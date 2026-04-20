@@ -1,0 +1,84 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Role-based admin check
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == "shamimrez22@gmail.com" ||
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
+      );
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    // Site Settings
+    match /settings/{docId} {
+      allow read: if true;
+      allow write: if true; // Local admin bypass
+    }
+
+    // Homepage Slider
+    match /slider_banners/{bannerId} {
+      allow read: if true;
+      allow write: if true; // Local admin bypass
+    }
+
+    // Orders
+    match /orders/{orderId} {
+      allow list, get: if true; // Bypass as per user request (Warning: Insecure)
+      allow create: if true; 
+      allow update, delete: if true; // Enabled for local admin session functionality
+    }
+
+    // Notifications
+    match /notifications/{notifId} {
+      allow list, get: if true; // Bypass as per user request
+      allow create: if true;
+      allow update, delete: if true;
+    }
+
+    // Products
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if true; // Local admin bypass
+    }
+
+    // Coupons
+    match /coupons/{couponId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Categories
+    match /categories/{catId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // User Profiles
+    match /users/{userId} {
+      allow list, get: if true; // Bypass for admin panel functionality
+      allow create: if isSignedIn();
+      allow update: if isOwner(userId) || true;
+    }
+  }
+}

@@ -45,15 +45,15 @@ export const UserLayout: React.FC = () => {
   React.useEffect(() => {
     // Inject Adsterra Scripts - Optimized to prevent reloading/stuck
     const ads = settings?.ads?.adsterra;
+    const injectedScripts: HTMLScriptElement[] = [];
+
     if (ads) {
       const injectScript = (id: string, code: string) => {
         if (!code || code.trim() === '') return;
         
-        // Better check: if container exists AND has the same code, don't re-inject
         const existing = document.getElementById(id);
         if (existing && existing.getAttribute('data-code') === btoa(code)) return;
 
-        // Remove old if code changed
         if (existing) existing.remove();
 
         const container = document.createElement('div');
@@ -69,13 +69,14 @@ export const UserLayout: React.FC = () => {
           } else {
             s.innerHTML = oldScript.innerHTML;
           }
-          // Copy other attributes
           Array.from(oldScript.attributes).forEach(attr => s.setAttribute(attr.name, attr.value));
+          s.setAttribute('data-ad-id', id); // Mark for cleanup
           document.body.appendChild(s);
+          injectedScripts.push(s);
         });
         
         if (id !== 'adsterra-popunder-wrap') {
-            document.body.appendChild(container);
+          document.body.appendChild(container);
         }
       };
 
@@ -83,16 +84,28 @@ export const UserLayout: React.FC = () => {
       if (ads.socialBarCode) injectScript('adsterra-socialbar-wrap', ads.socialBarCode);
       if (ads.customAdScript) injectScript('adsterra-custom-wrap', ads.customAdScript);
     }
+
+    return () => {
+      // Cleanup: Remove scripts if component unmounts or settings change
+      injectedScripts.forEach(s => s.remove());
+    };
   }, [settings?.ads?.adsterra?.popunderCode, settings?.ads?.adsterra?.socialBarCode, settings?.ads?.adsterra?.customAdScript]);
 
   // Helper for Banner Injection
   const injectAdIntoRef = (ref: React.RefObject<HTMLDivElement | null>, code?: string) => {
     if (ref.current && code) {
+      // Clear previous content
       ref.current.innerHTML = '';
+      
       const container = document.createElement('div');
       container.innerHTML = code;
       const scriptList = Array.from(container.getElementsByTagName('script'));
-      ref.current.appendChild(container);
+      
+      // Append non-script content
+      const nonScriptContent = Array.from(container.childNodes).filter(node => node.nodeName !== 'SCRIPT');
+      nonScriptContent.forEach(node => ref.current?.appendChild(node));
+
+      // Append and execute scripts
       scriptList.forEach(oldScript => {
         const newScript = document.createElement('script');
         Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
@@ -103,6 +116,8 @@ export const UserLayout: React.FC = () => {
         }
         ref.current?.appendChild(newScript);
       });
+    } else if (ref.current) {
+        ref.current.innerHTML = '';
     }
   };
 
@@ -111,7 +126,17 @@ export const UserLayout: React.FC = () => {
     injectAdIntoRef(nativeAdRef, settings?.ads?.adsterra?.nativeBannerCode);
     injectAdIntoRef(bannerOneRef, settings?.ads?.adsterra?.bannerOneCode);
     injectAdIntoRef(bannerTwoRef, settings?.ads?.adsterra?.bannerTwoCode);
-  }, [settings]);
+    
+    return () => {
+        [nativeAdRef, bannerOneRef, bannerTwoRef].forEach(ref => {
+            if (ref.current) ref.current.innerHTML = '';
+        });
+    };
+  }, [
+    settings?.ads?.adsterra?.nativeBannerCode, 
+    settings?.ads?.adsterra?.bannerOneCode, 
+    settings?.ads?.adsterra?.bannerTwoCode
+  ]);
 
   const handleLogin = async () => {
     try {

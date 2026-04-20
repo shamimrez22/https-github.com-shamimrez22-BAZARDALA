@@ -8,7 +8,7 @@ import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';
 import { Checkbox } from '../../components/ui/checkbox';
-import { Plus, Trash2, Save, Globe, Share2, Info, Zap, Megaphone, LayoutGrid, Image as ImageIcon, Lock, User, Shield } from 'lucide-react';
+import { Plus, Trash2, Save, Globe, Share2, Info, Zap, Megaphone, LayoutGrid, Image as ImageIcon, Lock, User, Shield, Mail } from 'lucide-react';
 import { toast } from 'sonner';
 
 const defaultSettings: SiteSettings = {
@@ -65,7 +65,8 @@ const defaultSettings: SiteSettings = {
     adminCredentials: {
       username: 'SHAMIM',
       pass: '321'
-    }
+    },
+    adminEmails: ['shamimrez22@gmail.com']
   }
 };
 
@@ -93,7 +94,8 @@ const Settings = () => {
             socialBarAd: { ...defaultSettings.ads!.socialBarAd, ...(data.ads?.socialBarAd || {}) },
             globalNotice: { ...defaultSettings.ads!.globalNotice, ...(data.ads?.globalNotice || {}) },
             adsterra: { ...defaultSettings.ads!.adsterra, ...(data.ads?.adsterra || {}) },
-            adminCredentials: { ...defaultSettings.ads!.adminCredentials, ...(data.ads?.adminCredentials || {}) }
+            adminCredentials: { ...defaultSettings.ads!.adminCredentials, ...(data.ads?.adminCredentials || {}) },
+            adminEmails: data.ads?.adminEmails || defaultSettings.ads!.adminEmails
           }
         });
       } else {
@@ -673,6 +675,74 @@ const Settings = () => {
               </div>
             </div>
             
+            <div className="mt-12 pt-8 border-t border-[#777]/20">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <Label className="text-[10px] font-black uppercase text-slate-600 tracking-widest flex items-center gap-2">
+                    <Mail className="h-3 w-3" /> Authorized Google Admin Emails (অ্যাডমিন জিমেইল তালিকা)
+                  </Label>
+                  <p className="text-[9px] font-bold text-slate-400 uppercase mt-1">
+                    List of Google accounts that can access the Admin Panel and recover access.
+                  </p>
+                </div>
+                <Button 
+                  onClick={() => setSettings(prev => ({
+                    ...prev,
+                    ads: { 
+                      ...prev.ads, 
+                      adminEmails: [...(prev.ads?.adminEmails || []), ''] 
+                    }
+                  }))}
+                  variant="outline"
+                  size="sm"
+                  className="rounded-none border-[#777] h-8 text-[9px] font-black uppercase tracking-widest px-4 hover:bg-[#9B2B2C] hover:text-white transition-all shadow-[2px_2px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
+                >
+                  <Plus className="mr-2 h-3 w-3" /> Add Email
+                </Button>
+              </div>
+
+              <div className="space-y-3">
+                {(settings.ads?.adminEmails || []).map((email, i) => (
+                  <div key={i} className="flex gap-3 animate-in fade-in slide-in-from-left-2 duration-300">
+                    <Input 
+                      type="email"
+                      value={email}
+                      onChange={(e) => {
+                        const newEmails = [...(settings.ads?.adminEmails || [])];
+                        newEmails[i] = e.target.value;
+                        setSettings(prev => ({
+                          ...prev,
+                          ads: { ...prev.ads, adminEmails: newEmails }
+                        }));
+                      }}
+                      placeholder="admin@gmail.com"
+                      className="rounded-none border-[#777] font-bold text-xs h-10 bg-white"
+                    />
+                    <Button 
+                      onClick={() => {
+                        const newEmails = (settings.ads?.adminEmails || []).filter((_, idx) => idx !== i);
+                        setSettings(prev => ({
+                          ...prev,
+                          ads: { ...prev.ads, adminEmails: newEmails }
+                        }));
+                      }}
+                      variant="ghost"
+                      size="icon"
+                      className="h-10 w-10 text-red-500 hover:bg-red-50 hover:text-red-600 rounded-none border border-transparent hover:border-red-200"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
+                
+                {(settings.ads?.adminEmails || []).length === 0 && (
+                  <div className="text-center py-6 border border-dashed border-[#777]/30 bg-slate-50">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase">No authorized emails defined. Only the primary account will work.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
             <div className="mt-8 p-4 bg-red-50 border border-red-200 flex items-start gap-4">
                <Info className="h-5 w-5 text-red-500 shrink-0 mt-0.5" />
                <p className="text-[10px] font-bold text-red-700 uppercase leading-relaxed">

@@ -101,5 +101,6 @@ export interface SiteSettings {
       username: string;
       pass: string;
     };
+    adminEmails?: string[];
   };
 }

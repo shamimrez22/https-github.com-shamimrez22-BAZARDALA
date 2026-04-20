@@ -29,14 +29,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const [isAdminSession, setIsAdminSession] = useState(localStorage.getItem('isAdmin') === 'true');
   const [adminCreds, setAdminCreds] = useState({ username: 'SHAMIM', pass: '321' });
+  const [authorizedEmails, setAuthorizedEmails] = useState<string[]>(['shamimrez22@gmail.com']);
 
   useEffect(() => {
-    // Listen for site settings to get admin credentials
+    // Listen for site settings to get admin credentials and emails
     const unsubSettings = onSnapshot(doc(db, 'settings', 'site'), (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.data();
         if (data.ads?.adminCredentials) {
           setAdminCreds(data.ads.adminCredentials);
+        }
+        if (data.ads?.adminEmails && Array.isArray(data.ads.adminEmails)) {
+          setAuthorizedEmails(data.ads.adminEmails);
         }
       }
     });
@@ -46,14 +50,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(firebaseUser);
         if (firebaseUser) {
           const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
-          if (userDoc.exists()) {
-            setProfile(userDoc.data() as UserProfile);
+          const currentProfile = userDoc.exists() ? userDoc.data() as UserProfile : null;
+          
+          // Re-evaluate role based on dynamic authorized emails
+          const isUserAdminByEmail = firebaseUser.email && 
+            authorizedEmails.map(e => e.toLowerCase()).includes(firebaseUser.email.toLowerCase());
+          
+          if (currentProfile) {
+            // Update role if it changed in settings
+            if (isUserAdminByEmail && currentProfile.role !== 'admin') {
+               const updatedProfile = { ...currentProfile, role: 'admin' as const };
+               await setDoc(doc(db, 'users', firebaseUser.uid), updatedProfile);
+               setProfile(updatedProfile);
+            } else if (!isUserAdminByEmail && currentProfile.role === 'admin' && firebaseUser.email?.toLowerCase() !== 'shamimrez22@gmail.com') {
+               // Demote if removed from list (keeping master shamim email always admin as fallback)
+               const updatedProfile = { ...currentProfile, role: 'customer' as const };
+               await setDoc(doc(db, 'users', firebaseUser.uid), updatedProfile);
+               setProfile(updatedProfile);
+            } else {
+               setProfile(currentProfile);
+            }
           } else {
             const newProfile: UserProfile = {
               uid: firebaseUser.uid,
               name: firebaseUser.displayName || 'User',
               email: firebaseUser.email || '',
-              role: firebaseUser.email?.toLowerCase() === 'shamimrez22@gmail.com' ? 'admin' : 'customer',
+              role: isUserAdminByEmail ? 'admin' : 'customer',
               wishlist: [],
               cart: [],
             };
@@ -75,6 +97,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       unsubAuth();
     };
   }, []);
+
+  // Update profile role if authorizedEmails change
+  useEffect(() => {
+    const updateRole = async () => {
+      if (user && profile) {
+        const isUserAdminByEmail = user.email && 
+          authorizedEmails.map(e => e.toLowerCase()).includes(user.email.toLowerCase());
+        
+        if (isUserAdminByEmail && profile.role !== 'admin') {
+          const updatedProfile = { ...profile, role: 'admin' as const };
+          await setDoc(doc(db, 'users', user.uid), updatedProfile);
+          setProfile(updatedProfile);
+        } else if (!isUserAdminByEmail && profile.role === 'admin' && user.email?.toLowerCase() !== 'shamimrez22@gmail.com') {
+          const updatedProfile = { ...profile, role: 'customer' as const };
+          await setDoc(doc(db, 'users', user.uid), updatedProfile);
+          setProfile(updatedProfile);
+        }
+      }
+    };
+    updateRole();
+  }, [authorizedEmails, user]);
 
   const loginAdmin = (username: string, pass: string) => {
     if (username === adminCreds.username && pass === adminCreds.pass) {

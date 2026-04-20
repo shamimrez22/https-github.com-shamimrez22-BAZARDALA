@@ -86,7 +86,7 @@ const AdminLogin = () => {
                         type="text"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        className="pl-12 bg-white border-[#777] text-slate-900 rounded-none h-14 font-black text-xs uppercase focus-visible:ring-0 focus-visible:border-[#9B2B2C] tracking-widest"
+                        className="pl-12 bg-white border-[#777] text-slate-900 rounded-none h-14 font-black text-xs focus-visible:ring-0 focus-visible:border-[#9B2B2C]"
                         placeholder="ADMIN_ID"
                         required
                       />

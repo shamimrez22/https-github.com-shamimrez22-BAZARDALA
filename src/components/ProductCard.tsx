@@ -43,6 +43,11 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
         />
         
         {/* Status Overlays */}
+        {product.discountPercentage && product.discountPercentage > 0 && (
+          <div className="absolute top-2 right-2 bg-yellow-400 text-slate-900 text-[10px] font-black px-2 py-1 uppercase tracking-tighter border border-slate-900 shadow-[2px_2px_0px_#000]">
+            {product.discountPercentage}% OFF
+          </div>
+        )}
         {product.stock < 5 && product.stock > 0 && (
           <div className="absolute top-2 left-2 bg-[#9B2B2C] text-white text-[9px] font-black px-2 py-0.5 uppercase tracking-widest border border-white">
             Low Stock
@@ -91,15 +96,14 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
         
         <div className="mt-auto flex items-end justify-between border-t border-[#777]/10 pt-4">
           <div className="flex flex-col">
+            {product.oldPrice && product.oldPrice > 0 && (
+              <span className="text-[10px] font-bold text-slate-400 line-through mb-1">
+                ৳{product.oldPrice.toLocaleString()}
+              </span>
+            )}
             <span className="text-lg font-black text-[#9B2B2C] tracking-tighter font-mono leading-none">
               ৳{product.price.toLocaleString()}
             </span>
-          </div>
-          <div className="flex items-center gap-1.5 pb-0.5">
-            <div className="bg-[#ead9c4] px-1.5 py-0.5 border border-[#777]/30 flex items-center gap-1">
-              <StarIcon className="h-2.5 w-2.5 text-[#9B2B2C]" />
-              <span className="text-[10px] font-black text-slate-700">{product.ratings || 4.5}</span>
-            </div>
           </div>
         </div>
       </div>

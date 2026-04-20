@@ -2,6 +2,8 @@ export interface Product {
   id: string;
   name: string;
   price: number;
+  oldPrice?: number;
+  discountPercentage?: number;
   category: string;
   stock: number;
   images: string[];

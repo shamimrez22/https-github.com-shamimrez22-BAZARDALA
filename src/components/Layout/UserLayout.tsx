@@ -43,30 +43,37 @@ export const UserLayout: React.FC = () => {
   }, [settings]);
 
   React.useEffect(() => {
-    // Inject Adsterra Scripts
+    // Inject Adsterra Scripts - Optimized to prevent reloading/stuck
     const ads = settings?.ads?.adsterra;
     if (ads) {
       const injectScript = (id: string, code: string) => {
-        if (!code) return;
-        if (document.getElementById(id)) return;
+        if (!code || code.trim() === '') return;
+        
+        // Better check: if container exists AND has the same code, don't re-inject
+        const existing = document.getElementById(id);
+        if (existing && existing.getAttribute('data-code') === btoa(code)) return;
+
+        // Remove old if code changed
+        if (existing) existing.remove();
 
         const container = document.createElement('div');
         container.id = id;
+        container.setAttribute('data-code', btoa(code));
         container.innerHTML = code;
         
-        // Extract and execute scripts within the code
-        const scripts = container.getElementsByTagName('script');
-        for (let i = 0; i < scripts.length; i++) {
+        const scripts = Array.from(container.getElementsByTagName('script'));
+        scripts.forEach(oldScript => {
           const s = document.createElement('script');
-          if (scripts[i].src) {
-            s.src = scripts[i].src;
+          if (oldScript.src) {
+            s.src = oldScript.src;
           } else {
-            s.innerHTML = scripts[i].innerHTML;
+            s.innerHTML = oldScript.innerHTML;
           }
+          // Copy other attributes
+          Array.from(oldScript.attributes).forEach(attr => s.setAttribute(attr.name, attr.value));
           document.body.appendChild(s);
-        }
+        });
         
-        // Append the rest of the HTML (containers etc) for non-popunder ones if they have visible parts
         if (id !== 'adsterra-popunder-wrap') {
             document.body.appendChild(container);
         }
@@ -76,7 +83,7 @@ export const UserLayout: React.FC = () => {
       if (ads.socialBarCode) injectScript('adsterra-socialbar-wrap', ads.socialBarCode);
       if (ads.customAdScript) injectScript('adsterra-custom-wrap', ads.customAdScript);
     }
-  }, [settings]);
+  }, [settings?.ads?.adsterra?.popunderCode, settings?.ads?.adsterra?.socialBarCode, settings?.ads?.adsterra?.customAdScript]);
 
   // Helper for Banner Injection
   const injectAdIntoRef = (ref: React.RefObject<HTMLDivElement | null>, code?: string) => {

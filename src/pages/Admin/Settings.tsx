@@ -124,27 +124,69 @@ const Settings = () => {
   };
 
   const addLink = (type: 'support' | 'company' | 'social') => {
-    const newSettings = { ...settings };
-    if (type === 'support') newSettings.footerSupportLinks.push({ label: 'New Link', url: '#' });
-    if (type === 'company') newSettings.footerCompanyLinks.push({ label: 'New Link', url: '#' });
-    if (type === 'social') newSettings.socialLinks.push({ platform: 'NEW', url: '#' });
-    setSettings(newSettings);
+    if (type === 'support') {
+      setSettings(prev => ({
+        ...prev,
+        footerSupportLinks: [...prev.footerSupportLinks, { label: 'New Link', url: '#' }]
+      }));
+    }
+    if (type === 'company') {
+      setSettings(prev => ({
+        ...prev,
+        footerCompanyLinks: [...prev.footerCompanyLinks, { label: 'New Link', url: '#' }]
+      }));
+    }
+    if (type === 'social') {
+      setSettings(prev => ({
+        ...prev,
+        socialLinks: [...prev.socialLinks, { platform: 'NEW', url: '#' }]
+      }));
+    }
   };
 
   const removeLink = (type: 'support' | 'company' | 'social', index: number) => {
-    const newSettings = { ...settings };
-    if (type === 'support') newSettings.footerSupportLinks.splice(index, 1);
-    if (type === 'company') newSettings.footerCompanyLinks.splice(index, 1);
-    if (type === 'social') newSettings.socialLinks.splice(index, 1);
-    setSettings(newSettings);
+    if (type === 'support') {
+      setSettings(prev => ({
+        ...prev,
+        footerSupportLinks: prev.footerSupportLinks.filter((_, i) => i !== index)
+      }));
+    }
+    if (type === 'company') {
+      setSettings(prev => ({
+        ...prev,
+        footerCompanyLinks: prev.footerCompanyLinks.filter((_, i) => i !== index)
+      }));
+    }
+    if (type === 'social') {
+      setSettings(prev => ({
+        ...prev,
+        socialLinks: prev.socialLinks.filter((_, i) => i !== index)
+      }));
+    }
   };
 
   const updateLink = (type: 'support' | 'company' | 'social', index: number, field: string, value: string) => {
-    const newSettings = { ...settings };
-    if (type === 'support') (newSettings.footerSupportLinks[index] as any)[field] = value;
-    if (type === 'company') (newSettings.footerCompanyLinks[index] as any)[field] = value;
-    if (type === 'social') (newSettings.socialLinks[index] as any)[field] = value;
-    setSettings(newSettings);
+    if (type === 'support') {
+      setSettings(prev => {
+        const newList = [...prev.footerSupportLinks];
+        (newList[index] as any)[field] = value;
+        return { ...prev, footerSupportLinks: newList };
+      });
+    }
+    if (type === 'company') {
+      setSettings(prev => {
+        const newList = [...prev.footerCompanyLinks];
+        (newList[index] as any)[field] = value;
+        return { ...prev, footerCompanyLinks: newList };
+      });
+    }
+    if (type === 'social') {
+      setSettings(prev => {
+        const newList = [...prev.socialLinks];
+        (newList[index] as any)[field] = value;
+        return { ...prev, socialLinks: newList };
+      });
+    }
   };
 
   if (loading) return <div className="p-8 text-center font-black uppercase text-[#9B2B2C] animate-pulse">Syncing Site Protocols...</div>;
@@ -648,7 +690,7 @@ const Settings = () => {
                       }
                     }))}
                     placeholder="Enter new username"
-                    className="rounded-none border-[#777] font-black text-xs uppercase h-12 bg-[#f4e4d4]/10"
+                    className="rounded-none border-[#777] font-black text-xs h-12 bg-[#f4e4d4]/10"
                   />
                 </div>
               </div>

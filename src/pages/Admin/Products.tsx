@@ -54,6 +54,8 @@ const AdminProducts = () => {
   const [formData, setFormData] = useState({
     name: '',
     price: '',
+    oldPrice: '',
+    discountPercentage: '',
     category: '',
     stock: '',
     description: '',
@@ -139,6 +141,8 @@ const AdminProducts = () => {
       const data = {
         name: formData.name,
         price: parseFloat(formData.price),
+        oldPrice: formData.oldPrice ? parseFloat(formData.oldPrice) : 0,
+        discountPercentage: formData.discountPercentage ? parseFloat(formData.discountPercentage) : 0,
         category: formData.category,
         stock: parseInt(formData.stock),
         description: formData.description,
@@ -168,20 +172,18 @@ const AdminProducts = () => {
   };
 
   const handleDelete = async (id: string) => {
-    toast('Delete this product?', {
-      action: {
-        label: 'Confirm Delete',
-        onClick: async () => {
-          try {
-            await deleteDoc(doc(db, 'products', id));
-            toast.success('Product deleted');
-            setProducts(prev => prev.filter(p => p.id !== id));
-          } catch (error) {
-            toast.error('Failed to delete product');
-          }
-        }
-      },
-    });
+    // Making it "Hard" as requested by user
+    const confirmed = window.confirm('আপনি কি নিশ্চিত যে আপনি এই প্রোডাক্টটি ডিলিট করতে চান?');
+    if (!confirmed) return;
+
+    try {
+      await deleteDoc(doc(db, 'products', id));
+      toast.success('Product deleted successfully');
+      setProducts(prev => prev.filter(p => p.id !== id));
+    } catch (error) {
+      console.error('Delete error:', error);
+      toast.error('Failed to delete product. Please try again.');
+    }
   };
 
   const handleAiGenerate = async () => {
@@ -249,8 +251,8 @@ const AdminProducts = () => {
                     <Input 
                       value={formData.name} 
                       onChange={e => setFormData({...formData, name: e.target.value})}
-                      placeholder="e.g. PREMIUM T-SHIRT"
-                      className="h-10 bg-white border-[#777] text-slate-900 rounded-none font-bold text-xs focus:ring-0 focus:border-[#9B2B2C] uppercase"
+                      placeholder="e.g. Premium T-Shirt"
+                      className="h-10 bg-white border-[#777] text-slate-900 rounded-none font-bold text-xs focus:ring-0 focus:border-[#9B2B2C]"
                       required 
                     />
                   </div>
@@ -271,7 +273,7 @@ const AdminProducts = () => {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-widest text-[#9B2B2C]">Price (৳)</Label>
+                    <Label className="text-[10px] font-black uppercase tracking-widest text-[#9B2B2C]">Selling Price (৳)</Label>
                     <Input 
                       type="number" 
                       step="0.01"
@@ -280,6 +282,29 @@ const AdminProducts = () => {
                       placeholder="0.00"
                       className="h-10 bg-white border-[#777] text-slate-900 rounded-none font-bold text-xs focus:ring-0 focus:border-[#9B2B2C]"
                       required 
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Old Price (৳) - Strikethrough</Label>
+                    <Input 
+                      type="number" 
+                      step="0.01"
+                      value={formData.oldPrice} 
+                      onChange={e => setFormData({...formData, oldPrice: e.target.value})}
+                      placeholder="Optional"
+                      className="h-10 bg-white border-[#777] text-slate-400 rounded-none font-bold text-xs focus:ring-0 focus:border-[#9B2B2C]"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-black uppercase tracking-widest text-[#9B2B2C]">Discount %</Label>
+                    <Input 
+                      type="number" 
+                      value={formData.discountPercentage} 
+                      onChange={e => setFormData({...formData, discountPercentage: e.target.value})}
+                      placeholder="e.g. 10"
+                      className="h-10 bg-white border-[#777] text-slate-900 rounded-none font-bold text-xs focus:ring-0 focus:border-[#9B2B2C]"
                     />
                   </div>
                   <div className="space-y-2">
@@ -444,6 +469,8 @@ const AdminProducts = () => {
                           setFormData({
                             name: product.name,
                             price: product.price.toString(),
+                            oldPrice: product.oldPrice?.toString() || '',
+                            discountPercentage: product.discountPercentage?.toString() || '',
                             category: product.category,
                             stock: product.stock.toString(),
                             description: product.description,

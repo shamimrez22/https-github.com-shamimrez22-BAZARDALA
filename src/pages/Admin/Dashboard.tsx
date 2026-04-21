@@ -27,7 +27,7 @@ import {
   ArrowUpRight, 
   ArrowDownRight,
   Package,
-  Clock,
+  Timer,
   Truck
 } from 'lucide-react';
 import { 

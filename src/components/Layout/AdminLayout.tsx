@@ -23,7 +23,7 @@ import {
   X,
   ExternalLink,
   Image as ImageIcon,
-  Clock,
+  Timer,
   Zap,
   CircleUser
 } from 'lucide-react';
@@ -140,7 +140,7 @@ export const AdminLayout: React.FC = () => {
     { label: 'Manage Products', icon: Package, path: '/admin/products' },
     { label: 'Add Product', icon: PlusCircle, path: '/admin/products/add' },
     { label: 'All Orders', icon: ShoppingCart, path: '/admin/orders' },
-    { label: 'Pending Orders', icon: Clock, path: '/admin/orders?status=pending', badge: pendingOrdersCount > 0 ? pendingOrdersCount : null },
+    { label: 'Pending Orders', icon: Timer, path: '/admin/orders?status=pending', badge: pendingOrdersCount > 0 ? pendingOrdersCount : null },
     { label: 'Customers', icon: Users, path: '/admin/customers' },
     { label: 'Slider Banners', icon: ImageIcon, path: '/admin/slider' },
     { label: 'Limited Offers', icon: Zap, path: '/admin/limited-offers' },

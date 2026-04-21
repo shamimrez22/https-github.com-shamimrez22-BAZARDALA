@@ -8,7 +8,7 @@ import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../../components/ui/card';
 import { Checkbox } from '../../components/ui/checkbox';
-import { Plus, Trash2, Save, Globe, Share2, Info, Zap, Megaphone, LayoutGrid, Image as ImageIcon, Lock, User, Shield, Mail } from 'lucide-react';
+import { Plus, Trash2, Save, Globe, Share2, Info, Zap, Megaphone, LayoutGrid, Image as ImageIcon, Lock, User, Shield, Mail, Timer } from 'lucide-react';
 import { toast } from 'sonner';
 
 const defaultSettings: SiteSettings = {
@@ -67,6 +67,19 @@ const defaultSettings: SiteSettings = {
       pass: '321'
     },
     adminEmails: ['shamimrez22@gmail.com']
+  },
+  theme: {
+    enabled: false,
+    primaryColor: '#9B2B2C',
+    secondaryColor: '#ead9c4',
+    backgroundColor: '#f4e4d4',
+    cardColor: '#ffffff',
+    buttonColor: '#9B2B2C'
+  },
+  countdown: {
+    enabled: true,
+    targetDate: new Date(Date.now() + 86400000 * 3).toISOString(), // 3 days from now
+    text: 'FLASH SALE'
   }
 };
 
@@ -96,7 +109,9 @@ const Settings = () => {
             adsterra: { ...defaultSettings.ads!.adsterra, ...(data.ads?.adsterra || {}) },
             adminCredentials: { ...defaultSettings.ads!.adminCredentials, ...(data.ads?.adminCredentials || {}) },
             adminEmails: data.ads?.adminEmails || defaultSettings.ads!.adminEmails
-          }
+          },
+          theme: { ...defaultSettings.theme!, ...(data.theme || {}) },
+          countdown: { ...defaultSettings.countdown!, ...(data.countdown || {}) }
         });
       } else {
         // Init if not exists
@@ -372,6 +387,214 @@ const Settings = () => {
                 onChange={(e) => setSettings({...settings, siteDescription: e.target.value})}
                 className="w-full min-h-[120px] p-4 bg-[#f4e4d4]/10 border border-[#777] font-bold text-xs uppercase tracking-tight focus:outline-none focus:border-[#9B2B2C]"
               />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Global Color Protocols - NEW */}
+        <Card className="rounded-none border-[#777] bg-white shadow-lg overflow-hidden border-t-4 border-t-[#9B2B2C]">
+          <CardHeader className="bg-[#ead9c4]/30 py-4 border-b border-[#777]">
+            <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
+              <LayoutGrid className="h-4 w-4 text-[#9B2B2C]" /> Global Style Protocols (থিম কালার পরিবর্তন)
+            </CardTitle>
+            <CardDescription className="text-[10px] text-slate-500 font-bold uppercase">
+              Control the overall visual vibe of the website.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-6 space-y-6">
+            <div className="flex items-center gap-3 p-4 bg-[#f4e4d4]/20 border border-dashed border-[#9B2B2C]/30 mb-4">
+              <Checkbox 
+                id="theme-enabled"
+                checked={settings.theme?.enabled}
+                onCheckedChange={(checked) => setSettings(prev => ({
+                  ...prev,
+                  theme: { ...(prev.theme || defaultSettings.theme!), enabled: !!checked }
+                }))}
+              />
+              <Label htmlFor="theme-enabled" className="text-xs font-black uppercase text-[#9B2B2C] cursor-pointer">
+                Enable Custom Color Protocols (মাস্টার কালার সক্রিয় করুন)
+              </Label>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label className="text-[10px] font-black uppercase text-slate-600">Primary Brand Color (মেইন কালার)</Label>
+                <div className="flex gap-2">
+                  <Input 
+                    type="color"
+                    value={settings.theme?.primaryColor}
+                    onChange={(e) => setSettings(prev => ({
+                      ...prev,
+                      theme: { ...(prev.theme || defaultSettings.theme!), primaryColor: e.target.value }
+                    }))}
+                    className="w-12 h-10 p-1 rounded-none border-[#777] cursor-pointer"
+                  />
+                  <Input 
+                    value={settings.theme?.primaryColor}
+                    onChange={(e) => setSettings(prev => ({
+                      ...prev,
+                      theme: { ...(prev.theme || defaultSettings.theme!), primaryColor: e.target.value }
+                    }))}
+                    className="flex-1 h-10 font-mono text-xs uppercase"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-[10px] font-black uppercase text-slate-600">Secondary BG Color (বর্ডার/হেডার কালার)</Label>
+                <div className="flex gap-2">
+                  <Input 
+                    type="color"
+                    value={settings.theme?.secondaryColor}
+                    onChange={(e) => setSettings(prev => ({
+                      ...prev,
+                      theme: { ...(prev.theme || defaultSettings.theme!), secondaryColor: e.target.value }
+                    }))}
+                    className="w-12 h-10 p-1 rounded-none border-[#777] cursor-pointer"
+                  />
+                  <Input 
+                    value={settings.theme?.secondaryColor}
+                    onChange={(e) => setSettings(prev => ({
+                      ...prev,
+                      theme: { ...(prev.theme || defaultSettings.theme!), secondaryColor: e.target.value }
+                    }))}
+                    className="flex-1 h-10 font-mono text-xs uppercase"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-[10px] font-black uppercase text-slate-600">Global Background (পেছনের কালার)</Label>
+                <div className="flex gap-2">
+                  <Input 
+                    type="color"
+                    value={settings.theme?.backgroundColor}
+                    onChange={(e) => setSettings(prev => ({
+                      ...prev,
+                      theme: { ...(prev.theme || defaultSettings.theme!), backgroundColor: e.target.value }
+                    }))}
+                    className="w-12 h-10 p-1 rounded-none border-[#777] cursor-pointer"
+                  />
+                  <Input 
+                    value={settings.theme?.backgroundColor}
+                    onChange={(e) => setSettings(prev => ({
+                      ...prev,
+                      theme: { ...(prev.theme || defaultSettings.theme!), backgroundColor: e.target.value }
+                    }))}
+                    className="flex-1 h-10 font-mono text-xs uppercase"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-[10px] font-black uppercase text-slate-600">Button Master Color (বাটন কালার)</Label>
+                <div className="flex gap-2">
+                  <Input 
+                    type="color"
+                    value={settings.theme?.buttonColor}
+                    onChange={(e) => setSettings(prev => ({
+                      ...prev,
+                      theme: { ...(prev.theme || defaultSettings.theme!), buttonColor: e.target.value }
+                    }))}
+                    className="w-12 h-10 p-1 rounded-none border-[#777] cursor-pointer"
+                  />
+                  <Input 
+                    value={settings.theme?.buttonColor}
+                    onChange={(e) => setSettings(prev => ({
+                      ...prev,
+                      theme: { ...(prev.theme || defaultSettings.theme!), buttonColor: e.target.value }
+                    }))}
+                    className="flex-1 h-10 font-mono text-xs uppercase"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2 md:col-span-2">
+                <Label className="text-[10px] font-black uppercase text-slate-600">Card Background (কার্ডের পেছনের কালার)</Label>
+                <div className="flex gap-2">
+                  <Input 
+                    type="color"
+                    value={settings.theme?.cardColor}
+                    onChange={(e) => setSettings(prev => ({
+                      ...prev,
+                      theme: { ...(prev.theme || defaultSettings.theme!), cardColor: e.target.value }
+                    }))}
+                    className="w-12 h-10 p-1 rounded-none border-[#777] cursor-pointer"
+                  />
+                  <Input 
+                    value={settings.theme?.cardColor}
+                    onChange={(e) => setSettings(prev => ({
+                      ...prev,
+                      theme: { ...(prev.theme || defaultSettings.theme!), cardColor: e.target.value }
+                    }))}
+                    className="flex-1 h-10 font-mono text-xs uppercase"
+                  />
+                </div>
+              </div>
+            </div>
+            
+            <div className="p-3 bg-blue-50 border border-blue-200">
+               <p className="text-[9px] font-bold text-blue-700 uppercase leading-relaxed tracking-wider">
+                 * এই কালারগুলো শুধুমাত্র তখনই কাজ করবে যখন আপনি উপরের "Enable Custom Color Protocols" চেক বক্সে টিক দিবেন। 
+                 টিক না দিলে ওয়েবসাইটের অরিজিনাল (Master) কালার ব্যবহার হবে।
+               </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Home Countdown Protocols - NEW */}
+        <Card className="rounded-none border-[#777] bg-white shadow-lg overflow-hidden border-t-4 border-t-brand-primary">
+          <CardHeader className="bg-slate-900 text-white py-4">
+            <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
+              <Timer className="h-4 w-4" /> Flash Sale Countdown (অফার এর সময় নির্ধারণ)
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-6 space-y-6">
+            <div className="flex items-center gap-3 p-4 bg-[#f4e4d4]/20 border border-dashed border-brand-primary/30">
+              <Checkbox 
+                id="countdown-enabled"
+                checked={settings.countdown?.enabled}
+                onCheckedChange={(checked) => setSettings(prev => ({
+                  ...prev,
+                  countdown: { ...(prev.countdown || defaultSettings.countdown!), enabled: !!checked }
+                }))}
+              />
+              <Label htmlFor="countdown-enabled" className="text-xs font-black uppercase text-brand-primary cursor-pointer">
+                Flash Sale Active (ফ্ল্যাশ সেল চালু করুন)
+              </Label>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label className="text-[10px] font-black uppercase text-slate-600">Promotion Label (হেডিং টেকক্সট)</Label>
+                <Input 
+                  value={settings.countdown?.text}
+                  onChange={(e) => setSettings(prev => ({
+                    ...prev,
+                    countdown: { ...(prev.countdown || defaultSettings.countdown!), text: e.target.value }
+                  }))}
+                  className="h-10 border-[#777] rounded-none font-black text-xs uppercase"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-[10px] font-black uppercase text-slate-600">End Date & Time (অফার শেষ হওয়ার সময়)</Label>
+                <Input 
+                  type="datetime-local"
+                  value={settings.countdown?.targetDate ? new Date(new Date(settings.countdown.targetDate).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16) : ''}
+                  onChange={(e) => setSettings(prev => ({
+                    ...prev,
+                    countdown: { ...(prev.countdown || defaultSettings.countdown!), targetDate: new Date(e.target.value).toISOString() }
+                  }))}
+                  className="h-10 border-[#777] rounded-none font-black text-xs uppercase"
+                />
+              </div>
+            </div>
+
+            <div className="p-3 bg-amber-50 border border-amber-200">
+               <p className="text-[9px] font-bold text-amber-700 uppercase leading-relaxed tracking-wider">
+                 * এখানে যে সময় দিবেন সেই সময় অনুযায়ী হোমপেজের ফ্ল্যাশ সেলের সময় কমতে থাকবে। সময় শেষ হয়ে গেলে কাউন্টডাউন জিরো হয়ে যাবে।
+               </p>
             </div>
           </CardContent>
         </Card>

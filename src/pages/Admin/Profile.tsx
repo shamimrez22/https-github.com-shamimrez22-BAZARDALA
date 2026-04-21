@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { doc, updateDoc } from 'firebase/firestore';
-import { updateProfile } from 'firebase/auth';
-import { db, auth } from '../../firebase';
 import { useAuth } from '../../context/AuthContext';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
@@ -12,7 +9,7 @@ import { toast } from 'sonner';
 import { optimizeProfileImage } from '../../lib/image-utils';
 
 const AdminProfile = () => {
-  const { profile, user, refreshProfile } = useAuth();
+  const { profile, user, refreshProfile, updateUserProfile } = useAuth();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: profile?.name || '',
@@ -46,28 +43,27 @@ const AdminProfile = () => {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
+    
+    if (!user) {
+      toast.error('Identity sync blocked. You must be signed in through the Google Authentication protocol to modify administrative persona.');
+      return;
+    }
 
     setLoading(true);
+    const loadingToast = toast.loading('Synchronizing identity changes...');
+    
     try {
-      // Update Firebase Auth profile
-      await updateProfile(user, {
-        displayName: formData.name,
-        photoURL: formData.photoURL
-      });
-
-      // Update Firestore user document
-      const userRef = doc(db, 'users', user.uid);
-      await updateDoc(userRef, {
+      await updateUserProfile({
         name: formData.name,
         photoURL: formData.photoURL
       });
-
-      await refreshProfile();
-      toast.success('Profile updated successfully');
-    } catch (error) {
+      
+      toast.dismiss(loadingToast);
+      toast.success('ADMIN_IDENTITY_LOCKED: Profile synchronized successfully');
+    } catch (error: any) {
       console.error('Profile update error:', error);
-      toast.error('Failed to update profile');
+      toast.dismiss(loadingToast);
+      toast.error(`SYNC_FAILURE: ${error.message || 'Verification timed out'}`);
     } finally {
       setLoading(false);
     }

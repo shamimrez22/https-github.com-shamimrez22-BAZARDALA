@@ -17,7 +17,26 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   useEffect(() => {
     const unsub = onSnapshot(doc(db, 'settings', 'site'), (snapshot) => {
       if (snapshot.exists()) {
-        setSettings(snapshot.data() as SiteSettings);
+        const data = snapshot.data() as SiteSettings;
+        setSettings(data);
+
+        // Inject Dynamic Colors
+        if (data.theme?.enabled) {
+          const root = document.documentElement;
+          root.style.setProperty('--primary-color', data.theme.primaryColor);
+          root.style.setProperty('--secondary-color', data.theme.secondaryColor);
+          root.style.setProperty('--background-color', data.theme.backgroundColor);
+          root.style.setProperty('--card-color', data.theme.cardColor);
+          root.style.setProperty('--button-color', data.theme.buttonColor);
+        } else {
+          // Reset to defaults
+          const root = document.documentElement;
+          root.style.setProperty('--primary-color', '#9B2B2C');
+          root.style.setProperty('--secondary-color', '#ead9c4');
+          root.style.setProperty('--background-color', '#f4e4d4');
+          root.style.setProperty('--card-color', '#ffffff');
+          root.style.setProperty('--button-color', '#9B2B2C');
+        }
       }
       setLoading(false);
     }, (error) => {

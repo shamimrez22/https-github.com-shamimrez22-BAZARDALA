@@ -20,14 +20,14 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="bg-white border border-[#777] shadow-sm hover:shadow-xl transition-all group relative flex flex-col"
+      className="bg-brand-card border border-[#777] shadow-sm hover:shadow-xl transition-all group relative flex flex-col"
     >
       {/* Visual Header / SKU ID */}
-      <div className="bg-[#ead9c4] border-b border-[#777] px-2 py-1 flex justify-between items-center bg-opacity-50">
-        <span className="text-[8px] font-black text-[#9B2B2C] uppercase tracking-tighter">Product_{product.name.slice(0, 3).toUpperCase()}</span>
+      <div className="bg-brand-secondary border-b border-[#777] px-2 py-1 flex justify-between items-center bg-opacity-50">
+        <span className="text-[8px] font-black text-brand-primary uppercase tracking-tighter">Product_{product.name.slice(0, 3).toUpperCase()}</span>
         <div className="flex gap-1">
-          <div className="w-1 h-1 bg-[#9B2B2C] rounded-full" />
-          <div className="w-1 h-1 bg-[#9B2B2C] rounded-full opacity-30" />
+          <div className="w-1 h-1 bg-brand-primary rounded-full" />
+          <div className="w-1 h-1 bg-brand-primary rounded-full opacity-30" />
         </div>
       </div>
 
@@ -38,6 +38,7 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
         <img
           src={product.images?.[0] || 'https://picsum.photos/seed/product/400/400'}
           alt={product.name}
+          loading="lazy"
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 grayscale group-hover:grayscale-0"
           referrerPolicy="no-referrer"
         />
@@ -101,16 +102,16 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
                 ৳{product.oldPrice.toLocaleString()}
               </span>
             )}
-            <span className="text-lg font-black text-[#9B2B2C] tracking-tighter font-mono leading-none">
+            <span className="text-lg font-black text-brand-primary tracking-tighter font-mono leading-none">
               ৳{product.price.toLocaleString()}
             </span>
           </div>
         </div>
       </div>
 
-      <div className="p-1 bg-[#ead9c4] border-t border-[#777]">
+      <div className="p-1 bg-brand-secondary border-t border-[#777]">
         <button
-          className="w-full bg-[#9B2B2C] hover:bg-slate-900 text-white transition-all h-10 text-[10px] font-black uppercase tracking-[0.2em] disabled:bg-slate-300 disabled:opacity-50"
+          className="w-full bg-brand-button hover:bg-slate-900 text-white transition-all h-10 text-[10px] font-black uppercase tracking-[0.2em] disabled:bg-slate-300 disabled:opacity-50"
           disabled={product.stock === 0}
           onClick={(e) => {
             e.stopPropagation();

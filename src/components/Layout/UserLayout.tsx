@@ -152,7 +152,7 @@ export const UserLayout: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#f4e4d4] text-slate-900 font-sans">
+    <div className="min-h-screen flex flex-col bg-brand-bg text-slate-900 font-sans">
       {/* Global Notice Banner */}
       {settings?.ads?.globalNotice?.active && (
         <div className="bg-slate-900 text-white py-2 px-4 relative overflow-hidden group border-b border-[#9B2B2C]/30">
@@ -169,7 +169,7 @@ export const UserLayout: React.FC = () => {
 
       {/* Social Bar Ad (SOCAILBAR) */}
       {settings?.ads?.socialBarAd?.active && (
-        <div className="bg-[#9B2B2C] text-white py-1.5 border-b border-black/10">
+        <div className="bg-brand-primary text-white py-1.5 border-b border-black/10">
           <div className="container mx-auto px-4 flex items-center justify-center gap-4">
              <p className="text-[9px] font-black uppercase tracking-[0.25em]">
                {settings.ads.socialBarAd.message}
@@ -187,44 +187,44 @@ export const UserLayout: React.FC = () => {
       )}
 
       {/* Top Navbar */}
-      <header className="sticky top-0 z-50 w-full border-b border-[#777] bg-[#ead9c4]/95 backdrop-blur-sm shadow-md">
+      <header className="sticky top-0 z-50 w-full border-b border-[#777] bg-brand-secondary/95 backdrop-blur-sm shadow-md">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-10">
-            <Link to="/" className="text-2xl font-black tracking-tighter text-[#9B2B2C] uppercase group flex items-center gap-3">
-              <div className="bg-[#9B2B2C] text-white p-2 rounded-xl shadow-lg group-hover:scale-110 transition-transform">
+            <Link to="/" className="text-2xl font-black tracking-tighter text-brand-primary uppercase group flex items-center gap-3">
+              <div className="bg-brand-primary text-white p-2 rounded-xl shadow-lg group-hover:scale-110 transition-transform">
                 <ShoppingBasket className="h-6 w-6" />
               </div>
               <div>
                 {(settings?.siteName || 'BAZAR DALA').split(' ')[0]}
-                <span className="text-slate-900 group-hover:text-[#9B2B2C] transition-colors">
+                <span className="text-slate-900 group-hover:text-brand-primary transition-colors">
                   {' '}{(settings?.siteName || 'BAZAR DALA').split(' ').slice(1).join(' ')}
                 </span>
               </div>
             </Link>
-            <nav className="hidden lg:flex items-center gap-8 text-[11px] font-black uppercase tracking-widest text-[#9B2B2C]">
-              <Link to="/" className="hover:text-slate-900 transition-colors border-b-2 border-transparent hover:border-[#9B2B2C] pb-1">HOME</Link>
-              <Link to="/shop" className="hover:text-slate-900 transition-colors border-b-2 border-transparent hover:border-[#9B2B2C] pb-1">SHOP</Link>
-              <Link to="/tracking" className="hover:text-slate-900 transition-colors border-b-2 border-transparent hover:border-[#9B2B2C] pb-1">TRACK ORDER</Link>
+            <nav className="hidden lg:flex items-center gap-8 text-[11px] font-black uppercase tracking-widest text-brand-primary">
+              <Link to="/" onMouseEnter={() => import('../../pages/Home')} className="hover:text-slate-900 transition-colors border-b-2 border-transparent hover:border-brand-primary pb-1">HOME</Link>
+              <Link to="/shop" onMouseEnter={() => import('../../pages/Shop')} className="hover:text-slate-900 transition-colors border-b-2 border-transparent hover:border-brand-primary pb-1">SHOP</Link>
+              <Link to="/tracking" className="hover:text-slate-900 transition-colors border-b-2 border-transparent hover:border-brand-primary pb-1">TRACK ORDER</Link>
             </nav>
           </div>
 
           <div className="flex-1 max-w-lg mx-12 hidden xl:block">
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#9B2B2C]" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-primary" />
               <Input
                 placeholder="Search products..."
-                className="pl-12 bg-white/50 border-[#777] rounded-none h-11 text-xs font-bold uppercase tracking-tight focus-visible:ring-0 focus-visible:border-[#9B2B2C] placeholder:text-slate-400"
+                className="pl-12 bg-white/50 border-[#777] rounded-none h-11 text-xs font-bold uppercase tracking-tight focus-visible:ring-0 focus-visible:border-brand-primary placeholder:text-slate-400"
               />
             </div>
           </div>
 
           <div className="flex items-center gap-4">
             <Link to="/cart" className="relative group">
-              <div className="p-2 border border-[#777] bg-white group-hover:bg-[#ead9c4] transition-all">
-                <ShoppingCart className="h-5 w-5 text-[#9B2B2C]" />
+              <div className="p-2 border border-[#777] bg-white group-hover:bg-brand-secondary transition-all">
+                <ShoppingCart className="h-5 w-5 text-brand-primary" />
               </div>
               {items.length > 0 && (
-                <span className="absolute -top-2 -right-2 h-5 min-w-[20px] bg-[#9B2B2C] text-white text-[10px] font-black flex items-center justify-center px-1 border border-white">
+                <span className="absolute -top-2 -right-2 h-5 min-w-[20px] bg-brand-primary text-white text-[10px] font-black flex items-center justify-center px-1 border border-white">
                   {items.length}
                 </span>
               )}
@@ -233,7 +233,7 @@ export const UserLayout: React.FC = () => {
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="flex items-center gap-3 p-1 border border-[#777] bg-white hover:bg-[#ead9c4] transition-all">
+                  <button className="flex items-center gap-3 p-1 border border-[#777] bg-white hover:bg-brand-secondary transition-all">
                     <div className="w-8 h-8 overflow-hidden grayscale">
                       <img
                         src={user.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`}
@@ -244,19 +244,19 @@ export const UserLayout: React.FC = () => {
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56 bg-white border-[#777] rounded-none p-0 shadow-xl">
-                  <DropdownMenuLabel className="bg-[#ead9c4] p-4 border-b border-[#777]">
+                  <DropdownMenuLabel className="bg-brand-secondary p-4 border-b border-[#777]">
                     <div className="flex flex-col space-y-1">
-                      <p className="text-[10px] font-black uppercase tracking-widest leading-none text-[#9B2B2C]">{user.displayName}</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest leading-none text-brand-primary">{user.displayName}</p>
                       <p className="text-[9px] font-bold leading-none text-slate-500 mt-1">{user.email}</p>
                     </div>
                   </DropdownMenuLabel>
-                  <div className="p-1 bg-[#f4e4d4]/10">
-                    <DropdownMenuItem onClick={() => navigate('/dashboard')} className="text-[10px] font-black uppercase p-3 focus:bg-[#ead9c4]">
-                      <User className="mr-3 h-4 w-4 text-[#9B2B2C]" />
+                  <div className="p-1 bg-brand-bg/10">
+                    <DropdownMenuItem onClick={() => navigate('/dashboard')} className="text-[10px] font-black uppercase p-3 focus:bg-brand-secondary">
+                      <User className="mr-3 h-4 w-4 text-brand-primary" />
                       <span>My Profile</span>
                     </DropdownMenuItem>
                     {isAdmin && (
-                      <DropdownMenuItem onClick={() => navigate('/admin')} className="text-[10px] font-black uppercase p-3 focus:bg-[#9B2B2C] focus:text-white">
+                      <DropdownMenuItem onClick={() => navigate('/admin')} className="text-[10px] font-black uppercase p-3 focus:bg-brand-primary focus:text-white">
                         <Menu className="mr-3 h-4 w-4" />
                         <span>Admin Panel</span>
                       </DropdownMenuItem>
@@ -270,7 +270,7 @@ export const UserLayout: React.FC = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Button onClick={handleLogin} className="bg-[#9B2B2C] hover:bg-slate-900 text-white rounded-none h-10 px-8 text-[11px] font-black uppercase tracking-widest shadow-lg">
+              <Button onClick={handleLogin} className="bg-brand-button hover:bg-slate-900 text-white rounded-none h-10 px-8 text-[11px] font-black uppercase tracking-widest shadow-lg">
                 Login
               </Button>
             )}
@@ -294,12 +294,12 @@ export const UserLayout: React.FC = () => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="lg:hidden bg-[#ead9c4] border-b border-[#777] overflow-hidden"
+            className="lg:hidden bg-brand-secondary border-b border-[#777] overflow-hidden"
           >
             <nav className="flex flex-col p-6 gap-6 text-[11px] font-black uppercase tracking-widest">
-              <Link to="/" onClick={() => setIsMenuOpen(false)} className="border-l-2 border-[#9B2B2C] pl-4 hover:bg-white/30 py-2">HOME</Link>
-              <Link to="/shop" onClick={() => setIsMenuOpen(false)} className="border-l-2 border-[#9B2B2C] pl-4 hover:bg-white/30 py-2">SHOP</Link>
-              <Link to="/tracking" onClick={() => setIsMenuOpen(false)} className="border-l-2 border-[#9B2B2C] pl-4 hover:bg-white/30 py-2">TRACK ORDER</Link>
+              <Link to="/" onMouseEnter={() => import('../../pages/Home')} onClick={() => setIsMenuOpen(false)} className="border-l-2 border-brand-primary pl-4 hover:bg-white/30 py-2">HOME</Link>
+              <Link to="/shop" onMouseEnter={() => import('../../pages/Shop')} onClick={() => setIsMenuOpen(false)} className="border-l-2 border-brand-primary pl-4 hover:bg-white/30 py-2">SHOP</Link>
+              <Link to="/tracking" onClick={() => setIsMenuOpen(false)} className="border-l-2 border-brand-primary pl-4 hover:bg-white/30 py-2">TRACK ORDER</Link>
             </nav>
           </motion.div>
         )}
@@ -333,11 +333,11 @@ export const UserLayout: React.FC = () => {
         </div>
       )}
 
-      <footer className="bg-[#ead9c4] border-t border-[#777] pt-20 pb-10">
+      <footer className="bg-brand-secondary border-t border-[#777] pt-20 pb-10">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
             <div className="space-y-8">
-              <h3 className="text-[#9B2B2C] text-2xl font-black tracking-tighter uppercase flex items-center gap-3">
+              <h3 className="text-brand-primary text-2xl font-black tracking-tighter uppercase flex items-center gap-3">
                 <ShoppingBasket className="h-8 w-8" />
                 <div>
                   {(settings?.siteName || 'BAZAR DALA').split(' ')[0]}
@@ -360,7 +360,7 @@ export const UserLayout: React.FC = () => {
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 border border-[#777] bg-white flex items-center justify-center text-[#9B2B2C] hover:bg-[#9B2B2C] hover:text-white transition-all cursor-pointer font-black grayscale hover:grayscale-0"
+                    className="w-10 h-10 border border-[#777] bg-white flex items-center justify-center text-brand-primary hover:bg-brand-primary hover:text-white transition-all cursor-pointer font-black grayscale hover:grayscale-0"
                   >
                     <span className="text-xs uppercase">{social.platform.slice(0, 1)}</span>
                   </a>
@@ -369,7 +369,7 @@ export const UserLayout: React.FC = () => {
             </div>
 
             <div>
-              <h4 className="text-[#9B2B2C] font-black mb-8 uppercase tracking-[0.2em] text-[11px] border-b border-[#9B2B2C]/20 pb-3">Customer Support</h4>
+              <h4 className="text-brand-primary font-black mb-8 uppercase tracking-[0.2em] text-[11px] border-b border-brand-primary/20 pb-3">Customer Support</h4>
               <ul className="space-y-4 text-[10px] font-black text-slate-700 uppercase tracking-widest">
                 {(settings?.footerSupportLinks || [
                   { label: 'Help Center', url: '/help' },
@@ -378,13 +378,13 @@ export const UserLayout: React.FC = () => {
                   { label: 'Contact Us', url: '/contact' },
                   { label: 'Terms & Conditions', url: '/terms' }
                 ]).map((link, i) => (
-                  <li key={i}><Link to={link.url} className="hover:text-[#9B2B2C] transition-colors">{link.label}</Link></li>
+                  <li key={i}><Link to={link.url} className="hover:text-brand-primary transition-colors">{link.label}</Link></li>
                 ))}
               </ul>
             </div>
 
             <div>
-              <h4 className="text-[#9B2B2C] font-black mb-8 uppercase tracking-[0.2em] text-[11px] border-b border-[#9B2B2C]/20 pb-3">Our Company</h4>
+              <h4 className="text-brand-primary font-black mb-8 uppercase tracking-[0.2em] text-[11px] border-b border-brand-primary/20 pb-3">Our Company</h4>
               <ul className="space-y-4 text-[10px] font-black text-slate-700 uppercase tracking-widest">
                 {(settings?.footerCompanyLinks || [
                   { label: 'About Us', url: '/about' },
@@ -392,18 +392,18 @@ export const UserLayout: React.FC = () => {
                   { label: 'Our Blog', url: '/blog' },
                   { label: 'Track Order', url: '/tracking' }
                 ]).map((link, i) => (
-                  <li key={i}><Link to={link.url} className="hover:text-[#9B2B2C] transition-colors">{link.label}</Link></li>
+                  <li key={i}><Link to={link.url} className="hover:text-brand-primary transition-colors">{link.label}</Link></li>
                 ))}
-                <li><Link to="/admin/login" className="text-slate-400 hover:text-[#9B2B2C] transition-colors">Admin Login</Link></li>
+                <li><Link to="/admin/login" className="text-slate-400 hover:text-brand-primary transition-colors">Admin Login</Link></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-[#9B2B2C] font-black mb-8 uppercase tracking-[0.2em] text-[11px] border-b border-[#9B2B2C]/20 pb-3">Newsletter</h4>
+              <h4 className="text-brand-primary font-black mb-8 uppercase tracking-[0.2em] text-[11px] border-b border-brand-primary/20 pb-3">Newsletter</h4>
               <p className="text-[10px] font-bold text-slate-600 uppercase mb-6 leading-relaxed">Subscribe for latest products and offers.</p>
               <div className="space-y-3">
-                <Input placeholder="Enter your email" className="bg-white/50 border-[#777] rounded-none focus-visible:ring-0 focus-visible:border-[#9B2B2C] text-[10px] font-bold uppercase" />
-                <Button className="w-full bg-[#9B2B2C] hover:bg-slate-900 text-white font-black uppercase text-[10px] rounded-none h-10 tracking-widest">Subscribe</Button>
+                <Input placeholder="Enter your email" className="bg-white/50 border-[#777] rounded-none focus-visible:ring-0 focus-visible:border-brand-primary text-[10px] font-bold uppercase" />
+                <Button className="w-full bg-brand-button hover:bg-slate-900 text-white font-black uppercase text-[10px] rounded-none h-10 tracking-widest">Subscribe</Button>
               </div>
             </div>
           </div>

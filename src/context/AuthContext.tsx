@@ -4,9 +4,10 @@ import {
   User, 
   signInWithPopup, 
   GoogleAuthProvider,
-  signOut as firebaseSignOut
+  signOut as firebaseSignOut,
+  updateProfile as firebaseUpdateProfile
 } from 'firebase/auth';
-import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc, setDoc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 import { UserProfile } from '../types';
 
@@ -19,6 +20,7 @@ interface AuthContextType {
   loginWithGoogle: () => Promise<void>;
   logoutAdmin: () => void;
   refreshProfile: () => Promise<void>;
+  updateUserProfile: (data: { name: string; photoURL?: string }) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -141,10 +143,46 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const refreshProfile = async () => {
     if (auth.currentUser) {
-      const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid));
-      if (userDoc.exists()) {
-        setProfile(userDoc.data() as UserProfile);
+      try {
+        // Reload the user to get latest photoURL/displayName from Auth service
+        await auth.currentUser.reload();
+        
+        const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid));
+        if (userDoc.exists()) {
+          const data = userDoc.data() as UserProfile;
+          setProfile(data);
+        }
+        
+        // Use a new object reference to trigger React re-render
+        setUser({ ...auth.currentUser } as User);
+      } catch (error) {
+        console.error('Refresh profile error:', error);
       }
+    }
+  };
+
+  const updateUserProfile = async (data: { name: string; photoURL?: string }) => {
+    if (!auth.currentUser) throw new Error('No user logged in');
+    
+    try {
+      // 1. Update Firebase Auth profile
+      await firebaseUpdateProfile(auth.currentUser, {
+        displayName: data.name,
+        photoURL: data.photoURL
+      });
+
+      // 2. Update Firestore document (idempotent if data is same)
+      const userRef = doc(db, 'users', auth.currentUser.uid);
+      await updateDoc(userRef, {
+        name: data.name,
+        photoURL: data.photoURL || auth.currentUser.photoURL || ''
+      });
+
+      // 3. Force reload and state update
+      await refreshProfile();
+    } catch (error) {
+      console.error('Update profile internal error:', error);
+      throw error;
     }
   };
 
@@ -157,7 +195,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       loginAdmin,
       loginWithGoogle,
       logoutAdmin,
-      refreshProfile
+      refreshProfile,
+      updateUserProfile
     }}>
       {children}
     </AuthContext.Provider>

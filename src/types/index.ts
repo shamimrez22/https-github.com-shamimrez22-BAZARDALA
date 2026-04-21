@@ -105,4 +105,17 @@ export interface SiteSettings {
     };
     adminEmails?: string[];
   };
+  theme?: {
+    enabled: boolean;
+    primaryColor: string;
+    secondaryColor: string;
+    backgroundColor: string;
+    cardColor: string;
+    buttonColor: string;
+  };
+  countdown?: {
+    enabled: boolean;
+    targetDate: string;
+    text: string;
+  };
 }

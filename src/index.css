@@ -46,6 +46,13 @@
     --radius-2xl: calc(var(--radius) * 1.8);
     --radius-3xl: calc(var(--radius) * 2.2);
     --radius-4xl: calc(var(--radius) * 2.6);
+
+    /* Brand Custom Colors */
+    --color-brand-primary: var(--primary-color);
+    --color-brand-secondary: var(--secondary-color);
+    --color-brand-bg: var(--background-color);
+    --color-brand-card: var(--card-color);
+    --color-brand-button: var(--button-color);
 }
 
 @layer utilities {
@@ -59,6 +66,12 @@
 }
 
 :root {
+    --primary-color: #9B2B2C;
+    --secondary-color: #ead9c4;
+    --background-color: #f4e4d4;
+    --card-color: #ffffff;
+    --button-color: #9B2B2C;
+
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
     --card: oklch(1 0 0);

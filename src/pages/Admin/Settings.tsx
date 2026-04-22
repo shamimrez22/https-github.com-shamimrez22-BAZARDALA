@@ -80,6 +80,13 @@ const defaultSettings: SiteSettings = {
     enabled: true,
     targetDate: new Date(Date.now() + 86400000 * 3).toISOString(), // 3 days from now
     text: 'FLASH SALE'
+  },
+  sidebar: {
+    showCategories: true,
+    showOffer: false,
+    offerImageUrl: '',
+    offerLink: '',
+    offerTitle: 'SPECIAL OFFER'
   }
 };
 
@@ -88,6 +95,7 @@ const Settings = () => {
   const [settings, setSettings] = useState<SiteSettings>(defaultSettings);
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [showMobileView, setShowMobileView] = useState(false);
 
   useEffect(() => {
     if (authLoading || !isAdmin) return;
@@ -111,7 +119,8 @@ const Settings = () => {
             adminEmails: data.ads?.adminEmails || defaultSettings.ads!.adminEmails
           },
           theme: { ...defaultSettings.theme!, ...(data.theme || {}) },
-          countdown: { ...defaultSettings.countdown!, ...(data.countdown || {}) }
+          countdown: { ...defaultSettings.countdown!, ...(data.countdown || {}) },
+          sidebar: { ...defaultSettings.sidebar!, ...(data.sidebar || {}) }
         });
       } else {
         // Init if not exists
@@ -216,14 +225,65 @@ const Settings = () => {
             Website Configuration & Global Links
           </div>
         </div>
-        <Button 
-          onClick={handleSave} 
-          disabled={isSaving}
-          className="bg-[#9B2B2C] hover:bg-slate-900 text-white font-black uppercase tracking-widest px-10 h-14 rounded-none shadow-[4px_4px_0px_#000] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all"
-        >
-          {isSaving ? 'Saving...' : <><Save className="mr-3 h-5 w-5" /> Save Changes</>}
-        </Button>
+        <div className="flex flex-col md:flex-row items-center gap-4">
+          <Button 
+            onClick={() => setShowMobileView(!showMobileView)} 
+            variant="outline"
+            className="border-[#9B2B2C] text-[#9B2B2C] hover:bg-[#9B2B2C] hover:text-white font-black uppercase tracking-widest px-6 h-14 rounded-none transition-all"
+          >
+            <Zap className="mr-3 h-5 w-5" /> {showMobileView ? 'Close Mobile View' : 'Open Mobile View'}
+          </Button>
+          <Button 
+            onClick={handleSave} 
+            disabled={isSaving}
+            className="bg-[#9B2B2C] hover:bg-slate-900 text-white font-black uppercase tracking-widest px-10 h-14 rounded-none shadow-[4px_4px_0px_#000] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all"
+          >
+            {isSaving ? 'Saving...' : <><Save className="mr-3 h-5 w-5" /> Save Changes</>}
+          </Button>
+        </div>
       </div>
+
+      {showMobileView && (
+        <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="relative w-full max-w-[400px] h-full max-h-[800px] bg-white border-[12px] border-slate-900 rounded-[3rem] overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-col">
+            {/* Phone Notch/Speaker */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-40 h-8 bg-slate-900 rounded-b-3xl z-20 flex items-center justify-center">
+              <div className="w-16 h-1.5 bg-slate-800 rounded-full" />
+            </div>
+            
+            <div className="absolute top-4 right-8 z-20">
+              <button 
+                onClick={() => setShowMobileView(false)}
+                className="bg-red-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-black"
+              >
+                X
+              </button>
+            </div>
+
+            {/* Mobile Content Iframe */}
+            <div className="flex-1 mt-6">
+              <iframe 
+                src="/" 
+                className="w-full h-full border-none"
+                title="Mobile Preview"
+              />
+            </div>
+            
+            {/* Phone Home Indicator */}
+            <div className="h-6 w-full bg-slate-900 flex items-center justify-center">
+              <div className="w-24 h-1 bg-white/20 rounded-full" />
+            </div>
+          </div>
+          
+          <div className="ml-8 hidden lg:block text-white max-w-xs">
+             <h2 className="text-2xl font-black uppercase tracking-tighter mb-4 border-l-4 border-brand-primary pl-4">Mobile Simulator</h2>
+             <p className="text-[10px] font-bold text-white/60 uppercase leading-relaxed">
+               This view shows exactly how your "Special Offer" and "Slider" will look on a mobile device. 
+               We've updated the layout so that these sections remain visible and optimized for smaller screens.
+             </p>
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Support Links */}
@@ -596,6 +656,143 @@ const Settings = () => {
                  * এখানে যে সময় দিবেন সেই সময় অনুযায়ী হোমপেজের ফ্ল্যাশ সেলের সময় কমতে থাকবে। সময় শেষ হয়ে গেলে কাউন্টডাউন জিরো হয়ে যাবে।
                </p>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Home Sidebar Protocols - NEW */}
+        <Card className="rounded-none border-[#777] bg-white shadow-lg overflow-hidden border-t-4 border-t-brand-primary">
+          <CardHeader className="bg-[#ead9c4]/30 py-4 border-b border-[#777]">
+            <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
+              <LayoutGrid className="h-4 w-4 text-brand-primary" /> Sidebar Protocols (সাইডবার নিয়ন্ত্রণ)
+            </CardTitle>
+            <CardDescription className="text-[10px] text-slate-500 font-bold uppercase">
+              Control the left sidebar behavior (Categories vs Offers).
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-6 space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex items-center gap-3 p-4 bg-slate-50 border border-[#777]/20">
+                <Checkbox 
+                  id="show-categories"
+                  checked={settings.sidebar?.showCategories}
+                  onCheckedChange={(checked) => setSettings(prev => ({
+                    ...prev,
+                    sidebar: { ...(prev.sidebar || defaultSettings.sidebar!), showCategories: !!checked }
+                  }))}
+                />
+                <Label htmlFor="show-categories" className="text-xs font-black uppercase text-slate-700 cursor-pointer">
+                  Show All Categories (ক্যাটাগরি লিস্ট দেখান)
+                </Label>
+              </div>
+
+              <div className="flex items-center gap-3 p-4 bg-slate-50 border border-[#777]/20">
+                <Checkbox 
+                  id="show-offer"
+                  checked={settings.sidebar?.showOffer}
+                  onCheckedChange={(checked) => setSettings(prev => ({
+                    ...prev,
+                    sidebar: { ...(prev.sidebar || defaultSettings.sidebar!), showOffer: !!checked }
+                  }))}
+                />
+                <Label htmlFor="show-offer" className="text-xs font-black uppercase text-brand-primary cursor-pointer">
+                  Show Sidebar Offer (অফার কার্ড দেখান)
+                </Label>
+              </div>
+            </div>
+
+            {settings.sidebar?.showOffer && (
+              <div className="p-6 bg-brand-primary/5 border border-brand-primary/20 space-y-4">
+                <h3 className="text-[10px] font-black uppercase text-brand-primary mb-2">Offer Configuration (অফার সেটিংস)</h3>
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-black uppercase text-slate-600">Offer Title</Label>
+                    <Input 
+                      value={settings.sidebar?.offerTitle}
+                      onChange={(e) => setSettings(prev => ({
+                        ...prev,
+                        sidebar: { ...(prev.sidebar || defaultSettings.sidebar!), offerTitle: e.target.value }
+                      }))}
+                      className="h-10 border-[#777] rounded-none font-black text-xs uppercase"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-black uppercase text-slate-600">Offer Image (সরাসরি আপলোড করুন)</Label>
+                    <div className="flex flex-col gap-4">
+                      {settings.sidebar?.offerImageUrl && (
+                        <div className="relative w-full h-40 border border-[#777] overflow-hidden bg-slate-100">
+                          <img 
+                            src={settings.sidebar.offerImageUrl} 
+                            className="w-full h-full object-cover" 
+                            alt="Offer Preview" 
+                          />
+                          <button 
+                            onClick={() => setSettings(prev => ({
+                              ...prev,
+                              sidebar: { ...(prev.sidebar || defaultSettings.sidebar!), offerImageUrl: '' }
+                            }))}
+                            className="absolute top-2 right-2 p-1 bg-red-600 text-white rounded-none hover:bg-red-700 transition-all"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      )}
+                      
+                      <div className="relative cursor-pointer">
+                        <input 
+                          type="file" 
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              const reader = new FileReader();
+                              reader.onloadend = () => {
+                                setSettings(prev => ({
+                                  ...prev,
+                                  sidebar: { ...(prev.sidebar || defaultSettings.sidebar!), offerImageUrl: reader.result as string }
+                                }));
+                              };
+                              reader.readAsDataURL(file);
+                            }
+                          }}
+                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                        />
+                        <div className="border-2 border-dashed border-[#777]/30 p-4 flex flex-col items-center justify-center gap-2 hover:bg-slate-50 transition-all">
+                          <ImageIcon className="h-6 w-6 text-slate-400" />
+                          <p className="text-[10px] font-black uppercase text-slate-500">
+                            {settings.sidebar?.offerImageUrl ? 'Change Image (ইমেজ পরিবর্তন করুন)' : 'Choose Image (ইমেজ সিলেক্ট করুন)'}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-black uppercase text-slate-600">Offer Destination Link</Label>
+                    <Input 
+                      value={settings.sidebar?.offerLink}
+                      onChange={(e) => setSettings(prev => ({
+                        ...prev,
+                        sidebar: { ...(prev.sidebar || defaultSettings.sidebar!), offerLink: e.target.value }
+                      }))}
+                      className="h-10 border-[#777] rounded-none font-black text-xs"
+                      placeholder="/shop or https://..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-black uppercase text-slate-600">Offer Description (ছোট বিবরণ)</Label>
+                    <textarea 
+                      value={settings.sidebar?.offerDescription || ''}
+                      onChange={(e) => setSettings(prev => ({
+                        ...prev,
+                        sidebar: { ...(prev.sidebar || defaultSettings.sidebar!), offerDescription: e.target.value }
+                      }))}
+                      rows={3}
+                      className="w-full bg-white border border-[#777] p-3 rounded-none font-black text-xs focus:outline-none focus:border-brand-primary"
+                      placeholder="লিখুন..."
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
 

@@ -146,13 +146,25 @@
     }
   body {
     @apply bg-background text-foreground;
-    overflow-x: hidden;
+    overflow-x: hidden !important;
+    width: 1200px !important;
+    min-width: 1200px !important;
     }
   html {
     @apply font-sans;
     scroll-behavior: auto !important;
-    overflow-x: hidden;
+    overflow-x: hidden !important;
+    width: 1200px !important;
+    min-width: 1200px !important;
     }
+
+  /* Force container to 1200px regardless of screen size */
+  .container {
+    max-width: 1200px !important;
+    width: 1200px !important;
+    min-width: 1200px !important;
+    margin: 0 auto !important;
+  }
 
   html.lenis,
   html.lenis body {

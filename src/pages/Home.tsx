@@ -71,6 +71,7 @@ const categories = [
 
 const Home = () => {
   const [currentSlide, setCurrentSlide] = React.useState(0);
+  const [variantIndex, setVariantIndex] = React.useState(0);
   const [banners, setBanners] = React.useState(defaultBanners);
   const [settings, setSettings] = React.useState<SiteSettings | null>(null);
   const [limitedOffersConfig, setLimitedOffersConfig] = React.useState({ limit: 6, productIds: [] as string[] });
@@ -165,59 +166,118 @@ const Home = () => {
     if (banners.length === 0) return;
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % banners.length);
-    }, 8000); // Slower cycle for legibility
+      setVariantIndex(Math.floor(Math.random() * 10));
+    }, 4000); // Faster cycle
     return () => clearInterval(timer);
   }, [banners.length]);
 
-  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % banners.length);
-  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + banners.length) % banners.length);
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % banners.length);
+    setVariantIndex(Math.floor(Math.random() * 10));
+  };
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + banners.length) % banners.length);
+    setVariantIndex(Math.floor(Math.random() * 10));
+  };
+
+  // Dynamic variants for diversified transitions
+  const variants = [
+    { initial: { x: '100%', opacity: 0 }, animate: { x: 0, opacity: 1, scale: 1 }, exit: { x: '-100%', opacity: 0 } }, // Slide Left
+    { initial: { x: '-100%', opacity: 0 }, animate: { x: 0, opacity: 1, scale: 1 }, exit: { x: '100%', opacity: 0 } }, // Slide Right
+    { initial: { y: '100%', opacity: 0 }, animate: { y: 0, opacity: 1, scale: 1 }, exit: { y: '-100%', opacity: 0 } }, // Slide Up
+    { initial: { y: '-100%', opacity: 0 }, animate: { y: 0, opacity: 1, scale: 1 }, exit: { y: '100%', opacity: 0 } }, // Slide Down
+    { initial: { scale: 0.8, opacity: 0 }, animate: { scale: 1, opacity: 1 }, exit: { scale: 1.2, opacity: 0 } }, // Zoom In
+    { initial: { scale: 1.2, opacity: 0 }, animate: { scale: 1, opacity: 1 }, exit: { scale: 0.8, opacity: 0 } }, // Zoom Out
+    { initial: { rotate: -10, opacity: 0, scale: 0.9 }, animate: { rotate: 0, opacity: 1, scale: 1 }, exit: { rotate: 10, opacity: 0, scale: 1.1 } }, // Tilt Enter
+    { initial: { filter: 'blur(20px)', opacity: 0 }, animate: { filter: 'blur(0px)', opacity: 1 }, exit: { filter: 'blur(20px)', opacity: 0 } }, // Blur Reveal
+    { initial: { clipPath: 'inset(100% 0 0 0)', opacity: 0 }, animate: { clipPath: 'inset(0% 0 0 0)', opacity: 1 }, exit: { clipPath: 'inset(0 0 100% 0)', opacity: 0 } }, // Curtain Up
+    { initial: { skewX: -20, opacity: 0 }, animate: { skewX: 0, opacity: 1 }, exit: { skewX: 20, opacity: 0 } } // Skew Slide
+  ];
+
+  const currentVariant = variants[variantIndex];
 
   return (
     <div className="flex flex-col bg-brand-bg text-slate-900 pb-20">
       {/* System Hero Section */}
       <section className="pt-2 pb-4">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row gap-6">
-            {/* Category Sidebar */}
-            <div className="w-full lg:w-72 bg-brand-secondary border border-[#777] shadow-sm flex-shrink-0 flex flex-col h-[300px] md:h-[450px]">
-              <div className="bg-brand-primary p-3 border-b border-[#777] flex-shrink-0">
-                 <h2 className="text-[10px] font-black text-white uppercase tracking-[0.2em] flex items-center gap-2">
-                   <List className="h-4 w-4" /> All Categories
-                 </h2>
-              </div>
-              <div className="flex-1 overflow-y-auto py-1 bg-white/30 scrollbar-thin scrollbar-thumb-brand-primary/20">
-                <div className="grid grid-cols-2 lg:grid-cols-1">
-                  {categories.map((cat, i) => (
-                    <Link 
-                      key={i} 
-                      to={`/shop?cat=${cat.name.toLowerCase()}`}
-                      className="flex items-center justify-between px-4 py-2 hover:bg-brand-secondary transition-all group border-b border-[#777]/10"
-                    >
-                      <div className="flex items-center gap-3">
-                        <cat.icon className="h-3.5 w-3.5 text-brand-primary" />
-                        <span className="text-[10px] font-black uppercase tracking-tight text-slate-700">{cat.name}</span>
+          <div className="flex flex-row gap-4">
+            {/* Category Sidebar/Offer - Dynamic based on settings */}
+            {(settings?.sidebar?.showCategories || settings?.sidebar?.showOffer) && (
+              <div className="w-72 bg-brand-secondary border border-[#777] shadow-sm flex flex-col h-[450px] flex-shrink-0">
+                {settings.sidebar?.showCategories ? (
+                  <>
+                    <div className="bg-brand-primary p-3 border-b border-[#777] flex-shrink-0">
+                      <h2 className="text-[10px] font-black text-white uppercase tracking-[0.2em] flex items-center gap-2">
+                        <List className="h-4 w-4" /> All Categories
+                      </h2>
+                    </div>
+                    <div className="flex-1 overflow-y-auto py-1 bg-white/30 scrollbar-thin scrollbar-thumb-brand-primary/20">
+                      <div className="grid grid-cols-2 lg:grid-cols-1">
+                        {categories.map((cat, i) => (
+                          <Link 
+                            key={i} 
+                            to={`/shop?cat=${cat.name.toLowerCase()}`}
+                            className="flex items-center justify-between px-4 py-2 hover:bg-brand-secondary transition-all group border-b border-[#777]/10"
+                          >
+                            <div className="flex items-center gap-3">
+                              <cat.icon className="h-3.5 w-3.5 text-brand-primary" />
+                              <span className="text-[10px] font-black uppercase tracking-tight text-slate-700">{cat.name}</span>
+                            </div>
+                            <ChevronRight className="h-3 w-3 text-slate-400 group-hover:text-brand-primary" />
+                          </Link>
+                        ))}
                       </div>
-                      <ChevronRight className="h-3 w-3 text-slate-400 group-hover:text-brand-primary" />
+                    </div>
+                    <div className="p-3 bg-brand-secondary border-t border-[#777] flex-shrink-0">
+                       <Link to="/shop" className="block w-full py-1.5 border border-brand-primary text-brand-primary text-[9px] font-black uppercase tracking-widest hover:bg-brand-primary hover:text-white transition-all text-center">
+                         Show More
+                       </Link>
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex-1 flex flex-col overflow-hidden group">
+                    <div className="bg-brand-primary p-3 border-b border-[#777] flex-shrink-0">
+                      <h2 className="text-[10px] font-black text-white uppercase tracking-[0.2em] flex items-center gap-2">
+                        <Zap className="h-4 w-4" /> {settings.sidebar?.offerTitle || 'EXCLUSIVE_OFFER'}
+                      </h2>
+                    </div>
+                    <Link to={settings.sidebar?.offerLink || '/shop'} className="flex-1 relative overflow-hidden group flex flex-col">
+                      <div className="flex-1 min-h-0 relative">
+                        <img 
+                          src={settings.sidebar?.offerImageUrl || 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=800'} 
+                          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                          alt="Sidebar Offer"
+                          referrerPolicy="no-referrer"
+                        />
+                        <div className="absolute inset-0 bg-brand-primary/20 group-hover:bg-transparent transition-all duration-300" />
+                      </div>
+                      <div className="bg-white/95 p-4 border-t-2 border-brand-primary shadow-xl">
+                        <p className="text-[10px] font-black text-brand-primary uppercase tracking-[0.2em] mb-1">Flash Deal // v1.0</p>
+                        <h4 className="text-[12px] font-black text-slate-900 uppercase leading-tight tracking-tight mb-2">
+                          {settings.sidebar?.offerTitle || 'Claim Your Premium Offer Now'}
+                        </h4>
+                        {settings.sidebar?.offerDescription && (
+                          <p className="text-[9px] font-bold text-slate-500 uppercase leading-snug">
+                            {settings.sidebar.offerDescription}
+                          </p>
+                        )}
+                      </div>
                     </Link>
-                  ))}
-                </div>
+                  </div>
+                )}
               </div>
-              <div className="p-3 bg-brand-secondary border-t border-[#777] flex-shrink-0">
-                 <button className="w-full py-1.5 border border-brand-primary text-brand-primary text-[9px] font-black uppercase tracking-widest hover:bg-brand-primary hover:text-white transition-all">
-                   Show More
-                 </button>
-              </div>
-            </div>
+            )}
 
             {/* Main Image Slider */}
-            <div className="flex-1 relative bg-white border border-[#777] shadow-lg overflow-hidden group h-[300px] md:h-[450px]">
+            <div className={`flex-1 relative bg-white border border-[#777] shadow-lg overflow-hidden group h-[450px]`}>
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentSlide}
-                  initial={{ opacity: 0, scale: 1.05 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.8 }}
+                  initial={currentVariant.initial}
+                  animate={currentVariant.animate}
+                  exit={currentVariant.exit}
+                  transition={{ duration: 0.6, ease: "easeInOut" }}
                   className="absolute inset-0"
                 >
                   {banners[currentSlide] && (
@@ -228,7 +288,7 @@ const Home = () => {
                         className="w-full h-full object-cover grayscale opacity-80"
                         referrerPolicy="no-referrer"
                       />
-                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-primary via-brand-primary/80 to-transparent p-8 md:p-12">
+                      <div className="absolute inset-x-0 bottom-0 p-8 md:p-12">
                         <motion.div
                           initial={{ y: 30, opacity: 0 }}
                           animate={{ y: 0, opacity: 1 }}
@@ -361,7 +421,7 @@ const Home = () => {
             </Link>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+          <div className="grid grid-cols-6 gap-6">
             {[
               { name: 'Smartphones', img: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=400' },
               { name: 'Laptops', img: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400' },
@@ -398,48 +458,52 @@ const Home = () => {
         </div>
       </section>
 
-      {/* High-Alert Dispatch Section (Flash Sale) */}
-      <section className="py-12 bg-brand-primary relative overflow-hidden">
-        {/* Subtle decorative grid background */}
-        <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="flex flex-col md:flex-row items-center justify-between mb-16 gap-8">
-            <div className="text-center md:text-left">
-              <div className="flex items-center justify-center md:justify-start gap-4 mb-3">
-                <span className="w-12 h-[2px] bg-white/50" />
-                <span className="text-white text-[12px] font-black uppercase tracking-[0.4em]">{settings?.countdown?.text || 'FLASH SALE'}</span>
-              </div>
-              <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter leading-none mb-4">LIMITED OFFERS</h2>
-              <p className="text-white/60 text-[10px] font-bold uppercase tracking-[0.2em]">Hurry up! Secure your favorites before they're gone</p>
-            </div>
+      {/* High-Alert Dispatch Section (Flash Sale) - ALIGNED */}
+      <section className="pb-12 pt-4">
+        <div className="container mx-auto px-4">
+           <div className="bg-brand-primary relative overflow-hidden border-2 border-brand-primary shadow-xl">
+            {/* Subtle decorative grid background */}
+            <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
             
-            <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-6 flex flex-col items-center gap-4">
-                <p className="text-[10px] font-black text-white/50 uppercase tracking-[0.2em] mb-2">Ends In</p>
-                <div className="flex gap-4">
-                  {[
-                    { val: timeLeft.hrs, label: 'HR' },
-                    { val: timeLeft.mins, label: 'MIN' },
-                    { val: timeLeft.secs, label: 'SEC' },
-                  ].map((t, i) => (
-                    <div key={i} className="flex flex-col items-center">
-                      <div className="bg-white text-brand-primary w-14 h-14 flex items-center justify-center text-2xl font-mono font-black border-2 border-white/50">{t.val}</div>
-                      <span className="text-[8px] font-black text-white uppercase mt-2 tracking-widest">{t.label}</span>
-                    </div>
-                  ))}
+            <div className="p-8 md:p-12 relative z-10">
+              <div className="flex flex-col lg:flex-row items-center justify-between mb-16 gap-8 text-center lg:text-left">
+                <div>
+                  <div className="flex items-center justify-center lg:justify-start gap-4 mb-3">
+                    <span className="w-12 h-[2px] bg-white/50" />
+                    <span className="text-white text-[12px] font-black uppercase tracking-[0.4em]">{settings?.countdown?.text || 'FLASH SALE'}</span>
+                  </div>
+                  <h2 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter leading-none mb-4">LIMITED OFFERS</h2>
+                  <p className="text-white/60 text-[10px] font-bold uppercase tracking-[0.2em]">Hurry up! Secure your favorites before they're gone</p>
                 </div>
+                
+                <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-6 flex flex-col items-center gap-4">
+                    <p className="text-[10px] font-black text-white/50 uppercase tracking-[0.2em] mb-2">Ends In</p>
+                    <div className="flex gap-4">
+                      {[
+                        { val: timeLeft.hrs, label: 'HR' },
+                        { val: timeLeft.mins, label: 'MIN' },
+                        { val: timeLeft.secs, label: 'SEC' },
+                      ].map((t, i) => (
+                        <div key={i} className="flex flex-col items-center">
+                          <div className="bg-white text-brand-primary w-14 h-14 flex items-center justify-center text-2xl font-mono font-black border-2 border-white/50">{t.val}</div>
+                          <span className="text-[8px] font-black text-white uppercase mt-2 tracking-widest">{t.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-6 gap-6 px-2">
+                {loadingProducts ? (
+                  [...Array(6)].map((_, i) => (
+                    <div key={i} className="aspect-square bg-white/10 animate-pulse border border-white/20" />
+                  ))
+                ) : featuredProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
             </div>
-          </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
-            {loadingProducts ? (
-              [...Array(6)].map((_, i) => (
-                <div key={i} className="aspect-square bg-white/10 animate-pulse border border-white/20" />
-              ))
-            ) : featuredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+           </div>
         </div>
       </section>
     </div>

@@ -118,4 +118,12 @@ export interface SiteSettings {
     targetDate: string;
     text: string;
   };
+  sidebar?: {
+    showCategories: boolean;
+    showOffer: boolean;
+    offerImageUrl: string;
+    offerLink: string;
+    offerTitle: string;
+    offerDescription?: string;
+  };
 }

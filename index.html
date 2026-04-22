@@ -2,7 +2,18 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" id="viewport" content="width=1200" />
+    <script>
+      (function() {
+        var ww = window.screen.width;
+        var mw = 1200; // Target width
+        var ratio = ww / mw;
+        var viewport = document.getElementById('viewport');
+        if (ww < mw) {
+          viewport.setAttribute('content', 'width=' + mw + ', initial-scale=' + ratio + ', maximum-scale=' + ratio + ', user-scalable=yes');
+        }
+      })();
+    </script>
     <title>BAZAR DALA | Premium Online Shop</title>
   </head>
   <body>

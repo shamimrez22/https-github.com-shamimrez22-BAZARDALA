@@ -86,10 +86,8 @@ const Home = () => {
 
   // Handle "Popunder" link on first interaction
   const handleGlobalClick = () => {
-    if (!hasClicked && settings?.ads?.adsterra?.popunderCode) {
-       window.open(settings.ads.adsterra.popunderCode, '_blank');
-       setHasClicked(true);
-    }
+    // Adsterra scripts and popunders are handled globally via UserLayout script injection
+    // Manual triggers are omitted to allow script-based popunders to function normally
   };
 
   useEffect(() => {

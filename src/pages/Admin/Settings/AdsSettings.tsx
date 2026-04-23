@@ -51,21 +51,55 @@ const AdsSettings = () => {
           </Button>
         </CardHeader>
         <CardContent className="p-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-             {['popunderCode', 'socialBarCode', 'bannerOneCode', 'bannerTwoCode', 'bannerThreeCode', 'bannerFourCode', 'bannerFiveCode', 'bannerSixCode'].map((field) => (
-               <div key={field} className="space-y-2">
-                 <Label className="text-[10px] font-black uppercase text-slate-600">{field.replace(/([A-Z])/g, ' $1')}</Label>
-                 <Input 
-                   value={(settings.ads?.adsterra as any)?.[field] || ''} 
-                   onChange={e => {
-                     const newAds = { ...(settings.ads || {}), adsterra: { ...(settings.ads?.adsterra || {}), [field]: e.target.value } };
-                     setSettings({...settings, ads: newAds as any});
-                   }}
-                   placeholder="https://..."
-                   className="h-10 border-[#777] rounded-none text-xs"
-                 />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+             <div className="space-y-4 p-4 bg-slate-50 border border-[#777]/30">
+               <h3 className="text-[10px] font-black uppercase text-brand-primary flex items-center gap-2">
+                 <Zap className="h-3 w-3" /> Essential Ad Slots
+               </h3>
+               {[
+                 { id: 'socialBarCode', label: 'Social Bar Code', desc: 'Floating script' },
+                 { id: 'popunderCode', label: 'Popunder Code', desc: 'Full page or script' },
+                 { id: 'nativeBannerCode', label: 'Native Banner Code', desc: 'Contextual banners' }
+               ].map((ad) => (
+                 <div key={ad.id} className="space-y-2">
+                   <div className="flex items-center justify-between">
+                     <Label className="text-[9px] font-black uppercase text-slate-500">{ad.label}</Label>
+                     <span className="text-[8px] text-slate-400 font-mono uppercase">{ad.desc}</span>
+                   </div>
+                   <textarea 
+                     value={(settings.ads?.adsterra as any)?.[ad.id] || ''} 
+                     onChange={e => {
+                       const newAds = { ...(settings.ads || {}), adsterra: { ...(settings.ads?.adsterra || {}), [ad.id]: e.target.value } };
+                       setSettings({...settings, ads: newAds as any});
+                     }}
+                     placeholder="Paste Adsterra content here..."
+                     className="w-full min-h-[60px] p-2 border border-[#777] rounded-none text-[10px] font-mono leading-tight bg-white focus:border-brand-primary outline-none"
+                   />
+                 </div>
+               ))}
+             </div>
+
+             <div className="space-y-4 p-4 bg-slate-50 border border-[#777]/30">
+               <h3 className="text-[10px] font-black uppercase text-slate-600 flex items-center gap-2">
+                 <Megaphone className="h-3 w-3" /> Content Banners
+               </h3>
+               <div className="grid grid-cols-2 gap-3">
+                 {['bannerOneCode', 'bannerTwoCode', 'bannerThreeCode', 'bannerFourCode', 'bannerFiveCode', 'bannerSixCode'].map((field) => (
+                   <div key={field} className="space-y-1">
+                     <Label className="text-[8px] font-black uppercase text-slate-400">{field.replace(/Code$/, '')}</Label>
+                     <Input 
+                       value={(settings.ads?.adsterra as any)?.[field] || ''} 
+                       onChange={e => {
+                         const newAds = { ...(settings.ads || {}), adsterra: { ...(settings.ads?.adsterra || {}), [field]: e.target.value } };
+                         setSettings({...settings, ads: newAds as any});
+                       }}
+                       placeholder="Banner URL"
+                       className="h-8 border-[#777] rounded-none text-[9px]"
+                     />
+                   </div>
+                 ))}
                </div>
-             ))}
+             </div>
           </div>
         </CardContent>
       </Card>

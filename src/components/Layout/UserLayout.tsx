@@ -33,12 +33,18 @@ export const UserLayout: React.FC = () => {
   const bannerTwoRef = React.useRef<HTMLDivElement>(null);
 
   const [showPortalNotice, setShowPortalNotice] = useState(false);
+  const [hasTriggeredThisMount, setHasTriggeredThisMount] = useState(false);
 
   React.useEffect(() => {
-    // Show social bar after delay - FASTER SHOW TIME
-    const timer = setTimeout(() => setShowPortalNotice(true), 1500);
-    return () => clearTimeout(timer);
-  }, []);
+    // Show social bar as soon as settings are available, only once per mount
+    if (settings && !hasTriggeredThisMount) {
+      const timer = setTimeout(() => {
+        setShowPortalNotice(true);
+        setHasTriggeredThisMount(true);
+      }, 500); // Small 500ms delay for smoothness after load
+      return () => clearTimeout(timer);
+    }
+  }, [settings, hasTriggeredThisMount]);
 
   React.useEffect(() => {
     // Handle Popup show

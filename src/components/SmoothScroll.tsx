@@ -10,7 +10,11 @@ export const SmoothScroll: React.FC<SmoothScrollProps> = ({ children }) => {
   const lenisRef = React.useRef<Lenis | null>(null);
 
   React.useEffect(() => {
-    // Initialize Lenis
+    // Initialize Lenis - Only for Desktop to prevent mobile lag
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    if (isMobile) return;
+
     const lenis = new Lenis({
       lerp: 0.1, // Smoother inertia
       wheelMultiplier: 1.1, // Natural speed

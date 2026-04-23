@@ -197,21 +197,19 @@ const Home = () => {
     setVariantIndex(Math.floor(Math.random() * 10));
   };
 
-  // Dynamic variants for diversified transitions
-  const variants = [
-    { initial: { x: '100%', opacity: 0 }, animate: { x: 0, opacity: 1, scale: 1 }, exit: { x: '-100%', opacity: 0 } }, // Slide Left
-    { initial: { x: '-100%', opacity: 0 }, animate: { x: 0, opacity: 1, scale: 1 }, exit: { x: '100%', opacity: 0 } }, // Slide Right
-    { initial: { y: '100%', opacity: 0 }, animate: { y: 0, opacity: 1, scale: 1 }, exit: { y: '-100%', opacity: 0 } }, // Slide Up
-    { initial: { y: '-100%', opacity: 0 }, animate: { y: 0, opacity: 1, scale: 1 }, exit: { y: '100%', opacity: 0 } }, // Slide Down
-    { initial: { scale: 0.8, opacity: 0 }, animate: { scale: 1, opacity: 1 }, exit: { scale: 1.2, opacity: 0 } }, // Zoom In
-    { initial: { scale: 1.2, opacity: 0 }, animate: { scale: 1, opacity: 1 }, exit: { scale: 0.8, opacity: 0 } }, // Zoom Out
-    { initial: { rotate: -10, opacity: 0, scale: 0.9 }, animate: { rotate: 0, opacity: 1, scale: 1 }, exit: { rotate: 10, opacity: 0, scale: 1.1 } }, // Tilt Enter
-    { initial: { filter: 'blur(20px)', opacity: 0 }, animate: { filter: 'blur(0px)', opacity: 1 }, exit: { filter: 'blur(20px)', opacity: 0 } }, // Blur Reveal
-    { initial: { clipPath: 'inset(100% 0 0 0)', opacity: 0 }, animate: { clipPath: 'inset(0% 0 0 0)', opacity: 1 }, exit: { clipPath: 'inset(0 0 100% 0)', opacity: 0 } }, // Curtain Up
-    { initial: { skewX: -20, opacity: 0 }, animate: { skewX: 0, opacity: 1 }, exit: { skewX: 20, opacity: 0 } } // Skew Slide
+  // Optimized variants for performance (static fade on mobile)
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const variants = isMobile ? [
+    { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } }
+  ] : [
+    { initial: { x: '100%', opacity: 0 }, animate: { x: 0, opacity: 1, scale: 1 }, exit: { x: '-100%', opacity: 0 } }, 
+    { initial: { y: '100%', opacity: 0 }, animate: { y: 0, opacity: 1, scale: 1 }, exit: { y: '-100%', opacity: 0 } }, 
+    { initial: { scale: 0.8, opacity: 0 }, animate: { scale: 1, opacity: 1 }, exit: { scale: 1.2, opacity: 0 } },
+    { initial: { filter: 'blur(20px)', opacity: 0 }, animate: { filter: 'blur(0px)', opacity: 1 }, exit: { filter: 'blur(20px)', opacity: 0 } }
   ];
 
-  const currentVariant = variants[variantIndex];
+  const variantIndexToUse = isMobile ? 0 : variantIndex % variants.length;
+  const currentVariant = variants[variantIndexToUse];
 
   return (
     <div className="flex flex-col bg-brand-bg text-slate-900 pb-20 overflow-x-hidden relative" onClick={handleGlobalClick}>
@@ -652,7 +650,7 @@ const Home = () => {
                 </div>
               </div>
               
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 px-2">
+              <div className="grid grid-cols-2 lg:grid-cols-6 gap-3 md:gap-6 px-1 md:px-2">
                 {loadingProducts ? (
                   [...Array(6)].map((_, i) => (
                     <div key={i} className="aspect-square bg-white/10 animate-pulse border border-white/20" />

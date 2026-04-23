@@ -212,40 +212,82 @@ const Home = () => {
 
   return (
     <div className="flex flex-col bg-brand-bg text-slate-900 pb-20 overflow-x-hidden relative" onClick={handleGlobalClick}>
-      {/* Social Bar Adsterra Floating Pop */}
+      {/* Social Bar Adsterra Floating Pop - NEW IMPROVED DESIGN */}
       <AnimatePresence>
         {showSocialBar && settings?.ads?.adsterra?.socialBarCode && (
           <motion.div 
-            initial={{ y: 100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 100, opacity: 0 }}
-            className="fixed bottom-10 right-4 md:right-10 z-[100] w-[calc(100%-2rem)] md:w-72"
+            initial={{ x: 300, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: 300, opacity: 0 }}
+            whileHover={{ scale: 1.02 }}
+            className="fixed bottom-10 right-4 md:right-10 z-[100] w-[calc(100%-2rem)] md:w-80 group"
           >
-            <div className="bg-white border-2 border-brand-primary shadow-[6px_6px_0px_#9B2B2C] p-4 relative">
-              <button 
-                onClick={(e) => { e.stopPropagation(); setShowSocialBar(false); }}
-                className="absolute -top-3 -right-3 w-8 h-8 bg-brand-primary text-white rounded-full flex items-center justify-center shadow-lg hover:bg-slate-900 transition-all border border-white"
-              >
-                <X className="h-4 w-4" />
-              </button>
-              <div className="flex gap-3 items-center">
-                <div className="w-10 h-10 bg-brand-primary flex-shrink-0 flex items-center justify-center animate-pulse">
-                   <Bell className="h-5 w-5 text-white" />
-                </div>
-                <div className="text-left">
-                   <p className="text-[9px] font-black uppercase text-brand-primary tracking-widest">New Notification</p>
-                   <p className="text-[11px] font-black text-slate-800 uppercase leading-tight">Claim Your Premium Discount Now!</p>
-                </div>
+            <div className="bg-white border-2 border-slate-900 shadow-[10px_10px_0px_#9B2B2C] p-0 relative overflow-hidden">
+              {/* Top Banner Tag */}
+              <div className="bg-slate-900 text-white text-[8px] font-black uppercase tracking-[0.4em] py-1.5 px-4 flex justify-between items-center">
+                <span>Verified Offer</span>
+                <span className="flex items-center gap-1">
+                  <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                  Live Deal
+                </span>
               </div>
-              <a 
-                href={settings.ads.adsterra.socialBarCode} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-                className="mt-3 block w-full bg-slate-900 text-white text-center py-2 text-[10px] font-black uppercase tracking-widest hover:bg-brand-primary transition-all"
-              >
-                Accept Offer
-              </a>
+
+              <div className="p-5">
+                <button 
+                  onClick={(e) => { e.stopPropagation(); setShowSocialBar(false); }}
+                  className="absolute top-2 right-2 w-7 h-7 bg-white text-slate-400 hover:text-brand-primary flex items-center justify-center transition-all z-20"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+
+                <div className="flex gap-4 items-start">
+                  <div className="relative">
+                    <div className="w-14 h-14 bg-brand-primary rounded-none flex-shrink-0 flex items-center justify-center shadow-[4px_4px_0px_#000] rotate-3 group-hover:rotate-0 transition-transform">
+                       <Zap className="h-8 w-8 text-white fill-white animate-pulse" />
+                    </div>
+                    <div className="absolute -bottom-2 -right-2 bg-yellow-400 text-black text-[7px] font-black px-2 py-0.5 border border-black uppercase italic">
+                      Special
+                    </div>
+                  </div>
+
+                  <div className="text-left flex-1">
+                     <h4 className="text-sm font-black text-slate-900 uppercase leading-none mb-1 tracking-tighter">
+                       CONGRATULATIONS!
+                     </h4>
+                     <p className="text-[11px] font-bold text-slate-500 uppercase leading-tight mb-2">
+                       You've been selected for a <span className="text-brand-primary">Mega Bonus</span>.
+                     </p>
+                     
+                     <div className="flex items-center gap-2 mb-3">
+                        <div className="flex -space-x-2">
+                           {[1,2,3].map(i => (
+                             <div key={i} className="w-4 h-4 rounded-full border border-white bg-slate-200" />
+                           ))}
+                        </div>
+                        <span className="text-[8px] font-black text-slate-400 uppercase">340+ People Claimed</span>
+                     </div>
+                  </div>
+                </div>
+
+                <a 
+                  href={settings.ads.adsterra.socialBarCode} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="relative group/btn block w-full bg-brand-primary text-white text-center py-3 text-[12px] font-black uppercase tracking-[0.2em] hover:bg-slate-900 transition-all shadow-[4px_4px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none mt-2"
+                >
+                  <span className="relative z-10 flex items-center justify-center gap-2">
+                    REDEEM GIFT NOW <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                  </span>
+                </a>
+                
+                <p className="text-center text-[7px] font-bold text-slate-400 uppercase mt-3 tracking-widest">
+                  Expires in 04:59 // No Registration Required
+                </p>
+              </div>
+              
+              {/* Progress Bar Animation */}
+              <div className="absolute bottom-0 left-0 h-1 bg-brand-primary animate-[shimmer_2s_infinite_linear]" style={{ width: '100%' }} />
             </div>
           </motion.div>
         )}

@@ -153,42 +153,9 @@ export const UserLayout: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-brand-bg text-slate-900 font-sans">
-      {/* Global Notice Banner */}
-      {settings?.ads?.globalNotice?.active && (
-        <div className="bg-slate-900 text-white py-2 px-4 relative overflow-hidden group border-b border-[#9B2B2C]/30">
-          <div className="absolute inset-0 bg-[#9B2B2C]/5 animate-pulse pointer-events-none" />
-          <div className="container mx-auto flex items-center justify-center gap-4 relative z-10">
-            <div className="w-1.5 h-1.5 bg-[#9B2B2C] rounded-full animate-ping" />
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-center">
-              {settings.ads.globalNotice.message}
-            </p>
-            <div className="w-1.5 h-1.5 bg-[#9B2B2C] rounded-full animate-ping" />
-          </div>
-        </div>
-      )}
-
-      {/* Social Bar Ad (SOCAILBAR) */}
-      {settings?.ads?.socialBarAd?.active && (
-        <div className="bg-brand-primary text-white py-1.5 border-b border-black/10">
-          <div className="container mx-auto px-4 flex items-center justify-center gap-4">
-             <p className="text-[9px] font-black uppercase tracking-[0.25em]">
-               {settings.ads.socialBarAd.message}
-             </p>
-             {settings.ads.socialBarAd.link && (
-               <Link 
-                 to={settings.ads.socialBarAd.link} 
-                 className="text-[9px] font-black underline bg-white text-[#9B2B2C] px-2 py-0.5 hover:bg-slate-900 hover:text-white transition-all"
-               >
-                 EXPLORE
-               </Link>
-             )}
-          </div>
-        </div>
-      )}
-
       {/* Top Navbar */}
       <header className="sticky top-0 z-50 w-full border-b border-[#777] bg-brand-secondary/95 backdrop-blur-sm shadow-md">
-        <div className="container mx-auto h-16 flex items-center justify-between">
+        <div className="w-full px-4 md:px-6 h-14 md:h-16 flex items-center justify-between">
           <div className="flex items-center gap-6">
             <Link to="/" className="text-xl font-black tracking-tighter text-brand-primary uppercase group flex items-center gap-2">
               <div className="bg-brand-primary text-white p-1.5 rounded-lg shadow-lg group-hover:scale-110 transition-transform">
@@ -201,14 +168,14 @@ export const UserLayout: React.FC = () => {
                 </span>
               </div>
             </Link>
-            <nav className="flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.1em] text-brand-primary">
+            <nav className="hidden lg:flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.1em] text-brand-primary">
               <Link to="/" onMouseEnter={() => import('../../pages/Home')} className="hover:text-slate-900 transition-colors border-b-2 border-transparent hover:border-brand-primary pb-1">HOME</Link>
               <Link to="/shop" onMouseEnter={() => import('../../pages/Shop')} className="hover:text-slate-900 transition-colors border-b-2 border-transparent hover:border-brand-primary pb-1">SHOP</Link>
               <Link to="/tracking" className="hover:text-slate-900 transition-colors border-b-2 border-transparent hover:border-brand-primary pb-1">TRACK ORDER</Link>
             </nav>
           </div>
 
-          <div className="flex-1 max-w-lg mx-12 block">
+          <div className="flex-1 max-w-lg mx-12 hidden lg:block">
             <div className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-primary" />
               <Input
@@ -278,14 +245,51 @@ export const UserLayout: React.FC = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="hidden border border-[#777] bg-white rounded-none"
+              className="lg:hidden border border-[#777] bg-white rounded-none h-9 w-9"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
-              {isMenuOpen ? <X className="text-[#9B2B2C]" /> : <Menu className="text-[#9B2B2C]" />}
+              {isMenuOpen ? <X className="text-[#9B2B2C] h-4 w-4" /> : <Menu className="text-[#9B2B2C] h-4 w-4" />}
             </Button>
           </div>
         </div>
       </header>
+
+      {/* Global Notice Banner - Full Width Style */}
+      {settings?.ads?.globalNotice?.active && (
+        <div className="w-full px-4 md:px-6 py-1 md:py-1.5 flex justify-center">
+          <div className="w-full bg-slate-900 shadow-sm text-white py-2 md:py-3 px-4 relative overflow-hidden transition-all duration-300 border border-white/10 rounded-sm">
+            <div className="absolute inset-0 bg-white/5 animate-pulse pointer-events-none" />
+            <div className="flex items-center justify-center gap-4 relative z-10 min-h-[24px]">
+              <div className="w-1.5 h-1.5 bg-brand-primary rounded-full animate-ping hidden sm:block" />
+              <p className="text-[11px] md:text-[12px] font-black uppercase tracking-[0.3em] text-center leading-relaxed">
+                {settings.ads.globalNotice.message}
+              </p>
+              <div className="w-1.5 h-1.5 bg-brand-primary rounded-full animate-ping hidden sm:block" />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Social Bar Ad (SOCAILBAR) - Full Width Style */}
+      {settings?.ads?.socialBarAd?.active && (
+        <div className="w-full px-4 md:px-6 py-1 flex justify-center">
+          <div className="w-full bg-brand-primary shadow-sm text-white py-1.5 md:py-2.5 border border-black/10 rounded-sm">
+            <div className="px-4 flex items-center justify-center gap-4 min-h-[20px]">
+              <p className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.35em] text-center">
+                {settings.ads.socialBarAd.message}
+              </p>
+              {settings.ads.socialBarAd.link && (
+                <Link 
+                  to={settings.ads.socialBarAd.link} 
+                  className="text-[10px] font-black underline bg-white text-brand-primary px-4 py-1.5 hover:bg-slate-900 hover:text-white transition-all shadow-sm"
+                >
+                  EXPLORE
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Mobile Menu */}
       <AnimatePresence>
@@ -312,7 +316,7 @@ export const UserLayout: React.FC = () => {
         </div>
       )}
 
-      <main className="flex-1">
+      <main className="flex-1 -mt-2 md:mt-0">
         <Outlet />
       </main>
 

@@ -2,35 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=1600" />
-    <script>
-      (function() {
-        var fixLayout = function() {
-          var targetWidth = 1600;
-          var deviceWidth = window.innerWidth > 0 ? window.innerWidth : screen.width;
-          
-          if (deviceWidth < targetWidth) {
-            var ratio = deviceWidth / targetWidth;
-            // Use zoom for Chrome/Safari/Edge to avoid height gaps
-            if ('zoom' in document.documentElement.style) {
-               document.documentElement.style.zoom = ratio;
-               document.documentElement.style.width = targetWidth + 'px';
-            } else {
-               // Fallback for browsers that don't support zoom
-               document.documentElement.style.transform = 'scale(' + ratio + ')';
-               document.documentElement.style.transformOrigin = 'top left';
-               document.documentElement.style.width = targetWidth + 'px';
-            }
-          } else {
-            document.documentElement.style.zoom = '';
-            document.documentElement.style.transform = '';
-            document.documentElement.style.width = '';
-          }
-        };
-        fixLayout();
-        window.addEventListener('resize', fixLayout);
-      })();
-    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BAZAR DALA | Premium Online Shop</title>
   </head>
   <body>

@@ -87,7 +87,7 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
         </div>
         
         <h3 
-          className="font-black text-slate-800 text-[13px] md:text-[11px] uppercase tracking-tight line-clamp-2 mb-3 group-hover:text-[#9B2B2C] transition-colors cursor-pointer leading-tight h-8 flex items-center"
+          className="font-black text-slate-800 text-[14px] md:text-[11px] uppercase tracking-tight line-clamp-2 mb-3 group-hover:text-[#9B2B2C] transition-colors cursor-pointer leading-tight h-10 flex items-center"
           onClick={() => navigate(`/product/${product.id}`, { state: { product } })}
         >
           {product.name}
@@ -96,11 +96,11 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
         <div className="mt-auto flex items-end justify-between border-t border-[#777]/10 pt-3 md:pt-4">
           <div className="flex flex-col">
             {product.oldPrice && product.oldPrice > 0 && (
-              <span className="text-[12px] md:text-[10px] font-bold text-slate-400 line-through mb-1">
+              <span className="text-[13px] md:text-[10px] font-bold text-slate-400 line-through mb-1">
                 ৳{product.oldPrice.toLocaleString()}
               </span>
             )}
-            <span className="text-xl md:text-lg font-black text-brand-primary tracking-tighter font-mono leading-none">
+            <span className="text-2xl md:text-lg font-black text-brand-primary tracking-tighter font-mono leading-none">
               ৳{product.price.toLocaleString()}
             </span>
           </div>

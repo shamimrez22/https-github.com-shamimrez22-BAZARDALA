@@ -22,7 +22,8 @@ import {
   MoreHorizontal,
   List,
   PlusCircle,
-  Bell
+  Bell,
+  X
 } from 'lucide-react';
 
 import { collection, getDocs, getDoc, query, orderBy, limit, doc, onSnapshot } from 'firebase/firestore';
@@ -220,14 +221,14 @@ const Home = () => {
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
-            className="fixed bottom-10 right-10 z-[100] w-72"
+            className="fixed bottom-10 right-4 md:right-10 z-[100] w-[calc(100%-2rem)] md:w-72"
           >
             <div className="bg-white border-2 border-brand-primary shadow-[6px_6px_0px_#9B2B2C] p-4 relative">
               <button 
                 onClick={(e) => { e.stopPropagation(); setShowSocialBar(false); }}
-                className="absolute -top-3 -right-3 w-6 h-6 bg-brand-primary text-white text-[10px] rounded-full flex items-center justify-center font-black"
+                className="absolute -top-3 -right-3 w-8 h-8 bg-brand-primary text-white rounded-full flex items-center justify-center shadow-lg hover:bg-slate-900 transition-all border border-white"
               >
-                X
+                <X className="h-4 w-4" />
               </button>
               <div className="flex gap-3 items-center">
                 <div className="w-10 h-10 bg-brand-primary flex-shrink-0 flex items-center justify-center animate-pulse">
@@ -251,12 +252,12 @@ const Home = () => {
           </motion.div>
         )}
       </AnimatePresence>
-      {/* System Hero Section */}
-      <section className="pt-2 pb-4">
-        <div className="container mx-auto">
-          <div className="flex flex-row gap-5 items-start">
-            {/* Category Sidebar/Offer - PERMANENT DESKTOP VIEW */}
-            <div className="w-80 bg-brand-secondary border border-[#777] shadow-sm flex flex-col h-[480px] flex-shrink-0 overflow-hidden">
+      {/* Full Width Hero Section */}
+      <section className="pt-0 pb-4 w-full">
+        <div className="w-full px-4 md:px-6 overflow-hidden">
+          <div className="flex flex-col lg:flex-row items-stretch w-full min-h-[300px] lg:min-h-[480px] border border-[#777] shadow-sm">
+            {/* Category Sidebar/Offer - FULL WIDTH SIDEBAR */}
+            <div className="w-full lg:w-80 bg-brand-secondary border-y lg:border-y-0 lg:border-r border-[#777] flex flex-col flex-shrink-0 overflow-hidden">
                 {settings?.sidebar?.showCategories ? (
                   <>
                     <div className="bg-brand-primary p-3 border-b border-[#777] flex-shrink-0">
@@ -314,18 +315,17 @@ const Home = () => {
                   </div>
                 )}
             </div>
-
             {/* Main Image Slider */}
-            <div className={`flex-1 relative bg-white border border-[#777] shadow-lg overflow-hidden group h-[480px]`}>
+            <div className={`flex-1 relative bg-white border-y lg:border-y-0 lg:border-l border-[#777] shadow-lg overflow-hidden group h-[300px] sm:h-[400px] lg:h-[480px]`}>
               <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentSlide}
-                  initial={currentVariant.initial}
-                  animate={currentVariant.animate}
-                  exit={currentVariant.exit}
-                  transition={{ duration: 0.6, ease: "easeInOut" }}
-                  className="absolute inset-0"
-                >
+                  <motion.div
+                    key={currentSlide}
+                    initial={currentVariant.initial}
+                    animate={currentVariant.animate}
+                    exit={currentVariant.exit}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
+                    className="absolute inset-0"
+                  >
                   {banners[currentSlide] && (
                     <>
                       <img
@@ -402,8 +402,8 @@ const Home = () => {
 
       {/* Top Banner Ad - Adsterra */}
       {settings?.ads?.adsterra?.bannerOneCode && (
-        <section className="py-2">
-          <div className="container mx-auto px-4">
+        <section className="py-2 w-full">
+          <div className="w-full px-4 md:px-6">
             <a 
               href={settings.ads.adsterra.bannerOneCode} 
               target="_blank" 
@@ -430,31 +430,33 @@ const Home = () => {
 
       {/* Dynamic Floating Notice Bar */}
       {settings?.ads?.floatingNotice?.active && settings?.ads?.floatingNotice?.text && (
-        <section className="py-0.5 md:py-1">
-          <div 
-            className="relative overflow-hidden whitespace-nowrap h-8 md:h-10 flex items-center border-y border-[#777]/10"
-            style={{ backgroundColor: settings.ads.floatingNotice.bgColor }}
-          >
+        <section className="py-0.5 md:py-1 w-full">
+          <div className="w-full px-4 md:px-6">
             <div 
-              className="animate-marquee inline-block font-black uppercase text-[10px] md:text-[11px] tracking-[0.2em] md:tracking-widest whitespace-nowrap"
-              style={{ color: settings.ads.floatingNotice.textColor }}
+              className="relative overflow-hidden whitespace-nowrap h-8 md:h-10 flex items-center border-y border-[#777]/10 rounded-sm"
+              style={{ backgroundColor: settings.ads.floatingNotice.bgColor }}
             >
-              <span className="inline-block px-4">{settings.ads.floatingNotice.text}</span>
-              <span className="inline-block px-4">{settings.ads.floatingNotice.text}</span>
-              <span className="inline-block px-4">{settings.ads.floatingNotice.text}</span>
-              <span className="inline-block px-4">{settings.ads.floatingNotice.text}</span>
-              <span className="inline-block px-4">{settings.ads.floatingNotice.text}</span>
-              <span className="inline-block px-4">{settings.ads.floatingNotice.text}</span>
-              <span className="inline-block px-4">{settings.ads.floatingNotice.text}</span>
-              <span className="inline-block px-4">{settings.ads.floatingNotice.text}</span>
+              <div 
+                className="animate-marquee inline-block font-black uppercase text-[10px] md:text-[11px] tracking-[0.2em] md:tracking-widest whitespace-nowrap"
+                style={{ color: settings.ads.floatingNotice.textColor }}
+              >
+                <span className="inline-block px-4">{settings.ads.floatingNotice.text}</span>
+                <span className="inline-block px-4">{settings.ads.floatingNotice.text}</span>
+                <span className="inline-block px-4">{settings.ads.floatingNotice.text}</span>
+                <span className="inline-block px-4">{settings.ads.floatingNotice.text}</span>
+                <span className="inline-block px-4">{settings.ads.floatingNotice.text}</span>
+                <span className="inline-block px-4">{settings.ads.floatingNotice.text}</span>
+                <span className="inline-block px-4">{settings.ads.floatingNotice.text}</span>
+                <span className="inline-block px-4">{settings.ads.floatingNotice.text}</span>
+              </div>
             </div>
           </div>
         </section>
       )}
 
       {/* Trust & Features Section / Dynamic Ad */}
-      <section className="py-1">
-        <div className="container mx-auto px-4">
+      <section className="py-1 w-full">
+        <div className="w-full px-4 md:px-6">
           {settings?.ads?.featuresAd?.active ? (
             <a 
               href={settings.ads.featuresAd.link || '#'} 
@@ -508,8 +510,8 @@ const Home = () => {
 
       {/* Adsterra Slot 3 - Below Features */}
       {settings?.ads?.adsterra?.bannerThreeCode && (
-        <section className="py-4">
-          <div className="container mx-auto px-4">
+        <section className="py-4 w-full">
+          <div className="w-full px-4 md:px-6">
              <a href={settings.ads.adsterra.bannerThreeCode} target="_blank" rel="noopener noreferrer" className="block relative overflow-hidden group">
                <div className="bg-[#ead9c4] border-2 border-brand-primary p-6 text-center shadow-lg hover:bg-white transition-all">
                   <span className="text-[10px] font-black uppercase text-brand-primary tracking-[0.4em] mb-2 block">Premium Channel Active</span>
@@ -522,8 +524,8 @@ const Home = () => {
       )}
 
       {/* Curated Grid Selection */}
-      <section className="py-6">
-        <div className="container mx-auto px-4">
+      <section className="py-6 w-full">
+        <div className="w-full px-4 md:px-6">
           <div className="flex items-center justify-between mb-8 border-b-2 border-brand-primary pb-4">
             <div>
               <h2 className="text-2xl font-black uppercase tracking-tighter text-slate-900">Categories</h2>
@@ -573,8 +575,8 @@ const Home = () => {
 
       {/* Adsterra Slot 4 - Below Categories */}
       {settings?.ads?.adsterra?.bannerFourCode && (
-        <section className="py-4">
-          <div className="container mx-auto px-4">
+        <section className="py-4 w-full">
+          <div className="w-full px-4 md:px-6">
              <a href={settings.ads.adsterra.bannerFourCode} target="_blank" rel="noopener noreferrer" className="block group">
                 <div className="bg-slate-900 border-2 border-slate-700 h-28 flex items-center justify-center p-6 relative overflow-hidden">
                    <div className="absolute top-0 right-0 p-4 opacity-10">
@@ -592,8 +594,8 @@ const Home = () => {
 
       {/* Middle Banner Ad - Adsterra */}
       {settings?.ads?.adsterra?.bannerTwoCode && (
-        <section className="py-4">
-          <div className="container mx-auto px-4">
+        <section className="py-4 w-full">
+          <div className="w-full px-4 md:px-6">
             <a 
               href={settings.ads.adsterra.bannerTwoCode} 
               target="_blank" 
@@ -616,24 +618,24 @@ const Home = () => {
       )}
 
       {/* High-Alert Dispatch Section (Flash Sale) - ALIGNED */}
-      <section className="pb-12 pt-4">
-        <div className="container mx-auto px-4">
+      <section className="pb-12 pt-4 w-full">
+        <div className="w-full px-4 md:px-6">
            <div className="bg-brand-primary relative overflow-hidden border-2 border-brand-primary shadow-xl">
             {/* Subtle decorative grid background */}
             <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
             
-            <div className="p-12 relative z-10">
-              <div className="flex flex-row items-center justify-between mb-16 gap-8 text-left">
+            <div className="p-4 md:p-12 relative z-10">
+              <div className="flex flex-col md:flex-row items-center justify-between mb-8 md:mb-16 gap-8 text-center md:text-left">
                 <div>
-                  <div className="flex items-center justify-start gap-4 mb-3">
+                  <div className="flex items-center justify-center md:justify-start gap-4 mb-3">
                     <span className="w-12 h-[2px] bg-white/50" />
                     <span className="text-white text-[12px] font-black uppercase tracking-[0.4em]">{settings?.countdown?.text || 'FLASH SALE'}</span>
                   </div>
-                  <h2 className="text-5xl font-black text-white uppercase tracking-tighter leading-none mb-4">LIMITED OFFERS</h2>
+                  <h2 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter leading-none mb-4">LIMITED OFFERS</h2>
                   <p className="text-white/60 text-[10px] font-bold uppercase tracking-[0.2em]">Hurry up! Secure your favorites before they're gone</p>
                 </div>
                 
-                <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-6 flex flex-col items-center gap-4">
+                <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-4 md:p-6 flex flex-col items-center gap-4 w-full md:w-auto">
                     <p className="text-[10px] font-black text-white/50 uppercase tracking-[0.2em] mb-2">Ends In</p>
                     <div className="flex gap-4">
                       {[
@@ -642,7 +644,7 @@ const Home = () => {
                         { val: timeLeft.secs, label: 'SEC' },
                       ].map((t, i) => (
                         <div key={i} className="flex flex-col items-center">
-                          <div className="bg-white text-brand-primary w-14 h-14 flex items-center justify-center text-2xl font-mono font-black border-2 border-white/50">{t.val}</div>
+                          <div className="bg-white text-brand-primary w-12 h-12 md:w-14 md:h-14 flex items-center justify-center text-xl md:text-2xl font-mono font-black border-2 border-white/50">{t.val}</div>
                           <span className="text-[8px] font-black text-white uppercase mt-2 tracking-widest">{t.label}</span>
                         </div>
                       ))}
@@ -666,8 +668,8 @@ const Home = () => {
 
       {/* Adsterra Slot 5 - Below Flash Sale */}
       {settings?.ads?.adsterra?.bannerFiveCode && (
-        <section className="py-6">
-          <div className="container mx-auto px-4">
+        <section className="py-6 w-full">
+          <div className="w-full px-4 md:px-6">
              <a href={settings.ads.adsterra.bannerFiveCode} target="_blank" rel="noopener noreferrer" className="block relative h-40 border-4 border-slate-900 group">
                 <img 
                   src="https://images.unsplash.com/photo-1622675363311-3e1904dc1885?auto=format&fit=crop&q=80&w=1500" 
@@ -685,8 +687,8 @@ const Home = () => {
       )}
       {/* Adsterra Slot 6 - Bottom Ad before Footer */}
       {settings?.ads?.adsterra?.bannerSixCode && (
-        <section className="pt-2 pb-10">
-          <div className="container mx-auto px-4">
+        <section className="pt-2 pb-10 w-full">
+          <div className="w-full px-4 md:px-6">
              <a href={settings.ads.adsterra.bannerSixCode} target="_blank" rel="noopener noreferrer" className="block group">
                 <div className="bg-brand-secondary border border-slate-300 p-4 flex flex-col md:flex-row items-center justify-between gap-6 hover:bg-slate-900 transition-all group shadow-sm">
                    <div className="flex items-center gap-6">

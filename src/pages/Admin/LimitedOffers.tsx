@@ -7,6 +7,7 @@ import {
   setDoc, 
   query, 
   where,
+  onSnapshot,
   limit as firestoreLimit
 } from 'firebase/firestore';
 import { db } from '../../firebase';
@@ -14,13 +15,15 @@ import { useAuth } from '../../context/AuthContext';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
+import { Switch } from '../../components/ui/switch';
 import { 
   Plus, 
   Zap, 
   X, 
   Search, 
   Save,
-  ShoppingBag
+  ShoppingBag,
+  Clock
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Product } from '../../types';
@@ -35,10 +38,19 @@ const AdminLimitedOffers = () => {
     limit: 6,
     productIds: [] as string[]
   });
+  const [globalSettings, setGlobalSettings] = useState<any>({});
 
   useEffect(() => {
     if (authLoading || !isAdmin) return;
     fetchData();
+    
+    // Sync global settings for countdown
+    const unsub = onSnapshot(doc(db, 'settings', 'site'), (snapshot) => {
+      if (snapshot.exists()) {
+        setGlobalSettings(snapshot.data());
+      }
+    });
+    return () => unsub();
   }, [authLoading, isAdmin]);
 
   const fetchData = async () => {
@@ -66,6 +78,7 @@ const AdminLimitedOffers = () => {
     setSaving(true);
     try {
       await setDoc(doc(db, 'settings', 'limited_offers'), config);
+      await setDoc(doc(db, 'settings', 'site'), globalSettings, { merge: true });
       toast.success('Limited Offers updated! Protocol Secured.');
     } catch (error) {
       console.error('Save error:', error);
@@ -135,6 +148,51 @@ const AdminLimitedOffers = () => {
                   className="bg-white border-[#777] rounded-none h-12 text-xs font-black focus:ring-1 focus:ring-[#9B2B2C]"
                 />
                 <p className="text-[8px] text-slate-400 font-bold uppercase italic mt-1">* Recommended: 6-12 products</p>
+              </div>
+
+              <div className="pt-6 border-t border-[#777]/20 space-y-6">
+                <h3 className="text-[10px] font-black text-slate-900 uppercase tracking-widest flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-[#9B2B2C]" /> Countdown Timer
+                </h3>
+
+                <div className="flex items-center justify-between p-3 bg-white border border-[#777]/20">
+                  <Label className="text-[10px] font-black uppercase text-slate-600">Enable Countdown</Label>
+                  <Switch 
+                    checked={globalSettings.countdown?.enabled || false}
+                    onCheckedChange={val => setGlobalSettings({
+                      ...globalSettings, 
+                      countdown: { ...(globalSettings.countdown || {}), enabled: val }
+                    })}
+                  />
+                </div>
+
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label className="text-[9px] font-black uppercase text-slate-500">Target Date & Time</Label>
+                    <Input 
+                      type="datetime-local" 
+                      value={globalSettings.countdown?.targetDate || ''} 
+                      onChange={e => setGlobalSettings({
+                        ...globalSettings, 
+                        countdown: { ...(globalSettings.countdown || {}), targetDate: e.target.value }
+                      })}
+                      className="bg-white border-[#777] rounded-none h-12 text-xs font-black uppercase"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-[9px] font-black uppercase text-slate-500">Timer Label</Label>
+                    <Input 
+                      value={globalSettings.countdown?.text || 'FLASH SALE'} 
+                      onChange={e => setGlobalSettings({
+                        ...globalSettings, 
+                        countdown: { ...(globalSettings.countdown || {}), text: e.target.value }
+                      })}
+                      placeholder="e.g. FLASH SALE ENDS IN"
+                      className="bg-white border-[#777] rounded-none h-12 text-xs font-black uppercase"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>

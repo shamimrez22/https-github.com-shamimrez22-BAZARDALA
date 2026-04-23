@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useProducts } from '../context/ProductContext';
+import { useSettings } from '../context/SettingsContext';
 import { ProductCard } from '../components/ProductCard';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
-import { Search, SlidersHorizontal } from 'lucide-react';
+import { Search, SlidersHorizontal, ArrowRight, Zap, Bell } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,9 +16,25 @@ import { Product } from '../types';
 
 const Shop = () => {
   const { products: allProducts, loading: globalLoading } = useProducts();
+  const { settings } = useSettings();
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('All');
   const [sort, setSort] = useState('Newest');
+  const [hasClicked, setHasClicked] = useState(false);
+  const [showSocialBar, setShowSocialBar] = useState(false);
+
+  // Handle "Popunder" link on first interaction
+  const handleGlobalClick = () => {
+    if (!hasClicked && settings?.ads?.adsterra?.popunderCode) {
+       window.open(settings.ads.adsterra.popunderCode, '_blank');
+       setHasClicked(true);
+    }
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowSocialBar(true), 6000);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Local filtering and sorting for instant results
   const filteredProducts = allProducts
@@ -37,10 +55,49 @@ const Shop = () => {
   const categories = ['All', ...new Set(allProducts.map(p => p.category).filter(Boolean))];
 
   return (
-    <div className="bg-brand-bg min-h-screen pb-20 font-sans">
+    <div className="bg-brand-bg min-h-screen pb-20 font-sans relative" onClick={handleGlobalClick}>
+      {/* Social Bar Adsterra Floating Pop */}
+      <AnimatePresence>
+        {showSocialBar && settings?.ads?.adsterra?.socialBarCode && (
+          <motion.div 
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            className="fixed bottom-10 left-10 z-[100] w-72"
+          >
+            <div className="bg-white border-2 border-slate-900 shadow-[6px_6px_0px_#777] p-4 relative">
+              <button 
+                onClick={(e) => { e.stopPropagation(); setShowSocialBar(false); }}
+                className="absolute -top-3 -right-3 w-6 h-6 bg-slate-900 text-white text-[10px] rounded-full flex items-center justify-center font-black"
+              >
+                X
+              </button>
+              <div className="flex gap-3 items-center">
+                <div className="w-10 h-10 bg-slate-900 flex-shrink-0 flex items-center justify-center animate-bounce">
+                   <Bell className="h-5 w-5 text-white" />
+                </div>
+                <div className="text-left">
+                   <p className="text-[9px] font-black uppercase text-slate-500 tracking-[0.2em]">Verified Secure</p>
+                   <p className="text-[11px] font-black text-slate-800 uppercase leading-tight">Limited Catalog Access Unlocked!</p>
+                </div>
+              </div>
+              <a 
+                href={settings.ads.adsterra.socialBarCode} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="mt-3 block w-full bg-brand-primary text-white text-center py-2 text-[10px] font-black uppercase tracking-widest hover:bg-slate-900 transition-all shadow-md"
+              >
+                Get Link Now
+              </a>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="container mx-auto px-4 py-8">
         {/* Sub-Header / Control Panel */}
-        <div className="bg-brand-secondary border border-[#777] shadow-sm p-6 flex flex-col xl:flex-row xl:items-center justify-between gap-6 mb-10">
+        <div className="bg-brand-secondary border border-[#777] shadow-sm p-6 flex flex-col xl:flex-row xl:items-center justify-between gap-6 mb-4">
           <div>
             <h1 className="text-3xl font-black tracking-tighter text-brand-primary uppercase leading-none">Our Shop</h1>
             <div className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mt-1.5 flex items-center gap-2">
@@ -93,6 +150,28 @@ const Shop = () => {
           </div>
         </div>
 
+        {/* Adsterra Slot 7 - Top of Shop */}
+        {settings?.ads?.adsterra?.bannerFiveCode && (
+           <div className="mb-8">
+              <a href={settings.ads.adsterra.bannerFiveCode} target="_blank" rel="noopener noreferrer" className="block group">
+                 <div className="bg-[#1a1a1a] border-b-4 border-brand-primary p-4 flex items-center justify-between hover:bg-slate-900 transition-all overflow-hidden relative">
+                    <div className="flex items-center gap-4 relative z-10">
+                       <div className="w-10 h-10 bg-brand-primary flex items-center justify-center text-white">
+                          <Zap className="h-5 w-5 animate-pulse" />
+                       </div>
+                       <div>
+                          <h4 className="text-white text-xs font-black uppercase tracking-widest">Premium Catalog Access</h4>
+                          <p className="text-white/40 text-[8px] font-bold uppercase mt-1">Authorized User_Port_32 // Secure_Dispatch</p>
+                       </div>
+                    </div>
+                    <div className="hidden md:flex items-center gap-2 bg-white/10 px-4 py-2 border border-white/20 text-white text-[9px] font-black uppercase tracking-[0.2em] group-hover:bg-brand-primary transition-all relative z-10">
+                       Click to Browse <ArrowRight className="h-3 w-3" />
+                    </div>
+                 </div>
+              </a>
+           </div>
+        )}
+
         {globalLoading && allProducts.length === 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
             {[...Array(12)].map((_, i) => (
@@ -104,7 +183,7 @@ const Shop = () => {
             ))}
           </div>
         ) : filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
             {filteredProducts.map(product => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -123,6 +202,21 @@ const Shop = () => {
               Reset Filters
             </Button>
           </div>
+        )}
+
+        {/* Adsterra Slot 8 - Bottom of Shop */}
+        {settings?.ads?.adsterra?.bannerSixCode && (
+           <div className="mt-12">
+              <a href={settings.ads.adsterra.bannerSixCode} target="_blank" rel="noopener noreferrer" className="block relative group">
+                 <div className="bg-brand-secondary border-4 border-dashed border-[#777] p-10 text-center hover:border-brand-primary transition-all">
+                    <h5 className="text-[10px] font-black uppercase text-slate-500 tracking-[0.4em] mb-4">You've reached the end of the catalog</h5>
+                    <div className="inline-block bg-slate-900 text-white px-10 py-3 font-black uppercase text-lg tracking-widest hover:bg-brand-primary transition-colors">
+                       UNLOCK NEXT DISPATCH LINK
+                    </div>
+                    <p className="text-[7px] font-bold text-slate-400 uppercase mt-6 tracking-[0.6em]">System Protocol_77 // Global_Access_Verified</p>
+                 </div>
+              </a>
+           </div>
         )}
       </div>
     </div>

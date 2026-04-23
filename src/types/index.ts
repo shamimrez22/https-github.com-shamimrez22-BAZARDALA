@@ -91,12 +91,23 @@ export interface SiteSettings {
       message: string;
       type: 'info' | 'urgent' | 'promo';
     };
+    floatingNotice?: {
+      active: boolean;
+      text: string;
+      textColor: string;
+      bgColor: string;
+      speed?: number;
+    };
     adsterra?: {
       popunderCode: string;
       nativeBannerCode: string;
       socialBarCode: string;
       bannerOneCode?: string;
       bannerTwoCode?: string;
+      bannerThreeCode?: string;
+      bannerFourCode?: string;
+      bannerFiveCode?: string;
+      bannerSixCode?: string;
       customAdScript?: string;
     };
     adminCredentials?: {

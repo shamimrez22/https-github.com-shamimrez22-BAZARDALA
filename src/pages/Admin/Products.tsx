@@ -232,9 +232,9 @@ const AdminProducts = () => {
           }
         }}>
           <DialogTrigger asChild>
-            <Button className="bg-[#9B2B2C] hover:bg-[#7a1f1f] text-white rounded-none h-10 px-6 font-black text-[10px] uppercase tracking-widest border border-white/20 shadow-lg">
+            <button className="bg-[#9B2B2C] hover:bg-[#7a1f1f] text-white rounded-none h-10 px-6 font-black text-[10px] uppercase tracking-widest border border-white/20 shadow-lg inline-flex items-center justify-center">
               <Plus className="mr-2 h-4 w-4" /> Add New Product
-            </Button>
+            </button>
           </DialogTrigger>
           <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto rounded-none p-0 border border-[#777] shadow-2xl bg-[#f4e4d4]">
             <div className="p-8">

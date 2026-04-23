@@ -6,6 +6,16 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+    --animate-marquee: marquee 20s linear infinite;
+    --animate-marquee-reverse: marquee-reverse 20s linear infinite;
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    @keyframes marquee-reverse {
+      0% { transform: translateX(-50%); }
+      100% { transform: translateX(0); }
+    }
     --font-heading: var(--font-sans);
     --font-sans: 'Geist Variable', sans-serif;
     --color-sidebar-ring: var(--sidebar-ring);
@@ -146,24 +156,32 @@
     }
   body {
     @apply bg-background text-foreground;
-    overflow-x: hidden !important;
-    width: 1200px !important;
-    min-width: 1200px !important;
+    margin: 0 !important;
+    min-height: 100vh;
     }
   html {
     @apply font-sans;
     scroll-behavior: auto !important;
-    overflow-x: hidden !important;
-    width: 1200px !important;
-    min-width: 1200px !important;
+    margin: 0 !important;
+    background-color: #f8f1e7; /* Match your brand-bg */
     }
 
-  /* Force container to 1200px regardless of screen size */
+  /* Desktop fluidity and container refinement */
   .container {
-    max-width: 1200px !important;
-    width: 1200px !important;
-    min-width: 1200px !important;
-    margin: 0 auto !important;
+    width: 100% !important;
+    max-width: 1600px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  /* Reset layout for natural height calculation */
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    min-height: 100% !important;
+    background-color: #f8f1e7;
   }
 
   html.lenis,

@@ -188,27 +188,27 @@ export const UserLayout: React.FC = () => {
 
       {/* Top Navbar */}
       <header className="sticky top-0 z-50 w-full border-b border-[#777] bg-brand-secondary/95 backdrop-blur-sm shadow-md">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-10">
-            <Link to="/" className="text-2xl font-black tracking-tighter text-brand-primary uppercase group flex items-center gap-3">
-              <div className="bg-brand-primary text-white p-2 rounded-xl shadow-lg group-hover:scale-110 transition-transform">
-                <ShoppingBasket className="h-6 w-6" />
+        <div className="container mx-auto h-16 flex items-center justify-between">
+          <div className="flex items-center gap-6">
+            <Link to="/" className="text-xl font-black tracking-tighter text-brand-primary uppercase group flex items-center gap-2">
+              <div className="bg-brand-primary text-white p-1.5 rounded-lg shadow-lg group-hover:scale-110 transition-transform">
+                <ShoppingBasket className="h-5 w-5" />
               </div>
-              <div>
+              <div className="whitespace-nowrap">
                 {(settings?.siteName || 'BAZAR DALA').split(' ')[0]}
                 <span className="text-slate-900 group-hover:text-brand-primary transition-colors">
                   {' '}{(settings?.siteName || 'BAZAR DALA').split(' ').slice(1).join(' ')}
                 </span>
               </div>
             </Link>
-            <nav className="hidden lg:flex items-center gap-8 text-[11px] font-black uppercase tracking-widest text-brand-primary">
+            <nav className="flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.1em] text-brand-primary">
               <Link to="/" onMouseEnter={() => import('../../pages/Home')} className="hover:text-slate-900 transition-colors border-b-2 border-transparent hover:border-brand-primary pb-1">HOME</Link>
               <Link to="/shop" onMouseEnter={() => import('../../pages/Shop')} className="hover:text-slate-900 transition-colors border-b-2 border-transparent hover:border-brand-primary pb-1">SHOP</Link>
               <Link to="/tracking" className="hover:text-slate-900 transition-colors border-b-2 border-transparent hover:border-brand-primary pb-1">TRACK ORDER</Link>
             </nav>
           </div>
 
-          <div className="flex-1 max-w-lg mx-12 hidden xl:block">
+          <div className="flex-1 max-w-lg mx-12 block">
             <div className="relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-primary" />
               <Input
@@ -278,7 +278,7 @@ export const UserLayout: React.FC = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden border border-[#777] bg-white rounded-none"
+              className="hidden border border-[#777] bg-white rounded-none"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? <X className="text-[#9B2B2C]" /> : <Menu className="text-[#9B2B2C]" />}
@@ -334,8 +334,8 @@ export const UserLayout: React.FC = () => {
       )}
 
       <footer className="bg-brand-secondary border-t border-[#777] pt-20 pb-10">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
+        <div className="container mx-auto">
+          <div className="grid grid-cols-4 gap-16 mb-20">
             <div className="space-y-8">
               <h3 className="text-brand-primary text-2xl font-black tracking-tighter uppercase flex items-center gap-3">
                 <ShoppingBasket className="h-8 w-8" />

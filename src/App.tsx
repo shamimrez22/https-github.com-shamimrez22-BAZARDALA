@@ -137,7 +137,7 @@ const AppContent = () => {
                     <Route path="limited-offers" element={<AdminLimitedOffers />} />
                     <Route path="categories" element={<AdminCategories />} />
                     <Route path="reports" element={<AdminAnalytics />} />
-                    <Route path="settings" element={<AdminSettings />} />
+                    <Route path="settings/*" element={<AdminSettings />} />
                     <Route path="profile" element={<AdminProfile />} />
                   </Route>
                 </Routes>

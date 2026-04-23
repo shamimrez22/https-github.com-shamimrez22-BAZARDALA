@@ -18,7 +18,35 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const unsub = onSnapshot(doc(db, 'settings', 'site'), (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.data() as SiteSettings;
-        setSettings(data);
+        
+        // Ensure nesting doesn't break
+        const sanitizedData = {
+          ...data,
+          ads: {
+            ...data.ads,
+            adsterra: {
+              popunderCode: '',
+              nativeBannerCode: '',
+              socialBarCode: '',
+              bannerOneCode: '',
+              bannerTwoCode: '',
+              bannerThreeCode: '',
+              bannerFourCode: '',
+              bannerFiveCode: '',
+              bannerSixCode: '',
+              ...(data.ads?.adsterra || {})
+            },
+            floatingNotice: {
+              active: false,
+              text: '',
+              textColor: '#000000',
+              bgColor: '#f4e4d4',
+              ...(data.ads?.floatingNotice || {})
+            }
+          }
+        };
+
+        setSettings(sanitizedData as any);
 
         // Inject Dynamic Colors
         if (data.theme?.enabled) {

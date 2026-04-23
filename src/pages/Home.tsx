@@ -91,8 +91,8 @@ const Home = () => {
   };
 
   useEffect(() => {
-    // Show social bar after delay
-    const timer = setTimeout(() => setShowSocialBar(true), 5000);
+    // Show social bar after delay - FASTER SHOW TIME
+    const timer = setTimeout(() => setShowSocialBar(true), 1500);
     return () => clearTimeout(timer);
   }, []);
 

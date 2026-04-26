@@ -77,8 +77,8 @@
 
 :root {
     --primary-color: #9B2B2C;
-    --secondary-color: #ead9c4;
-    --background-color: #f4e4d4;
+    --secondary-color: #ffffff;
+    --background-color: #ffffff;
     --card-color: #ffffff;
     --button-color: #9B2B2C;
 
@@ -90,7 +90,7 @@
     --popover-foreground: oklch(0.145 0 0);
     --primary: oklch(0.205 0 0);
     --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
+    --secondary: oklch(1 0 0);
     --secondary-foreground: oklch(0.205 0 0);
     --muted: oklch(0.97 0 0);
     --muted-foreground: oklch(0.556 0 0);
@@ -163,7 +163,7 @@
     @apply font-sans;
     scroll-behavior: auto !important;
     margin: 0 !important;
-    background-color: #f8f1e7; /* Match your brand-bg */
+    background-color: #ffffff; /* Match your brand-bg */
     }
 
   /* Desktop fluidity and container refinement */
@@ -195,7 +195,7 @@
     margin: 0 !important;
     padding: 0 !important;
     min-height: 100% !important;
-    background-color: #f8f1e7;
+    background-color: #ffffff;
   }
 
   html.lenis,

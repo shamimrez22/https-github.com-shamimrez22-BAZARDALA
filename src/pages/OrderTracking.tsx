@@ -54,7 +54,7 @@ const OrderTracking = () => {
   const currentStep = steps.findIndex(s => s.status === order?.status);
 
   return (
-    <div className="bg-[#f4e4d4] min-h-screen pb-20 font-sans">
+    <div className="bg-brand-bg min-h-screen pb-20 font-sans">
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto">
           <div className="mb-12 border-b-2 border-[#9B2B2C] pb-6 flex flex-col md:flex-row items-end justify-between gap-4">
@@ -68,7 +68,7 @@ const OrderTracking = () => {
             </div>
           </div>
 
-          <div className="bg-[#ead9c4] border border-[#777] p-8 shadow-xl mb-12">
+          <div className="bg-brand-secondary border border-[#777] p-8 shadow-xl mb-12">
             <form onSubmit={handleTrack} className="flex flex-col sm:flex-row gap-4">
               <div className="relative flex-1">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#9B2B2C]" />
@@ -108,7 +108,7 @@ const OrderTracking = () => {
                   </div>
                   <div className="text-left md:text-right">
                     <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2">EXPECTED_DELIVERY</p>
-                    <div className="inline-flex items-center gap-2 bg-[#f4e4d4] border border-[#777] px-4 py-1.5">
+                    <div className="inline-flex items-center gap-2 bg-brand-bg border border-[#777] px-4 py-1.5">
                        <Clock className="h-3 w-3 text-[#9B2B2C]" />
                        <span className="text-[11px] font-black text-slate-900 uppercase">April 20, 2026</span>
                     </div>
@@ -125,7 +125,7 @@ const OrderTracking = () => {
                       <div key={step.status} className="relative group">
                         <div className={`p-6 border transition-all duration-700 flex flex-col items-center text-center gap-4 ${
                           isCompleted 
-                          ? 'bg-[#ead9c4] border-[#9B2B2C] shadow-lg translate-y-[-4px]' 
+                          ? 'bg-brand-secondary border-[#9B2B2C] shadow-lg translate-y-[-4px]' 
                           : 'bg-slate-50 border-[#777]/10 opacity-40 grayscale'
                         }`}>
                           <div className={`w-12 h-12 flex items-center justify-center border-2 ${isCompleted ? 'border-[#9B2B2C] bg-white text-[#9B2B2C]' : 'border-slate-300 text-slate-300'}`}>
@@ -153,7 +153,7 @@ const OrderTracking = () => {
                   })}
                 </div>
 
-                <div className="bg-[#f4e4d4] border border-[#777] p-8 flex flex-col md:flex-row items-center gap-8 shadow-inner">
+                <div className="bg-brand-bg border border-[#777] p-8 flex flex-col md:flex-row items-center gap-8 shadow-inner">
                   <div className="w-16 h-16 bg-[#9B2B2C] flex items-center justify-center text-white shadow-xl flex-shrink-0">
                      <MapPin className="h-8 w-8" />
                   </div>

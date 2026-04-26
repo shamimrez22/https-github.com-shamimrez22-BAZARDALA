@@ -87,7 +87,7 @@ const Checkout = () => {
           animate={{ scale: 1, opacity: 1 }}
           className="max-w-md mx-auto"
         >
-          <div className="w-20 h-20 bg-[#ead9c4] border border-[#777] flex items-center justify-center mx-auto mb-6 shadow-xl">
+          <div className="w-20 h-20 bg-brand-secondary border border-[#777] flex items-center justify-center mx-auto mb-6 shadow-xl">
             <CheckCircle2 className="h-10 w-10 text-[#9B2B2C]" />
           </div>
           <h1 className="text-3xl font-black text-[#9B2B2C] mb-2 uppercase tracking-tighter">ORDER_SUCCESSFUL</h1>
@@ -122,7 +122,7 @@ const Checkout = () => {
           animate={{ opacity: 1, x: 0 }}
         >
           <Card className="border border-[#777] shadow-xl rounded-none overflow-hidden bg-white">
-            <CardHeader className="bg-[#ead9c4] border-b border-[#777]">
+            <CardHeader className="bg-brand-secondary border-b border-[#777]">
               <CardTitle className="flex items-center gap-2 text-[12px] font-black uppercase tracking-[0.2em] text-[#9B2B2C]">
                 <Truck className="h-4 w-4" /> Shipping Details
               </CardTitle>
@@ -175,7 +175,7 @@ const Checkout = () => {
                       { id: 'bkash', label: 'bKash', icon: CreditCard },
                       { id: 'nagad', label: 'Nagad', icon: CreditCard },
                     ].map((method) => (
-                      <div key={method.id} className="flex items-center space-x-2 border border-[#777] p-3 rounded-none cursor-pointer hover:bg-[#ead9c4] transition-all bg-white">
+                      <div key={method.id} className="flex items-center space-x-2 border border-[#777] p-3 rounded-none cursor-pointer hover:bg-brand-secondary transition-all bg-white">
                         <RadioGroupItem value={method.id} id={method.id} className="border-[#777] text-[#9B2B2C]" />
                         <Label htmlFor={method.id} className="flex items-center gap-2 cursor-pointer text-[9px] font-black uppercase tracking-widest">
                           <method.icon className="h-3.5 w-3.5 text-[#9B2B2C]" /> {method.label}
@@ -202,7 +202,7 @@ const Checkout = () => {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
         >
-          <Card className="border border-[#777] shadow-xl rounded-none overflow-hidden bg-[#ead9c4] sticky top-24">
+          <Card className="border border-[#777] shadow-xl rounded-none overflow-hidden bg-brand-secondary sticky top-24">
             <CardHeader className="bg-[#9B2B2C] border-b border-[#777]">
               <CardTitle className="text-white text-[12px] font-black uppercase tracking-[0.2em]">ORDER_SUMMARY</CardTitle>
             </CardHeader>

@@ -82,7 +82,7 @@ const InfoPage = () => {
   const { title, icon: Icon, content, details } = getPageContent();
 
   return (
-    <div className="min-h-[80vh] bg-[#f4e4d4] py-16">
+    <div className="min-h-[80vh] bg-brand-bg py-16">
       <div className="container mx-auto px-4 max-w-4xl">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -90,7 +90,7 @@ const InfoPage = () => {
           className="bg-white border border-[#777] shadow-[10px_10px_0px_#9B2B2C] p-10 md:p-16"
         >
           <div className="flex items-center gap-6 mb-10 border-b-2 border-[#9B2B2C] pb-6">
-            <div className="w-16 h-16 bg-[#ead9c4] border border-[#777] flex items-center justify-center text-[#9B2B2C]">
+            <div className="w-16 h-16 bg-brand-secondary border border-[#777] flex items-center justify-center text-[#9B2B2C]">
               <Icon size={32} />
             </div>
             <h1 className="text-4xl md:text-5xl font-black text-slate-900 uppercase tracking-tighter leading-none">
@@ -104,7 +104,7 @@ const InfoPage = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {details.map((item, index) => (
-              <div key={index} className="p-6 bg-[#f4e4d4]/30 border border-[#777]/30 group hover:border-[#9B2B2C] transition-all">
+              <div key={index} className="p-6 bg-brand-bg/30 border border-[#777]/30 group hover:border-[#9B2B2C] transition-all">
                 <div className="flex items-center gap-4">
                   <div className="w-2 h-2 bg-[#9B2B2C] group-hover:w-8 transition-all" />
                   <span className="text-xs font-black uppercase tracking-widest text-[#9B2B2C]">{item}</span>

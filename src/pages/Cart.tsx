@@ -14,7 +14,7 @@ const Cart = () => {
   if (items.length === 0) {
     return (
       <div className="container mx-auto px-4 py-20 text-center">
-        <div className="w-24 h-24 bg-[#ead9c4] border border-[#777] flex items-center justify-center mx-auto mb-6 shadow-xl">
+        <div className="w-24 h-24 bg-white border border-[#777] flex items-center justify-center mx-auto mb-6 shadow-xl">
           <ShoppingBag className="h-12 w-12 text-[#9B2B2C]" />
         </div>
         <h1 className="text-3xl font-black text-[#9B2B2C] mb-4 uppercase tracking-tighter">EMPTY_CART</h1>
@@ -46,7 +46,7 @@ const Cart = () => {
               animate={{ opacity: 1, scale: 1 }}
               className="flex items-center gap-6 p-4 bg-white border border-[#777] shadow-sm group"
             >
-              <div className="w-24 h-24 border border-[#777]/20 overflow-hidden bg-slate-100 flex-shrink-0 grayscale group-hover:grayscale-0 transition-all">
+              <div className="w-24 h-24 border border-[#777]/20 overflow-hidden bg-white flex-shrink-0 grayscale group-hover:grayscale-0 transition-all">
                 <img src={item.image} alt={item.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
               </div>
               <div className="flex-1 min-w-0">
@@ -54,17 +54,17 @@ const Cart = () => {
                 <h3 className="font-black text-slate-900 mb-1 uppercase tracking-tight truncate">{item.name}</h3>
                 <p className="text-[#9B2B2C] font-black tracking-tighter font-mono">৳{item.price.toLocaleString()}</p>
                 <div className="flex items-center gap-4 mt-3">
-                  <div className="flex items-center border border-[#777] bg-[#ead9c4]/30 h-8">
+                  <div className="flex items-center border border-[#777] bg-white h-8">
                     <button
                       onClick={() => updateQuantity(item.productId, item.quantity - 1)}
-                      className="px-2 hover:bg-[#ead9c4] transition-colors"
+                      className="px-2 hover:bg-slate-50 transition-colors"
                     >
                       <Minus className="h-3 w-3 text-[#9B2B2C]" />
                     </button>
                     <span className="px-3 text-[10px] font-black w-8 text-center border-x border-[#777]/30">{item.quantity}</span>
                     <button
                       onClick={() => updateQuantity(item.productId, item.quantity + 1)}
-                      className="px-2 hover:bg-[#ead9c4] transition-colors"
+                      className="px-2 hover:bg-slate-50 transition-colors"
                     >
                       <Plus className="h-3 w-3 text-[#9B2B2C]" />
                     </button>
@@ -89,7 +89,7 @@ const Cart = () => {
 
         {/* Order Summary */}
         <div className="lg:col-span-1">
-          <div className="bg-[#ead9c4] border border-[#777] p-8 shadow-xl sticky top-24">
+          <div className="bg-white border border-[#777] p-8 shadow-xl sticky top-24">
             <h2 className="text-xl font-black text-[#9B2B2C] mb-8 uppercase tracking-tighter border-b border-[#9B2B2C]/20 pb-4">ORDER_SUMMARY</h2>
             <div className="space-y-4 mb-8">
               <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-[#9B2B2C]">

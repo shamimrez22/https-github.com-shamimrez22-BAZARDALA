@@ -46,9 +46,21 @@ const AdsSettings = () => {
           <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
             <Megaphone className="h-4 w-4" /> Adsterra Matrix
           </CardTitle>
-          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-[#9B2B2C] hover:bg-slate-800 h-8 font-black uppercase text-[9px]">
-            {saving ? 'Saving...' : <><Save className="mr-2 h-3 w-3" /> Save Module</>}
-          </Button>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 bg-white/10 px-3 py-1 border border-white/20">
+               <span className="text-[8px] font-black uppercase">Enable Matrix</span>
+               <Switch 
+                 checked={settings.ads?.adsterra?.enabled || false}
+                 onCheckedChange={val => {
+                    const newAds = { ...(settings.ads || {}), adsterra: { ...(settings.ads?.adsterra || {}), enabled: val } };
+                    setSettings({...settings, ads: newAds as any});
+                 }}
+               />
+            </div>
+            <Button onClick={handleSave} disabled={saving} size="sm" className="bg-[#9B2B2C] hover:bg-slate-800 h-8 font-black uppercase text-[9px]">
+              {saving ? 'Saving...' : <><Save className="mr-2 h-3 w-3" /> Save Module</>}
+            </Button>
+          </div>
         </CardHeader>
         <CardContent className="p-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

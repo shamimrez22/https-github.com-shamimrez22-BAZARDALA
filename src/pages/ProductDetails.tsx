@@ -132,7 +132,7 @@ const ProductDetails = () => {
 
   if (loading) {
     return (
-      <div className="h-screen flex items-center justify-center bg-[#f4e4d4] text-[#9B2B2C] font-black uppercase tracking-widest text-xs">
+      <div className="h-screen flex items-center justify-center bg-white text-[#9B2B2C] font-black uppercase tracking-widest text-xs">
         RETRIEVING PRODUCT DATA...
       </div>
     );
@@ -140,7 +140,7 @@ const ProductDetails = () => {
 
   if (!product) {
     return (
-      <div className="h-screen flex flex-col items-center justify-center bg-[#f4e4d4] text-[#9B2B2C]">
+      <div className="h-screen flex flex-col items-center justify-center bg-white text-[#9B2B2C]">
         <h2 className="text-2xl font-black uppercase tracking-tighter mb-4">Product Not Found</h2>
         <Button 
           className="bg-[#9B2B2C] text-white rounded-none px-8 font-black uppercase text-[10px] tracking-widest"
@@ -153,7 +153,7 @@ const ProductDetails = () => {
   }
 
   return (
-    <div className="bg-[#f4e4d4] min-h-screen font-sans">
+    <div className="bg-white min-h-screen font-sans">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Image Gallery */}
@@ -166,7 +166,7 @@ const ProductDetails = () => {
               <img
                 src={product.images?.[selectedImage] || 'https://picsum.photos/seed/product/800/800'}
                 alt={product.name}
-                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                className="w-full h-full object-cover transition-all duration-700"
                 referrerPolicy="no-referrer"
               />
               <div className="absolute top-4 left-4 bg-[#9B2B2C] text-white text-[10px] font-black uppercase tracking-widest px-4 py-1 border border-white">
@@ -190,7 +190,7 @@ const ProductDetails = () => {
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="flex flex-col bg-[#ead9c4] border border-[#777] p-8 shadow-xl"
+            className="flex flex-col bg-white border border-[#777] p-8 shadow-xl"
           >
             <div className="mb-8 border-b border-[#9B2B2C]/20 pb-6">
               <div className="flex items-center gap-2 mb-4">
@@ -227,14 +227,14 @@ const ProductDetails = () => {
               <div className="flex items-center border border-[#777] bg-white h-14 w-full sm:w-auto">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="px-6 h-full hover:bg-[#ead9c4] transition-colors text-xl font-black text-[#9B2B2C]"
+                  className="px-6 h-full hover:bg-slate-50 transition-colors text-xl font-black text-[#9B2B2C]"
                 >
                   -
                 </button>
                 <span className="px-6 font-mono font-black w-16 text-center border-x border-[#777]/30 text-lg">{quantity}</span>
                 <button
                   onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
-                  className="px-6 h-full hover:bg-[#ead9c4] transition-colors text-xl font-black text-[#9B2B2C]"
+                  className="px-6 h-full hover:bg-slate-50 transition-colors text-xl font-black text-[#9B2B2C]"
                 >
                   +
                 </button>
@@ -252,7 +252,7 @@ const ProductDetails = () => {
               >
                 ORDER NOW
               </Button>
-              <Button variant="outline" className="h-14 w-14 p-0 border-[#777] rounded-none bg-white hover:bg-[#ead9c4] group">
+              <Button variant="outline" className="h-14 w-14 p-0 border-[#777] rounded-none bg-white hover:bg-slate-50 group">
                 <Heart className="h-5 w-5 text-[#9B2B2C] group-hover:scale-110 transition-transform" />
               </Button>
             </div>
@@ -284,7 +284,7 @@ const ProductDetails = () => {
 
       {/* Order Modal */}
       <Dialog open={isOrderModalOpen} onOpenChange={setIsOrderModalOpen}>
-        <DialogContent className="sm:max-w-md bg-[#ead9c4] border border-[#777] rounded-none p-0 overflow-hidden shadow-2xl">
+        <DialogContent className="sm:max-w-md bg-white border border-[#777] rounded-none p-0 overflow-hidden shadow-2xl">
           <DialogHeader className="bg-[#9B2B2C] p-6 text-white border-b border-[#777]">
             <DialogTitle className="text-xl font-black uppercase tracking-tighter leading-none">Confirm_Order</DialogTitle>
             <DialogDescription className="text-[9px] font-black uppercase tracking-widest text-white/60 mt-2">
@@ -343,9 +343,9 @@ const ProductDetails = () => {
 
       {/* Success Modal */}
       <Dialog open={isSuccessModalOpen} onOpenChange={setIsSuccessModalOpen}>
-        <DialogContent className="sm:max-w-md text-center bg-[#f4e4d4] border border-[#777] rounded-none py-12 px-8">
+        <DialogContent className="sm:max-w-md text-center bg-white border border-[#777] rounded-none py-12 px-8">
           <div className="flex flex-col items-center gap-6">
-            <div className="w-24 h-24 bg-[#ead9c4] border-2 border-[#9B2B2C] flex items-center justify-center text-[#9B2B2C] shadow-2xl relative">
+            <div className="w-24 h-24 bg-white border-2 border-[#9B2B2C] flex items-center justify-center text-[#9B2B2C] shadow-2xl relative">
               <CheckCircle className="h-12 w-12" />
               <div className="absolute -top-1 -right-1 w-4 h-4 bg-white border border-[#9B2B2C]" />
               <div className="absolute -bottom-1 -left-1 w-4 h-4 bg-white border border-[#9B2B2C]" />

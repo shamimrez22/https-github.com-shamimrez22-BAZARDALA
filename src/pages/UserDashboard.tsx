@@ -98,12 +98,12 @@ const UserDashboard = () => {
   };
 
   return (
-    <div className="bg-[#f4e4d4] min-h-screen pb-20 font-sans">
+    <div className="bg-brand-bg min-h-screen pb-20 font-sans">
       <div className="container mx-auto px-4 py-12">
         <div className="flex flex-col xl:flex-row gap-8">
           {/* Sidebar / Identity Terminal */}
           <div className="w-full xl:w-96 space-y-6">
-            <div className="bg-[#ead9c4] border border-[#777] shadow-lg overflow-hidden relative">
+            <div className="bg-brand-secondary border border-[#777] shadow-lg overflow-hidden relative">
               <div className="bg-[#9B2B2C] h-24 border-b border-[#777]" />
               <div className="px-8 pb-10 -mt-12 text-center relative z-10">
                 <div className="w-28 h-28 border border-[#777] bg-white p-1 mx-auto mb-6 shadow-2xl">
@@ -149,7 +149,7 @@ const UserDashboard = () => {
                     className={`w-full flex items-center justify-between px-6 py-4 border border-[#777] text-[10px] font-black transition-all ${
                       activeTab === item.id 
                       ? 'bg-[#9B2B2C] text-white shadow-xl translate-x-2' 
-                      : 'bg-white text-slate-600 hover:bg-[#ead9c4]'
+                      : 'bg-white text-slate-600 hover:bg-brand-secondary'
                     }`}
                   >
                     <div className="flex items-center gap-4">
@@ -173,7 +173,7 @@ const UserDashboard = () => {
                   exit={{ opacity: 0, y: -10 }}
                   className="space-y-10"
                 >
-                  <div className="bg-[#ead9c4] border border-[#777] p-8 shadow-sm">
+                  <div className="bg-brand-secondary border border-[#777] p-8 shadow-sm">
                     <h1 className="text-4xl font-black text-[#9B2B2C] uppercase tracking-tighter leading-none mb-3">Recent_Orders</h1>
                     <div className="h-1 w-20 bg-[#9B2B2C] mb-4" />
                     <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Your order history and tracking detail</p>
@@ -202,7 +202,7 @@ const UserDashboard = () => {
 
                             <div className="p-8 flex flex-col md:flex-row justify-between items-center gap-8 relative z-10">
                               <div className="flex gap-8 items-center w-full md:w-auto">
-                                <div className="w-20 h-20 bg-[#f4e4d4] border border-[#777] flex items-center justify-center relative">
+                                <div className="w-20 h-20 bg-brand-bg border border-[#777] flex items-center justify-center relative">
                                   <ShoppingBag className="h-8 w-8 text-[#9B2B2C]" />
                                   <div className="absolute -top-1 -left-1 w-2 h-2 bg-[#9B2B2C]" />
                                 </div>
@@ -242,7 +242,7 @@ const UserDashboard = () => {
                                   <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Total_Price</p>
                                   <p className="text-3xl font-black text-[#9B2B2C] tracking-tighter">৳{(order?.total || 0).toLocaleString()}</p>
                                 </div>
-                                <button className="px-6 py-2 bg-[#ead9c4] border border-[#777] text-[9px] font-black uppercase tracking-widest hover:bg-[#9B2B2C] hover:text-white transition-all">
+                                <button className="px-6 py-2 bg-brand-secondary border border-[#777] text-[9px] font-black uppercase tracking-widest hover:bg-[#9B2B2C] hover:text-white transition-all">
                                   Details
                                 </button>
                               </div>
@@ -252,7 +252,7 @@ const UserDashboard = () => {
                       </div>
                   ) : (
                       <div className="text-center py-40 border-2 border-dashed border-[#777]/30 bg-white/20">
-                        <div className="w-24 h-24 bg-[#ead9c4] border border-[#777] flex items-center justify-center mx-auto mb-8 shadow-xl">
+                        <div className="w-24 h-24 bg-brand-secondary border border-[#777] flex items-center justify-center mx-auto mb-8 shadow-xl">
                           <ShoppingBag className="h-10 w-10 text-[#9B2B2C]" />
                         </div>
                         <h3 className="text-2xl font-black text-slate-800 uppercase tracking-tighter mb-2">No Orders Yet</h3>
@@ -273,7 +273,7 @@ const UserDashboard = () => {
                   exit={{ opacity: 0, y: -10 }}
                   className="space-y-10"
                 >
-                  <div className="bg-[#ead9c4] border border-[#777] p-8 shadow-sm">
+                  <div className="bg-brand-secondary border border-[#777] p-8 shadow-sm">
                     <h1 className="text-4xl font-black text-[#9B2B2C] uppercase tracking-tighter leading-none mb-3">Edit_Profile</h1>
                     <div className="h-1 w-20 bg-[#9B2B2C] mb-4" />
                     <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Update your personal identity and avatar</p>
@@ -283,7 +283,7 @@ const UserDashboard = () => {
                     <form onSubmit={handleProfileSave} className="max-w-2xl mx-auto space-y-10">
                       <div className="flex flex-col md:flex-row items-center gap-10 border-b border-[#777]/10 pb-10">
                         <div className="relative group">
-                          <div className="w-32 h-32 bg-[#f4e4d4] border-4 border-[#ead9c4] shadow-lg overflow-hidden flex items-center justify-center">
+                          <div className="w-32 h-32 bg-brand-bg border-4 border-brand-secondary shadow-lg overflow-hidden flex items-center justify-center">
                             {profileData.photoURL ? (
                               <img src={profileData.photoURL} alt="Preview" className="w-full h-full object-cover" />
                             ) : (

@@ -37,12 +37,10 @@ export const UserLayout: React.FC = () => {
 
   React.useEffect(() => {
     // Show social bar as soon as settings are available, only once per mount
-    if (settings && !hasTriggeredThisMount) {
-      const timer = setTimeout(() => {
-        setShowPortalNotice(true);
-        setHasTriggeredThisMount(true);
-      }, 500); // Small 500ms delay for smoothness after load
-      return () => clearTimeout(timer);
+    const ads = settings?.ads?.adsterra;
+    if (settings && ads?.enabled && ads?.socialBarCode && ads.socialBarCode.trim() !== '' && !hasTriggeredThisMount) {
+      setShowPortalNotice(true);
+      setHasTriggeredThisMount(true);
     }
   }, [settings, hasTriggeredThisMount]);
 
@@ -51,7 +49,7 @@ export const UserLayout: React.FC = () => {
     if (settings?.ads?.popupAd?.active) {
       const alreadyShown = sessionStorage.getItem('popup_displayed');
       if (!alreadyShown) {
-        setTimeout(() => setShowPopup(true), 1500);
+        setTimeout(() => setShowPopup(true), 500);
       }
     }
   }, [settings]);
@@ -61,7 +59,7 @@ export const UserLayout: React.FC = () => {
     const ads = settings?.ads?.adsterra;
     const injectedScripts: HTMLScriptElement[] = [];
 
-    if (ads) {
+    if (ads && ads.enabled) {
       const injectScript = (id: string, code: string) => {
         if (!code || code.trim() === '') return;
         
@@ -137,9 +135,16 @@ export const UserLayout: React.FC = () => {
 
   // Re-run injections when settings change
   React.useEffect(() => {
-    injectAdIntoRef(nativeAdRef, settings?.ads?.adsterra?.nativeBannerCode);
-    injectAdIntoRef(bannerOneRef, settings?.ads?.adsterra?.bannerOneCode);
-    injectAdIntoRef(bannerTwoRef, settings?.ads?.adsterra?.bannerTwoCode);
+    const ads = settings?.ads?.adsterra;
+    if (ads?.enabled) {
+      injectAdIntoRef(nativeAdRef, ads.nativeBannerCode);
+      injectAdIntoRef(bannerOneRef, ads.bannerOneCode);
+      injectAdIntoRef(bannerTwoRef, ads.bannerTwoCode);
+    } else {
+      [nativeAdRef, bannerOneRef, bannerTwoRef].forEach(ref => {
+        if (ref.current) ref.current.innerHTML = '';
+      });
+    }
     
     return () => {
         [nativeAdRef, bannerOneRef, bannerTwoRef].forEach(ref => {
@@ -147,6 +152,7 @@ export const UserLayout: React.FC = () => {
         });
     };
   }, [
+    settings?.ads?.adsterra?.enabled,
     settings?.ads?.adsterra?.nativeBannerCode, 
     settings?.ads?.adsterra?.bannerOneCode, 
     settings?.ads?.adsterra?.bannerTwoCode
@@ -166,9 +172,9 @@ export const UserLayout: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-brand-bg text-slate-900 font-sans">
+    <div className="min-h-screen flex flex-col bg-white text-slate-900 font-sans">
       {/* Top Navbar */}
-      <header className="sticky top-0 z-50 w-full border-b border-[#777] bg-brand-secondary/95 backdrop-blur-sm shadow-md">
+      <header className="sticky top-0 z-50 w-full border-b border-[#777] bg-white/95 backdrop-blur-sm shadow-md">
         <div className="w-full px-4 md:px-6 h-14 md:h-16 flex items-center justify-between">
           <div className="flex items-center gap-6">
             <Link to="/" className="text-xl font-black tracking-tighter text-brand-primary uppercase group flex items-center gap-2">
@@ -201,7 +207,7 @@ export const UserLayout: React.FC = () => {
 
           <div className="flex items-center gap-4">
             <Link to="/cart" className="relative group">
-              <div className="p-2 border border-[#777] bg-white group-hover:bg-brand-secondary transition-all">
+              <div className="p-2 border border-[#777] bg-white group-hover:bg-slate-50 transition-all">
                 <ShoppingCart className="h-5 w-5 text-brand-primary" />
               </div>
               {items.length > 0 && (
@@ -225,7 +231,7 @@ export const UserLayout: React.FC = () => {
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56 bg-white border-[#777] rounded-none p-0 shadow-xl">
-                  <DropdownMenuLabel className="bg-brand-secondary p-4 border-b border-[#777]">
+                  <DropdownMenuLabel className="bg-white p-4 border-b border-[#777]">
                     <div className="flex flex-col space-y-1">
                       <p className="text-[10px] font-black uppercase tracking-widest leading-none text-brand-primary">{user.displayName}</p>
                       <p className="text-[9px] font-bold leading-none text-slate-500 mt-1">{user.email}</p>
@@ -315,9 +321,9 @@ export const UserLayout: React.FC = () => {
             className="lg:hidden bg-brand-secondary border-b border-[#777] overflow-hidden"
           >
             <nav className="flex flex-col p-6 gap-6 text-[11px] font-black uppercase tracking-widest">
-              <Link to="/" onMouseEnter={() => import('../../pages/Home')} onClick={() => setIsMenuOpen(false)} className="border-l-2 border-brand-primary pl-4 hover:bg-white/30 py-2">HOME</Link>
-              <Link to="/shop" onMouseEnter={() => import('../../pages/Shop')} onClick={() => setIsMenuOpen(false)} className="border-l-2 border-brand-primary pl-4 hover:bg-white/30 py-2">SHOP</Link>
-              <Link to="/tracking" onClick={() => setIsMenuOpen(false)} className="border-l-2 border-brand-primary pl-4 hover:bg-white/30 py-2">TRACK ORDER</Link>
+              <Link to="/" onMouseEnter={() => import('../../pages/Home')} onClick={() => setIsMenuOpen(false)} className="border-l-2 border-brand-primary pl-4 hover:bg-slate-50 py-2">HOME</Link>
+              <Link to="/shop" onMouseEnter={() => import('../../pages/Shop')} onClick={() => setIsMenuOpen(false)} className="border-l-2 border-brand-primary pl-4 hover:bg-slate-50 py-2">SHOP</Link>
+              <Link to="/tracking" onClick={() => setIsMenuOpen(false)} className="border-l-2 border-brand-primary pl-4 hover:bg-slate-50 py-2">TRACK ORDER</Link>
             </nav>
           </motion.div>
         )}
@@ -351,7 +357,7 @@ export const UserLayout: React.FC = () => {
         </div>
       )}
 
-      <footer className="bg-brand-secondary border-t border-[#777] pt-20 pb-10">
+      <footer className="bg-white border-t border-[#777] pt-20 pb-10">
         <div className="container mx-auto">
           <div className="grid grid-cols-4 gap-16 mb-20">
             <div className="space-y-8">
@@ -439,57 +445,62 @@ export const UserLayout: React.FC = () => {
 
       {/* Social Bar Adsterra Floating Pop - GLOBAL PORTAL */}
       <AnimatePresence>
-        {showPortalNotice && settings?.ads?.adsterra?.socialBarCode && (
+        {showPortalNotice && settings?.ads?.adsterra?.enabled && settings?.ads?.adsterra?.socialBarCode && (
           <motion.div 
-            initial={{ x: 300, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: 300, opacity: 0 }}
-            whileHover={{ scale: 1.02 }}
-            className="fixed bottom-10 right-4 md:right-10 z-[100] w-[calc(100%-2rem)] md:w-80 group"
+            initial={{ x: 300, opacity: 0, scale: 0.9 }}
+            animate={{ x: 0, opacity: 1, scale: 1 }}
+            exit={{ x: 300, opacity: 0, scale: 0.9 }}
+            whileHover={{ scale: 1.05 }}
+            className="fixed bottom-6 right-4 md:right-8 z-[100] w-[calc(100%-2rem)] md:w-85 group"
           >
-            <div className="bg-white border-2 border-slate-900 shadow-[10px_10px_0px_#9B2B2C] p-0 relative overflow-hidden">
+            <div className="bg-white border-[3px] border-slate-900 shadow-[12px_12px_0px_#9B2B2C] p-0 relative overflow-hidden transition-all duration-300 group-hover:shadow-[16px_16px_0px_#9B2B2C]">
               {/* Top Banner Tag */}
-              <div className="bg-slate-900 text-white text-[8px] font-black uppercase tracking-[0.4em] py-1.5 px-4 flex justify-between items-center">
-                <span>Verified Offer</span>
-                <span className="flex items-center gap-1">
-                  <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                  Live Deal
+              <div className="bg-slate-900 text-white text-[9px] font-black uppercase tracking-[0.5em] py-2 px-5 flex justify-between items-center border-b-[3px] border-slate-900">
+                <span className="flex items-center gap-2">
+                   <div className="w-2 h-2 bg-brand-primary rounded-full animate-ping" />
+                   SECURE_LINK_UNLOCKED
+                </span>
+                <span className="flex items-center gap-1.5">
+                   BATCH_ID: {Math.floor(Math.random() * 899 + 100)}
                 </span>
               </div>
 
-              <div className="p-5">
+              <div className="p-6">
                 <button 
                   onClick={() => setShowPortalNotice(false)}
-                  className="absolute top-2 right-2 w-7 h-7 bg-white text-slate-400 hover:text-brand-primary flex items-center justify-center transition-all z-20"
+                  className="absolute top-14 right-4 w-8 h-8 bg-slate-100 text-slate-400 hover:text-brand-primary hover:bg-slate-200 flex items-center justify-center transition-all z-20 rounded-full border border-slate-300"
                 >
-                  <X className="h-4 w-4" />
+                  <X className="h-5 w-5" />
                 </button>
 
-                <div className="flex gap-4 items-start">
-                  <div className="relative">
-                    <div className="w-14 h-14 bg-brand-primary rounded-none flex-shrink-0 flex items-center justify-center shadow-[4px_4px_0px_#000] rotate-3 group-hover:rotate-0 transition-transform">
-                       <Zap className="h-8 w-8 text-white fill-white animate-pulse" />
+                <div className="flex gap-5 items-center">
+                  <div className="relative flex-shrink-0">
+                    <div className="w-16 h-16 bg-brand-primary rounded-xl flex items-center justify-center shadow-[6px_6px_0px_#000] rotate-6 group-hover:rotate-0 transition-all duration-500 overflow-hidden">
+                       <Zap className="h-9 w-9 text-white fill-white animate-[bounce_1s_infinite]" />
+                       <div className="absolute inset-0 bg-white/20 animate-[pulse_2s_infinite]" />
                     </div>
-                    <div className="absolute -bottom-2 -right-2 bg-yellow-400 text-black text-[7px] font-black px-2 py-0.5 border border-black uppercase italic">
-                      Special
+                    <div className="absolute -top-3 -right-3 bg-yellow-400 text-black text-[8px] font-black px-2.5 py-1 border-2 border-black uppercase italic shadow-sm z-10 animate-bounce">
+                      URGENT
                     </div>
                   </div>
 
                   <div className="text-left flex-1">
-                     <h4 className="text-sm font-black text-slate-900 uppercase leading-none mb-1 tracking-tighter">
-                       CONGRATULATIONS!
+                     <h4 className="text-base font-black text-slate-900 uppercase leading-none mb-1.5 tracking-tighter italic">
+                       DISPATCH READY!
                      </h4>
-                     <p className="text-[11px] font-bold text-slate-500 uppercase leading-tight mb-2">
-                       You've been selected for a <span className="text-brand-primary">Mega Bonus</span>.
+                     <p className="text-[12px] font-bold text-slate-500 uppercase leading-tight mb-2">
+                       A premium gift link has been <span className="text-brand-primary underline decoration-2 underline-offset-2">authorized</span> for you.
                      </p>
                      
-                     <div className="flex items-center gap-2 mb-3">
-                        <div className="flex -space-x-2">
-                           {[1,2,3].map(i => (
-                             <div key={i} className="w-4 h-4 rounded-full border border-white bg-slate-200" />
+                     <div className="flex items-center gap-2.5">
+                        <div className="flex -space-x-2.5">
+                           {[1,2,3,4].map(i => (
+                             <div key={i} className="w-5 h-5 rounded-full border-2 border-white bg-slate-200 shadow-sm overflow-hidden">
+                                <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i + 123}`} alt="" className="w-full h-full object-cover" />
+                             </div>
                            ))}
                         </div>
-                        <span className="text-[8px] font-black text-slate-400 uppercase">340+ People Claimed</span>
+                        <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-0.5">582+ USERS ACTIVE</span>
                      </div>
                   </div>
                 </div>
@@ -498,20 +509,27 @@ export const UserLayout: React.FC = () => {
                   href={settings.ads.adsterra.socialBarCode} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="relative group/btn block w-full bg-brand-primary text-white text-center py-3 text-[12px] font-black uppercase tracking-[0.2em] hover:bg-slate-900 transition-all shadow-[4px_4px_0px_#000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none mt-2"
+                  className="relative group/btn block w-full bg-brand-primary text-white text-center py-4 text-[13px] font-black uppercase tracking-[0.25em] hover:bg-slate-900 transition-all shadow-[6px_6px_0px_#000] active:translate-x-1 active:translate-y-1 active:shadow-none mt-5 border-2 border-black"
                 >
-                  <span className="relative z-10 flex items-center justify-center gap-2">
-                    REDEEM GIFT NOW <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                  <span className="relative z-10 flex items-center justify-center gap-3">
+                    COLLECT REWARD <ArrowRight className="h-5 w-5 group-hover/btn:translate-x-2 transition-transform" />
                   </span>
+                  <div className="absolute inset-x-0 bottom-0 h-1 bg-white/30 group-hover/btn:h-full transition-all duration-500" />
                 </a>
                 
-                <p className="text-center text-[7px] font-bold text-slate-400 uppercase mt-3 tracking-widest">
-                  Expires in 04:59 // No Registration Required
-                </p>
+                <div className="flex justify-between items-center mt-4">
+                  <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest italic animate-pulse">
+                    Session_Protocol: [ENCRYPTED]
+                  </p>
+                  <div className="text-[8px] font-black text-[#9B2B2C] uppercase flex items-center gap-1">
+                    <div className="w-1.5 h-1.5 bg-[#9B2B2C] rounded-full animate-ping" />
+                    Destruct In 04:59
+                  </div>
+                </div>
               </div>
               
-              {/* Progress Bar Animation */}
-              <div className="absolute bottom-0 left-0 h-1 bg-brand-primary animate-[shimmer_2s_infinite_linear]" style={{ width: '100%' }} />
+              {/* Animated Scan Line */}
+              <div className="absolute top-0 left-0 w-full h-[2px] bg-brand-primary/50 blur-[1px] animate-[scan_3s_linear_infinite] z-30" />
             </div>
           </motion.div>
         )}

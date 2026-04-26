@@ -40,7 +40,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
               active: false,
               text: '',
               textColor: '#000000',
-              bgColor: '#f4e4d4',
+              bgColor: '#ffffff',
               ...(data.ads?.floatingNotice || {})
             }
           }
@@ -60,8 +60,8 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           // Reset to defaults
           const root = document.documentElement;
           root.style.setProperty('--primary-color', '#9B2B2C');
-          root.style.setProperty('--secondary-color', '#ead9c4');
-          root.style.setProperty('--background-color', '#f4e4d4');
+          root.style.setProperty('--secondary-color', '#ffffff');
+          root.style.setProperty('--background-color', '#ffffff');
           root.style.setProperty('--card-color', '#ffffff');
           root.style.setProperty('--button-color', '#9B2B2C');
         }

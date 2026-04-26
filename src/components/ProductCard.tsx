@@ -19,9 +19,9 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="bg-brand-card border border-[#777] shadow-sm hover:shadow-xl transition-all group relative flex flex-col"
+      className="bg-white border border-[#777] shadow-sm hover:shadow-xl transition-all group relative flex flex-col"
     >
-      <div className="bg-[#ead9c4]/50 border-b border-[#777] px-2 py-1.5 flex justify-between items-center">
+      <div className="bg-white border-b border-[#777] px-2 py-1.5 flex justify-between items-center">
         <span className="text-[10px] md:text-[8px] font-black text-brand-primary uppercase tracking-tighter">Product_{product.name.slice(0, 3).toUpperCase()}</span>
         <div className="flex gap-1">
           <div className="w-1.5 h-1.5 md:w-1 md:h-1 bg-brand-primary rounded-full" />
@@ -30,7 +30,7 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
       </div>
 
       <div 
-        className="relative aspect-square overflow-hidden bg-slate-50 border-b border-[#777]/20 cursor-pointer"
+        className="relative aspect-square overflow-hidden bg-white border-b border-[#777]/20 cursor-pointer"
         onClick={() => navigate(`/product/${product.id}`, { state: { product } })}
       >
         <img
@@ -107,7 +107,7 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
         </div>
       </div>
 
-      <div className="p-1.5 bg-brand-secondary border-t border-[#777]">
+      <div className="p-1.5 bg-white border-t border-[#777]">
         <button
           className="w-full bg-brand-button hover:bg-slate-900 text-white transition-all h-12 md:h-10 text-[12px] md:text-[10px] font-black uppercase tracking-[0.2em] disabled:bg-slate-300 disabled:opacity-50"
           disabled={product.stock === 0}

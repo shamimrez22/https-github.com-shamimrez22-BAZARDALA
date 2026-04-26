@@ -55,7 +55,7 @@ const Shop = () => {
   const categories = ['All', ...new Set(allProducts.map(p => p.category).filter(Boolean))];
 
   return (
-    <div className="bg-brand-bg min-h-screen pb-20 font-sans relative" onClick={handleGlobalClick}>
+    <div className="bg-white min-h-screen pb-20 font-sans relative" onClick={handleGlobalClick}>
       {/* Social Bar Adsterra Floating Pop */}
       <AnimatePresence>
         {showSocialBar && settings?.ads?.adsterra?.socialBarCode && (
@@ -97,7 +97,7 @@ const Shop = () => {
 
       <div className="container mx-auto px-4 py-8">
         {/* Sub-Header / Control Panel */}
-        <div className="bg-brand-secondary border border-[#777] shadow-sm p-6 flex flex-col xl:flex-row xl:items-center justify-between gap-6 mb-4">
+        <div className="bg-white border border-[#777] shadow-sm p-6 flex flex-col xl:flex-row xl:items-center justify-between gap-6 mb-4">
           <div>
             <h1 className="text-3xl font-black tracking-tighter text-brand-primary uppercase leading-none">Our Shop</h1>
             <div className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mt-1.5 flex items-center gap-2">
@@ -119,14 +119,14 @@ const Shop = () => {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="h-11 rounded-none border-[#777] bg-white gap-3 px-6 text-[10px] font-black uppercase tracking-widest hover:bg-brand-secondary">
+                <Button variant="outline" className="h-11 rounded-none border-[#777] bg-white gap-3 px-6 text-[10px] font-black uppercase tracking-widest hover:bg-slate-50">
                   <SlidersHorizontal className="h-4 w-4 text-brand-primary" />
                   Category: {category}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56 bg-white border-[#777] rounded-none p-1 shadow-2xl">
                 {categories.map(cat => (
-                  <DropdownMenuItem key={cat} onClick={() => setCategory(cat)} className="text-[10px] font-black uppercase p-3 focus:bg-brand-secondary">
+                  <DropdownMenuItem key={cat} onClick={() => setCategory(cat)} className="text-[10px] font-black uppercase p-3 focus:bg-slate-50">
                     {cat}
                   </DropdownMenuItem>
                 ))}
@@ -135,13 +135,13 @@ const Shop = () => {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="h-11 rounded-none border-[#777] bg-white gap-3 px-6 text-[10px] font-black uppercase tracking-widest hover:bg-brand-secondary">
+                <Button variant="outline" className="h-11 rounded-none border-[#777] bg-white gap-3 px-6 text-[10px] font-black uppercase tracking-widest hover:bg-slate-50">
                   Sort: {sort}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56 bg-white border-[#777] rounded-none p-1 shadow-2xl">
                 {['Newest', 'Price: Low to High', 'Price: High to Low'].map(s => (
-                  <DropdownMenuItem key={s} onClick={() => setSort(s)} className="text-[10px] font-black uppercase p-3 focus:bg-brand-secondary">
+                  <DropdownMenuItem key={s} onClick={() => setSort(s)} className="text-[10px] font-black uppercase p-3 focus:bg-slate-50">
                     {s}
                   </DropdownMenuItem>
                 ))}
@@ -190,7 +190,7 @@ const Shop = () => {
           </div>
         ) : (
           <div className="text-center py-32 bg-white/20 border-2 border-dashed border-[#777]/30">
-            <div className="w-24 h-24 bg-brand-secondary border border-[#777] flex items-center justify-center mx-auto mb-8 shadow-xl">
+            <div className="w-24 h-24 bg-white border border-[#777] flex items-center justify-center mx-auto mb-8 shadow-xl">
               <Search className="h-10 w-10 text-brand-primary" />
             </div>
             <h2 className="text-2xl font-black text-slate-800 uppercase tracking-tighter mb-2">No Results</h2>
@@ -208,7 +208,7 @@ const Shop = () => {
         {settings?.ads?.adsterra?.bannerSixCode && (
            <div className="mt-12">
               <a href={settings.ads.adsterra.bannerSixCode} target="_blank" rel="noopener noreferrer" className="block relative group">
-                 <div className="bg-brand-secondary border-4 border-dashed border-[#777] p-10 text-center hover:border-brand-primary transition-all">
+                 <div className="bg-white border-4 border-dashed border-[#777] p-10 text-center hover:border-brand-primary transition-all">
                     <h5 className="text-[10px] font-black uppercase text-slate-500 tracking-[0.4em] mb-4">You've reached the end of the catalog</h5>
                     <div className="inline-block bg-slate-900 text-white px-10 py-3 font-black uppercase text-lg tracking-widest hover:bg-brand-primary transition-colors">
                        UNLOCK NEXT DISPATCH LINK

@@ -99,6 +99,7 @@ export interface SiteSettings {
       speed?: number;
     };
     adsterra?: {
+      enabled: boolean;
       popunderCode: string;
       nativeBannerCode: string;
       socialBarCode: string;

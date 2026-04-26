@@ -204,13 +204,13 @@ const Home = () => {
   const currentVariant = variants[variantIndexToUse];
 
   return (
-    <div className="flex flex-col bg-brand-bg text-slate-900 pb-20 overflow-x-hidden relative" onClick={handleGlobalClick}>
+    <div className="flex flex-col bg-white text-slate-900 pb-20 overflow-x-hidden relative" onClick={handleGlobalClick}>
       {/* Full Width Hero Section */}
       <section className="pt-0 pb-4 w-full">
         <div className="w-full px-4 md:px-6 overflow-hidden">
-          <div className="flex flex-col lg:flex-row items-stretch w-full min-h-[300px] lg:min-h-[480px] border border-[#777] shadow-sm">
+          <div className="flex flex-col lg:flex-row items-stretch w-full min-h-[220px] lg:min-h-[380px] border border-[#777] shadow-sm">
             {/* Category Sidebar/Offer - FULL WIDTH SIDEBAR */}
-            <div className="w-full lg:w-80 bg-brand-secondary border-y lg:border-y-0 lg:border-r border-[#777] flex flex-col flex-shrink-0 overflow-hidden">
+            <div className="w-full lg:w-80 bg-white border-y lg:border-y-0 lg:border-r border-[#777] flex flex-col flex-shrink-0 overflow-hidden">
                 {settings?.sidebar?.showCategories ? (
                   <>
                     <div className="bg-brand-primary p-3 border-b border-[#777] flex-shrink-0">
@@ -235,7 +235,7 @@ const Home = () => {
                         ))}
                       </div>
                     </div>
-                    <div className="p-3 bg-brand-secondary border-t border-[#777] flex-shrink-0">
+                    <div className="p-3 bg-white border-t border-[#777] flex-shrink-0">
                        <Link to="/shop" className="block w-full py-1.5 border border-brand-primary text-brand-primary text-[9px] font-black uppercase tracking-widest hover:bg-brand-primary hover:text-white transition-all text-center">
                          Show More
                        </Link>
@@ -269,7 +269,7 @@ const Home = () => {
                 )}
             </div>
             {/* Main Image Slider */}
-            <div className={`flex-1 relative bg-white border-y lg:border-y-0 lg:border-l border-[#777] shadow-lg overflow-hidden group h-[300px] sm:h-[400px] lg:h-[480px]`}>
+            <div className={`flex-1 relative bg-white border-y lg:border-y-0 lg:border-l border-[#777] shadow-lg overflow-hidden group h-[220px] sm:h-[320px] lg:h-[380px]`}>
               <AnimatePresence mode="wait">
                   <motion.div
                     key={currentSlide}
@@ -284,7 +284,7 @@ const Home = () => {
                       <img
                         src={banners[currentSlide].image || 'https://picsum.photos/seed/slide/1920/1080'}
                         alt={banners[currentSlide].title || 'Slide Image'}
-                        className="w-full h-full object-cover grayscale opacity-80"
+                        className="w-full h-full object-cover"
                         referrerPolicy="no-referrer"
                       />
                       <div className="absolute inset-x-0 bottom-0 p-8 md:p-12">
@@ -363,7 +363,7 @@ const Home = () => {
               rel="noopener noreferrer"
               className="block group relative overflow-hidden"
             >
-              <div className="bg-[#1a1a1a] border-2 border-brand-primary h-24 md:h-32 flex items-center justify-center relative shadow-[8px_8px_0px_#9B2B2C] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all">
+              <div className="bg-[#1a1a1a] border-2 border-brand-primary h-16 md:h-24 flex items-center justify-center relative shadow-[8px_8px_0px_#9B2B2C] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all">
                 <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'repeating-linear-gradient(45deg, #9B2B2C, #9B2B2C 10px, transparent 10px, transparent 20px)' }} />
                 <div className="relative z-10 text-center">
                   <span className="inline-block px-3 py-1 bg-brand-primary text-white text-[8px] font-black uppercase tracking-[0.3em] mb-2">Exclusive Offer</span>
@@ -435,7 +435,7 @@ const Home = () => {
               </div>
             </a>
           ) : (
-            <div className="bg-brand-secondary border border-[#777] grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-[#777]/30">
+            <div className="bg-white border border-[#777] grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-[#777]/30">
               {[
                 { icon: Truck, title: 'Free Delivery', desc: 'Doorstep shipping', extra: 'SEAL_VERIFIED' },
                 { icon: ShieldCheck, title: 'Original Products', desc: '100% Genuine Items', extra: 'SECURED' },
@@ -466,7 +466,7 @@ const Home = () => {
         <section className="py-4 w-full">
           <div className="w-full px-4 md:px-6">
              <a href={settings.ads.adsterra.bannerThreeCode} target="_blank" rel="noopener noreferrer" className="block relative overflow-hidden group">
-               <div className="bg-[#ead9c4] border-2 border-brand-primary p-6 text-center shadow-lg hover:bg-white transition-all">
+               <div className="bg-white border-2 border-brand-primary p-6 text-center shadow-lg hover:bg-slate-50 transition-all">
                   <span className="text-[10px] font-black uppercase text-brand-primary tracking-[0.4em] mb-2 block">Premium Channel Active</span>
                   <h4 className="text-2xl font-black text-slate-900 uppercase">ACCESS EXCLUSIVE DISCOUNTS</h4>
                   <p className="text-[9px] font-bold text-slate-500 uppercase mt-2">Verified Dispatch // Global Port_32</p>
@@ -577,28 +577,28 @@ const Home = () => {
             {/* Subtle decorative grid background */}
             <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
             
-            <div className="p-4 md:p-12 relative z-10">
-              <div className="flex flex-col md:flex-row items-center justify-between mb-8 md:mb-16 gap-8 text-center md:text-left">
+            <div className="p-3 md:p-8 relative z-10">
+              <div className="flex flex-col md:flex-row items-center justify-between mb-4 md:mb-8 gap-6 text-center md:text-left">
                 <div>
-                  <div className="flex items-center justify-center md:justify-start gap-4 mb-3">
-                    <span className="w-12 h-[2px] bg-white/50" />
-                    <span className="text-white text-[12px] font-black uppercase tracking-[0.4em]">{settings?.countdown?.text || 'FLASH SALE'}</span>
+                  <div className="flex items-center justify-center md:justify-start gap-3 mb-2">
+                    <span className="w-10 h-[2px] bg-white/50" />
+                    <span className="text-white text-[10px] font-black uppercase tracking-[0.3em]">{settings?.countdown?.text || 'FLASH SALE'}</span>
                   </div>
-                  <h2 className="text-4xl md:text-5xl font-black text-white uppercase tracking-tighter leading-none mb-4">LIMITED OFFERS</h2>
-                  <p className="text-white/60 text-[10px] font-bold uppercase tracking-[0.2em]">Hurry up! Secure your favorites before they're gone</p>
+                  <h2 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tighter leading-none mb-2">LIMITED OFFERS</h2>
+                  <p className="text-white/60 text-[9px] font-bold uppercase tracking-[0.1em]">Hurry up! Secure your favorites before they're gone</p>
                 </div>
                 
-                <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-4 md:p-6 flex flex-col items-center gap-4 w-full md:w-auto">
-                    <p className="text-[10px] font-black text-white/50 uppercase tracking-[0.2em] mb-2">Ends In</p>
-                    <div className="flex gap-4">
+                <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-3 md:p-4 flex flex-col items-center gap-3 w-full md:w-auto">
+                    <p className="text-[9px] font-black text-white/50 uppercase tracking-[0.1em] mb-1">Ends In</p>
+                    <div className="flex gap-3">
                       {[
                         { val: timeLeft.hrs, label: 'HR' },
                         { val: timeLeft.mins, label: 'MIN' },
                         { val: timeLeft.secs, label: 'SEC' },
                       ].map((t, i) => (
                         <div key={i} className="flex flex-col items-center">
-                          <div className="bg-white text-brand-primary w-12 h-12 md:w-14 md:h-14 flex items-center justify-center text-xl md:text-2xl font-mono font-black border-2 border-white/50">{t.val}</div>
-                          <span className="text-[8px] font-black text-white uppercase mt-2 tracking-widest">{t.label}</span>
+                          <div className="bg-white text-brand-primary w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-lg md:text-xl font-mono font-black border-2 border-white/50">{t.val}</div>
+                          <span className="text-[7px] font-black text-white uppercase mt-1 tracking-widest">{t.label}</span>
                         </div>
                       ))}
                     </div>

@@ -147,7 +147,7 @@ const AdminLimitedOffers = () => {
                   onChange={e => setConfig({...config, limit: parseInt(e.target.value) || 0})}
                   className="bg-white border-[#777] rounded-none h-12 text-xs font-black focus:ring-1 focus:ring-[#9B2B2C]"
                 />
-                <p className="text-[8px] text-slate-400 font-bold uppercase italic mt-1">* Recommended: 6-12 products</p>
+                <p className="text-[8px] text-slate-400 font-bold uppercase mt-1">* Recommended: 6-12 products</p>
               </div>
 
               <div className="pt-6 border-t border-[#777]/20 space-y-6">

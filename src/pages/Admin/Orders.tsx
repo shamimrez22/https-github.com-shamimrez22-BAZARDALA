@@ -392,7 +392,7 @@ const AdminOrders = () => {
              <Button 
                onClick={() => navigate('/admin/orders')}
                className={`h-8 px-4 rounded-none text-[9px] font-black uppercase transition-all ${
-                 !statusFilter ? 'bg-[#9B2B2C] text-white shadow-[2px_2px_0px_#000]' : 'bg-white border border-[#777] text-[#9B2B2C] hover:bg-[#ead9c4]'
+                 !statusFilter ? 'bg-[#9B2B2C] text-white shadow-md' : 'bg-white border border-[#777] text-[#9B2B2C] hover:bg-[#ead9c4]'
                }`}
              >
                All Logs
@@ -400,7 +400,7 @@ const AdminOrders = () => {
              <Button 
                onClick={() => navigate('/admin/orders?status=pending')}
                className={`h-8 px-4 rounded-none text-[9px] font-black uppercase transition-all relative ${
-                 statusFilter === 'pending' ? 'bg-[#9B2B2C] text-white shadow-[2px_2px_0px_#000]' : 'bg-white border border-[#777] text-[#9B2B2C] hover:bg-[#ead9c4]'
+                 statusFilter === 'pending' ? 'bg-[#9B2B2C] text-white shadow-md' : 'bg-white border border-[#777] text-[#9B2B2C] hover:bg-[#ead9c4]'
                }`}
              >
                Pending
@@ -413,7 +413,7 @@ const AdminOrders = () => {
              <Button 
                onClick={() => navigate('/admin/orders?status=confirmed')}
                className={`h-8 px-4 rounded-none text-[9px] font-black uppercase transition-all relative ${
-                 statusFilter === 'confirmed' ? 'bg-[#9B2B2C] text-white shadow-[2px_2px_0px_#000]' : 'bg-white border border-[#777] text-[#9B2B2C] hover:bg-[#ead9c4]'
+                 statusFilter === 'confirmed' ? 'bg-[#9B2B2C] text-white shadow-md' : 'bg-white border border-[#777] text-[#9B2B2C] hover:bg-[#ead9c4]'
                }`}
              >
                Confirmed

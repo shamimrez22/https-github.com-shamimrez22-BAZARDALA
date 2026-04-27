@@ -82,43 +82,54 @@ const InfoPage = () => {
   const { title, icon: Icon, content, details } = getPageContent();
 
   return (
-    <div className="min-h-[80vh] bg-brand-bg py-16">
-      <div className="container mx-auto px-4 max-w-4xl">
+    <div className="min-h-[80vh] bg-slate-50/30 py-20">
+      <div className="container mx-auto px-4 max-w-5xl">
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white border border-[#777] shadow-[10px_10px_0px_#9B2B2C] p-10 md:p-16"
+          className="bg-white rounded-[4rem] shadow-3xl p-10 md:p-20 border border-slate-50 relative overflow-hidden"
         >
-          <div className="flex items-center gap-6 mb-10 border-b-2 border-[#9B2B2C] pb-6">
-            <div className="w-16 h-16 bg-brand-secondary border border-[#777] flex items-center justify-center text-[#9B2B2C]">
-              <Icon size={32} />
+          <div className="absolute top-0 right-0 w-80 h-80 bg-brand-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
+          
+          <div className="flex flex-col md:flex-row items-center gap-10 mb-16 pb-12 border-b border-slate-50 relative z-10">
+            <div className="w-24 h-24 bg-slate-50 rounded-3xl flex items-center justify-center text-brand-primary shadow-inner border border-slate-100 rotate-6 transition-transform hover:rotate-0">
+              <Icon size={40} />
             </div>
-            <h1 className="text-4xl md:text-5xl font-black text-slate-900 uppercase tracking-tighter leading-none">
-              {title}
-            </h1>
+            <div className="text-center md:text-left">
+              <h1 className="text-4xl md:text-6xl font-black text-slate-900 uppercase tracking-tighter leading-none mb-4">
+                {title}
+              </h1>
+              <div className="flex items-center justify-center md:justify-start gap-3">
+                 <div className="w-2 h-2 bg-brand-primary rounded-full animate-pulse" />
+                 <p className="text-[11px] font-bold text-slate-300 uppercase tracking-[0.3em]">Authorized Information Resource // 2026</p>
+              </div>
+            </div>
           </div>
 
-          <p className="text-lg font-bold text-slate-700 uppercase tracking-tight leading-relaxed mb-12">
+          <p className="text-xl md:text-2xl font-black text-slate-600 tracking-tight leading-relaxed mb-16 text-center md:text-left">
             {content}
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
             {details.map((item, index) => (
-              <div key={index} className="p-6 bg-brand-bg/30 border border-[#777]/30 group hover:border-[#9B2B2C] transition-all">
-                <div className="flex items-center gap-4">
-                  <div className="w-2 h-2 bg-[#9B2B2C] group-hover:w-8 transition-all" />
-                  <span className="text-xs font-black uppercase tracking-widest text-[#9B2B2C]">{item}</span>
+              <div key={index} className="p-8 bg-slate-50 rounded-[2.5rem] border border-transparent hover:border-brand-primary/10 hover:bg-white hover:shadow-xl transition-all group">
+                <div className="flex items-center gap-6 mb-6">
+                  <div className="w-12 h-1 bg-brand-primary/20 rounded-full group-hover:w-16 group-hover:bg-brand-primary transition-all duration-500" />
+                  <span className="text-[13px] font-black uppercase tracking-widest text-slate-800">{item}</span>
                 </div>
-                <p className="mt-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-loose">
-                  [DEMO_CONTENT_PROTOCOL] // This section is currently in demo mode. Final content will be updated soon via the Admin Control Center settings protocol.
+                <p className="text-[11px] font-bold text-slate-300 uppercase tracking-widest leading-loose">
+                  [REDACTED_ACCESS_ONLY] // This protocol section is currently under maintenance. Data will be populated via the primary administrative control channel.
                 </p>
               </div>
             ))}
           </div>
 
-          <div className="mt-20 pt-10 border-t border-[#777]/20 flex justify-between items-center text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">
-             <span>{siteName} // Terminal_Info</span>
-             <span>Ref_ID: {path.replace('/', '').toUpperCase()}_2026</span>
+          <div className="mt-24 pt-12 border-t border-slate-50 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-bold uppercase tracking-[0.4em] text-slate-300">
+             <div className="flex items-center gap-4">
+                <div className="w-2 h-2 bg-slate-200 rounded-full" />
+                <span>{siteName} // Information_Terminal</span>
+             </div>
+             <span className="bg-slate-50 px-6 py-2 rounded-full border border-slate-100">Ref_ID: {path.replace('/', '').toUpperCase()}_V_2.0</span>
           </div>
         </motion.div>
       </div>

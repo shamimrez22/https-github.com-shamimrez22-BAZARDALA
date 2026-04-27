@@ -180,8 +180,8 @@ export const AdminLayout: React.FC = () => {
           to={item.path}
           className={`flex items-center justify-between px-5 py-4 border border-[#777]/40 ${
             isActive 
-              ? 'bg-[#9B2B2C] text-white border-[#000] shadow-[3px_3px_0px_#000]' 
-              : 'bg-white text-slate-800 hover:bg-[#ead9c4] border-[#777]/20 shadow-[2px_2px_0px_rgba(0,0,0,0.1)]'
+              ? 'bg-[#9B2B2C] text-white border-[#000] shadow-md' 
+              : 'bg-white text-slate-800 hover:bg-[#ead9c4] border-[#777]/20 shadow-sm'
           }`}
         >
           <div className="flex items-center gap-4">
@@ -263,7 +263,7 @@ export const AdminLayout: React.FC = () => {
       {/* Main Content */}
       <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ${isSidebarOpen ? 'lg:ml-72' : 'ml-0'}`}>
         {/* Header */}
-        <header className="h-16 bg-[#ead9c4] border-b border-[#777] sticky top-0 z-40 px-6 flex items-center justify-between shadow-md">
+        <header className="h-16 bg-[#ead9c4] border-b border-[#777] fixed top-0 right-0 z-[60] px-6 flex items-center justify-between shadow-md transition-all duration-300" style={{ left: isSidebarOpen ? '288px' : '0' }}>
           <div className="flex items-center gap-4">
             {/* Desktop Sidebar Toggle */}
             <Button 
@@ -416,7 +416,7 @@ export const AdminLayout: React.FC = () => {
         </header>
 
         {/* Page Content */}
-        <main className="flex-1 p-6 overflow-y-auto">
+        <main className="flex-1 p-6 overflow-y-auto mt-16">
           <Outlet />
         </main>
       </div>

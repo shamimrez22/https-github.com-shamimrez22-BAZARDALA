@@ -327,7 +327,7 @@ const AdminProducts = () => {
                     placeholder="https://example.com/product-page"
                     className="h-10 bg-white border-[#777] text-slate-900 rounded-none font-bold text-xs focus:ring-0 focus:border-[#9B2B2C]"
                   />
-                  <p className="text-[8px] text-slate-500 font-bold uppercase italic mt-1">* If provided, "Order Now" will redirect to this external link.</p>
+                  <p className="text-[8px] text-slate-500 font-bold uppercase mt-1">* If provided, "Order Now" will redirect to this external link.</p>
                 </div>
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
@@ -501,7 +501,7 @@ const AdminProducts = () => {
             <Button 
               onClick={() => fetchProducts(true)} 
               disabled={loadingMore}
-              className="bg-[#9B2B2C] hover:bg-slate-900 text-white font-black uppercase tracking-widest px-10 h-12 rounded-none shadow-[4px_4px_0px_#000] transition-all"
+              className="bg-[#9B2B2C] hover:bg-slate-900 text-white font-black uppercase tracking-widest px-10 h-12 rounded-none shadow-lg transition-all"
             >
               {loadingMore ? 'Syncing...' : 'Load More Products'}
             </Button>

@@ -98,93 +98,97 @@ const UserDashboard = () => {
   };
 
   return (
-    <div className="bg-brand-bg min-h-screen pb-20 font-sans">
-      <div className="w-full px-8 md:px-20 lg:px-40 py-16">
+    <div className="bg-slate-50/30 min-h-screen pb-20 font-sans">
+      <div className="w-full px-4 md:px-8 lg:px-12 xl:px-20 py-16 max-w-[1600px] mx-auto">
         <div className="flex flex-col xl:flex-row gap-12">
-          {/* Sidebar / Identity Terminal */}
-          <div className="w-full xl:w-96 space-y-8">
-            <div className="bg-brand-secondary border-2 border-[#777] shadow-xl overflow-hidden relative">
-              <div className="bg-[#9B2B2C] h-32 border-b border-[#777]" />
-              <div className="px-10 pb-12 -mt-16 text-center relative z-10">
-                <div className="w-32 h-32 border-2 border-[#777] bg-white p-1.5 mx-auto mb-8 shadow-2xl">
-                  <div className="w-full h-full border border-[#777]/20 overflow-hidden">
+          {/* Sidebar / Identity Hub */}
+          <div className="w-full xl:w-[400px] space-y-8">
+            <div className="bg-white rounded-none shadow-xl overflow-hidden relative border-2 border-[#777]">
+              <div className="bg-slate-900 h-40 border-b-2 border-slate-900 relative overflow-hidden">
+                 <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+              </div>
+              <div className="px-10 pb-12 -mt-20 text-center relative z-10">
+                <div className="w-40 h-40 rounded-none bg-white p-2 mx-auto mb-8 shadow-lg border-2 border-[#777] group">
+                  <div className="w-full h-full rounded-none overflow-hidden bg-[#f8f8f8] relative">
                     <img
                       src={user?.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.email}`}
                       alt="Avatar"
-                      className="w-full h-full object-cover grayscale opacity-80"
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     />
                   </div>
                 </div>
                 <h2 className="text-3xl font-black text-slate-800 uppercase tracking-tighter leading-none mb-3">
-                  USER: {user?.displayName?.toUpperCase()}
+                  {user?.displayName || 'User Session'}
                 </h2>
-                <div className="inline-block px-4 py-1.5 bg-white border-2 border-[#777] text-[11px] font-black uppercase tracking-widest text-[#9B2B2C] mb-10">
+                <div className="inline-block px-5 py-2 bg-[#f8f8f8] border border-[#777] rounded-none text-[11px] font-black uppercase tracking-widest text-slate-400 mb-10">
                   {user?.email}
                 </div>
                 
-                <div className="flex justify-center gap-6 border-t border-[#777]/20 pt-8">
-                  <div className="text-center">
-                    <p className="text-2xl font-black text-[#9B2B2C] tracking-tighter">{orders.length}</p>
-                    <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Logs</p>
+                <div className="flex items-center justify-between p-8 bg-[#f8f8f8] border-2 border-[#777] rounded-none shadow-inner">
+                  <div className="flex-1 text-center">
+                    <p className="text-3xl font-black text-slate-900 tracking-tighter leading-none mb-2">{orders.length}</p>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest opacity-60">Total Logs</p>
                   </div>
-                  <div className="w-[1px] h-10 bg-[#777]/20" />
-                  <div className="text-center">
-                    <p className="text-2xl font-black text-[#9B2B2C] tracking-tighter">{profile?.wishlist?.length || 0}</p>
-                    <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Assets</p>
+                  <div className="w-[2px] h-12 bg-[#777] rounded-none opacity-20" />
+                  <div className="flex-1 text-center">
+                    <p className="text-3xl font-black text-slate-900 tracking-tighter leading-none mb-2">{profile?.wishlist?.length || 0}</p>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest opacity-60">Assets</p>
                   </div>
                 </div>
               </div>
             </div>
 
-              <div className="space-y-2">
+              <div className="grid grid-cols-1 gap-4">
                 {[
-                  { id: 'MY_ORDERS', label: 'MY_ORDERS', icon: ShoppingBag },
-                  { id: 'MY_WISHLIST', label: 'MY_WISHLIST', icon: Heart },
-                  { id: 'EDIT_PROFILE', label: 'EDIT_PROFILE', icon: User },
-                  { id: 'SETTINGS', label: 'SETTINGS', icon: Settings },
+                  { id: 'MY_ORDERS', label: 'ORDER_HISTORY', icon: ShoppingBag },
+                  { id: 'MY_WISHLIST', label: 'FAVORITES', icon: Heart },
+                  { id: 'EDIT_PROFILE', label: 'MODIFY_PROFILE', icon: User },
+                  { id: 'SETTINGS', label: 'CORE_SETTINGS', icon: Settings },
                 ].map((item, i) => (
                   <button
                     key={i}
                     onClick={() => setActiveTab(item.id)}
-                    className={`w-full flex items-center justify-between px-8 py-5 border-2 border-[#777] text-[13px] font-black transition-all ${
+                    className={`group w-full flex items-center justify-between px-8 py-6 rounded-none text-[13px] font-black uppercase tracking-widest transition-all border-2 ${
                       activeTab === item.id 
-                      ? 'bg-[#9B2B2C] text-white shadow-xl translate-x-4' 
-                      : 'bg-white text-slate-600 hover:bg-brand-secondary'
+                      ? 'bg-slate-900 border-slate-900 text-white shadow-lg' 
+                      : 'bg-white border-[#777] text-slate-400 hover:bg-[#f8f8f8] shadow-sm'
                     }`}
                   >
-                    <div className="flex items-center gap-4">
-                      <item.icon className="h-4 w-4" />
+                    <div className="flex items-center gap-5">
+                      <div className={`p-3 rounded-none border-2 transition-colors ${activeTab === item.id ? 'bg-white border-transparent text-slate-900' : 'bg-[#f8f8f8] border-[#777] text-slate-300'}`}>
+                        <item.icon className="h-5 w-5" />
+                      </div>
                       <span>{item.label}</span>
                     </div>
-                    <div className={`h-1.5 w-1.5 rounded-full ${activeTab === item.id ? 'bg-white animate-pulse' : 'bg-slate-300'}`} />
+                    <div className={`w-3 h-3 rounded-none border-2 border-[#777] transform transition-all ${activeTab === item.id ? 'bg-[#9B2B2C] scale-100' : 'bg-transparent scale-50'}`} />
                   </button>
                 ))}
               </div>
           </div>
 
           {/* Main Action Terminal */}
-          <div className="flex-1 space-y-10">
+          <div className="flex-1 min-w-0">
             <AnimatePresence mode="wait">
               {activeTab === 'MY_ORDERS' && (
                 <motion.div
                   key="orders"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
                   className="space-y-10"
                 >
-                  <div className="bg-brand-secondary border-2 border-[#777] p-10 shadow-sm">
-                    <h1 className="text-6xl font-black text-[#9B2B2C] uppercase tracking-tighter leading-none mb-4">Recent_Orders</h1>
-                    <div className="h-1.5 w-24 bg-[#9B2B2C] mb-6" />
-                    <p className="text-[13px] font-black text-slate-500 uppercase tracking-[0.3em]">Your order history and tracking detail</p>
+                  <div className="bg-white rounded-none p-10 md:p-14 shadow-2xl border-2 border-[#777] relative overflow-hidden">
+                    <h1 className="text-4xl md:text-6xl font-black text-slate-900 uppercase tracking-tighter leading-none mb-6 relative z-10 border-b-4 border-[#9B2B2C] pb-4 inline-block">DISPATCH_HISTORY</h1>
+                    <div className="flex items-center gap-4 relative z-10 mt-6">
+                       <div className="w-3 h-3 bg-[#9B2B2C] rounded-none animate-pulse" />
+                       <p className="text-[12px] font-black text-slate-400 uppercase tracking-[0.3em]">Accessing verified purchase logs for your session</p>
+                    </div>
                   </div>
 
                   {loading ? (
                     <div className="space-y-6">
                       {[...Array(3)].map((_, i) => (
-                        <div key={i} className="h-32 bg-white border border-[#777] p-1 opacity-40 animate-pulse">
-                          <div className="w-full h-full border border-[#777]/20" />
-                        </div>
+                        <div key={i} className="h-40 bg-white rounded-none animate-pulse border-2 border-[#777]" />
                       ))}
                     </div>
                   ) : orders.length > 0 ? (
@@ -194,42 +198,37 @@ const UserDashboard = () => {
                             key={order.id}
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
-                            className="bg-white border border-[#777] group hover:shadow-2xl transition-all relative overflow-hidden"
+                            className="bg-white rounded-none p-8 md:p-10 shadow-xl border-2 border-[#777] group relative overflow-hidden"
                           >
-                            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-100 transition-opacity">
-                               <Package className="h-16 w-16 text-[#9B2B2C]" />
-                            </div>
-
-                            <div className="p-8 flex flex-col md:flex-row justify-between items-center gap-8 relative z-10">
-                              <div className="flex gap-8 items-center w-full md:w-auto">
-                                <div className="w-20 h-20 bg-brand-bg border border-[#777] flex items-center justify-center relative">
-                                  <ShoppingBag className="h-8 w-8 text-[#9B2B2C]" />
-                                  <div className="absolute -top-1 -left-1 w-2 h-2 bg-[#9B2B2C]" />
+                            <div className="flex flex-col lg:flex-row justify-between items-center gap-10 relative z-10">
+                              <div className="flex flex-col md:flex-row gap-8 items-center w-full lg:w-auto">
+                                <div className="w-24 h-24 bg-[#f8f8f8] border-2 border-[#777] rounded-none flex items-center justify-center relative shadow-inner">
+                                  <ShoppingBag className="h-10 w-10 text-slate-400" />
                                 </div>
                                 
-                                <div>
-                                  <div className="flex items-center gap-3 mb-2">
-                                    <span className="text-xs font-black text-[#9B2B2C] border-b border-[#9B2B2C] font-mono">
+                                <div className="text-center md:text-left">
+                                  <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mb-3">
+                                    <span className="text-[12px] font-black text-slate-400 px-4 py-1 bg-[#f8f8f8] border border-[#777] rounded-none">
                                       #{order?.orderId || order?.id?.slice(0, 8).toUpperCase() || 'UNKNOWN'}
                                     </span>
-                                    <div className={`px-2 py-0.5 border text-[8px] font-black uppercase tracking-widest ${
-                                      order?.status === 'delivered' ? 'border-emerald-500 text-emerald-600 bg-emerald-50' : 
-                                      'border-amber-500 text-amber-600 bg-amber-50'
+                                    <div className={`px-4 py-1 rounded-none border-2 border-slate-900 text-[10px] font-black uppercase tracking-widest ${
+                                      order?.status === 'delivered' ? 'bg-green-600 text-white' : 
+                                      'bg-[#9B2B2C] text-white'
                                     }`}>
-                                      {order?.status || 'PENDING'}
+                                      {order?.status?.toUpperCase() || 'PENDING'}
                                     </div>
                                   </div>
-                                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-4">
-                                    Logged: {order?.createdAt?.toDate ? format(order.createdAt.toDate(), 'PPP HH:mm') : 'Just now'}
+                                  <p className="text-[11px] font-black text-slate-400 uppercase tracking-widest mb-5 opacity-60">
+                                    LOGGED: {order?.createdAt?.toDate ? format(order.createdAt.toDate(), 'PPP HH:mm') : 'ACTIVE_SESSION'}
                                   </p>
-                                  <div className="flex gap-2">
+                                  <div className="flex justify-center md:justify-start gap-3">
                                     {order?.items?.slice(0, 4).map((item: any, i: number) => (
-                                      <div key={i} className="w-10 h-10 border border-[#777]/20 p-0.5 bg-[#f8f8f8]">
-                                        <img src={item?.image || 'https://picsum.photos/seed/thumb/100/100'} alt="" className="w-full h-full object-cover grayscale" />
+                                      <div key={i} className="w-12 h-12 rounded-none border-2 border-slate-900 overflow-hidden bg-white p-1">
+                                        <img src={item?.image || 'https://picsum.photos/seed/thumb/100/100'} alt="" className="w-full h-full object-cover rounded-none" />
                                       </div>
                                     ))}
                                     {order?.items && order.items.length > 4 && (
-                                      <div className="w-10 h-10 border border-[#777]/20 flex items-center justify-center text-[10px] font-black text-slate-400 bg-white">
+                                      <div className="w-12 h-12 rounded-none border-2 border-[#777] bg-[#f8f8f8] flex items-center justify-center text-[10px] font-black text-slate-400">
                                         +{order.items.length - 4}
                                       </div>
                                     )}
@@ -237,13 +236,16 @@ const UserDashboard = () => {
                                 </div>
                               </div>
 
-                              <div className="flex flex-row md:flex-col justify-between items-center md:items-end w-full md:w-auto border-t md:border-t-0 md:border-l border-[#777]/10 pt-6 md:pt-0 md:pl-10">
-                                <div className="text-right mb-4">
-                                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total_Price</p>
-                                  <p className="text-4xl font-black text-[#9B2B2C] tracking-tighter">৳{(order?.total || 0).toLocaleString()}</p>
+                              <div className="flex flex-row lg:flex-col justify-between items-center lg:items-end w-full lg:w-auto pt-8 lg:pt-0 border-t-2 lg:border-t-0 lg:border-l-2 border-[#777] lg:pl-10">
+                                <div className="text-right lg:mb-6">
+                                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 opacity-60">VALUATION</p>
+                                  <p className="text-4xl font-black text-slate-900 tracking-tighter">৳{(order?.total || 0).toLocaleString()}</p>
                                 </div>
-                                <button className="px-6 py-2 bg-brand-secondary border border-[#777] text-[9px] font-black uppercase tracking-widest hover:bg-[#9B2B2C] hover:text-white transition-all">
-                                  Details
+                                <button 
+                                  onClick={() => navigate(`/tracking?id=${order.orderId}`)}
+                                  className="px-10 py-4 bg-slate-900 text-white rounded-none text-[10px] font-black uppercase tracking-widest hover:bg-[#9B2B2C] transition-all shadow-lg active:scale-95"
+                                >
+                                  TRACE_PARCEL
                                 </button>
                               </div>
                             </div>
@@ -251,14 +253,14 @@ const UserDashboard = () => {
                         ))}
                       </div>
                   ) : (
-                      <div className="text-center py-40 border-2 border-dashed border-[#777]/30 bg-white/20">
-                        <div className="w-24 h-24 bg-brand-secondary border border-[#777] flex items-center justify-center mx-auto mb-8 shadow-xl">
-                          <ShoppingBag className="h-10 w-10 text-[#9B2B2C]" />
+                      <div className="text-center py-40 bg-white rounded-none shadow-2xl border-2 border-[#777]">
+                        <div className="w-32 h-32 bg-[#f8f8f8] border-2 border-[#777] rounded-none flex items-center justify-center mx-auto mb-10 shadow-inner">
+                          <ShoppingBag className="h-12 w-12 text-slate-400" />
                         </div>
-                        <h3 className="text-2xl font-black text-slate-800 uppercase tracking-tighter mb-2">No Orders Yet</h3>
-                        <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.3em] mb-10 max-w-sm mx-auto">Start shopping today to see your order history.</p>
-                        <button className="bg-[#9B2B2C] text-white px-10 py-3 text-[11px] font-black uppercase tracking-widest hover:bg-slate-900 transition-all shadow-lg" onClick={() => navigate('/shop')}>
-                          Start Shopping
+                        <h3 className="text-3xl font-black text-slate-800 uppercase tracking-tighter mb-4">LOGS_REGISTRY_EMPTY</h3>
+                        <p className="text-[12px] text-slate-400 font-black uppercase tracking-[0.2em] mb-12 max-w-sm mx-auto leading-relaxed">You haven't initiated any dispatches yet. Access global collections to start.</p>
+                        <button className="bg-slate-900 hover:bg-[#9B2B2C] text-white px-12 py-5 text-[12px] font-black uppercase tracking-widest rounded-none shadow-xl active:scale-95 transition-all" onClick={() => navigate('/shop')}>
+                          ACCESS_COLLECTIONS
                         </button>
                       </div>
                   )}
@@ -268,58 +270,62 @@ const UserDashboard = () => {
               {activeTab === 'EDIT_PROFILE' && (
                 <motion.div
                   key="edit_profile"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
                   className="space-y-10"
                 >
-                  <div className="bg-brand-secondary border-2 border-[#777] p-10 shadow-sm">
-                    <h1 className="text-6xl font-black text-[#9B2B2C] uppercase tracking-tighter leading-none mb-4">Edit_Profile</h1>
-                    <div className="h-1.5 w-24 bg-[#9B2B2C] mb-6" />
-                    <p className="text-[13px] font-black text-slate-500 uppercase tracking-[0.3em]">Update your personal identity and avatar</p>
+                  <div className="bg-white rounded-none p-10 md:p-14 shadow-2xl border-2 border-[#777] relative overflow-hidden">
+                    <h1 className="text-4xl md:text-6xl font-black text-slate-900 uppercase tracking-tighter leading-none mb-6 relative z-10 border-b-4 border-[#9B2B2C] pb-4 inline-block">IDENTITY_CORE</h1>
+                    <div className="flex items-center gap-4 relative z-10 mt-6">
+                       <div className="w-3 h-3 bg-[#9B2B2C] rounded-none animate-pulse" />
+                       <p className="text-[12px] font-black text-slate-400 uppercase tracking-[0.3em]">Modify your authentication identity across the network</p>
+                    </div>
                   </div>
 
-                  <div className="bg-white border border-[#777] p-10 shadow-xl">
-                    <form onSubmit={handleProfileSave} className="max-w-2xl mx-auto space-y-10">
-                      <div className="flex flex-col md:flex-row items-center gap-10 border-b border-[#777]/10 pb-10">
+                  <div className="bg-white rounded-none p-12 md:p-16 shadow-2xl border-2 border-[#777]">
+                    <form onSubmit={handleProfileSave} className="max-w-3xl mx-auto space-y-12">
+                      <div className="flex flex-col md:flex-row items-center gap-12 pb-12 border-b-2 border-[#777]">
                         <div className="relative group">
-                          <div className="w-32 h-32 bg-brand-bg border-4 border-brand-secondary shadow-lg overflow-hidden flex items-center justify-center">
-                            {profileData.photoURL ? (
-                              <img src={profileData.photoURL} alt="Preview" className="w-full h-full object-cover" />
-                            ) : (
-                              <User className="h-12 w-12 text-[#9B2B2C]/30" />
-                            )}
+                          <div className="w-44 h-44 bg-[#f8f8f8] rounded-none shadow-inner overflow-hidden flex items-center justify-center p-2 border-2 border-[#777]">
+                            <div className="w-full h-full rounded-none overflow-hidden border-2 border-slate-900">
+                              {profileData.photoURL ? (
+                                <img src={profileData.photoURL} alt="Preview" className="w-full h-full object-cover" />
+                              ) : (
+                                <User className="h-16 w-16 text-slate-300" />
+                              )}
+                            </div>
                           </div>
-                          <label className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-                            <Camera className="h-8 w-8 text-white" />
+                          <label className="absolute inset-4 rounded-none flex items-center justify-center bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-all cursor-pointer backdrop-blur-md">
+                            <Camera className="h-10 w-10 text-white" />
                             <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
                           </label>
                         </div>
-                        <div className="text-center md:text-left">
-                          <h3 className="text-sm font-black uppercase tracking-widest text-[#9B2B2C] mb-2">Avatar_Upload</h3>
-                          <p className="text-[10px] font-black text-slate-400 uppercase leading-relaxed max-w-xs">
-                            Click image to upload. Recommended: Square ratio, JPEG format. Optimized to 300x300.
+                        <div className="text-center md:text-left flex-1">
+                          <h3 className="text-sm font-black uppercase tracking-widest text-[#9B2B2C] mb-3">AVATAR_DISPATCH</h3>
+                          <p className="text-[11px] font-black text-slate-400 uppercase tracking-widest leading-relaxed">
+                            Upload a high-fidelity image for cross-network recognition. Optimized dimensions: [300x300_ENC]
                           </p>
                         </div>
                       </div>
 
-                      <div className="space-y-6">
-                        <div className="space-y-2">
-                          <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Full_Name</Label>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <div className="space-y-4">
+                          <Label className="text-[11px] font-black uppercase tracking-widest text-slate-400 mb-2 block">SYSTEM_ALIAS</Label>
                           <Input 
                             value={profileData.name}
                             onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
-                            className="bg-[#f8f8f8] border-[#777] h-12 rounded-none font-black text-sm uppercase placeholder:text-slate-300"
-                            placeholder="ENTER_YOUR_NAME"
+                            className="bg-[#f8f8f8] border-2 border-[#777] h-16 rounded-none font-black text-sm uppercase tracking-widest px-6 shadow-inner focus-visible:ring-0"
+                            placeholder="SET_ALIAS"
                             required
                           />
                         </div>
-                        <div className="space-y-2">
-                          <Label className="text-[10px] font-black uppercase tracking-widest text-slate-300">Email_Address (Restricted)</Label>
+                        <div className="space-y-4">
+                          <Label className="text-[11px] font-black uppercase tracking-widest text-slate-300 mb-2 block opacity-60">VERIFIED_CHANNEL (STATIC)</Label>
                           <Input 
                             value={user?.email || ''} 
                             disabled 
-                            className="bg-slate-100 border-[#777]/20 h-12 rounded-none font-bold text-sm text-slate-400"
+                            className="bg-[#f8f8f8] border-2 border-[#777]/20 h-16 rounded-none font-black text-sm text-slate-300 px-6 cursor-not-allowed"
                           />
                         </div>
                       </div>
@@ -327,10 +333,10 @@ const UserDashboard = () => {
                       <button 
                         type="submit" 
                         disabled={savingProfile}
-                        className="w-full bg-[#9B2B2C] text-white py-4 font-black uppercase tracking-[0.3em] text-xs hover:bg-slate-900 transition-all shadow-[6px_6px_0px_#000] active:translate-x-1 active:translate-y-1 active:shadow-none flex items-center justify-center gap-3"
+                        className="w-full bg-slate-900 hover:bg-[#9B2B2C] text-white py-6 rounded-none font-black uppercase tracking-widest text-[12px] shadow-xl active:scale-95 transition-all flex items-center justify-center gap-5 group"
                       >
-                        <Save className="h-4 w-4" />
-                        {savingProfile ? 'SYNCHRONIZING...' : 'SAVE_IDENTITY_CHANGES'}
+                        <Save className="h-5 w-5 group-hover:rotate-12 transition-transform" />
+                        {savingProfile ? 'SYNCHRONIZING_ID...' : 'CONFIRM_GLOBAL_CHANGES'}
                       </button>
                     </form>
                   </div>

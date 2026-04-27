@@ -49,7 +49,7 @@ const SettingsLayout = () => {
         <div className="lg:hidden px-1">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className="w-full bg-slate-900 text-white h-14 rounded-none font-black uppercase text-xs tracking-widest flex justify-between px-6 shadow-[4px_4px_0px_#9B2B2C]">
+              <Button className="w-full bg-slate-900 text-white h-14 rounded-none font-black uppercase text-xs tracking-widest flex justify-between px-6 shadow-lg">
                 <div className="flex items-center gap-3">
                   <currentItem.icon className="h-4 w-4" />
                   {currentItem.label}
@@ -81,7 +81,7 @@ const SettingsLayout = () => {
               className={({ isActive }) => `
                 flex items-center gap-3 p-4 font-black uppercase text-[10px] tracking-widest border transition-all
                 ${isActive 
-                  ? 'bg-slate-900 text-white border-slate-900 shadow-[4px_4px_0px_#9B2B2C]' 
+                  ? 'bg-slate-900 text-white border-slate-900 shadow-lg' 
                   : 'bg-white text-slate-600 border-[#777] hover:border-[#9B2B2C] hover:text-[#9B2B2C]'}
               `}
             >

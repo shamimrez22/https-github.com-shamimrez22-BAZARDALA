@@ -32,7 +32,6 @@ const AdminCategories = lazy(() => import('./pages/Admin/Categories'));
 const AdminLimitedOffers = lazy(() => import('./pages/Admin/LimitedOffers'));
 const AdminProfile = lazy(() => import('./pages/Admin/Profile'));
 const AdminLogin = lazy(() => import('./pages/Admin/Login'));
-const AIChatbot = lazy(() => import('./components/AIChatbot').then(m => ({ default: m.AIChatbot })));
 
 import { SettingsProvider, useSettings } from './context/SettingsContext';
 
@@ -139,7 +138,6 @@ const AppContent = () => {
                     <Route path="profile" element={<AdminProfile />} />
                   </Route>
                 </Routes>
-                <AIChatbot />
                 <Toaster position="top-center" richColors />
               </Suspense>
             </SmoothScroll>

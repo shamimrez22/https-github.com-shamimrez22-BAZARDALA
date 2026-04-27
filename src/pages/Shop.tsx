@@ -20,21 +20,6 @@ const Shop = () => {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('All');
   const [sort, setSort] = useState('Newest');
-  const [hasClicked, setHasClicked] = useState(false);
-  const [showSocialBar, setShowSocialBar] = useState(false);
-
-  // Handle "Popunder" link on first interaction
-  const handleGlobalClick = () => {
-    if (!hasClicked && settings?.ads?.adsterra?.popunderCode) {
-       window.open(settings.ads.adsterra.popunderCode, '_blank');
-       setHasClicked(true);
-    }
-  };
-
-  useEffect(() => {
-    const timer = setTimeout(() => setShowSocialBar(true), 6000);
-    return () => clearTimeout(timer);
-  }, []);
 
   // Local filtering and sorting for instant results
   const filteredProducts = allProducts
@@ -55,78 +40,38 @@ const Shop = () => {
   const categories = ['All', ...new Set(allProducts.map(p => p.category).filter(Boolean))];
 
   return (
-    <div className="bg-white min-h-screen pb-20 font-sans relative" onClick={handleGlobalClick}>
-      {/* Social Bar Adsterra Floating Pop */}
-      <AnimatePresence>
-        {showSocialBar && settings?.ads?.adsterra?.socialBarCode && (
-          <motion.div 
-            initial={{ y: 100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 100, opacity: 0 }}
-            className="fixed bottom-10 left-10 z-[100] w-72"
-          >
-            <div className="bg-white border-2 border-slate-900 shadow-[6px_6px_0px_#777] p-4 relative">
-              <button 
-                onClick={(e) => { e.stopPropagation(); setShowSocialBar(false); }}
-                className="absolute -top-3 -right-3 w-6 h-6 bg-slate-900 text-white text-[10px] rounded-full flex items-center justify-center font-black"
-              >
-                X
-              </button>
-              <div className="flex gap-3 items-center">
-                <div className="w-10 h-10 bg-slate-900 flex-shrink-0 flex items-center justify-center animate-bounce">
-                   <Bell className="h-5 w-5 text-white" />
-                </div>
-                <div className="text-left">
-                   <p className="text-[9px] font-black uppercase text-slate-500 tracking-[0.2em]">Verified Secure</p>
-                   <p className="text-[11px] font-black text-slate-800 uppercase leading-tight">Limited Catalog Access Unlocked!</p>
-                </div>
-              </div>
-              <a 
-                href={settings.ads.adsterra.socialBarCode} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-                className="mt-3 block w-full bg-brand-primary text-white text-center py-2 text-[10px] font-black uppercase tracking-widest hover:bg-slate-900 transition-all shadow-md"
-              >
-                Get Link Now
-              </a>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <div className="w-full px-8 md:px-20 lg:px-40 py-12">
+    <div className="bg-slate-50/30 min-h-screen pb-20 font-sans relative overflow-x-hidden">
+      <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10 py-12">
         {/* Sub-Header / Control Panel */}
-        <div className="bg-white border-2 border-[#777] shadow-xl p-10 flex flex-col xl:flex-row xl:items-center justify-between gap-10 mb-8">
+        <div className="bg-white rounded-none shadow-xl p-6 md:p-8 flex flex-col xl:flex-row xl:items-center justify-between gap-6 mb-12 border-2 border-[#777]">
           <div>
-            <h1 className="text-5xl font-black tracking-tighter text-brand-primary uppercase leading-none">Our Shop</h1>
-            <div className="text-[13px] font-black text-slate-500 uppercase tracking-[0.3em] mt-3 flex items-center gap-3">
-               <div className="w-2 h-2 bg-brand-primary rounded-full animate-pulse" />
-               Products Found: {filteredProducts.length}
+            <h1 className="text-2xl md:text-3xl font-black tracking-tighter text-slate-800 uppercase leading-none">Catalog_DIR</h1>
+            <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-3 flex items-center gap-2">
+               <div className="w-2 h-2 bg-[#9B2B2C] rounded-none animate-pulse" />
+               INDEX_SIZE: {filteredProducts.length} RECORDS_FOUND
             </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-4">
-            <div className="relative w-full md:w-96">
-              <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-brand-primary" />
+            <div className="relative w-full md:w-80">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
               <Input
-                placeholder="Search items..."
+                placeholder="SEARCH_CATALOG..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-14 bg-white border-2 border-[#777] rounded-none h-14 text-sm font-black uppercase tracking-widest focus-visible:ring-0 focus-visible:border-brand-primary"
+                className="pl-12 bg-[#f8f8f8] border-2 border-[#777] rounded-none h-12 text-[12px] font-black uppercase tracking-widest focus-visible:ring-0 shadow-inner"
               />
             </div>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="h-14 rounded-none border-2 border-[#777] bg-white gap-4 px-8 text-[12px] font-black uppercase tracking-[0.2em] hover:bg-slate-50">
-                  <SlidersHorizontal className="h-5 w-5 text-brand-primary" />
-                  Category: {category}
+                <Button variant="outline" className="h-12 rounded-none border-2 border-[#777] gap-3 px-6 text-[11px] font-black uppercase tracking-widest hover:bg-[#f8f8f8] transition-all text-slate-700 shadow-md active:scale-95">
+                  CATEGORY: {category}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-64 bg-white border-2 border-[#777] rounded-none p-1 shadow-2xl">
+              <DropdownMenuContent align="end" className="w-56 bg-white rounded-none p-2 shadow-xl border-2 border-[#777]">
                 {categories.map(cat => (
-                  <DropdownMenuItem key={cat} onClick={() => setCategory(cat)} className="text-[12px] font-black uppercase p-4 focus:bg-slate-50">
+                  <DropdownMenuItem key={cat} onClick={() => setCategory(cat)} className="text-[11px] font-black uppercase p-3 rounded-none focus:bg-[#f8f8f8] transition-colors cursor-pointer">
                     {cat}
                   </DropdownMenuItem>
                 ))}
@@ -135,13 +80,13 @@ const Shop = () => {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="h-14 rounded-none border-2 border-[#777] bg-white gap-4 px-8 text-[12px] font-black uppercase tracking-[0.2em] hover:bg-slate-50">
-                  Sort: {sort}
+                <Button variant="outline" className="h-12 rounded-none border-2 border-[#777] gap-3 px-6 text-[11px] font-black uppercase tracking-widest hover:bg-[#f8f8f8] transition-all text-slate-700 shadow-md active:scale-95">
+                  SORT: {sort}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-64 bg-white border-2 border-[#777] rounded-none p-1 shadow-2xl">
+              <DropdownMenuContent align="end" className="w-64 bg-white rounded-none p-2 shadow-xl border-2 border-[#777]">
                 {['Newest', 'Price: Low to High', 'Price: High to Low'].map(s => (
-                  <DropdownMenuItem key={s} onClick={() => setSort(s)} className="text-[12px] font-black uppercase p-4 focus:bg-slate-50">
+                  <DropdownMenuItem key={s} onClick={() => setSort(s)} className="text-[11px] font-black uppercase p-3 rounded-none focus:bg-[#f8f8f8] transition-colors cursor-pointer">
                     {s}
                   </DropdownMenuItem>
                 ))}
@@ -152,20 +97,21 @@ const Shop = () => {
 
         {/* Adsterra Slot 7 - Top of Shop */}
         {settings?.ads?.adsterra?.bannerFiveCode && (
-           <div className="mb-8">
+           <div className="mb-12">
               <a href={settings.ads.adsterra.bannerFiveCode} target="_blank" rel="noopener noreferrer" className="block group">
-                 <div className="bg-[#1a1a1a] border-b-4 border-brand-primary p-4 flex items-center justify-between hover:bg-slate-900 transition-all overflow-hidden relative">
-                    <div className="flex items-center gap-4 relative z-10">
-                       <div className="w-10 h-10 bg-brand-primary flex items-center justify-center text-white">
-                          <Zap className="h-5 w-5 animate-pulse" />
+                 <div className="bg-slate-900 rounded-none p-6 flex items-center justify-between border-2 border-slate-900 transition-all overflow-hidden relative shadow-lg">
+                    <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+                    <div className="flex items-center gap-6 relative z-10">
+                       <div className="w-14 h-14 bg-white rounded-none flex items-center justify-center text-slate-900 border-2 border-slate-900">
+                          <Zap className="h-7 w-7 text-[#9B2B2C] fill-[#9B2B2C] animate-pulse" />
                        </div>
                        <div>
-                          <h4 className="text-white text-xs font-black uppercase tracking-widest">Premium Catalog Access</h4>
-                          <p className="text-white/40 text-[8px] font-bold uppercase mt-1">Authorized User_Port_32 // Secure_Dispatch</p>
+                          <h4 className="text-white text-base font-black uppercase tracking-widest mb-2 leading-none">PREMIUM MEMBER ACCESS UNLOCKED</h4>
+                          <p className="text-white/40 text-[10px] font-black uppercase tracking-widest">Authorized Session Active // SSL_SECURED</p>
                        </div>
                     </div>
-                    <div className="hidden md:flex items-center gap-2 bg-white/10 px-4 py-2 border border-white/20 text-white text-[9px] font-black uppercase tracking-[0.2em] group-hover:bg-brand-primary transition-all relative z-10">
-                       Click to Browse <ArrowRight className="h-3 w-3" />
+                    <div className="hidden md:flex items-center gap-2 bg-[#9B2B2C] px-8 py-3 rounded-none text-white text-[11px] font-black uppercase tracking-widest group-hover:bg-white group-hover:text-slate-900 transition-all relative z-10 shadow-lg">
+                       CLICK_HERE <ArrowRight className="h-4 w-4" />
                     </div>
                  </div>
               </a>
@@ -173,47 +119,47 @@ const Shop = () => {
         )}
 
         {globalLoading && allProducts.length === 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
             {[...Array(12)].map((_, i) => (
-              <div key={i} className="h-[300px] bg-brand-card border border-[#777] relative p-1 shadow-inner opacity-40">
-                 <div className="w-full h-full border border-[#777]/20 flex items-center justify-center">
-                    <div className="w-8 h-8 border-2 border-brand-primary border-t-transparent animate-spin" />
+              <div key={i} className="aspect-square bg-white rounded-none animate-pulse shadow-md p-4 border-2 border-[#777]">
+                 <div className="w-full h-full bg-[#f8f8f8] rounded-none flex items-center justify-center">
+                    <div className="w-8 h-8 border-2 border-[#9B2B2C] border-t-transparent animate-spin rounded-none" />
                  </div>
               </div>
             ))}
           </div>
         ) : filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
             {filteredProducts.map(product => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
         ) : (
-          <div className="text-center py-32 bg-white/20 border-2 border-dashed border-[#777]/30">
-            <div className="w-24 h-24 bg-white border border-[#777] flex items-center justify-center mx-auto mb-8 shadow-xl">
-              <Search className="h-10 w-10 text-brand-primary" />
+          <div className="text-center py-32 bg-white rounded-none shadow-2xl border-2 border-[#777]">
+            <div className="w-32 h-32 bg-[#f8f8f8] border-2 border-[#777] flex items-center justify-center mx-auto mb-10 shadow-inner rounded-none">
+              <Search className="h-12 w-12 text-slate-300" />
             </div>
-            <h2 className="text-2xl font-black text-slate-800 uppercase tracking-tighter mb-2">No Results</h2>
-            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.3em] mb-10 max-w-sm mx-auto">We couldn't find any items matching your search.</p>
+            <h2 className="text-3xl font-black text-slate-800 uppercase tracking-tighter mb-4">NO_DATA_FOUND</h2>
+            <p className="text-[12px] font-black text-slate-400 uppercase tracking-[0.2em] mb-12 max-w-sm mx-auto leading-relaxed">We couldn't find anything matching your current filters. Try refining your selection.</p>
             <Button 
               onClick={() => { setSearch(''); setCategory('All'); }}
-              className="bg-brand-button hover:bg-slate-900 text-white rounded-none h-12 px-10 text-[11px] font-black uppercase tracking-widest shadow-lg"
+              className="bg-slate-900 hover:bg-[#9B2B2C] text-white rounded-none h-14 px-12 text-[12px] font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all"
             >
-              Reset Filters
+              RESET_ALL_FILTERS
             </Button>
           </div>
         )}
 
         {/* Adsterra Slot 8 - Bottom of Shop */}
         {settings?.ads?.adsterra?.bannerSixCode && (
-           <div className="mt-12">
+           <div className="mt-16">
               <a href={settings.ads.adsterra.bannerSixCode} target="_blank" rel="noopener noreferrer" className="block relative group">
-                 <div className="bg-white border-4 border-dashed border-[#777] p-10 text-center hover:border-brand-primary transition-all">
-                    <h5 className="text-[10px] font-black uppercase text-slate-500 tracking-[0.4em] mb-4">You've reached the end of the catalog</h5>
-                    <div className="inline-block bg-slate-900 text-white px-10 py-3 font-black uppercase text-lg tracking-widest hover:bg-brand-primary transition-colors">
-                       UNLOCK NEXT DISPATCH LINK
+                 <div className="bg-[#f8f8f8] rounded-none p-16 text-center hover:bg-white transition-all border-2 border-[#777] shadow-2xl relative overflow-hidden group">
+                    <h5 className="text-[12px] font-black uppercase text-slate-400 tracking-[0.4em] mb-8">END_OF_CATALOG // ACCESSING_REDUNDANT_PROTOCOL</h5>
+                    <div className="inline-block bg-slate-900 text-white px-12 py-5 font-black uppercase text-xl tracking-widest hover:bg-[#9B2B2C] transition-all rounded-none shadow-xl active:scale-95">
+                       ACCESS PRIVATE DISPATCH LINK
                     </div>
-                    <p className="text-[7px] font-bold text-slate-400 uppercase mt-6 tracking-[0.6em]">System Protocol_77 // Global_Access_Verified</p>
+                    <p className="text-[10px] font-black text-slate-300 uppercase mt-10 tracking-[0.5em]">Dispatch_ID: [REDACTED] // Global_Channel_01</p>
                  </div>
               </a>
            </div>

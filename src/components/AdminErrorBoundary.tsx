@@ -29,7 +29,7 @@ class AdminErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         <div className="min-h-screen bg-[#f4e4d4] flex items-center justify-center p-6 font-sans">
-          <div className="max-w-md w-full bg-[#ead9c4] border-2 border-[#9B2B2C] shadow-[10px_10px_0px_#9B2B2C] p-8 text-center relative overflow-hidden">
+          <div className="max-w-md w-full bg-[#ead9c4] border-2 border-[#9B2B2C] shadow-2xl p-8 text-center relative overflow-hidden">
             <div className="absolute top-0 right-0 p-1 bg-[#9B2B2C] text-white text-[8px] font-black uppercase tracking-widest">
               PROTOCOL_FAILURE
             </div>

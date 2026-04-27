@@ -127,7 +127,7 @@ const AdminProfile = () => {
             <Button 
               type="submit" 
               disabled={loading}
-              className="w-full bg-[#9B2B2C] hover:bg-slate-900 text-white font-black uppercase tracking-widest h-14 rounded-none shadow-[4px_4px_0px_#000] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all"
+              className="w-full bg-[#9B2B2C] hover:bg-slate-900 text-white font-black uppercase tracking-widest h-14 rounded-none shadow-xl transition-all active:scale-95"
             >
               <Save className="mr-3 h-5 w-5" /> {loading ? 'UPDATING...' : 'SAVE_ACCOUT_CHANGES'}
             </Button>

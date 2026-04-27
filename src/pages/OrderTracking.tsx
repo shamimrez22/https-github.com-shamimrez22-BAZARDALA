@@ -54,98 +54,104 @@ const OrderTracking = () => {
   const currentStep = steps.findIndex(s => s.status === order?.status);
 
   return (
-    <div className="bg-brand-bg min-h-screen pb-20 font-sans">
-      <div className="w-full px-8 md:px-20 lg:px-40 py-20">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-16 border-b-4 border-[#9B2B2C] pb-10 flex flex-col md:flex-row items-end justify-between gap-6">
+    <div className="bg-slate-50/30 min-h-screen pb-20 font-sans">
+      <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10 py-12">
+        <div className="max-w-5xl mx-auto">
+          <div className="mb-12 flex flex-col md:flex-row items-end justify-between gap-6 px-4 md:px-0">
             <div>
-              <h1 className="text-6xl font-black text-slate-900 uppercase tracking-tighter leading-none">TRACK_ORDER</h1>
-              <p className="text-[13px] font-black text-slate-500 uppercase tracking-[0.3em] mt-3">Check the status of your order</p>
+              <h1 className="text-3xl md:text-5xl font-black text-slate-800 uppercase tracking-tighter leading-none border-b-4 border-[#9B2B2C] pb-4 inline-block">TRACKING_LINK</h1>
+              <div className="flex items-center gap-3 mt-5">
+                 <div className="w-2 h-2 bg-[#9B2B2C] rounded-none animate-pulse" />
+                 <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em]">Direct access to real-time dispatch data protocol</p>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-               <span className="text-[9px] font-black text-green-600 uppercase tracking-widest">System Online</span>
+            <div className="flex items-center gap-3 bg-white px-6 py-2.5 rounded-none shadow-md border-2 border-[#777]">
+               <div className="w-2 h-2 bg-green-600 rounded-none animate-ping" />
+               <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">CHANNEL_77_ACTIVE</span>
             </div>
           </div>
 
-          <div className="bg-brand-secondary border-2 border-[#777] p-12 shadow-2xl mb-16">
-            <form onSubmit={handleTrack} className="flex flex-col sm:flex-row gap-6">
-              <div className="relative flex-1">
-                <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-[#9B2B2C]" />
+          <div className="bg-white rounded-none p-8 md:p-12 shadow-2xl mb-12 border-2 border-[#777] relative overflow-hidden">
+            <form onSubmit={handleTrack} className="flex flex-col sm:flex-row gap-6 relative z-10">
+              <div className="relative flex-1 group">
+                <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 group-focus-within:text-[#9B2B2C] transition-colors" />
                 <Input
-                  placeholder="Order ID (e.g. ORD-XXXXXX)"
+                  placeholder="INSERT_ORDER_ID (e.g. ORD-XXXXXX)"
                   value={orderId}
                   onChange={(e) => setOrderId(e.target.value)}
-                  className="pl-14 h-16 bg-white border-2 border-[#777] rounded-none text-sm font-black uppercase tracking-widest focus-visible:ring-0 focus-visible:border-[#9B2B2C]"
+                  className="pl-16 h-16 bg-[#f8f8f8] border-2 border-[#777] rounded-none text-[12px] font-black uppercase tracking-widest focus-visible:ring-0 shadow-inner"
                 />
               </div>
-              <Button type="submit" className="h-16 px-16 bg-[#9B2B2C] hover:bg-slate-900 text-white rounded-none font-black uppercase text-[13px] tracking-widest shadow-xl disabled:bg-slate-400" disabled={loading}>
-                {loading ? 'TRACKING...' : 'TRACK NOW'}
+              <Button type="submit" className="h-16 px-12 bg-slate-900 hover:bg-[#9B2B2C] text-white rounded-none font-black uppercase text-[12px] tracking-widest shadow-xl active:scale-95 transition-all disabled:bg-slate-200" disabled={loading}>
+                {loading ? 'INITIALIZING_CHANNEL...' : 'TRACK_DISPATCH_PROTOCOL'}
               </Button>
             </form>
           </div>
 
           {error && (
-            <div className="p-6 bg-rose-50 border border-rose-200 text-rose-700 rounded-none text-[10px] font-black uppercase tracking-widest text-center mb-12 shadow-inner">
-               <span className="bg-rose-600 text-white px-2 py-0.5 mr-3">SYSTEM_ERR</span>
-               {error}
-            </div>
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="p-8 bg-red-50/50 rounded-none border-2 border-red-600 text-red-600 text-[11px] font-black uppercase tracking-widest text-center mb-12 shadow-lg"
+            >
+               ORDER_IDENTIFIER_NOT_FOUND // VERIFY_REGISTRY_AND_RETRY
+            </motion.div>
           )}
 
           {order && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="bg-white border border-[#777] shadow-2xl relative overflow-hidden"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white rounded-none shadow-2xl relative overflow-hidden border-2 border-[#777]"
             >
-              <div className="absolute top-0 left-0 w-1 h-full bg-[#9B2B2C]" />
-              
-              <div className="p-16">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-20 pb-12 border-b-2 border-[#777]/10 gap-10">
+              <div className="p-10 md:p-16">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 pb-12 border-b-2 border-[#777] gap-10">
                   <div>
-                    <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-3">ORDER_ID</p>
-                    <h2 className="text-5xl font-black text-[#9B2B2C] tracking-tighter uppercase leading-none">{order.orderId}</h2>
+                    <span className="inline-block px-4 py-1 bg-[#9B2B2C] text-white text-[10px] font-black uppercase tracking-[0.4em] rounded-none mb-4">
+                      SESSION_VERIFIED
+                    </span>
+                    <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter uppercase leading-none border-l-4 border-[#9B2B2C] pl-6">{order.orderId}</h2>
                   </div>
-                  <div className="text-left md:text-right">
-                    <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-3">EXPECTED_DELIVERY</p>
-                    <div className="inline-flex items-center gap-3 bg-brand-bg border-2 border-[#777] px-6 py-2.5">
-                       <Clock className="h-4 w-4 text-[#9B2B2C]" />
-                       <span className="text-[14px] font-black text-slate-900 uppercase">April 20, 2026</span>
+                  <div className="text-left md:text-right bg-[#f8f8f8] border-2 border-[#777] p-6 px-10 rounded-none shadow-inner">
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-3 opacity-60">Estimated Arrival</p>
+                    <div className="flex items-center gap-4 text-slate-800">
+                       <Clock className="h-5 w-5 text-[#9B2B2C]" />
+                       <span className="text-xl font-black uppercase tracking-tighter">EXPRESS_DISPATCH_PROTOCOL</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Timeline */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-20">
+                {/* Modern Stepper */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-20">
                   {steps.map((step, i) => {
                     const isCompleted = i <= currentStep;
                     const isCurrent = i === currentStep;
                     
                     return (
-                      <div key={step.status} className="relative group">
-                        <div className={`p-6 border transition-all duration-700 flex flex-col items-center text-center gap-4 ${
+                      <div key={step.status} className="relative">
+                        <div className={`p-8 rounded-none transition-all duration-700 flex flex-col items-center text-center gap-5 border-2 ${
                           isCompleted 
-                          ? 'bg-brand-secondary border-[#9B2B2C] shadow-lg translate-y-[-4px]' 
-                          : 'bg-slate-50 border-[#777]/10 opacity-40 grayscale'
+                          ? 'bg-white border-[#777] shadow-lg scale-100' 
+                          : 'bg-[#f8f8f8] border-[#777]/20 opacity-30 grayscale'
                         }`}>
-                          <div className={`w-12 h-12 flex items-center justify-center border-2 ${isCompleted ? 'border-[#9B2B2C] bg-white text-[#9B2B2C]' : 'border-slate-300 text-slate-300'}`}>
-                            <step.icon className="h-6 w-6" />
+                          <div className={`w-16 h-16 rounded-none border-2 border-slate-900 flex items-center justify-center shadow-lg transition-all duration-500 ${isCompleted ? 'bg-[#9B2B2C] text-white' : 'bg-white text-slate-300'}`}>
+                            <step.icon className={`h-7 w-7 ${isCurrent ? 'animate-pulse' : ''}`} />
                           </div>
                           <div>
-                             <h3 className={`text-[10px] font-black uppercase tracking-widest ${isCompleted ? 'text-slate-900 border-b-2 border-[#9B2B2C]' : 'text-slate-400'} inline-block mb-2 px-1`}>
-                               {step.label}
+                             <h3 className={`text-[12px] font-black uppercase tracking-widest leading-none mb-3 ${isCompleted ? 'text-slate-800' : 'text-slate-400'}`}>
+                                {step.label}
                              </h3>
-                             <p className="text-[8px] font-bold text-slate-500 uppercase tracking-tighter leading-tight">{step.desc}</p>
+                             <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.1em] leading-tight">{step.desc}</p>
                           </div>
                           {isCurrent && (
-                            <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-[#9B2B2C] text-white text-[7px] font-black px-2 py-0.5 uppercase tracking-widest border border-white">
-                               CURRENT_STATUS
+                            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[8px] font-black px-4 py-1.5 rounded-none uppercase tracking-widest shadow-xl">
+                               ACTIVE_NODE
                             </div>
                           )}
                         </div>
                         {i < 3 && (
-                           <div className="hidden md:block absolute top-[40px] -right-[15px] z-10">
-                              <ArrowRight className={`h-4 w-4 ${i < currentStep ? 'text-[#9B2B2C]' : 'text-slate-200'}`} />
+                           <div className="hidden md:flex absolute top-1/2 -right-3 z-10 -translate-y-1/2 items-center justify-center w-6 h-6 bg-white border-2 border-[#777] rounded-none shadow-md">
+                              <div className={`w-1.5 h-1.5 rounded-none ${i < currentStep ? 'bg-[#9B2B2C]' : 'bg-slate-200'}`} />
                            </div>
                         )}
                       </div>
@@ -153,15 +159,20 @@ const OrderTracking = () => {
                   })}
                 </div>
 
-                <div className="bg-brand-bg border border-[#777] p-8 flex flex-col md:flex-row items-center gap-8 shadow-inner">
-                  <div className="w-16 h-16 bg-[#9B2B2C] flex items-center justify-center text-white shadow-xl flex-shrink-0">
-                     <MapPin className="h-8 w-8" />
+                <div className="bg-[#f8f8f8] border-2 border-[#777] rounded-none p-10 md:p-14 flex flex-col md:flex-row items-center gap-12 shadow-inner group overflow-hidden relative">
+                  <div className="w-20 h-20 bg-white border-2 border-slate-900 rounded-none flex items-center justify-center text-slate-400 shadow-lg group-hover:rotate-12 transition-transform duration-500 relative z-10">
+                     <MapPin className="h-10 w-10 text-[#9B2B2C]" />
                   </div>
-                  <div>
-                    <p className="text-[10px] font-black text-[#9B2B2C] uppercase tracking-[0.3em] mb-2 underline decoration-dashed">DELIVERY_ADDRESS</p>
-                    <p className="text-xs font-bold text-slate-900 uppercase tracking-widest leading-relaxed">
+                  <div className="relative z-10 flex-1 text-center md:text-left">
+                    <p className="text-[11px] font-black text-[#9B2B2C] uppercase tracking-[0.4em] mb-4 opacity-60">SHIPPING_DESTINATION_NODE</p>
+                    <p className="text-xl md:text-2xl font-black text-slate-900 tracking-tight leading-relaxed uppercase">
                        {order?.customerInfo?.address || 'N/A'}
                     </p>
+                    <div className="flex items-center gap-3 mt-6 justify-center md:justify-start">
+                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{order?.customerInfo?.name}</p>
+                       <div className="w-2 h-[1px] bg-slate-300" />
+                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{order?.customerInfo?.phone}</p>
+                    </div>
                   </div>
                 </div>
               </div>

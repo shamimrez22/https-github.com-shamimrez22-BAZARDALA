@@ -17,20 +17,25 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="bg-white border border-[#777] shadow-sm hover:shadow-xl transition-all group relative flex flex-col"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      whileHover={{ y: -5 }}
+      transition={{ duration: 0.4 }}
+      className="bg-white rounded-none shadow-sm hover:shadow-2xl transition-all group relative flex flex-col overflow-hidden border border-[#777]"
     >
-      <div className="bg-white border-b border-[#777] px-3 py-2 flex justify-between items-center">
-        <span className="text-[12px] md:text-[10px] font-black text-brand-primary uppercase tracking-tighter">Product_{product.name.slice(0, 3).toUpperCase()}</span>
-        <div className="flex gap-1">
-          <div className="w-1.5 h-1.5 md:w-1 md:h-1 bg-brand-primary rounded-full" />
-          <div className="w-1.5 h-1.5 md:w-1 md:h-1 bg-brand-primary rounded-full opacity-30" />
+      <div className="bg-[#f8f8f8] px-4 py-2 border-b border-[#777] flex justify-between items-center relative overflow-hidden">
+        <div className="flex items-center gap-2 z-10">
+          <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">PRODUCT_REF:</span>
+          <span className="text-[10px] font-black text-[#9B2B2C] uppercase tracking-tighter">{product.name.slice(0, 5).toUpperCase()}</span>
+        </div>
+        <div className="flex gap-1 z-10">
+          <div className="w-1.5 h-1.5 bg-[#9B2B2C] rounded-none" />
         </div>
       </div>
 
       <div 
-        className="relative aspect-square overflow-hidden bg-white border-b border-[#777]/20 cursor-pointer"
+        className="relative aspect-square overflow-hidden bg-white border-b border-[#777] cursor-pointer"
         onClick={() => navigate('/checkout', { 
           state: { 
             directOrder: true, 
@@ -45,71 +50,43 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
         })}
       >
         <img
-          src={product.images?.[0] || 'https://picsum.photos/seed/product/400/400'}
+          src={product.images?.[0] || product.image}
           alt={product.name}
           loading="lazy"
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 grayscale group-hover:grayscale-0"
+          className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
           referrerPolicy="no-referrer"
         />
-        
+
         {/* Status Overlays */}
         {product.discountPercentage && product.discountPercentage > 0 && (
-          <div className="absolute top-2 right-2 bg-yellow-400 text-slate-900 text-[10px] font-black px-2 py-1 uppercase tracking-tighter border border-slate-900 shadow-[2px_2px_0px_#000]">
-            {product.discountPercentage}% OFF
+          <div className="absolute top-0 right-0 bg-[#9B2B2C] text-white text-[9px] font-black px-2 py-1 rounded-none z-10 uppercase tracking-widest">
+            -{product.discountPercentage}%
           </div>
         )}
+        
         {product.stock < 5 && product.stock > 0 && (
-          <div className="absolute top-2 left-2 bg-[#9B2B2C] text-white text-[9px] font-black px-2 py-0.5 uppercase tracking-widest border border-white">
-            Low Stock
+          <div className="absolute top-0 left-0 bg-white text-[#9B2B2C] text-[8px] font-black px-2 py-1 uppercase tracking-widest rounded-none flex items-center gap-1 border-b border-r border-[#777]">
+            <span className="w-1 h-1 bg-[#9B2B2C] rounded-none animate-pulse" />
+            STOCK_LOW
           </div>
         )}
+
         {product.stock === 0 && (
-          <div className="absolute inset-0 bg-white/80 backdrop-blur-[2px] flex items-center justify-center">
-            <span className="bg-slate-900 text-white text-[10px] font-black px-4 py-1 uppercase tracking-[0.2em] border border-white">
-              Sold Out
+          <div className="absolute inset-0 bg-white/80 flex items-center justify-center z-20">
+            <span className="bg-[#9B2B2C] text-white text-[10px] font-black px-4 py-1.5 uppercase tracking-widest rounded-none">
+              SOLD_OUT
             </span>
           </div>
         )}
-
-        {/* Hover Controls */}
-        <div className="absolute inset-0 bg-[#9B2B2C]/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
-          <button 
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate('/checkout', { 
-                state: { 
-                  directOrder: true, 
-                  product: {
-                    productId: product.id,
-                    name: product.name,
-                    price: product.price,
-                    image: product.images?.[0] || product.image,
-                    quantity: 1
-                  } 
-                } 
-              });
-            }}
-            className="w-10 h-10 bg-white border border-[#777] flex items-center justify-center text-[#9B2B2C] hover:bg-[#9B2B2C] hover:text-white transition-all shadow-lg"
-          >
-            <Eye className="h-4 w-4" />
-          </button>
-          <button 
-            onClick={(e) => e.stopPropagation()}
-            className="w-10 h-10 bg-white border border-[#777] flex items-center justify-center text-[#9B2B2C] hover:bg-[#9B2B2C] hover:text-white transition-all shadow-lg"
-          >
-            <Heart className="h-4 w-4" />
-          </button>
-        </div>
       </div>
 
-      <div className="p-3 md:p-4 flex-1 flex flex-col bg-white">
-        <div className="flex items-center gap-2 mb-2">
-           <div className="h-[1px] flex-1 bg-[#777]/20" />
-           <p className="text-[10px] md:text-[8px] text-slate-400 font-black uppercase tracking-widest whitespace-nowrap">{product.category}</p>
+      <div className="p-3 flex-1 flex flex-col bg-white relative">
+        <div className="flex items-center gap-2 mb-1">
+           <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">{product.category}</span>
         </div>
         
         <h3 
-          className="font-black text-slate-800 text-[18px] md:text-[14px] uppercase tracking-tight line-clamp-2 mb-4 group-hover:text-[#9B2B2C] transition-colors cursor-pointer leading-tight h-12 flex items-center"
+          className="font-black text-slate-900 text-[12px] line-clamp-1 mb-2 hover:text-[#9B2B2C] transition-colors cursor-pointer uppercase tracking-tight"
           onClick={() => navigate('/checkout', { 
             state: { 
               directOrder: true, 
@@ -126,29 +103,23 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
           {product.name}
         </h3>
         
-        <div className="mt-auto flex items-end justify-between border-t border-[#777]/10 pt-4 md:pt-6">
+        <div className="flex items-center justify-between mt-auto pt-3 border-t border-[#777]/10">
           <div className="flex flex-col">
             {product.oldPrice && product.oldPrice > 0 && (
-              <span className="text-[15px] md:text-[12px] font-bold text-slate-400 line-through mb-1">
+              <span className="text-[10px] font-black text-slate-300 line-through tracking-tighter">
                 ৳{product.oldPrice.toLocaleString()}
               </span>
             )}
-            <span className="text-3xl md:text-2xl font-black text-brand-primary tracking-tighter font-mono leading-none">
+            <span className="text-base md:text-lg font-black text-[#9B2B2C] tracking-tighter">
               ৳{product.price.toLocaleString()}
             </span>
           </div>
-        </div>
-      </div>
-
-      <div className="p-2 bg-white border-t border-[#777]">
-        <button
-          className="w-full bg-brand-button hover:bg-slate-900 text-white transition-all h-14 md:h-12 text-[14px] md:text-[12px] font-black uppercase tracking-[0.2em] disabled:bg-slate-300 disabled:opacity-50"
-          disabled={product.stock === 0}
-          onClick={(e) => {
-            e.stopPropagation();
-            if (product.affiliateLink) {
-              window.open(product.affiliateLink, '_blank');
-            } else {
+          
+          <button
+            className="bg-slate-900 hover:bg-[#9B2B2C] text-white transition-all h-7 md:h-9 px-2 md:px-4 text-[8px] md:text-[10px] font-black uppercase tracking-tighter md:tracking-widest rounded-none shadow-md active:scale-95 disabled:bg-slate-300 border border-slate-900"
+            disabled={product.stock === 0}
+            onClick={(e) => {
+              e.stopPropagation();
               navigate('/checkout', { 
                 state: { 
                   directOrder: true, 
@@ -161,11 +132,11 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
                   } 
                 } 
               });
-            }
-          }}
-        >
-          Order Now
-        </button>
+            }}
+          >
+            ORDER_NOW
+          </button>
+        </div>
       </div>
     </motion.div>
   );

@@ -11,7 +11,6 @@ import { ShoppingBasket } from 'lucide-react';
 
 const Home = lazy(() => import('./pages/Home'));
 const Shop = lazy(() => import('./pages/Shop'));
-const ProductDetails = lazy(() => import('./pages/ProductDetails'));
 const Cart = lazy(() => import('./pages/Cart'));
 const Checkout = lazy(() => import('./pages/Checkout'));
 const OrderTracking = lazy(() => import('./pages/OrderTracking'));
@@ -96,7 +95,6 @@ const AppContent = () => {
                   <Route path="/" element={<UserLayout />}>
                     <Route index element={<Home />} />
                     <Route path="shop" element={<Shop />} />
-                    <Route path="product/:id" element={<ProductDetails />} />
                     <Route path="cart" element={<Cart />} />
                     <Route path="checkout" element={<Checkout />} />
                     <Route path="tracking" element={<OrderTracking />} />

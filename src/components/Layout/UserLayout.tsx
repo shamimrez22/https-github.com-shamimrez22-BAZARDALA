@@ -175,11 +175,11 @@ export const UserLayout: React.FC = () => {
     <div className="min-h-screen flex flex-col bg-white text-slate-900 font-sans">
       {/* Top Navbar */}
       <header className="sticky top-0 z-50 w-full border-b border-[#777] bg-white/95 backdrop-blur-sm shadow-md">
-        <div className="w-full px-4 md:px-6 h-14 md:h-16 flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <Link to="/" className="text-xl font-black tracking-tighter text-brand-primary uppercase group flex items-center gap-2">
-              <div className="bg-brand-primary text-white p-1.5 rounded-lg shadow-lg group-hover:scale-110 transition-transform">
-                <ShoppingBasket className="h-5 w-5" />
+        <div className="w-full px-8 md:px-20 lg:px-40 h-16 md:h-20 flex items-center justify-between">
+          <div className="flex items-center gap-10">
+            <Link to="/" className="text-3xl font-black tracking-tighter text-brand-primary uppercase group flex items-center gap-3">
+              <div className="bg-brand-primary text-white p-2.5 rounded-lg shadow-lg group-hover:scale-110 transition-transform">
+                <ShoppingBasket className="h-7 w-7" />
               </div>
               <div className="whitespace-nowrap">
                 {(settings?.siteName || 'BAZAR DALA').split(' ')[0]}
@@ -188,30 +188,30 @@ export const UserLayout: React.FC = () => {
                 </span>
               </div>
             </Link>
-            <nav className="hidden lg:flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.1em] text-brand-primary">
+            <nav className="hidden lg:flex items-center gap-8 text-[13px] font-black uppercase tracking-[0.2em] text-brand-primary">
               <Link to="/" onMouseEnter={() => import('../../pages/Home')} className="hover:text-slate-900 transition-colors border-b-2 border-transparent hover:border-brand-primary pb-1">HOME</Link>
               <Link to="/shop" onMouseEnter={() => import('../../pages/Shop')} className="hover:text-slate-900 transition-colors border-b-2 border-transparent hover:border-brand-primary pb-1">SHOP</Link>
               <Link to="/tracking" className="hover:text-slate-900 transition-colors border-b-2 border-transparent hover:border-brand-primary pb-1">TRACK ORDER</Link>
             </nav>
           </div>
 
-          <div className="flex-1 max-w-lg mx-12 hidden lg:block">
+          <div className="flex-1 max-w-xl mx-20 hidden lg:block">
             <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-primary" />
+              <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-brand-primary" />
               <Input
                 placeholder="Search products..."
-                className="pl-12 bg-white/50 border-[#777] rounded-none h-11 text-xs font-bold uppercase tracking-tight focus-visible:ring-0 focus-visible:border-brand-primary placeholder:text-slate-400"
+                className="pl-14 bg-white/50 border-2 border-[#777] rounded-none h-14 text-sm font-black uppercase tracking-widest focus-visible:ring-0 focus-visible:border-brand-primary placeholder:text-slate-300"
               />
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
             <Link to="/cart" className="relative group">
-              <div className="p-2 border border-[#777] bg-white group-hover:bg-slate-50 transition-all">
-                <ShoppingCart className="h-5 w-5 text-brand-primary" />
+              <div className="p-3 border-2 border-[#777] bg-white group-hover:border-brand-primary transition-all">
+                <ShoppingCart className="h-6 w-6 text-brand-primary" />
               </div>
               {items.length > 0 && (
-                <span className="absolute -top-2 -right-2 h-5 min-w-[20px] bg-brand-primary text-white text-[10px] font-black flex items-center justify-center px-1 border border-white">
+                <span className="absolute -top-3 -right-3 h-6 min-w-[24px] bg-brand-primary text-white text-[12px] font-black flex items-center justify-center px-1.5 border-2 border-white shadow-lg">
                   {items.length}
                 </span>
               )}
@@ -276,15 +276,15 @@ export const UserLayout: React.FC = () => {
 
       {/* Global Notice Banner - Full Width Style */}
       {settings?.ads?.globalNotice?.active && (
-        <div className="w-full px-4 md:px-6 py-1 md:py-1.5 flex justify-center">
-          <div className="w-full bg-slate-900 shadow-sm text-white py-2 md:py-3 px-4 relative overflow-hidden transition-all duration-300 border border-white/10 rounded-sm">
+        <div className="w-full px-8 md:px-20 lg:px-40 py-2 md:py-3 flex justify-center">
+          <div className="w-full bg-slate-900 shadow-xl text-white py-4 md:py-6 px-10 relative overflow-hidden transition-all duration-300 border-2 border-brand-primary rounded-sm">
             <div className="absolute inset-0 bg-white/5 animate-pulse pointer-events-none" />
-            <div className="flex items-center justify-center gap-4 relative z-10 min-h-[24px]">
-              <div className="w-1.5 h-1.5 bg-brand-primary rounded-full animate-ping hidden sm:block" />
-              <p className="text-[11px] md:text-[12px] font-black uppercase tracking-[0.3em] text-center leading-relaxed">
+            <div className="flex items-center justify-center gap-8 relative z-10 min-h-[30px]">
+              <div className="w-2.5 h-2.5 bg-brand-primary rounded-full animate-ping hidden sm:block" />
+              <p className="text-[13px] md:text-[16px] font-black uppercase tracking-[0.4em] text-center leading-relaxed">
                 {settings.ads.globalNotice.message}
               </p>
-              <div className="w-1.5 h-1.5 bg-brand-primary rounded-full animate-ping hidden sm:block" />
+              <div className="w-2.5 h-2.5 bg-brand-primary rounded-full animate-ping hidden sm:block" />
             </div>
           </div>
         </div>
@@ -292,16 +292,16 @@ export const UserLayout: React.FC = () => {
 
       {/* Social Bar Ad (SOCAILBAR) - Full Width Style */}
       {settings?.ads?.socialBarAd?.active && (
-        <div className="w-full px-4 md:px-6 py-1 flex justify-center">
-          <div className="w-full bg-brand-primary shadow-sm text-white py-1.5 md:py-2.5 border border-black/10 rounded-sm">
-            <div className="px-4 flex items-center justify-center gap-4 min-h-[20px]">
-              <p className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.35em] text-center">
+        <div className="w-full px-8 md:px-20 lg:px-40 py-2 flex justify-center">
+          <div className="w-full bg-brand-primary shadow-xl text-white py-3 md:py-5 border-2 border-black/10 rounded-sm">
+            <div className="px-10 flex items-center justify-center gap-10 min-h-[24px]">
+              <p className="text-[12px] md:text-[14px] font-black uppercase tracking-[0.4em] text-center">
                 {settings.ads.socialBarAd.message}
               </p>
               {settings.ads.socialBarAd.link && (
                 <Link 
                   to={settings.ads.socialBarAd.link} 
-                  className="text-[10px] font-black underline bg-white text-brand-primary px-4 py-1.5 hover:bg-slate-900 hover:text-white transition-all shadow-sm"
+                  className="text-[11px] font-black underline bg-white text-brand-primary px-8 py-3 hover:bg-slate-900 hover:text-white transition-all shadow-xl border-2 border-black"
                 >
                   EXPLORE
                 </Link>
@@ -357,12 +357,12 @@ export const UserLayout: React.FC = () => {
         </div>
       )}
 
-      <footer className="bg-white border-t border-[#777] pt-20 pb-10">
-        <div className="container mx-auto">
-          <div className="grid grid-cols-4 gap-16 mb-20">
-            <div className="space-y-8">
-              <h3 className="text-brand-primary text-2xl font-black tracking-tighter uppercase flex items-center gap-3">
-                <ShoppingBasket className="h-8 w-8" />
+      <footer className="bg-white border-t-2 border-[#777] pt-28 pb-14">
+        <div className="w-full px-8 md:px-20 lg:px-40">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-20 mb-28">
+            <div className="space-y-10">
+              <h3 className="text-brand-primary text-3xl font-black tracking-tighter uppercase flex items-center gap-4">
+                <ShoppingBasket className="h-10 w-10" />
                 <div>
                   {(settings?.siteName || 'BAZAR DALA').split(' ')[0]}
                   <span className="text-slate-900">
@@ -370,10 +370,10 @@ export const UserLayout: React.FC = () => {
                   </span>
                 </div>
               </h3>
-              <p className="text-slate-600 text-[11px] font-bold uppercase leading-relaxed tracking-wider">
+              <p className="text-slate-600 text-[13px] font-black uppercase leading-relaxed tracking-wider">
                 {settings?.siteDescription || "Bangladesh’s premium online shop. Quality products, fast delivery, and secure payments."}
               </p>
-              <div className="flex gap-4">
+              <div className="flex gap-6">
                 {(settings?.socialLinks || [
                   { platform: 'FB', url: '#' },
                   { platform: 'TW', url: '#' },
@@ -384,17 +384,17 @@ export const UserLayout: React.FC = () => {
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-10 h-10 border border-[#777] bg-white flex items-center justify-center text-brand-primary hover:bg-brand-primary hover:text-white transition-all cursor-pointer font-black grayscale hover:grayscale-0"
+                    className="w-12 h-12 border-2 border-[#777] bg-white flex items-center justify-center text-brand-primary hover:bg-brand-primary hover:text-white transition-all cursor-pointer font-black grayscale hover:grayscale-0 shadow-md"
                   >
-                    <span className="text-xs uppercase">{social.platform.slice(0, 1)}</span>
+                    <span className="text-sm uppercase">{social.platform.slice(0, 1)}</span>
                   </a>
                 ))}
               </div>
             </div>
 
             <div>
-              <h4 className="text-brand-primary font-black mb-8 uppercase tracking-[0.2em] text-[11px] border-b border-brand-primary/20 pb-3">Customer Support</h4>
-              <ul className="space-y-4 text-[10px] font-black text-slate-700 uppercase tracking-widest">
+              <h4 className="text-brand-primary font-black mb-10 uppercase tracking-[0.2em] text-[13px] border-b-2 border-brand-primary pb-4">Customer Support</h4>
+              <ul className="space-y-5 text-[12px] font-black text-slate-900 uppercase tracking-widest">
                 {(settings?.footerSupportLinks || [
                   { label: 'Help Center', url: '/help' },
                   { label: 'How to Buy', url: '/how-to-buy' },
@@ -402,42 +402,42 @@ export const UserLayout: React.FC = () => {
                   { label: 'Contact Us', url: '/contact' },
                   { label: 'Terms & Conditions', url: '/terms' }
                 ]).map((link, i) => (
-                  <li key={i}><Link to={link.url} className="hover:text-brand-primary transition-colors">{link.label}</Link></li>
+                  <li key={i}><Link to={link.url} className="hover:text-brand-primary transition-colors flex items-center gap-2"><ArrowRight className="h-3 w-3" /> {link.label}</Link></li>
                 ))}
               </ul>
             </div>
 
             <div>
-              <h4 className="text-brand-primary font-black mb-8 uppercase tracking-[0.2em] text-[11px] border-b border-brand-primary/20 pb-3">Our Company</h4>
-              <ul className="space-y-4 text-[10px] font-black text-slate-700 uppercase tracking-widest">
+              <h4 className="text-brand-primary font-black mb-10 uppercase tracking-[0.2em] text-[13px] border-b-2 border-brand-primary pb-4">Our Company</h4>
+              <ul className="space-y-5 text-[12px] font-black text-slate-900 uppercase tracking-widest">
                 {(settings?.footerCompanyLinks || [
                   { label: 'About Us', url: '/about' },
                   { label: 'Careers', url: '/careers' },
                   { label: 'Our Blog', url: '/blog' },
                   { label: 'Track Order', url: '/tracking' }
                 ]).map((link, i) => (
-                  <li key={i}><Link to={link.url} className="hover:text-brand-primary transition-colors">{link.label}</Link></li>
+                  <li key={i}><Link to={link.url} className="hover:text-brand-primary transition-colors flex items-center gap-2"><ArrowRight className="h-3 w-3" /> {link.label}</Link></li>
                 ))}
                 <li><Link to="/admin/login" className="text-slate-400 hover:text-brand-primary transition-colors">Admin Login</Link></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-brand-primary font-black mb-8 uppercase tracking-[0.2em] text-[11px] border-b border-brand-primary/20 pb-3">Newsletter</h4>
-              <p className="text-[10px] font-bold text-slate-600 uppercase mb-6 leading-relaxed">Subscribe for latest products and offers.</p>
-              <div className="space-y-3">
-                <Input placeholder="Enter your email" className="bg-white/50 border-[#777] rounded-none focus-visible:ring-0 focus-visible:border-brand-primary text-[10px] font-bold uppercase" />
-                <Button className="w-full bg-brand-button hover:bg-slate-900 text-white font-black uppercase text-[10px] rounded-none h-10 tracking-widest">Subscribe</Button>
+              <h4 className="text-brand-primary font-black mb-10 uppercase tracking-[0.2em] text-[13px] border-b-2 border-brand-primary pb-4">Newsletter</h4>
+              <p className="text-[12px] font-black text-slate-600 uppercase mb-8 leading-relaxed">Subscribe for latest products and offers.</p>
+              <div className="space-y-4">
+                <Input placeholder="Enter your email" className="h-14 bg-white/50 border-2 border-[#777] rounded-none focus-visible:ring-0 focus-visible:border-brand-primary text-[12px] font-black uppercase tracking-widest" />
+                <Button className="w-full bg-brand-button hover:bg-slate-900 text-white font-black uppercase text-[12px] rounded-none h-14 tracking-[0.3em] shadow-xl">Subscribe</Button>
               </div>
             </div>
           </div>
 
-          <div className="pt-10 border-t border-[#777]/30 flex flex-col md:flex-row justify-between items-center gap-8">
-            <p className="text-slate-500 text-[9px] font-bold uppercase tracking-widest">© 2026 {settings?.siteName?.toUpperCase() || 'BAZAR DALA'} // ALL RIGHTS RESERVED</p>
-            <div className="flex items-center gap-10 grayscale opacity-40 hover:opacity-100 transition-all">
-              <span className="text-[10px] font-black text-slate-400">VISA</span>
-              <span className="text-[10px] font-black text-slate-400">MASTERCARD</span>
-              <span className="text-[10px] font-black text-slate-400">BKASH</span>
+          <div className="pt-12 border-t-2 border-[#777]/30 flex flex-col md:flex-row justify-between items-center gap-10">
+            <p className="text-slate-500 text-[11px] font-black uppercase tracking-widest leading-loose">© 2026 {settings?.siteName?.toUpperCase() || 'BAZAR DALA'} // ALL RIGHTS RESERVED // PROTOCOL_77_VERIFIED</p>
+            <div className="flex items-center gap-12 grayscale opacity-60 hover:opacity-100 transition-all">
+              <span className="text-[12px] font-black text-slate-500">VISA_FAST</span>
+              <span className="text-[12px] font-black text-slate-500">MASTERCARD_SECURE</span>
+              <span className="text-[12px] font-black text-slate-500">BKASH_LIVE</span>
             </div>
           </div>
         </div>

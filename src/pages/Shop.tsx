@@ -95,38 +95,38 @@ const Shop = () => {
         )}
       </AnimatePresence>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="w-full px-8 md:px-20 lg:px-40 py-12">
         {/* Sub-Header / Control Panel */}
-        <div className="bg-white border border-[#777] shadow-sm p-6 flex flex-col xl:flex-row xl:items-center justify-between gap-6 mb-4">
+        <div className="bg-white border-2 border-[#777] shadow-xl p-10 flex flex-col xl:flex-row xl:items-center justify-between gap-10 mb-8">
           <div>
-            <h1 className="text-3xl font-black tracking-tighter text-brand-primary uppercase leading-none">Our Shop</h1>
-            <div className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mt-1.5 flex items-center gap-2">
-               <div className="w-1.5 h-1.5 bg-brand-primary rounded-full animate-pulse" />
+            <h1 className="text-5xl font-black tracking-tighter text-brand-primary uppercase leading-none">Our Shop</h1>
+            <div className="text-[13px] font-black text-slate-500 uppercase tracking-[0.3em] mt-3 flex items-center gap-3">
+               <div className="w-2 h-2 bg-brand-primary rounded-full animate-pulse" />
                Products Found: {filteredProducts.length}
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="relative w-full md:w-80">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-primary" />
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="relative w-full md:w-96">
+              <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-brand-primary" />
               <Input
                 placeholder="Search items..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-12 bg-white border-[#777] rounded-none h-11 text-xs font-bold uppercase tracking-tight focus-visible:ring-0 focus-visible:border-brand-primary"
+                className="pl-14 bg-white border-2 border-[#777] rounded-none h-14 text-sm font-black uppercase tracking-widest focus-visible:ring-0 focus-visible:border-brand-primary"
               />
             </div>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="h-11 rounded-none border-[#777] bg-white gap-3 px-6 text-[10px] font-black uppercase tracking-widest hover:bg-slate-50">
-                  <SlidersHorizontal className="h-4 w-4 text-brand-primary" />
+                <Button variant="outline" className="h-14 rounded-none border-2 border-[#777] bg-white gap-4 px-8 text-[12px] font-black uppercase tracking-[0.2em] hover:bg-slate-50">
+                  <SlidersHorizontal className="h-5 w-5 text-brand-primary" />
                   Category: {category}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 bg-white border-[#777] rounded-none p-1 shadow-2xl">
+              <DropdownMenuContent align="end" className="w-64 bg-white border-2 border-[#777] rounded-none p-1 shadow-2xl">
                 {categories.map(cat => (
-                  <DropdownMenuItem key={cat} onClick={() => setCategory(cat)} className="text-[10px] font-black uppercase p-3 focus:bg-slate-50">
+                  <DropdownMenuItem key={cat} onClick={() => setCategory(cat)} className="text-[12px] font-black uppercase p-4 focus:bg-slate-50">
                     {cat}
                   </DropdownMenuItem>
                 ))}
@@ -135,13 +135,13 @@ const Shop = () => {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="h-11 rounded-none border-[#777] bg-white gap-3 px-6 text-[10px] font-black uppercase tracking-widest hover:bg-slate-50">
+                <Button variant="outline" className="h-14 rounded-none border-2 border-[#777] bg-white gap-4 px-8 text-[12px] font-black uppercase tracking-[0.2em] hover:bg-slate-50">
                   Sort: {sort}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 bg-white border-[#777] rounded-none p-1 shadow-2xl">
+              <DropdownMenuContent align="end" className="w-64 bg-white border-2 border-[#777] rounded-none p-1 shadow-2xl">
                 {['Newest', 'Price: Low to High', 'Price: High to Low'].map(s => (
-                  <DropdownMenuItem key={s} onClick={() => setSort(s)} className="text-[10px] font-black uppercase p-3 focus:bg-slate-50">
+                  <DropdownMenuItem key={s} onClick={() => setSort(s)} className="text-[12px] font-black uppercase p-4 focus:bg-slate-50">
                     {s}
                   </DropdownMenuItem>
                 ))}

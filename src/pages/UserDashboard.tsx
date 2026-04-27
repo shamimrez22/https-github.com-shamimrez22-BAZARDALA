@@ -99,14 +99,14 @@ const UserDashboard = () => {
 
   return (
     <div className="bg-brand-bg min-h-screen pb-20 font-sans">
-      <div className="container mx-auto px-4 py-12">
-        <div className="flex flex-col xl:flex-row gap-8">
+      <div className="w-full px-8 md:px-20 lg:px-40 py-16">
+        <div className="flex flex-col xl:flex-row gap-12">
           {/* Sidebar / Identity Terminal */}
-          <div className="w-full xl:w-96 space-y-6">
-            <div className="bg-brand-secondary border border-[#777] shadow-lg overflow-hidden relative">
-              <div className="bg-[#9B2B2C] h-24 border-b border-[#777]" />
-              <div className="px-8 pb-10 -mt-12 text-center relative z-10">
-                <div className="w-28 h-28 border border-[#777] bg-white p-1 mx-auto mb-6 shadow-2xl">
+          <div className="w-full xl:w-96 space-y-8">
+            <div className="bg-brand-secondary border-2 border-[#777] shadow-xl overflow-hidden relative">
+              <div className="bg-[#9B2B2C] h-32 border-b border-[#777]" />
+              <div className="px-10 pb-12 -mt-16 text-center relative z-10">
+                <div className="w-32 h-32 border-2 border-[#777] bg-white p-1.5 mx-auto mb-8 shadow-2xl">
                   <div className="w-full h-full border border-[#777]/20 overflow-hidden">
                     <img
                       src={user?.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.email}`}
@@ -115,10 +115,10 @@ const UserDashboard = () => {
                     />
                   </div>
                 </div>
-                <h2 className="text-2xl font-black text-slate-800 uppercase tracking-tighter leading-none mb-2">
+                <h2 className="text-3xl font-black text-slate-800 uppercase tracking-tighter leading-none mb-3">
                   USER: {user?.displayName?.toUpperCase()}
                 </h2>
-                <div className="inline-block px-3 py-1 bg-white border border-[#777] text-[9px] font-black uppercase tracking-widest text-[#9B2B2C] mb-8">
+                <div className="inline-block px-4 py-1.5 bg-white border-2 border-[#777] text-[11px] font-black uppercase tracking-widest text-[#9B2B2C] mb-10">
                   {user?.email}
                 </div>
                 
@@ -146,9 +146,9 @@ const UserDashboard = () => {
                   <button
                     key={i}
                     onClick={() => setActiveTab(item.id)}
-                    className={`w-full flex items-center justify-between px-6 py-4 border border-[#777] text-[10px] font-black transition-all ${
+                    className={`w-full flex items-center justify-between px-8 py-5 border-2 border-[#777] text-[13px] font-black transition-all ${
                       activeTab === item.id 
-                      ? 'bg-[#9B2B2C] text-white shadow-xl translate-x-2' 
+                      ? 'bg-[#9B2B2C] text-white shadow-xl translate-x-4' 
                       : 'bg-white text-slate-600 hover:bg-brand-secondary'
                     }`}
                   >
@@ -173,10 +173,10 @@ const UserDashboard = () => {
                   exit={{ opacity: 0, y: -10 }}
                   className="space-y-10"
                 >
-                  <div className="bg-brand-secondary border border-[#777] p-8 shadow-sm">
-                    <h1 className="text-4xl font-black text-[#9B2B2C] uppercase tracking-tighter leading-none mb-3">Recent_Orders</h1>
-                    <div className="h-1 w-20 bg-[#9B2B2C] mb-4" />
-                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Your order history and tracking detail</p>
+                  <div className="bg-brand-secondary border-2 border-[#777] p-10 shadow-sm">
+                    <h1 className="text-6xl font-black text-[#9B2B2C] uppercase tracking-tighter leading-none mb-4">Recent_Orders</h1>
+                    <div className="h-1.5 w-24 bg-[#9B2B2C] mb-6" />
+                    <p className="text-[13px] font-black text-slate-500 uppercase tracking-[0.3em]">Your order history and tracking detail</p>
                   </div>
 
                   {loading ? (
@@ -239,8 +239,8 @@ const UserDashboard = () => {
 
                               <div className="flex flex-row md:flex-col justify-between items-center md:items-end w-full md:w-auto border-t md:border-t-0 md:border-l border-[#777]/10 pt-6 md:pt-0 md:pl-10">
                                 <div className="text-right mb-4">
-                                  <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Total_Price</p>
-                                  <p className="text-3xl font-black text-[#9B2B2C] tracking-tighter">৳{(order?.total || 0).toLocaleString()}</p>
+                                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total_Price</p>
+                                  <p className="text-4xl font-black text-[#9B2B2C] tracking-tighter">৳{(order?.total || 0).toLocaleString()}</p>
                                 </div>
                                 <button className="px-6 py-2 bg-brand-secondary border border-[#777] text-[9px] font-black uppercase tracking-widest hover:bg-[#9B2B2C] hover:text-white transition-all">
                                   Details
@@ -273,10 +273,10 @@ const UserDashboard = () => {
                   exit={{ opacity: 0, y: -10 }}
                   className="space-y-10"
                 >
-                  <div className="bg-brand-secondary border border-[#777] p-8 shadow-sm">
-                    <h1 className="text-4xl font-black text-[#9B2B2C] uppercase tracking-tighter leading-none mb-3">Edit_Profile</h1>
-                    <div className="h-1 w-20 bg-[#9B2B2C] mb-4" />
-                    <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em]">Update your personal identity and avatar</p>
+                  <div className="bg-brand-secondary border-2 border-[#777] p-10 shadow-sm">
+                    <h1 className="text-6xl font-black text-[#9B2B2C] uppercase tracking-tighter leading-none mb-4">Edit_Profile</h1>
+                    <div className="h-1.5 w-24 bg-[#9B2B2C] mb-6" />
+                    <p className="text-[13px] font-black text-slate-500 uppercase tracking-[0.3em]">Update your personal identity and avatar</p>
                   </div>
 
                   <div className="bg-white border border-[#777] p-10 shadow-xl">

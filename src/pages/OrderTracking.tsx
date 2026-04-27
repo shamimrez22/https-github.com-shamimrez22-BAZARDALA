@@ -55,12 +55,12 @@ const OrderTracking = () => {
 
   return (
     <div className="bg-brand-bg min-h-screen pb-20 font-sans">
-      <div className="container mx-auto px-4 py-12">
-        <div className="max-w-4xl mx-auto">
-          <div className="mb-12 border-b-2 border-[#9B2B2C] pb-6 flex flex-col md:flex-row items-end justify-between gap-4">
+      <div className="w-full px-8 md:px-20 lg:px-40 py-20">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-16 border-b-4 border-[#9B2B2C] pb-10 flex flex-col md:flex-row items-end justify-between gap-6">
             <div>
-              <h1 className="text-4xl font-black text-slate-900 uppercase tracking-tighter leading-none">TRACK_ORDER</h1>
-              <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mt-2">Check the status of your order</p>
+              <h1 className="text-6xl font-black text-slate-900 uppercase tracking-tighter leading-none">TRACK_ORDER</h1>
+              <p className="text-[13px] font-black text-slate-500 uppercase tracking-[0.3em] mt-3">Check the status of your order</p>
             </div>
             <div className="flex items-center gap-2">
                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
@@ -68,18 +68,18 @@ const OrderTracking = () => {
             </div>
           </div>
 
-          <div className="bg-brand-secondary border border-[#777] p-8 shadow-xl mb-12">
-            <form onSubmit={handleTrack} className="flex flex-col sm:flex-row gap-4">
+          <div className="bg-brand-secondary border-2 border-[#777] p-12 shadow-2xl mb-16">
+            <form onSubmit={handleTrack} className="flex flex-col sm:flex-row gap-6">
               <div className="relative flex-1">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#9B2B2C]" />
+                <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-[#9B2B2C]" />
                 <Input
                   placeholder="Order ID (e.g. ORD-XXXXXX)"
                   value={orderId}
                   onChange={(e) => setOrderId(e.target.value)}
-                  className="pl-12 h-14 bg-white border border-[#777] rounded-none text-xs font-black uppercase tracking-widest focus-visible:ring-0 focus-visible:border-[#9B2B2C]"
+                  className="pl-14 h-16 bg-white border-2 border-[#777] rounded-none text-sm font-black uppercase tracking-widest focus-visible:ring-0 focus-visible:border-[#9B2B2C]"
                 />
               </div>
-              <Button type="submit" className="h-14 px-12 bg-[#9B2B2C] hover:bg-slate-900 text-white rounded-none font-black uppercase text-[11px] tracking-widest shadow-lg" disabled={loading}>
+              <Button type="submit" className="h-16 px-16 bg-[#9B2B2C] hover:bg-slate-900 text-white rounded-none font-black uppercase text-[13px] tracking-widest shadow-xl disabled:bg-slate-400" disabled={loading}>
                 {loading ? 'TRACKING...' : 'TRACK NOW'}
               </Button>
             </form>
@@ -100,17 +100,17 @@ const OrderTracking = () => {
             >
               <div className="absolute top-0 left-0 w-1 h-full bg-[#9B2B2C]" />
               
-              <div className="p-10">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 pb-10 border-b border-[#777]/10 gap-8">
+              <div className="p-16">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-20 pb-12 border-b-2 border-[#777]/10 gap-10">
                   <div>
-                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2">ORDER_ID</p>
-                    <h2 className="text-3xl font-black text-[#9B2B2C] tracking-tighter uppercase leading-none">{order.orderId}</h2>
+                    <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-3">ORDER_ID</p>
+                    <h2 className="text-5xl font-black text-[#9B2B2C] tracking-tighter uppercase leading-none">{order.orderId}</h2>
                   </div>
                   <div className="text-left md:text-right">
-                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-2">EXPECTED_DELIVERY</p>
-                    <div className="inline-flex items-center gap-2 bg-brand-bg border border-[#777] px-4 py-1.5">
-                       <Clock className="h-3 w-3 text-[#9B2B2C]" />
-                       <span className="text-[11px] font-black text-slate-900 uppercase">April 20, 2026</span>
+                    <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-3">EXPECTED_DELIVERY</p>
+                    <div className="inline-flex items-center gap-3 bg-brand-bg border-2 border-[#777] px-6 py-2.5">
+                       <Clock className="h-4 w-4 text-[#9B2B2C]" />
+                       <span className="text-[14px] font-black text-slate-900 uppercase">April 20, 2026</span>
                     </div>
                   </div>
                 </div>

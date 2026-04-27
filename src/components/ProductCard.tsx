@@ -21,8 +21,8 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
       animate={{ opacity: 1 }}
       className="bg-white border border-[#777] shadow-sm hover:shadow-xl transition-all group relative flex flex-col"
     >
-      <div className="bg-white border-b border-[#777] px-2 py-1.5 flex justify-between items-center">
-        <span className="text-[10px] md:text-[8px] font-black text-brand-primary uppercase tracking-tighter">Product_{product.name.slice(0, 3).toUpperCase()}</span>
+      <div className="bg-white border-b border-[#777] px-3 py-2 flex justify-between items-center">
+        <span className="text-[12px] md:text-[10px] font-black text-brand-primary uppercase tracking-tighter">Product_{product.name.slice(0, 3).toUpperCase()}</span>
         <div className="flex gap-1">
           <div className="w-1.5 h-1.5 md:w-1 md:h-1 bg-brand-primary rounded-full" />
           <div className="w-1.5 h-1.5 md:w-1 md:h-1 bg-brand-primary rounded-full opacity-30" />
@@ -31,7 +31,18 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
 
       <div 
         className="relative aspect-square overflow-hidden bg-white border-b border-[#777]/20 cursor-pointer"
-        onClick={() => navigate(`/product/${product.id}`, { state: { product } })}
+        onClick={() => navigate('/checkout', { 
+          state: { 
+            directOrder: true, 
+            product: {
+              productId: product.id,
+              name: product.name,
+              price: product.price,
+              image: product.images?.[0] || product.image,
+              quantity: 1
+            } 
+          } 
+        })}
       >
         <img
           src={product.images?.[0] || 'https://picsum.photos/seed/product/400/400'}
@@ -65,7 +76,18 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
           <button 
             onClick={(e) => {
               e.stopPropagation();
-              navigate(`/product/${product.id}`, { state: { product } });
+              navigate('/checkout', { 
+                state: { 
+                  directOrder: true, 
+                  product: {
+                    productId: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.images?.[0] || product.image,
+                    quantity: 1
+                  } 
+                } 
+              });
             }}
             className="w-10 h-10 bg-white border border-[#777] flex items-center justify-center text-[#9B2B2C] hover:bg-[#9B2B2C] hover:text-white transition-all shadow-lg"
           >
@@ -87,36 +109,58 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
         </div>
         
         <h3 
-          className="font-black text-slate-800 text-[14px] md:text-[11px] uppercase tracking-tight line-clamp-2 mb-3 group-hover:text-[#9B2B2C] transition-colors cursor-pointer leading-tight h-10 flex items-center"
-          onClick={() => navigate(`/product/${product.id}`, { state: { product } })}
+          className="font-black text-slate-800 text-[18px] md:text-[14px] uppercase tracking-tight line-clamp-2 mb-4 group-hover:text-[#9B2B2C] transition-colors cursor-pointer leading-tight h-12 flex items-center"
+          onClick={() => navigate('/checkout', { 
+            state: { 
+              directOrder: true, 
+              product: {
+                productId: product.id,
+                name: product.name,
+                price: product.price,
+                image: product.images?.[0] || product.image,
+                quantity: 1
+              } 
+            } 
+          })}
         >
           {product.name}
         </h3>
         
-        <div className="mt-auto flex items-end justify-between border-t border-[#777]/10 pt-3 md:pt-4">
+        <div className="mt-auto flex items-end justify-between border-t border-[#777]/10 pt-4 md:pt-6">
           <div className="flex flex-col">
             {product.oldPrice && product.oldPrice > 0 && (
-              <span className="text-[13px] md:text-[10px] font-bold text-slate-400 line-through mb-1">
+              <span className="text-[15px] md:text-[12px] font-bold text-slate-400 line-through mb-1">
                 ৳{product.oldPrice.toLocaleString()}
               </span>
             )}
-            <span className="text-2xl md:text-lg font-black text-brand-primary tracking-tighter font-mono leading-none">
+            <span className="text-3xl md:text-2xl font-black text-brand-primary tracking-tighter font-mono leading-none">
               ৳{product.price.toLocaleString()}
             </span>
           </div>
         </div>
       </div>
 
-      <div className="p-1.5 bg-white border-t border-[#777]">
+      <div className="p-2 bg-white border-t border-[#777]">
         <button
-          className="w-full bg-brand-button hover:bg-slate-900 text-white transition-all h-12 md:h-10 text-[12px] md:text-[10px] font-black uppercase tracking-[0.2em] disabled:bg-slate-300 disabled:opacity-50"
+          className="w-full bg-brand-button hover:bg-slate-900 text-white transition-all h-14 md:h-12 text-[14px] md:text-[12px] font-black uppercase tracking-[0.2em] disabled:bg-slate-300 disabled:opacity-50"
           disabled={product.stock === 0}
           onClick={(e) => {
             e.stopPropagation();
             if (product.affiliateLink) {
               window.open(product.affiliateLink, '_blank');
             } else {
-              navigate(`/product/${product.id}`, { state: { product } });
+              navigate('/checkout', { 
+                state: { 
+                  directOrder: true, 
+                  product: {
+                    productId: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.images?.[0] || product.image,
+                    quantity: 1
+                  } 
+                } 
+              });
             }
           }}
         >

@@ -29,13 +29,13 @@ const Cart = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      <div className="mb-12 border-b-2 border-[#9B2B2C] pb-4">
-        <h1 className="text-4xl font-black text-slate-900 uppercase tracking-tighter">SHOPPING_BAG</h1>
-        <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mt-1">Review your products before checkout</p>
+    <div className="w-full px-8 md:px-20 lg:px-40 py-16">
+      <div className="mb-16 border-b-4 border-[#9B2B2C] pb-6">
+        <h1 className="text-6xl font-black text-slate-900 uppercase tracking-tighter">SHOPPING_BAG</h1>
+        <p className="text-[13px] font-black text-slate-500 uppercase tracking-[0.3em] mt-2">Review your products before checkout</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
         {/* Cart Items */}
         <div className="lg:col-span-2 space-y-6">
           {items.map((item) => (
@@ -50,10 +50,10 @@ const Cart = () => {
                 <img src={item.image} alt={item.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">PRODUCT_ID: {item.productId.slice(0,8)}</p>
-                <h3 className="font-black text-slate-900 mb-1 uppercase tracking-tight truncate">{item.name}</h3>
-                <p className="text-[#9B2B2C] font-black tracking-tighter font-mono">৳{item.price.toLocaleString()}</p>
-                <div className="flex items-center gap-4 mt-3">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">PRODUCT_ID: {item.productId.slice(0,8)}</p>
+                <h3 className="font-black text-xl text-slate-900 mb-2 uppercase tracking-tight truncate">{item.name}</h3>
+                <p className="text-[#9B2B2C] text-lg font-black tracking-tighter font-mono">৳{item.price.toLocaleString()}</p>
+                <div className="flex items-center gap-6 mt-4">
                   <div className="flex items-center border border-[#777] bg-white h-8">
                     <button
                       onClick={() => updateQuantity(item.productId, item.quantity - 1)}
@@ -89,9 +89,9 @@ const Cart = () => {
 
         {/* Order Summary */}
         <div className="lg:col-span-1">
-          <div className="bg-white border border-[#777] p-8 shadow-xl sticky top-24">
-            <h2 className="text-xl font-black text-[#9B2B2C] mb-8 uppercase tracking-tighter border-b border-[#9B2B2C]/20 pb-4">ORDER_SUMMARY</h2>
-            <div className="space-y-4 mb-8">
+          <div className="bg-white border-2 border-[#777] p-10 shadow-2xl sticky top-24">
+            <h2 className="text-2xl font-black text-[#9B2B2C] mb-10 uppercase tracking-tighter border-b-2 border-[#9B2B2C]/20 pb-6">ORDER_SUMMARY</h2>
+            <div className="space-y-6 mb-10">
               <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-[#9B2B2C]">
                 <span>SUBTOTAL</span>
                 <span className="font-mono text-slate-900">৳{total.toLocaleString()}</span>
@@ -114,10 +114,10 @@ const Cart = () => {
               </div>
             </div>
             <Button
-              className="w-full h-12 bg-[#9B2B2C] hover:bg-slate-900 text-white rounded-none font-black uppercase text-[11px] tracking-widest shadow-2xl"
+              className="w-full h-16 bg-[#9B2B2C] hover:bg-slate-900 text-white rounded-none font-black uppercase text-[14px] tracking-[0.2em] shadow-2xl"
               onClick={() => navigate('/checkout')}
             >
-              PROCEED_TO_CHECKOUT <ArrowRight className="ml-2 h-4 w-4" />
+              PROCEED_TO_CHECKOUT <ArrowRight className="ml-3 h-5 w-5" />
             </Button>
             <p className="text-center text-[8px] font-black text-slate-500 uppercase tracking-[0.3em] mt-6">
               SECURE CHECKOUT POWERED BY {settings?.siteName?.toUpperCase() || 'BAZAR DALA'}

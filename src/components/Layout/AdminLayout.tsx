@@ -53,10 +53,30 @@ export const AdminLayout: React.FC = () => {
   const { settings } = useSettings();
   const navigate = useNavigate();
   const location = useLocation();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 1024);
   const [expandedItems, setExpandedItems] = useState<string[]>(['Products', 'Orders']);
   const [pendingOrdersCount, setPendingOrdersCount] = useState(0);
   const [recentNotifications, setRecentNotifications] = useState<any[]>([]);
+
+  // Close sidebar on mobile when navigating
+  useEffect(() => {
+    if (window.innerWidth < 1024 && isSidebarOpen) {
+      setIsSidebarOpen(false);
+    }
+  }, [location.pathname]);
+
+  // Handle resize to auto-open sidebar on desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setIsSidebarOpen(true);
+      } else {
+        setIsSidebarOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     if (authLoading || !isAdmin) return;
@@ -179,7 +199,20 @@ export const AdminLayout: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex bg-[#f4e4d4] text-slate-900">
+    <div className="min-h-screen flex bg-[#f4e4d4] text-slate-900 overflow-x-hidden">
+      {/* Sidebar Overlay for Mobile */}
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsSidebarOpen(false)}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+          />
+        )}
+      </AnimatePresence>
+
       {/* Sidebar */}
       <aside 
         className={`fixed inset-y-0 left-0 z-50 w-72 bg-[#ead9c4] border-r border-[#777] transition-transform duration-300 lg:translate-x-0 ${
@@ -232,14 +265,54 @@ export const AdminLayout: React.FC = () => {
         {/* Header */}
         <header className="h-16 bg-[#ead9c4] border-b border-[#777] sticky top-0 z-40 px-6 flex items-center justify-between shadow-md">
           <div className="flex items-center gap-4">
+            {/* Desktop Sidebar Toggle */}
             <Button 
               variant="ghost" 
               size="icon" 
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="text-slate-600 hover:bg-[#d4c1ad] rounded-lg"
+              className="text-slate-600 hover:bg-[#d4c1ad] rounded-lg hidden lg:flex"
             >
               {isSidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
+
+            {/* Mobile Navigation Dropdown */}
+            <div className="lg:hidden">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="text-slate-600 hover:bg-[#d4c1ad] rounded-lg border border-[#777]/20">
+                    <Menu className="h-6 w-6 text-[#9B2B2C]" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-72 bg-white border-[#777] p-2 space-y-1 shadow-2xl rounded-lg z-[100]">
+                  <DropdownMenuLabel className="p-3 text-[10px] font-black uppercase tracking-widest text-[#9B2B2C]">Admin_Command_Center</DropdownMenuLabel>
+                  <DropdownMenuSeparator className="bg-[#777]/20" />
+                  <div className="max-h-[70vh] overflow-y-auto custom-scrollbar p-1">
+                    {menuItems.map(item => (
+                      <DropdownMenuItem 
+                        key={item.label} 
+                        onClick={() => navigate(item.path)} 
+                        className={`flex items-center justify-between p-4 rounded-md transition-all mb-1 border border-transparent ${location.pathname === item.path ? 'bg-[#9B2B2C] text-white shadow-md' : 'hover:bg-[#ead9c4]/30'}`}
+                      >
+                        <div className="flex items-center gap-4">
+                          <item.icon className={`h-4.5 w-4.5 ${location.pathname === item.path ? 'text-white' : 'text-[#9B2B2C]'}`} />
+                          <span className="font-black text-[12px] uppercase tracking-tighter">{item.label}</span>
+                        </div>
+                        {item.badge && (
+                          <span className={`${location.pathname === item.path ? 'bg-white text-[#9B2B2C]' : 'bg-rose-600 text-white'} text-[9px] min-w-5 h-5 flex items-center justify-center p-0 font-black rounded-full`}>
+                            {item.badge}
+                          </span>
+                        )}
+                      </DropdownMenuItem>
+                    ))}
+                  </div>
+                  <DropdownMenuSeparator className="bg-[#777]/20" />
+                  <DropdownMenuItem onClick={handleLogout} className="p-4 text-rose-600 font-black text-xs uppercase flex items-center gap-3">
+                    <LogOut className="h-4 w-4" />
+                    Logout Account
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
 
             <div className="h-8 w-[1px] bg-[#777]/30 hidden md:block" />
 

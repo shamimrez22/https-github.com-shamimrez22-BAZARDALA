@@ -41,37 +41,37 @@ const Shop = () => {
 
   return (
     <div className="bg-slate-50/30 min-h-screen pb-20 font-sans relative overflow-x-hidden">
-      <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10 py-12">
+      <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10 py-6 md:py-10">
         {/* Sub-Header / Control Panel */}
-        <div className="bg-white rounded-none shadow-xl p-6 md:p-8 flex flex-col xl:flex-row xl:items-center justify-between gap-6 mb-12 border-2 border-[#777]">
+        <div className="bg-white rounded-none shadow-xl p-4 md:p-6 flex flex-col xl:flex-row xl:items-center justify-between gap-4 mb-8 border-2 border-[#777]">
           <div>
-            <h1 className="text-2xl md:text-3xl font-black tracking-tighter text-slate-800 uppercase leading-none">Catalog_DIR</h1>
-            <div className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-3 flex items-center gap-2">
+            <h1 className="text-xl md:text-2xl font-black tracking-tighter text-slate-800 uppercase leading-none">Catalog_DIR</h1>
+            <div className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mt-2 flex items-center gap-2">
                <div className="w-2 h-2 bg-[#9B2B2C] rounded-none animate-pulse" />
                INDEX_SIZE: {filteredProducts.length} RECORDS_FOUND
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="relative w-full md:w-80">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="relative w-full md:w-64">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <Input
                 placeholder="SEARCH_CATALOG..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-12 bg-[#f8f8f8] border-2 border-[#777] rounded-none h-12 text-[12px] font-black uppercase tracking-widest focus-visible:ring-0 shadow-inner"
+                className="pl-10 bg-[#f8f8f8] border-2 border-[#777] rounded-none h-10 text-[11px] font-black uppercase tracking-widest focus-visible:ring-0 shadow-inner"
               />
             </div>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="h-12 rounded-none border-2 border-[#777] gap-3 px-6 text-[11px] font-black uppercase tracking-widest hover:bg-[#f8f8f8] transition-all text-slate-700 shadow-md active:scale-95">
+                <Button variant="outline" className="h-10 rounded-none border-2 border-[#777] gap-3 px-4 text-[10px] font-black uppercase tracking-widest hover:bg-[#f8f8f8] transition-all text-slate-700 shadow-md active:scale-95">
                   CATEGORY: {category}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56 bg-white rounded-none p-2 shadow-xl border-2 border-[#777]">
                 {categories.map(cat => (
-                  <DropdownMenuItem key={cat} onClick={() => setCategory(cat)} className="text-[11px] font-black uppercase p-3 rounded-none focus:bg-[#f8f8f8] transition-colors cursor-pointer">
+                  <DropdownMenuItem key={cat} onClick={() => setCategory(cat)} className="text-[10px] font-black uppercase p-2.5 rounded-none focus:bg-[#f8f8f8] transition-colors cursor-pointer">
                     {cat}
                   </DropdownMenuItem>
                 ))}
@@ -80,13 +80,13 @@ const Shop = () => {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="h-12 rounded-none border-2 border-[#777] gap-3 px-6 text-[11px] font-black uppercase tracking-widest hover:bg-[#f8f8f8] transition-all text-slate-700 shadow-md active:scale-95">
+                <Button variant="outline" className="h-10 rounded-none border-2 border-[#777] gap-3 px-4 text-[10px] font-black uppercase tracking-widest hover:bg-[#f8f8f8] transition-all text-slate-700 shadow-md active:scale-95">
                   SORT: {sort}
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-64 bg-white rounded-none p-2 shadow-xl border-2 border-[#777]">
+              <DropdownMenuContent align="end" className="w-56 bg-white rounded-none p-2 shadow-xl border-2 border-[#777]">
                 {['Newest', 'Price: Low to High', 'Price: High to Low'].map(s => (
-                  <DropdownMenuItem key={s} onClick={() => setSort(s)} className="text-[11px] font-black uppercase p-3 rounded-none focus:bg-[#f8f8f8] transition-colors cursor-pointer">
+                  <DropdownMenuItem key={s} onClick={() => setSort(s)} className="text-[10px] font-black uppercase p-2.5 rounded-none focus:bg-[#f8f8f8] transition-colors cursor-pointer">
                     {s}
                   </DropdownMenuItem>
                 ))}

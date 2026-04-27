@@ -6,6 +6,13 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+    --animate-scanline: scanline 4s linear infinite;
+    @keyframes scanline {
+      0% { top: 0%; opacity: 0; }
+      5% { opacity: 0.1; }
+      95% { opacity: 0.1; }
+      100% { top: 100%; opacity: 0; }
+    }
     --animate-marquee: marquee 20s linear infinite;
     --animate-marquee-reverse: marquee-reverse 20s linear infinite;
     @keyframes marquee {

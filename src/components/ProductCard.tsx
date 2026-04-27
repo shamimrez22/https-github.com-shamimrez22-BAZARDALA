@@ -26,7 +26,7 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
     >
       <div className="bg-[#f8f8f8] px-4 py-2 border-b border-[#777] flex justify-between items-center relative overflow-hidden">
         <div className="flex items-center gap-2 z-10">
-          <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">PRODUCT_REF:</span>
+          <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">IDENT_KEY:</span>
           <span className="text-[10px] font-black text-[#9B2B2C] uppercase tracking-tighter">{product.name.slice(0, 5).toUpperCase()}</span>
         </div>
         <div className="flex gap-1 z-10">
@@ -67,14 +67,14 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
         {product.stock < 5 && product.stock > 0 && (
           <div className="absolute top-0 left-0 bg-white text-[#9B2B2C] text-[8px] font-black px-2 py-1 uppercase tracking-widest rounded-none flex items-center gap-1 border-b border-r border-[#777]">
             <span className="w-1 h-1 bg-[#9B2B2C] rounded-none animate-pulse" />
-            STOCK_LOW
+            CRITICAL_INVENTORY
           </div>
         )}
 
         {product.stock === 0 && (
           <div className="absolute inset-0 bg-white/80 flex items-center justify-center z-20">
             <span className="bg-[#9B2B2C] text-white text-[10px] font-black px-4 py-1.5 uppercase tracking-widest rounded-none">
-              SOLD_OUT
+              DEPLETED_NODE
             </span>
           </div>
         )}
@@ -103,20 +103,20 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
           {product.name}
         </h3>
         
-        <div className="flex items-center justify-between mt-auto pt-3 border-t border-[#777]/10">
-          <div className="flex flex-col">
+        <div className="flex flex-col mt-auto pt-2">
+          <div className="flex items-center justify-between mb-2">
             {product.oldPrice && product.oldPrice > 0 && (
-              <span className="text-[10px] font-black text-slate-300 line-through tracking-tighter">
+              <span className="text-[9px] font-black text-slate-300 line-through tracking-tighter">
                 ৳{product.oldPrice.toLocaleString()}
               </span>
             )}
-            <span className="text-base md:text-lg font-black text-[#9B2B2C] tracking-tighter">
+            <span className="text-[14px] font-black text-[#9B2B2C] tracking-tighter">
               ৳{product.price.toLocaleString()}
             </span>
           </div>
           
           <button
-            className="bg-slate-900 hover:bg-[#9B2B2C] text-white transition-all h-7 md:h-9 px-2 md:px-4 text-[8px] md:text-[10px] font-black uppercase tracking-tighter md:tracking-widest rounded-none shadow-md active:scale-95 disabled:bg-slate-300 border border-slate-900"
+            className="w-full bg-slate-900 hover:bg-[#9B2B2C] text-white transition-all h-7 px-3 text-[8px] font-black uppercase tracking-widest rounded-none shadow-md active:scale-95 disabled:bg-slate-300 border border-slate-900"
             disabled={product.stock === 0}
             onClick={(e) => {
               e.stopPropagation();

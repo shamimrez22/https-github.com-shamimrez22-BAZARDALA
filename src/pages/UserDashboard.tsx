@@ -99,16 +99,16 @@ const UserDashboard = () => {
 
   return (
     <div className="bg-slate-50/30 min-h-screen pb-20 font-sans">
-      <div className="w-full px-4 md:px-8 lg:px-12 xl:px-20 py-16 max-w-[1600px] mx-auto">
-        <div className="flex flex-col xl:flex-row gap-12">
+      <div className="w-full px-4 md:px-8 lg:px-12 xl:px-20 py-8 md:py-12 max-w-[1600px] mx-auto">
+        <div className="flex flex-col xl:flex-row gap-8">
           {/* Sidebar / Identity Hub */}
-          <div className="w-full xl:w-[400px] space-y-8">
+          <div className="w-full xl:w-[350px] space-y-6">
             <div className="bg-white rounded-none shadow-xl overflow-hidden relative border-2 border-[#777]">
-              <div className="bg-slate-900 h-40 border-b-2 border-slate-900 relative overflow-hidden">
+              <div className="bg-slate-900 h-32 border-b-2 border-slate-900 relative overflow-hidden">
                  <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
               </div>
-              <div className="px-10 pb-12 -mt-20 text-center relative z-10">
-                <div className="w-40 h-40 rounded-none bg-white p-2 mx-auto mb-8 shadow-lg border-2 border-[#777] group">
+              <div className="px-6 pb-8 -mt-16 text-center relative z-10">
+                <div className="w-32 h-32 rounded-none bg-white p-2 mx-auto mb-6 shadow-lg border-2 border-[#777] group">
                   <div className="w-full h-full rounded-none overflow-hidden bg-[#f8f8f8] relative">
                     <img
                       src={user?.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.email}`}
@@ -117,28 +117,28 @@ const UserDashboard = () => {
                     />
                   </div>
                 </div>
-                <h2 className="text-3xl font-black text-slate-800 uppercase tracking-tighter leading-none mb-3">
+                <h2 className="text-2xl font-black text-slate-800 uppercase tracking-tighter leading-none mb-2">
                   {user?.displayName || 'User Session'}
                 </h2>
-                <div className="inline-block px-5 py-2 bg-[#f8f8f8] border border-[#777] rounded-none text-[11px] font-black uppercase tracking-widest text-slate-400 mb-10">
+                <div className="inline-block px-4 py-1.5 bg-[#f8f8f8] border border-[#777] rounded-none text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6">
                   {user?.email}
                 </div>
                 
-                <div className="flex items-center justify-between p-8 bg-[#f8f8f8] border-2 border-[#777] rounded-none shadow-inner">
+                <div className="flex items-center justify-between p-4 bg-[#f8f8f8] border-2 border-[#777] rounded-none shadow-inner">
                   <div className="flex-1 text-center">
-                    <p className="text-3xl font-black text-slate-900 tracking-tighter leading-none mb-2">{orders.length}</p>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest opacity-60">Total Logs</p>
+                    <p className="text-2xl font-black text-slate-900 tracking-tighter leading-none mb-1">{orders.length}</p>
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest opacity-60">Total Logs</p>
                   </div>
-                  <div className="w-[2px] h-12 bg-[#777] rounded-none opacity-20" />
+                  <div className="w-[1px] h-8 bg-slate-300 rounded-none mx-2" />
                   <div className="flex-1 text-center">
-                    <p className="text-3xl font-black text-slate-900 tracking-tighter leading-none mb-2">{profile?.wishlist?.length || 0}</p>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest opacity-60">Assets</p>
+                    <p className="text-2xl font-black text-slate-900 tracking-tighter leading-none mb-1">{profile?.wishlist?.length || 0}</p>
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest opacity-60">Assets</p>
                   </div>
                 </div>
               </div>
             </div>
 
-              <div className="grid grid-cols-1 gap-4">
+              <div className="grid grid-cols-1 gap-3">
                 {[
                   { id: 'MY_ORDERS', label: 'ORDER_HISTORY', icon: ShoppingBag },
                   { id: 'MY_WISHLIST', label: 'FAVORITES', icon: Heart },
@@ -148,19 +148,19 @@ const UserDashboard = () => {
                   <button
                     key={i}
                     onClick={() => setActiveTab(item.id)}
-                    className={`group w-full flex items-center justify-between px-8 py-6 rounded-none text-[13px] font-black uppercase tracking-widest transition-all border-2 ${
+                    className={`group w-full flex items-center justify-between px-6 py-4 rounded-none text-[12px] font-black uppercase tracking-widest transition-all border-2 ${
                       activeTab === item.id 
                       ? 'bg-slate-900 border-slate-900 text-white shadow-lg' 
                       : 'bg-white border-[#777] text-slate-400 hover:bg-[#f8f8f8] shadow-sm'
                     }`}
                   >
-                    <div className="flex items-center gap-5">
-                      <div className={`p-3 rounded-none border-2 transition-colors ${activeTab === item.id ? 'bg-white border-transparent text-slate-900' : 'bg-[#f8f8f8] border-[#777] text-slate-300'}`}>
-                        <item.icon className="h-5 w-5" />
+                    <div className="flex items-center gap-4">
+                      <div className={`p-2 rounded-none border-2 transition-colors ${activeTab === item.id ? 'bg-white border-transparent text-slate-900' : 'bg-[#f8f8f8] border-[#777] text-slate-300'}`}>
+                        <item.icon className="h-4 w-4" />
                       </div>
                       <span>{item.label}</span>
                     </div>
-                    <div className={`w-3 h-3 rounded-none border-2 border-[#777] transform transition-all ${activeTab === item.id ? 'bg-[#9B2B2C] scale-100' : 'bg-transparent scale-50'}`} />
+                    <div className={`w-2 h-2 rounded-none border-2 border-[#777] transform transition-all ${activeTab === item.id ? 'bg-[#9B2B2C] scale-100' : 'bg-transparent scale-50'}`} />
                   </button>
                 ))}
               </div>
@@ -177,11 +177,11 @@ const UserDashboard = () => {
                   exit={{ opacity: 0, scale: 0.98 }}
                   className="space-y-10"
                 >
-                  <div className="bg-white rounded-none p-10 md:p-14 shadow-2xl border-2 border-[#777] relative overflow-hidden">
-                    <h1 className="text-4xl md:text-6xl font-black text-slate-900 uppercase tracking-tighter leading-none mb-6 relative z-10 border-b-4 border-[#9B2B2C] pb-4 inline-block">DISPATCH_HISTORY</h1>
-                    <div className="flex items-center gap-4 relative z-10 mt-6">
-                       <div className="w-3 h-3 bg-[#9B2B2C] rounded-none animate-pulse" />
-                       <p className="text-[12px] font-black text-slate-400 uppercase tracking-[0.3em]">Accessing verified purchase logs for your session</p>
+                  <div className="bg-white rounded-none p-8 md:p-10 shadow-2xl border-2 border-[#777] relative overflow-hidden">
+                    <h1 className="text-3xl md:text-4xl font-black text-slate-900 uppercase tracking-tighter leading-none mb-4 relative z-10 border-b-4 border-[#9B2B2C] pb-3 inline-block">DISPATCH_HISTORY</h1>
+                    <div className="flex items-center gap-3 relative z-10 mt-4">
+                       <div className="w-2 h-2 bg-[#9B2B2C] rounded-none animate-pulse" />
+                       <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em]">Accessing verified purchase logs for your session</p>
                     </div>
                   </div>
 
@@ -275,11 +275,11 @@ const UserDashboard = () => {
                   exit={{ opacity: 0, scale: 0.98 }}
                   className="space-y-10"
                 >
-                  <div className="bg-white rounded-none p-10 md:p-14 shadow-2xl border-2 border-[#777] relative overflow-hidden">
-                    <h1 className="text-4xl md:text-6xl font-black text-slate-900 uppercase tracking-tighter leading-none mb-6 relative z-10 border-b-4 border-[#9B2B2C] pb-4 inline-block">IDENTITY_CORE</h1>
-                    <div className="flex items-center gap-4 relative z-10 mt-6">
-                       <div className="w-3 h-3 bg-[#9B2B2C] rounded-none animate-pulse" />
-                       <p className="text-[12px] font-black text-slate-400 uppercase tracking-[0.3em]">Modify your authentication identity across the network</p>
+                  <div className="bg-white rounded-none p-8 md:p-10 shadow-2xl border-2 border-[#777] relative overflow-hidden">
+                    <h1 className="text-3xl md:text-4xl font-black text-slate-900 uppercase tracking-tighter leading-none mb-4 relative z-10 border-b-4 border-[#9B2B2C] pb-3 inline-block">IDENTITY_CORE</h1>
+                    <div className="flex items-center gap-3 relative z-10 mt-4">
+                       <div className="w-2 h-2 bg-[#9B2B2C] rounded-none animate-pulse" />
+                       <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em]">Modify your authentication identity across the network</p>
                     </div>
                   </div>
 

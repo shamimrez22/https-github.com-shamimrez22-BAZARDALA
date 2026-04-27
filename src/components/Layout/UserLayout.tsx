@@ -111,12 +111,12 @@ export const UserLayout: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-slate-900 font-sans overflow-x-hidden">
-      {/* Top Stack (Sticky) */}
-      <div className="sticky top-0 z-[60] w-full flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-white text-slate-900 font-sans overflow-x-hidden pt-[88px] md:pt-[104px]">
+      {/* Top Stack (Fixed) */}
+      <div className="fixed top-0 left-0 right-0 z-[60] w-full flex flex-col bg-white">
         {/* Banner Notice (Topmost) */}
         {settings?.ads?.bannerNotice?.active && (
-          <div className="w-full bg-[#9B2B2C] text-white py-1.5 px-4 md:px-10 text-center relative overflow-hidden shrink-0">
+          <div className="h-[24px] w-full bg-[#1F6F5F] text-white flex items-center justify-center px-4 md:px-10 relative overflow-hidden shrink-0">
              <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
              <p className="text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] relative z-10 animate-pulse">
                {settings.ads.bannerNotice.text}
@@ -320,13 +320,13 @@ export const UserLayout: React.FC = () => {
         )}
       </div>
 
-      <footer className="bg-white pt-32 pb-16 relative overflow-hidden border-t-4 border-slate-900">
+      <footer className="bg-white pt-16 pb-12 relative overflow-hidden border-t-4 border-slate-900">
         <div className="w-full px-8 md:px-20 lg:px-40 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-20 mb-28">
-            <div className="space-y-12">
-              <Link to="/" className="text-[#9B2B2C] text-3xl font-black tracking-tighter uppercase flex items-center gap-5">
-                <div className="w-14 h-14 bg-[#9B2B2C] rounded-none border-2 border-slate-900 flex items-center justify-center text-white shadow-lg">
-                  <ShoppingBasket className="h-8 w-8" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+            <div className="space-y-6">
+              <Link to="/" className="text-[#9B2B2C] text-2xl font-black tracking-tighter uppercase flex items-center gap-4">
+                <div className="w-12 h-12 bg-[#9B2B2C] rounded-none border-2 border-slate-900 flex items-center justify-center text-white shadow-lg">
+                  <ShoppingBasket className="h-6 w-6" />
                 </div>
                 <div className="underline underline-offset-4 decoration-slate-900 font-black">
                   {(settings?.siteName || 'BAZAR DALA').split(' ')[0]}
@@ -335,10 +335,10 @@ export const UserLayout: React.FC = () => {
                   </span>
                 </div>
               </Link>
-              <p className="text-slate-500 text-[14px] font-black uppercase leading-relaxed tracking-wide mt-8 border-l-4 border-slate-900 pl-4">
+              <p className="text-slate-500 text-[12px] font-black uppercase leading-relaxed tracking-wide mt-4 border-l-4 border-slate-900 pl-4">
                 {settings?.siteDescription || "Bangladesh’s most Trusted & Premium curation of global brands and essential lifestyles."}
               </p>
-              <div className="flex gap-4">
+              <div className="flex gap-3">
                 {(settings?.socialLinks || [
                   { platform: 'FB', url: '#' },
                   { platform: 'TW', url: '#' },
@@ -351,42 +351,42 @@ export const UserLayout: React.FC = () => {
                     rel="noopener noreferrer"
                     className="w-10 h-10 rounded-none bg-[#f8f8f8] border-2 border-slate-900 flex items-center justify-center text-slate-900 hover:bg-[#9B2B2C] hover:text-white transition-all shadow-md"
                   >
-                    <span className="text-xs font-black">{social.platform}</span>
+                    <span className="text-[10px] font-black">{social.platform}</span>
                   </a>
                 ))}
               </div>
             </div>
 
             <div>
-              <h4 className="text-slate-900 font-black mb-12 uppercase tracking-[0.25em] text-[13px] flex items-center gap-3">
+              <h4 className="text-slate-900 font-black mb-8 uppercase tracking-[0.25em] text-[12px] flex items-center gap-3">
                 <div className="w-2 h-2 bg-[#9B2B2C] rounded-none" />
-                SUPPORT_CENTER
+                CORE_LOGISTICS
               </h4>
-              <ul className="space-y-6 text-[13px] font-black text-slate-400 uppercase tracking-widest">
-                {(settings?.footerSupportLinks || [
-                  { label: 'Help Center', url: '/help' },
-                  { label: 'How to Buy', url: '/how-to-buy' },
-                  { label: 'Return Policy', url: '/returns' },
-                  { label: 'Contact Us', url: '/contact' },
-                  { label: 'Terms & Conditions', url: '/terms' }
-                ]).map((link, i) => (
+              <ul className="space-y-4 text-[12px] font-black text-slate-400 uppercase tracking-widest">
+                {[
+                  { label: 'CENTRAL_UNIT', url: '/help' },
+                  { label: 'ACQUISITION', url: '/how-to-buy' },
+                  { label: 'REVERSAL', url: '/returns' },
+                  { label: 'COMMS_LINK', url: '/contact' },
+                  { label: 'LEGAL_NODE', url: '/terms' }
+                ].map((link, i) => (
                   <li key={i}><Link to={link.url} className="hover:text-[#9B2B2C] transition-colors hover:translate-x-2 inline-block"> {link.label}</Link></li>
                 ))}
               </ul>
             </div>
 
             <div>
-              <h4 className="text-slate-900 font-black mb-12 uppercase tracking-[0.25em] text-[13px] flex items-center gap-3">
+              <h4 className="text-slate-900 font-black mb-8 uppercase tracking-[0.25em] text-[12px] flex items-center gap-3">
                 <div className="w-2 h-2 bg-[#9B2B2C] rounded-none" />
-                CORPORATE_LOGS
+                LEGACY_RECORDS
               </h4>
-              <ul className="space-y-6 text-[13px] font-black text-slate-400 uppercase tracking-widest">
-                {(settings?.footerCompanyLinks || [
-                  { label: 'Our Story', url: '/about' },
-                  { label: 'Open Positions', url: '/careers' },
-                  { label: 'Insights', url: '/blog' },
-                  { label: 'Tracking', url: '/tracking' }
-                ]).map((link, i) => (
+              <ul className="space-y-4 text-[12px] font-black text-slate-400 uppercase tracking-widest">
+                {[
+                  { label: 'MANIFESTO', url: '/about' },
+                  { label: 'TALENT_SEARCH', url: '/careers' },
+                  { label: 'KNOWLEDGE_BASE', url: '/blog' },
+                  { label: 'LOGISTICS_TRACK', url: '/tracking' }
+                ].map((link, i) => (
                   <li key={i}><Link to={link.url} className="hover:text-[#9B2B2C] transition-colors hover:translate-x-2 inline-block"> {link.label}</Link></li>
                 ))}
                 <li><Link to="/admin/login" className="text-slate-300 hover:text-[#9B2B2C] transition-colors">ADMIN_CORE</Link></li>
@@ -394,24 +394,24 @@ export const UserLayout: React.FC = () => {
             </div>
 
             <div>
-              <h4 className="text-slate-900 font-black mb-12 uppercase tracking-[0.25em] text-[13px] flex items-center gap-3">
+              <h4 className="text-slate-900 font-black mb-8 uppercase tracking-[0.25em] text-[12px] flex items-center gap-3">
                 <div className="w-2 h-2 bg-[#9B2B2C] rounded-none" />
-                LATEST_DISPATCHES
+                SYNC_DROPS
               </h4>
-              <p className="text-[13px] font-black text-slate-400 mb-8 leading-relaxed">Join 50k+ savvy shoppers for exclusive early access to major drops.</p>
-              <div className="space-y-4">
-                <Input placeholder="ENTER_EMAIL_NODE" className="h-14 bg-[#f8f8f8] border-2 border-slate-900 rounded-none focus-visible:ring-0 text-[12px] font-black uppercase tracking-widest shadow-inner placeholder:text-slate-400" />
-                <Button className="w-full bg-slate-900 hover:bg-[#9B2B2C] text-white font-black uppercase text-[12px] rounded-none h-14 tracking-widest shadow-lg transition-all border-2 border-slate-900">SUBSCRIBE_NOW</Button>
+              <p className="text-[12px] font-black text-slate-400 mb-6 leading-relaxed">Join 50k+ savvy shoppers for exclusive early access to major drops.</p>
+              <div className="space-y-3">
+                <Input placeholder="NODE_ACCESS_ID" className="h-12 bg-[#f8f8f8] border-2 border-slate-900 rounded-none focus-visible:ring-0 text-[11px] font-black uppercase tracking-widest shadow-inner placeholder:text-slate-400" />
+                <Button className="w-full bg-slate-900 hover:bg-[#9B2B2C] text-white font-black uppercase text-[11px] rounded-none h-12 tracking-widest shadow-lg transition-all border-2 border-slate-900">CONNECT_UPLINK</Button>
               </div>
             </div>
           </div>
 
-          <div className="pt-16 border-t-2 border-slate-900 flex flex-col md:flex-row justify-between items-center gap-10">
-            <p className="text-slate-400 text-[11px] font-black uppercase tracking-widest leading-loose opacity-60">© 2026 {settings?.siteName?.toUpperCase() || 'BAZAR DALA'} // DESIGNED_FOR_PROTOCOL_X // SECURED_BY_AIS_FIREWALL</p>
-            <div className="flex items-center gap-12 opacity-30 grayscale saturate-0">
-               <div className="w-12 h-6 bg-slate-200" />
-               <div className="w-12 h-6 bg-slate-100" />
-               <div className="w-12 h-6 bg-slate-200" />
+          <div className="pt-10 border-t-2 border-slate-900 flex flex-col md:flex-row justify-between items-center gap-8">
+            <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest leading-loose opacity-60">© 2026 {settings?.siteName?.toUpperCase() || 'BAZAR DALA'} // DESIGNED_FOR_PROTOCOL_X</p>
+            <div className="flex items-center gap-10 opacity-30 grayscale saturate-0">
+               <div className="w-10 h-4 bg-slate-200" />
+               <div className="w-10 h-4 bg-slate-100" />
+               <div className="w-10 h-4 bg-slate-200" />
             </div>
           </div>
         </div>

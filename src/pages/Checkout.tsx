@@ -137,14 +137,14 @@ const Checkout = () => {
   return (
     <div className="bg-slate-50/50 min-h-screen pb-20 overflow-x-hidden">
       {/* Dynamic Hero Header */}
-      <div className="w-full bg-slate-900 py-12 px-8 md:px-12 lg:px-16 border-b-4 border-[#9B2B2C] relative overflow-hidden">
+      <div className="w-full bg-slate-900 py-3 md:py-5 px-8 md:px-12 lg:px-16 border-b-4 border-[#9B2B2C] relative overflow-hidden">
          <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
          <div className="relative z-10 max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between">
             <div>
-              <h1 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter leading-none mb-4">CHECKOUT_PROTOCOL</h1>
-              <p className="text-white/40 text-[10px] md:text-[12px] font-black uppercase tracking-[0.4em]">Final Step // Secure Ordering Protocol // SSL_V_01</p>
+              <h1 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter leading-none mb-2">CHECKOUT_PROTOCOL</h1>
+              <p className="text-white/40 text-[9px] md:text-[10px] font-black uppercase tracking-[0.4em]">Final Step // Secure Ordering Protocol // SSL_V_01</p>
             </div>
-            <div className="mt-8 md:mt-0 flex items-center gap-6 bg-white rounded-none border-2 border-slate-900 p-4 px-8 shadow-lg">
+            <div className="mt-4 md:mt-0 flex items-center gap-4 bg-white rounded-none border-2 border-slate-900 p-2 md:p-3 px-6 md:px-8 shadow-lg">
               <div className="flex flex-col items-end">
                 <span className="text-slate-400 text-[9px] font-black uppercase tracking-widest">Est. Delivery</span>
                 <span className="text-slate-900 text-[12px] font-black uppercase">24-48 Hours</span>

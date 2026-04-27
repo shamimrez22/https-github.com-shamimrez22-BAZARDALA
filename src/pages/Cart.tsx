@@ -29,13 +29,13 @@ const Cart = () => {
   }
 
   return (
-    <div className="bg-slate-50/30 min-h-screen py-16">
+    <div className="bg-slate-50/30 min-h-screen py-8 md:py-12">
       <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10 max-w-7xl mx-auto">
-        <div className="mb-12 border-b-2 border-[#9B2B2C] pb-6">
-          <h1 className="text-4xl md:text-5xl font-black text-slate-900 uppercase tracking-tighter">Shopping_Bag</h1>
-          <div className="flex items-center gap-3 mt-4">
+        <div className="mb-8 border-b-2 border-[#9B2B2C] pb-4">
+          <h1 className="text-3xl md:text-4xl font-black text-slate-900 uppercase tracking-tighter">Shopping_Bag</h1>
+          <div className="flex items-center gap-3 mt-3">
              <div className="w-2 h-2 bg-[#9B2B2C] rounded-none animate-pulse" />
-             <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em]">Review your items for priority dispatch protocol</p>
+             <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Review your items for priority dispatch protocol</p>
           </div>
         </div>
 
@@ -95,10 +95,10 @@ const Cart = () => {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-none p-10 shadow-2xl sticky top-24 border-2 border-[#777]">
-              <h2 className="text-2xl font-black text-slate-800 mb-10 uppercase tracking-tighter border-b-2 border-[#777] pb-4">SUMMARY_DIR</h2>
+            <div className="bg-white rounded-none p-6 md:p-8 shadow-2xl sticky top-24 border-2 border-[#777]">
+              <h2 className="text-xl font-black text-slate-800 mb-6 md:mb-8 uppercase tracking-tighter border-b-2 border-[#777] pb-3">SUMMARY_DIR</h2>
               
-              <div className="space-y-6 mb-10">
+              <div className="space-y-4 mb-8">
                 <div className="flex justify-between items-center text-[12px] font-black uppercase tracking-widest text-slate-400">
                   <span>Subtotal</span>
                   <span className="text-slate-800">৳{total.toLocaleString()}</span>
@@ -114,24 +114,24 @@ const Cart = () => {
                   <span className="text-slate-800">৳{(total * 0.05).toLocaleString()}</span>
                 </div>
                 
-                <div className="pt-10 border-t-2 border-[#777]">
-                   <div className="bg-[#f8f8f8] rounded-none p-8 shadow-inner relative overflow-hidden group border border-[#777]">
-                      <span className="text-[10px] font-black text-[#9B2B2C] uppercase tracking-[0.4em] mb-3 block">GRAND_TOTAL</span>
+                <div className="pt-6 md:pt-8 border-t-2 border-[#777]">
+                   <div className="bg-[#f8f8f8] rounded-none p-6 shadow-inner relative overflow-hidden group border border-[#777]">
+                      <span className="text-[9px] font-black text-[#9B2B2C] uppercase tracking-[0.4em] mb-2 block">GRAND_TOTAL</span>
                       <div className="flex items-baseline gap-2">
-                         <span className="text-4xl font-black text-slate-900 tracking-tighter">
+                         <span className="text-3xl font-black text-slate-900 tracking-tighter">
                             ৳{(total + (total > 500 ? 0 : 60) + total * 0.05).toLocaleString()}
                          </span>
-                         <span className="text-[11px] font-black text-slate-300 uppercase tracking-widest">BDT</span>
+                         <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">BDT</span>
                       </div>
                    </div>
                 </div>
               </div>
 
               <Button
-                className="w-full h-16 bg-slate-900 hover:bg-[#9B2B2C] text-white rounded-none font-black uppercase text-[15px] tracking-[0.2em] shadow-xl active:scale-95 transition-all group"
+                className="w-full h-12 bg-slate-900 hover:bg-[#9B2B2C] text-white rounded-none font-black uppercase text-[13px] tracking-[0.2em] shadow-xl active:scale-95 transition-all group"
                 onClick={() => navigate('/checkout')}
               >
-                CHECKOUT_NOW <ArrowRight className="ml-4 h-6 w-6 group-hover:translate-x-2 transition-transform" />
+                CHECKOUT <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-2 transition-transform" />
               </Button>
               
               <div className="mt-8 flex items-center justify-center gap-3">

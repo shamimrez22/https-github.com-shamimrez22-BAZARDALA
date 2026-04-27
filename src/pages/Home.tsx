@@ -206,8 +206,8 @@ const Home = () => {
             <div className="w-full lg:w-72 bg-white border-b-2 lg:border-b-0 lg:border-r-2 border-[#777] flex flex-col flex-shrink-0 overflow-hidden">
                 {settings?.sidebar?.showCategories ? (
                   <>
-                    <div className="bg-[#f8f8f8] p-5 flex-shrink-0 border-b-2 border-[#777]">
-                      <h2 className="text-[14px] font-black text-slate-900 uppercase tracking-[0.2em] flex items-center gap-3">
+                    <div className="bg-[#f8f8f8] p-3 md:p-5 flex-shrink-0 border-b-2 border-[#777]">
+                      <h2 className="text-[11px] md:text-[14px] font-black text-slate-900 uppercase tracking-[0.2em] flex items-center gap-2 md:gap-3">
                         <List className="h-4 w-4" /> MENU_DIR
                       </h2>
                     </div>
@@ -217,46 +217,68 @@ const Home = () => {
                           <Link 
                             key={i} 
                             to={`/shop?cat=${cat.name.toLowerCase()}`}
-                            className="flex items-center justify-between px-5 py-3 hover:bg-[#f8f8f8] transition-all group border-b border-[#777]/10"
+                            className="flex items-center justify-between px-3 md:px-5 py-1.5 md:py-3 hover:bg-[#f8f8f8] transition-all group border-b border-[#777]/10"
                           >
-                            <div className="flex items-center gap-4">
-                              <cat.icon className="h-4 w-4 text-[#9B2B2C]" />
-                              <span className="text-[11px] font-black uppercase tracking-widest text-slate-700">{cat.name}</span>
+                            <div className="flex items-center gap-2 md:gap-4">
+                              <cat.icon className="h-3 w-3 md:h-4 md:w-4 text-[#9B2B2C]" />
+                              <span className="text-[9px] md:text-[11px] font-black uppercase tracking-widest text-slate-700">{cat.name}</span>
                             </div>
-                            <ChevronRight className="h-4 w-4 text-slate-300 group-hover:text-[#9B2B2C] transition-all" />
+                            <ChevronRight className="h-3 w-3 md:h-4 md:w-4 text-slate-300 group-hover:text-[#9B2B2C] transition-all" />
                           </Link>
                         ))}
                       </div>
                     </div>
-                    <div className="p-4 bg-white border-t-2 border-[#777] flex-shrink-0">
-                       <Link to="/shop" className="block w-full py-3 bg-[#9B2B2C] text-white text-[11px] font-black uppercase tracking-widest hover:bg-slate-900 transition-all text-center rounded-none shadow-md">
+                    <div className="p-3 md:p-4 bg-white border-t-2 border-[#777] flex-shrink-0">
+                       <Link to="/shop" className="block w-full py-2 md:py-3 bg-[#9B2B2C] text-white text-[10px] md:text-[11px] font-black uppercase tracking-widest hover:bg-slate-900 transition-all text-center rounded-none shadow-md">
                          ALL_CATEGORIES
                        </Link>
                     </div>
                   </>
                 ) : (
                   <div className="flex-1 flex flex-col overflow-hidden group">
-                    <div className="bg-[#f8f8f8] p-2 md:p-3 border-b-2 border-[#777] flex-shrink-0">
-                      <h2 className="text-[9px] md:text-[11px] font-black text-[#9B2B2C] uppercase tracking-[0.2em] flex items-center gap-2">
-                        <Zap className="h-3 w-3 md:h-4 md:w-4" /> {settings?.sidebar?.offerTitle || 'EXCLUSIVE_OFFER'}
+                    <div className="bg-[#f8f8f8] p-1.5 md:p-2 border-b-2 border-[#777] flex-shrink-0">
+                      <h2 className="text-[8px] md:text-[10px] font-black text-[#9B2B2C] uppercase tracking-[0.2em] flex items-center gap-1.5">
+                        <Zap className="h-2.5 w-2.5 md:h-3 md:w-3" /> {settings?.sidebar?.offerTitle || 'EXCLUSIVE_OFFER'}
                       </h2>
                     </div>
                     <Link to={settings?.sidebar?.offerLink || '/shop'} className="flex-1 relative overflow-hidden group flex flex-row lg:flex-col">
-                      <div className="w-24 md:w-32 lg:w-full relative shrink-0 lg:flex-1 min-h-[80px] lg:min-h-0">
-                        <img 
-                          src={settings?.sidebar?.offerImageUrl || 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=800'} 
-                          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                          alt="Sidebar Offer"
-                          referrerPolicy="no-referrer"
-                        />
-                      </div>
-                      <div className="flex-1 bg-white p-3 md:p-5 lg:border-t-2 border-[#777] shadow-lg relative flex flex-col justify-center">
-                        <div className="bg-[#9B2B2C] text-white text-[7px] md:text-[8px] lg:text-[9px] font-black px-1.5 md:px-2 lg:px-3 py-0.5 md:py-1 lg:py-1.5 uppercase tracking-widest mb-1 md:mb-2 lg:mb-3 inline-block self-start">
-                          PRIORITY_ACCESS
+                      <div className="w-20 md:w-28 lg:w-full relative shrink-0 lg:flex-1 min-h-[140px] lg:min-h-0 overflow-hidden bg-slate-900">
+                        {/* Cinematic Video with High Visibility */}
+                        <video 
+                          autoPlay 
+                          muted 
+                          loop 
+                          playsInline
+                          key={settings?.sidebar?.offerVideoUrl}
+                          poster={settings?.sidebar?.offerImageUrl || 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=800'}
+                          className="absolute inset-0 w-full h-full object-cover transition-all duration-[3000ms] ease-out group-hover:scale-125 scale-110 opacity-100"
+                        >
+                          {settings?.sidebar?.offerVideoUrl ? (
+                            <source src={settings.sidebar.offerVideoUrl} type="video/mp4" />
+                          ) : (
+                            <>
+                              <source src="https://v1.nitrocdn.com/fMvOidVjXoEVErQZzGNoSvhzYxRzUuXz/assets/static/optimized/rev-8656606/wp-content/uploads/2021/10/product-video-loop.mp4" type="video/mp4" />
+                              <source src="https://assets.mixkit.co/videos/preview/mixkit-shoes-on-a-red-background-1234-large.mp4" type="video/mp4" />
+                            </>
+                          )}
+                        </video>
+                        {/* Dramatic Cinematic Overlays */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_30%,_rgba(0,0,0,0.3)_100%)] pointer-events-none" />
+                        
+                        {/* Scanline Animation */}
+                        <div className="absolute inset-0 w-full h-full pointer-events-none opacity-10">
+                          <div className="w-full h-[1px] bg-white animate-[scanline_4s_linear_infinite]" />
                         </div>
-                        <h4 className="text-[12px] md:text-[14px] lg:text-[18px] font-black text-slate-900 uppercase leading-[1.1] tracking-tighter">
+                      </div>
+                      <div className="flex-1 bg-white p-3 md:p-4 lg:border-t-2 border-[#777] shadow-lg relative flex flex-col justify-center">
+                        <div className="w-full bg-[#9B2B2C] text-white text-[7px] md:text-[8px] lg:text-[9px] font-black py-1 md:py-1.5 uppercase tracking-[0.3em] mb-2 md:mb-3 text-center shadow-lg transform -skew-x-6">
+                          PRIORITY_ACCESS_GRANTED
+                        </div>
+                        <h4 className="text-[12px] md:text-[14px] lg:text-[16px] font-black text-slate-900 uppercase leading-[1.1] tracking-tighter group-hover:text-[#9B2B2C] transition-colors">
                           {settings?.sidebar?.offerTitle || 'Claim Your Premium Offer Now'}
                         </h4>
+                        <div className="h-1 w-0 bg-[#9B2B2C] mt-2 group-hover:w-full transition-all duration-500" />
                       </div>
                     </Link>
                   </div>
@@ -349,7 +371,7 @@ const Home = () => {
 
       {/* Top Banner Ad - Adsterra */}
       {settings?.ads?.adsterra?.bannerOneCode && (
-        <section className="py-6 w-full">
+        <section className="py-3 w-full">
           <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10">
              <a 
               href={settings.ads.adsterra.bannerOneCode} 
@@ -357,12 +379,12 @@ const Home = () => {
               rel="noopener noreferrer"
               className="block group relative overflow-hidden rounded-none"
             >
-              <div className="bg-slate-900 h-24 md:h-32 flex items-center justify-center relative border-2 border-slate-900 hover:border-[#9B2B2C] transition-all">
+              <div className="bg-slate-900 h-24 md:h-28 flex items-center justify-center relative border-2 border-slate-900 hover:border-[#9B2B2C] transition-all">
                 <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '15px 15px' }} />
                 <div className="relative z-10 text-center">
-                  <span className="inline-block px-4 py-1.5 bg-[#9B2B2C] text-white text-[10px] font-black uppercase tracking-[0.25em] mb-2 rounded-none">SPECIAL_PROMO</span>
-                  <h3 className="text-xl md:text-3xl font-black text-white uppercase tracking-tighter">UNLOCK EXCLUSIVE PREMIUM ACCESS</h3>
-                  <p className="text-white/30 text-[9px] font-black uppercase tracking-[0.3em] mt-1">Limited Availability // Secured Dispatch</p>
+                  <span className="inline-block px-4 py-1 bg-[#9B2B2C] text-white text-[9px] font-black uppercase tracking-[0.25em] mb-1.5 rounded-none">SPECIAL_PROMO</span>
+                  <h3 className="text-xl md:text-2xl font-black text-white uppercase tracking-tighter">ACTIVATE_ELITE_TERMINAL_ACCESS</h3>
+                  <p className="text-white/30 text-[8px] font-black uppercase tracking-[0.3em] mt-1">Limited Availability // Secured Dispatch</p>
                 </div>
               </div>
             </a>
@@ -392,7 +414,7 @@ const Home = () => {
       )}
 
       {/* Trust & Features Section / Dynamic Ad */}
-      <section className="py-6 w-full">
+      <section className="py-3 w-full">
         <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10">
           {settings?.ads?.featuresAd?.active ? (
             <a 
@@ -401,16 +423,16 @@ const Home = () => {
               rel="noopener noreferrer"
               className="block group"
             >
-              <div className="bg-[#9B2B2C] rounded-none shadow-xl p-10 relative overflow-hidden flex items-center justify-center min-h-[140px] transition-all hover:scale-[1.01]">
-                <div className="flex items-center gap-8 relative z-10">
-                  <div className="w-20 h-20 rounded-none border-2 border-white flex items-center justify-center bg-white/10 backdrop-blur-md shadow-lg">
-                    <Zap className="h-10 w-10 text-white animate-pulse" />
+              <div className="bg-[#9B2B2C] rounded-none shadow-xl p-8 relative overflow-hidden flex items-center justify-center min-h-[120px] transition-all hover:scale-[1.01]">
+                <div className="flex items-center gap-6 relative z-10">
+                  <div className="w-16 h-16 rounded-none border-2 border-white flex items-center justify-center bg-white/10 backdrop-blur-md shadow-lg">
+                    <Zap className="h-8 w-8 text-white animate-pulse" />
                   </div>
                   <div>
-                    <h3 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter leading-none mb-3">
+                    <h3 className="text-xl md:text-2xl font-black text-white uppercase tracking-tighter leading-none mb-2">
                       {settings.ads.featuresAd.message}
                     </h3>
-                    <p className="text-white/60 text-[12px] font-black uppercase tracking-[0.3em]">Explore custom curated offers uniquely for you</p>
+                    <p className="text-white/60 text-[10px] font-black uppercase tracking-[0.3em]">Explore custom curated offers uniquely for you</p>
                   </div>
                 </div>
               </div>
@@ -423,13 +445,13 @@ const Home = () => {
                 { icon: Zap, title: 'FlashSale', desc: 'Limited time offers', extra: 'ACTIVE_NOW' },
                 { icon: Star, title: 'Premium', desc: 'Elite savings', extra: 'VERIFIED' },
               ].map((item, i) => (
-                <div key={i} className="flex flex-col md:flex-row items-center gap-4 p-8 hover:bg-[#f8f8f8] transition-all cursor-pointer group border-r-2 border-b-2 border-[#777] last:border-0 last:border-r-0 md:last:border-r-0 md:nth-3:border-r-2">
-                  <div className="w-14 h-14 rounded-none border border-[#777] bg-white flex items-center justify-center text-[#9B2B2C] group-hover:bg-[#9B2B2C] group-hover:text-white transition-all duration-300">
-                    <item.icon className="h-7 w-7" />
+                <div key={i} className="flex flex-col md:flex-row items-center gap-4 p-6 hover:bg-[#f8f8f8] transition-all cursor-pointer group border-r-2 border-b-2 border-[#777] last:border-0 last:border-r-0 md:last:border-r-0 md:nth-3:border-r-2">
+                  <div className="w-12 h-12 rounded-none border border-[#777] bg-white flex items-center justify-center text-[#9B2B2C] group-hover:bg-[#9B2B2C] group-hover:text-white transition-all duration-300">
+                    <item.icon className="h-6 w-6" />
                   </div>
                   <div className="text-center md:text-left">
-                    <h3 className="text-[13px] font-black uppercase tracking-tight text-slate-900">{item.title}</h3>
-                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">{item.desc}</p>
+                    <h3 className="text-[12px] font-black uppercase tracking-tight text-slate-900">{item.title}</h3>
+                    <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -440,13 +462,13 @@ const Home = () => {
 
       {/* Adsterra Slot 3 - Below Features */}
       {settings?.ads?.adsterra?.bannerThreeCode && (
-        <section className="py-6 w-full">
+        <section className="py-3 w-full">
           <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10">
              <a href={settings.ads.adsterra.bannerThreeCode} target="_blank" rel="noopener noreferrer" className="block relative overflow-hidden group">
-               <div className="bg-white border-2 border-[#777] p-12 text-center shadow-xl hover:bg-slate-50 transition-all rounded-none relative overflow-hidden">
-                  <span className="text-[12px] font-black uppercase text-[#9B2B2C] tracking-[0.4em] mb-4 block animate-pulse">Priority Dispatch Active</span>
-                  <h4 className="text-4xl md:text-5xl font-black text-slate-900 uppercase tracking-tighter">ACCESS EXCLUSIVE REWARDS</h4>
-                  <p className="text-[11px] font-black text-slate-400 uppercase mt-8 tracking-[0.5em]">Verified Secure Protocol // G-Channel_01 // End-to-End Encryption</p>
+               <div className="bg-white border-2 border-[#777] p-8 text-center shadow-xl hover:bg-slate-50 transition-all rounded-none relative overflow-hidden">
+                  <span className="text-[10px] font-black uppercase text-[#9B2B2C] tracking-[0.4em] mb-3 block animate-pulse">Priority Dispatch Active</span>
+                  <h4 className="text-3xl md:text-4xl font-black text-slate-900 uppercase tracking-tighter">RETRIEVE_VALUED_NODE_ASSETS</h4>
+                  <p className="text-[9px] font-black text-slate-400 uppercase mt-4 tracking-[0.5em]">Verified Secure Protocol // G-Channel_01 // End-to-End Encryption</p>
                </div>
              </a>
           </div>
@@ -454,17 +476,17 @@ const Home = () => {
       )}
 
       {/* Curated Grid Selection */}
-      <section className="py-10 w-full">
+      <section className="py-5 w-full">
         <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10">
-          <div className="flex flex-col md:flex-row items-center justify-between mb-10 gap-6 border-b-2 border-[#9B2B2C] pb-6">
+          <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-6 border-b-2 border-[#9B2B2C] pb-4">
             <div>
-              <h2 className="text-3xl font-black uppercase tracking-tighter text-slate-900">Collections_DIR</h2>
-              <div className="flex items-center gap-3 mt-2">
-                 <div className="w-2 h-2 bg-[#9B2B2C] rounded-none animate-pulse" />
-                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.4em]">Browse our high-quality categories // AUTHORIZED_VIEW</p>
+              <h2 className="text-2xl font-black uppercase tracking-tighter text-slate-900">Collections_DIR</h2>
+              <div className="flex items-center gap-3 mt-1.5">
+                 <div className="w-1.5 h-1.5 bg-[#9B2B2C] rounded-none animate-pulse" />
+                 <p className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.4em]">Browse our high-quality categories // AUTHORIZED_VIEW</p>
               </div>
             </div>
-            <Link to="/shop" className="group flex items-center gap-4 bg-slate-900 text-white px-8 py-3.5 text-[11px] font-black uppercase tracking-widest hover:bg-[#9B2B2C] transition-all rounded-none shadow-lg hover:scale-[1.02] active:scale-[0.98]">
+            <Link to="/shop" className="group flex items-center gap-4 bg-slate-900 text-white px-6 py-2.5 text-[10px] font-black uppercase tracking-widest hover:bg-[#9B2B2C] transition-all rounded-none shadow-lg hover:scale-[1.02] active:scale-[0.98]">
               Explore All <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
@@ -502,16 +524,16 @@ const Home = () => {
 
       {/* Adsterra Slot 4 - Below Categories */}
       {settings?.ads?.adsterra?.bannerFourCode && (
-        <section className="py-4 w-full">
+        <section className="py-2 w-full">
           <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10">
              <a href={settings.ads.adsterra.bannerFourCode} target="_blank" rel="noopener noreferrer" className="block group">
-                <div className="bg-slate-900 rounded-none h-28 flex items-center justify-center p-6 relative overflow-hidden shadow-xl border-2 border-[#777] transition-all hover:scale-[1.01]">
-                   <div className="absolute top-0 right-0 p-4 opacity-10">
-                      <Zap className="h-20 w-20 text-white" />
+                <div className="bg-slate-900 rounded-none h-24 flex items-center justify-center p-4 relative overflow-hidden shadow-xl border-2 border-[#777] transition-all hover:scale-[1.01]">
+                   <div className="absolute top-0 right-0 p-3 opacity-10">
+                      <Zap className="h-16 w-16 text-white" />
                    </div>
                    <div className="text-center relative z-10">
-                      <h5 className="text-white text-xl md:text-2xl font-black uppercase tracking-tighter">CLICK TO GET SURPRISE GIFT!</h5>
-                      <span className="text-[#9B2B2C] text-[10px] font-black uppercase tracking-[0.5em] mt-2 block animate-pulse">EXCLUSIVE_OPPORTUNITY_77</span>
+                      <h5 className="text-white text-lg md:text-xl font-black uppercase tracking-tighter">EXECUTE_MYSTERY_DROP_RECOVERY</h5>
+                      <span className="text-[#9B2B2C] text-[9px] font-black uppercase tracking-[0.5em] mt-1 block animate-pulse">EXCLUSIVE_OPPORTUNITY_77</span>
                    </div>
                 </div>
              </a>
@@ -521,7 +543,7 @@ const Home = () => {
 
       {/* Middle Banner Ad - Adsterra */}
       {settings?.ads?.adsterra?.bannerTwoCode && (
-        <section className="py-4 w-full">
+        <section className="py-2 w-full">
           <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10">
             <a 
               href={settings.ads.adsterra.bannerTwoCode} 
@@ -529,13 +551,13 @@ const Home = () => {
               rel="noopener noreferrer"
               className="group block relative"
             >
-               <div className="bg-white border-2 border-[#777] rounded-none p-10 text-center hover:bg-[#f8f8f8] transition-all relative overflow-hidden shadow-xl">
+               <div className="bg-white border-2 border-[#777] rounded-none p-6 text-center hover:bg-[#f8f8f8] transition-all relative overflow-hidden shadow-xl">
                   <div className="relative z-10">
-                    <h4 className="text-xs font-black text-slate-400 uppercase tracking-[0.3em] mb-4">Recommended For User_Session</h4>
-                    <div className="inline-flex items-center gap-4 bg-[#9B2B2C] text-white px-10 py-4 font-black uppercase text-2xl md:text-3xl tracking-tighter shadow-xl border-2 border-slate-900">
-                       DOWNLOAD_PREMIUM_CATALOG <ArrowRight className="h-8 w-8" />
+                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-3">Recommended For User_Session</h4>
+                    <div className="inline-flex items-center gap-3 bg-[#9B2B2C] text-white px-8 py-3 font-black uppercase text-xl md:text-2xl tracking-tighter shadow-xl border-2 border-slate-900">
+                       DOWNLOAD_PREMIUM_CATALOG <ArrowRight className="h-6 w-6" />
                     </div>
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mt-8">AUTHORIZED_ACCESS_ONLY // SSL_ENCRYPTED</p>
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] mt-4">AUTHORIZED_ACCESS_ONLY // SSL_ENCRYPTED</p>
                   </div>
                </div>
             </a>
@@ -544,34 +566,34 @@ const Home = () => {
       )}
 
       {/* High-Alert Dispatch Section (Flash Sale) - ALIGNED */}
-      <section className="pb-12 pt-4 w-full">
+      <section className="pb-6 pt-2 w-full">
         <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10">
            <div className="bg-[#9B2B2C] relative overflow-hidden rounded-none border-2 border-[#777] shadow-2xl">
             {/* Subtle decorative grid background */}
             <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
             
-            <div className="p-8 md:p-14 relative z-10">
-          <div className="flex flex-col md:flex-row items-center justify-between mb-10 md:mb-12 gap-6 text-center md:text-left">
+            <div className="p-6 md:p-8 relative z-10">
+          <div className="flex flex-col md:flex-row items-center justify-between mb-6 md:mb-8 gap-6 text-center md:text-left">
             <div>
-              <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
-                <span className="w-10 h-[2px] bg-white/40 rounded-none" />
-                <span className="text-white text-[11px] font-black uppercase tracking-[0.3em]">{settings?.countdown?.text || 'FLASH SALE'}</span>
+              <div className="flex items-center justify-center md:justify-start gap-2 mb-1.5">
+                <span className="w-8 h-[1.5px] bg-white/40 rounded-none" />
+                <span className="text-white text-[9px] font-black uppercase tracking-[0.3em]">{settings?.countdown?.text || 'FLASH SALE'}</span>
               </div>
-              <h2 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter leading-none mb-3">MEGA LIMITED DISPATCH</h2>
-              <p className="text-white/60 text-[12px] font-black uppercase tracking-[0.2em]">Secure your favorites with authorized priority access</p>
+              <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter leading-none mb-1.5">ULTRA_CRITICAL_DISTRIBUTION</h2>
+              <p className="text-white/60 text-[10px] font-black uppercase tracking-[0.2em]">Secure your favorites with authorized priority access</p>
             </div>
                 
-                <div className="bg-white/10 backdrop-blur-2xl border-2 border-white/20 p-6 md:p-8 rounded-none flex flex-col items-center gap-4 w-full md:w-auto">
-                    <p className="text-[10px] font-black text-white/60 uppercase tracking-[0.2em] mb-1">TIME_LIMIT</p>
-                    <div className="flex gap-4">
+                <div className="bg-white/10 backdrop-blur-2xl border-2 border-white/20 p-4 md:p-6 rounded-none flex flex-col items-center gap-3 w-full md:w-auto">
+                    <p className="text-[9px] font-black text-white/60 uppercase tracking-[0.2em] mb-0.5">TIME_LIMIT</p>
+                    <div className="flex gap-3">
                       {[
                         { val: timeLeft.hrs, label: 'HR' },
                         { val: timeLeft.mins, label: 'MIN' },
                         { val: timeLeft.secs, label: 'SEC' },
                       ].map((t, i) => (
                         <div key={i} className="flex flex-col items-center">
-                          <div className="bg-white text-[#9B2B2C] w-14 h-14 md:w-16 md:h-16 flex items-center justify-center text-xl md:text-2xl font-mono font-black border-2 border-black">{t.val}</div>
-                          <span className="text-[9px] font-black text-white uppercase mt-2 tracking-widest">{t.label}</span>
+                          <div className="bg-white text-[#9B2B2C] w-12 h-12 md:w-14 md:h-14 flex items-center justify-center text-lg md:text-xl font-mono font-black border-2 border-black">{t.val}</div>
+                          <span className="text-[8px] font-black text-white uppercase mt-1.5 tracking-widest">{t.label}</span>
                         </div>
                       ))}
                     </div>
@@ -594,18 +616,18 @@ const Home = () => {
 
       {/* Adsterra Slot 5 - Below Flash Sale */}
       {settings?.ads?.adsterra?.bannerFiveCode && (
-        <section className="py-6 w-full">
+        <section className="py-3 w-full">
           <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10">
-             <a href={settings.ads.adsterra.bannerFiveCode} target="_blank" rel="noopener noreferrer" className="block relative h-40 group rounded-none overflow-hidden shadow-xl border-2 border-[#777]">
+             <a href={settings.ads.adsterra.bannerFiveCode} target="_blank" rel="noopener noreferrer" className="block relative h-32 group rounded-none overflow-hidden shadow-xl border-2 border-[#777]">
                 <img 
                   src="https://images.unsplash.com/photo-1622675363311-3e1904dc1885?auto=format&fit=crop&q=80&w=1500" 
                   className="absolute inset-0 w-full h-full object-cover grayscale opacity-20 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000 group-hover:scale-110"
                   alt="Ad"
                   referrerPolicy="no-referrer"
                 />
-                <div className="absolute inset-0 bg-slate-900/60 flex flex-col items-center justify-center p-8 backdrop-blur-[2px] transition-all group-hover:backdrop-blur-none group-hover:bg-slate-900/40">
-                   <h3 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter leading-none text-center">CLAIM YOUR SECRET REWARD</h3>
-                   <span className="bg-[#9B2B2C] text-white px-6 py-2 text-[10px] font-black uppercase mt-6 rounded-none tracking-[0.3em] shadow-md border border-white">LIMITED_ACCESS_PROTOCOL</span>
+                <div className="absolute inset-0 bg-slate-900/60 flex flex-col items-center justify-center p-6 backdrop-blur-[2px] transition-all group-hover:backdrop-blur-none group-hover:bg-slate-900/40">
+                   <h3 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter leading-none text-center">RECOVER_HIDDEN_PROTOCOL_BOUNTY</h3>
+                   <span className="bg-[#9B2B2C] text-white px-5 py-1.5 text-[9px] font-black uppercase mt-4 rounded-none tracking-[0.3em] shadow-md border border-white">LIMITED_ACCESS_PROTOCOL</span>
                 </div>
              </a>
           </div>
@@ -613,20 +635,20 @@ const Home = () => {
       )}
       {/* Adsterra Slot 6 - Bottom Ad before Footer */}
       {settings?.ads?.adsterra?.bannerSixCode && (
-        <section className="pt-2 pb-10 w-full">
+        <section className="pt-1 pb-6 w-full">
           <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10">
              <a href={settings.ads.adsterra.bannerSixCode} target="_blank" rel="noopener noreferrer" className="block group">
-                <div className="bg-white rounded-none p-6 flex flex-col md:flex-row items-center justify-between gap-6 hover:bg-[#f8f8f8] transition-all shadow-xl border-2 border-[#777] group overflow-hidden relative">
-                   <div className="flex items-center gap-8 relative z-10">
-                      <div className="w-20 h-20 bg-slate-900 rounded-none border-2 border-slate-900 flex items-center justify-center shadow-lg group-hover:bg-[#9B2B2C] transition-all duration-500">
-                        <Truck className="h-10 w-10 text-white" />
+                <div className="bg-white rounded-none p-5 flex flex-col md:flex-row items-center justify-between gap-5 hover:bg-[#f8f8f8] transition-all shadow-xl border-2 border-[#777] group overflow-hidden relative">
+                   <div className="flex items-center gap-6 relative z-10">
+                      <div className="w-16 h-16 bg-slate-900 rounded-none border-2 border-slate-900 flex items-center justify-center shadow-lg group-hover:bg-[#9B2B2C] transition-all duration-500">
+                        <Truck className="h-8 w-8 text-white" />
                       </div>
                       <div className="text-center md:text-left">
-                        <h4 className="text-2xl font-black uppercase text-slate-800 tracking-tighter leading-none mb-2 underline underline-offset-4 decoration-[#9B2B2C]">TRACKING_STATION_HUB</h4>
-                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">DIRECT_LOGISTICS_PROTOCOL // ACTIVE_SESSION</p>
+                        <h4 className="text-xl font-black uppercase text-slate-800 tracking-tighter leading-none mb-1.5 underline underline-offset-4 decoration-[#9B2B2C]">LOGISTICS_NEXUS_POINT</h4>
+                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em]">DIRECT_LOGISTICS_PROTOCOL // ACTIVE_SESSION</p>
                       </div>
                    </div>
-                   <div className="px-12 py-4 bg-slate-900 text-white font-black uppercase text-[12px] tracking-[0.25em] group-hover:bg-[#9B2B2C] transition-all rounded-none shadow-lg border-2 border-slate-900 relative z-10">
+                   <div className="px-10 py-3 bg-slate-900 text-white font-black uppercase text-[11px] tracking-[0.25em] group-hover:bg-[#9B2B2C] transition-all rounded-none shadow-lg border-2 border-slate-900 relative z-10">
                       SYNC_DASHBOARD
                    </div>
                 </div>

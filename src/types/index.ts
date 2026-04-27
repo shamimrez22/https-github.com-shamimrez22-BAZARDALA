@@ -134,6 +134,7 @@ export interface SiteSettings {
     showCategories: boolean;
     showOffer: boolean;
     offerImageUrl: string;
+    offerVideoUrl?: string;
     offerLink: string;
     offerTitle: string;
     offerDescription?: string;

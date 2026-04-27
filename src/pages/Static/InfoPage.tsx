@@ -82,49 +82,49 @@ const InfoPage = () => {
   const { title, icon: Icon, content, details } = getPageContent();
 
   return (
-    <div className="min-h-[80vh] bg-slate-50/30 py-20">
+    <div className="min-h-[80vh] bg-slate-50/30 py-10 md:py-16">
       <div className="container mx-auto px-4 max-w-5xl">
         <motion.div 
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-[4rem] shadow-3xl p-10 md:p-20 border border-slate-50 relative overflow-hidden"
+          className="bg-white rounded-none shadow-3xl p-8 md:p-12 border-2 border-[#777] relative overflow-hidden"
         >
           <div className="absolute top-0 right-0 w-80 h-80 bg-brand-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
           
-          <div className="flex flex-col md:flex-row items-center gap-10 mb-16 pb-12 border-b border-slate-50 relative z-10">
-            <div className="w-24 h-24 bg-slate-50 rounded-3xl flex items-center justify-center text-brand-primary shadow-inner border border-slate-100 rotate-6 transition-transform hover:rotate-0">
-              <Icon size={40} />
+          <div className="flex flex-col md:flex-row items-center gap-8 mb-10 pb-10 border-b-2 border-slate-50 relative z-10">
+            <div className="w-20 h-20 bg-slate-50 rounded-none flex items-center justify-center text-brand-primary shadow-inner border border-slate-100 rotate-6 transition-transform hover:rotate-0">
+              <Icon size={32} />
             </div>
             <div className="text-center md:text-left">
-              <h1 className="text-4xl md:text-6xl font-black text-slate-900 uppercase tracking-tighter leading-none mb-4">
+              <h1 className="text-3xl md:text-4xl font-black text-slate-900 uppercase tracking-tighter leading-none mb-3">
                 {title}
               </h1>
               <div className="flex items-center justify-center md:justify-start gap-3">
-                 <div className="w-2 h-2 bg-brand-primary rounded-full animate-pulse" />
-                 <p className="text-[11px] font-bold text-slate-300 uppercase tracking-[0.3em]">Authorized Information Resource // 2026</p>
+                 <div className="w-1.5 h-1.5 bg-[#9B2B2C] rounded-none animate-pulse" />
+                 <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em]">Authorized Information Resource // 2026</p>
               </div>
             </div>
           </div>
 
-          <p className="text-xl md:text-2xl font-black text-slate-600 tracking-tight leading-relaxed mb-16 text-center md:text-left">
+          <p className="text-lg md:text-xl font-black text-slate-600 tracking-tight leading-relaxed mb-12 text-center md:text-left">
             {content}
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
             {details.map((item, index) => (
-              <div key={index} className="p-8 bg-slate-50 rounded-[2.5rem] border border-transparent hover:border-brand-primary/10 hover:bg-white hover:shadow-xl transition-all group">
-                <div className="flex items-center gap-6 mb-6">
-                  <div className="w-12 h-1 bg-brand-primary/20 rounded-full group-hover:w-16 group-hover:bg-brand-primary transition-all duration-500" />
-                  <span className="text-[13px] font-black uppercase tracking-widest text-slate-800">{item}</span>
+              <div key={index} className="p-6 bg-slate-50 rounded-none border-2 border-transparent hover:border-brand-primary/10 hover:bg-white hover:shadow-xl transition-all group">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-8 h-1 bg-[#9B2B2C]/20 rounded-none group-hover:w-12 group-hover:bg-[#9B2B2C] transition-all duration-500" />
+                  <span className="text-[12px] font-black uppercase tracking-widest text-slate-800">{item}</span>
                 </div>
-                <p className="text-[11px] font-bold text-slate-300 uppercase tracking-widest leading-loose">
+                <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-loose">
                   [REDACTED_ACCESS_ONLY] // This protocol section is currently under maintenance. Data will be populated via the primary administrative control channel.
                 </p>
               </div>
             ))}
           </div>
 
-          <div className="mt-24 pt-12 border-t border-slate-50 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-bold uppercase tracking-[0.4em] text-slate-300">
+          <div className="mt-16 pt-8 border-t-2 border-slate-50 flex flex-col md:flex-row justify-between items-center gap-6 text-[9px] font-black uppercase tracking-[0.4em] text-slate-300">
              <div className="flex items-center gap-4">
                 <div className="w-2 h-2 bg-slate-200 rounded-full" />
                 <span>{siteName} // Information_Terminal</span>

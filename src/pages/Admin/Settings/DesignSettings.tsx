@@ -7,7 +7,7 @@ import { Input } from '../../../components/ui/input';
 import { Label } from '../../../components/ui/label';
 import { Button } from '../../../components/ui/button';
 import { Checkbox } from '../../../components/ui/checkbox';
-import { Save, LayoutGrid, Palette } from 'lucide-react';
+import { Save, LayoutGrid, Palette, Zap } from 'lucide-react';
 import { toast } from 'sonner';
 
 const DesignSettings = () => {
@@ -105,6 +105,62 @@ const DesignSettings = () => {
               />
               <Label htmlFor="show-offer" className="text-[10px] font-black uppercase text-[#9B2B2C]">Enable Sidebar Flash Offer</Label>
            </div>
+        </CardContent>
+      </Card>
+
+      <Card className="rounded-none border-[#777] bg-white shadow-lg">
+        <CardHeader className="bg-slate-900 text-white py-4 flex flex-row items-center justify-between">
+          <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
+            <Zap className="h-4 w-4 text-[#9B2B2C]" /> Sidebar Flash Offer Protocol
+          </CardTitle>
+          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-[#9B2B2C] hover:bg-slate-800 h-8 font-black uppercase text-[9px]">
+            {saving ? 'Saving...' : <><Save className="mr-2 h-3 w-3" /> Save Sidebar Config</>}
+          </Button>
+        </CardHeader>
+        <CardContent className="p-8 space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label className="text-[9px] font-black uppercase text-slate-500">Offer Header Title</Label>
+              <Input 
+                value={settings.sidebar?.offerTitle || ''} 
+                onChange={e => setSettings({...settings, sidebar: { ...(settings.sidebar || {}), offerTitle: e.target.value } as any})}
+                placeholder="e.g. EXCLUSIVE_OFFER"
+                className="h-11 border-[#777] rounded-none text-xs font-bold uppercase"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-[9px] font-black uppercase text-slate-500">Target Link URL</Label>
+              <Input 
+                value={settings.sidebar?.offerLink || ''} 
+                onChange={e => setSettings({...settings, sidebar: { ...(settings.sidebar || {}), offerLink: e.target.value } as any})}
+                placeholder="/shop or External URL"
+                className="h-11 border-[#777] rounded-none text-xs"
+              />
+            </div>
+          </div>
+          
+          <div className="space-y-2">
+            <Label className="text-[9px] font-black uppercase text-slate-500">Video Background URL (Direct Link)</Label>
+            <Input 
+              value={settings.sidebar?.offerVideoUrl || ''} 
+              onChange={e => setSettings({...settings, sidebar: { ...(settings.sidebar || {}), offerVideoUrl: e.target.value } as any})}
+              placeholder="https://example.com/video.mp4"
+              className="h-11 border-[#777] rounded-none text-xs border-2 border-slate-900"
+            />
+            <p className="text-[8px] text-[#9B2B2C] font-black uppercase tracking-widest leading-relaxed">
+              * Priority link // If provided, this video will play in the sidebar hub.
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-[9px] font-black uppercase text-slate-500">Fallback Poster / Image URL</Label>
+            <Input 
+              value={settings.sidebar?.offerImageUrl || ''} 
+              onChange={e => setSettings({...settings, sidebar: { ...(settings.sidebar || {}), offerImageUrl: e.target.value } as any})}
+              placeholder="https://example.com/poster.jpg"
+              className="h-11 border-[#777] rounded-none text-xs"
+            />
+          </div>
         </CardContent>
       </Card>
     </div>

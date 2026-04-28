@@ -55,8 +55,8 @@ const OrderTracking = () => {
 
   return (
     <div className="bg-slate-50/30 min-h-screen pb-20 font-sans">
-      <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10 py-6 md:py-10">
-        <div className="max-w-5xl mx-auto">
+      <div className="w-full px-4 md:px-8 lg:px-12 py-6 md:py-10">
+        <div className="max-w-screen-xl mx-auto">
           <div className="mb-8 flex flex-col md:flex-row items-end justify-between gap-4 px-4 md:px-0">
             <div>
               <h1 className="text-2xl md:text-3xl font-black text-slate-800 uppercase tracking-tighter leading-none border-b-4 border-[#9B2B2C] pb-3 inline-block">TRACKING_LINK</h1>

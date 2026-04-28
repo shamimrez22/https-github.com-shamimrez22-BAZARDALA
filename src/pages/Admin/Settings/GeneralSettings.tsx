@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui
 import { Input } from '../../../components/ui/input';
 import { Label } from '../../../components/ui/label';
 import { Button } from '../../../components/ui/button';
-import { Save, Globe, Info, Share2, Plus, Trash2 } from 'lucide-react';
+import { Save, Globe, Info, Share2, Plus, Trash2, Mail } from 'lucide-react';
 import { toast } from 'sonner';
 
 const GeneralSettings = () => {
@@ -66,6 +66,57 @@ const GeneralSettings = () => {
               className="w-full min-h-[120px] p-4 border border-[#777] font-bold text-xs uppercase"
             />
           </div>
+          <div className="space-y-2">
+            <Label className="text-[10px] font-black uppercase text-slate-600">Site Bio / Description (Bangla)</Label>
+            <textarea 
+              value={settings.siteDescriptionBangla || ''} 
+              onChange={e => setSettings({...settings, siteDescriptionBangla: e.target.value})}
+              className="w-full min-h-[100px] p-4 border border-[#777] font-bold text-xs"
+              placeholder="এসএস স্মার্ট হাট — বাংলাদেশের প্রিমিয়াম ফ্যাশন..."
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="rounded-none border-[#777] bg-white shadow-lg">
+        <CardHeader className="bg-slate-900 text-white py-4 flex flex-row items-center justify-between">
+          <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
+            <Mail className="h-4 w-4" /> Contact Information
+          </CardTitle>
+          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-[#9B2B2C] hover:bg-slate-800 h-8 font-black uppercase text-[9px]">
+            {saving ? 'Saving...' : <><Save className="mr-2 h-3 w-3" /> Save Changes</>}
+          </Button>
+        </CardHeader>
+        <CardContent className="p-8 space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label className="text-[10px] font-black uppercase text-slate-600">Contact Email</Label>
+              <Input 
+                value={settings.contactEmail || ''} 
+                onChange={e => setSettings({...settings, contactEmail: e.target.value})}
+                className="h-12 border-[#777] rounded-none font-black text-sm"
+                placeholder="info@example.com"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-[10px] font-black uppercase text-slate-600">Contact Phone</Label>
+              <Input 
+                value={settings.contactPhone || ''} 
+                onChange={e => setSettings({...settings, contactPhone: e.target.value})}
+                className="h-12 border-[#777] rounded-none font-black text-sm"
+                placeholder="+880 1XXX XXXXXX"
+              />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label className="text-[10px] font-black uppercase text-slate-600">Contact Address</Label>
+            <Input 
+              value={settings.contactAddress || ''} 
+              onChange={e => setSettings({...settings, contactAddress: e.target.value})}
+              className="h-12 border-[#777] rounded-none font-black text-sm"
+              placeholder="Dhaka, Bangladesh"
+            />
+          </div>
         </CardContent>
       </Card>
 
@@ -121,6 +172,62 @@ const GeneralSettings = () => {
             className="w-full border-dashed border-slate-900 h-10 font-black text-[10px] uppercase"
            >
              <Plus className="mr-2 h-3 w-3" /> Add New Network
+           </Button>
+        </CardContent>
+      </Card>
+
+      <Card className="rounded-none border-[#777] bg-white shadow-lg">
+        <CardHeader className="bg-slate-900 text-white py-4 flex flex-row items-center justify-between">
+          <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
+            <Plus className="h-4 w-4" /> Footer Quick Links
+          </CardTitle>
+          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-[#9B2B2C] hover:bg-slate-800 h-8 font-black uppercase text-[9px]">
+            {saving ? 'Saving...' : <><Save className="mr-2 h-3 w-3" /> Save Changes</>}
+          </Button>
+        </CardHeader>
+        <CardContent className="p-8 space-y-4">
+           {(settings.footerSupportLinks || []).map((link, i) => (
+             <div key={i} className="flex gap-3">
+               <div className="flex-1">
+                 <Input 
+                   value={link.label} 
+                   onChange={e => {
+                     const newList = [...(settings.footerSupportLinks || [])];
+                     newList[i].label = e.target.value;
+                     setSettings({...settings, footerSupportLinks: newList});
+                   }}
+                   placeholder="Label (e.g. SHOP)"
+                   className="h-10 border-[#777] rounded-none text-xs font-bold uppercase"
+                 />
+               </div>
+               <div className="flex-[2]">
+                 <Input 
+                   value={link.url} 
+                   onChange={e => {
+                     const newList = [...(settings.footerSupportLinks || [])];
+                     newList[i].url = e.target.value;
+                     setSettings({...settings, footerSupportLinks: newList});
+                   }}
+                   placeholder="URL (e.g. /shop)"
+                   className="h-10 border-[#777] rounded-none text-xs"
+                 />
+               </div>
+               <Button 
+                variant="destructive" 
+                size="icon" 
+                onClick={() => setSettings({...settings, footerSupportLinks: settings.footerSupportLinks?.filter((_, idx) => idx !== i)})}
+                className="rounded-none h-10 w-10 shrink-0"
+               >
+                 <Trash2 className="h-4 w-4" />
+               </Button>
+             </div>
+           ))}
+           <Button 
+            variant="outline" 
+            onClick={() => setSettings({...settings, footerSupportLinks: [...(settings.footerSupportLinks || []), { label: 'NEW LINK', url: '#' }]})}
+            className="w-full border-dashed border-slate-900 h-10 font-black text-[10px] uppercase"
+           >
+             <Plus className="mr-2 h-3 w-3" /> Add Link
            </Button>
         </CardContent>
       </Card>

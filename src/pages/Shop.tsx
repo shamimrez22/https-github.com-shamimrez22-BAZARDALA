@@ -41,7 +41,7 @@ const Shop = () => {
 
   return (
     <div className="bg-slate-50/30 min-h-screen pb-20 font-sans relative overflow-x-hidden">
-      <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10 py-6 md:py-10">
+      <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24 py-6 md:py-10">
         {/* Sub-Header / Control Panel */}
         <div className="bg-white rounded-none shadow-xl p-4 md:p-6 flex flex-col xl:flex-row xl:items-center justify-between gap-4 mb-8 border-2 border-[#777]">
           <div>

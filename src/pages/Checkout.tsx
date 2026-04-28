@@ -139,7 +139,7 @@ const Checkout = () => {
       {/* Dynamic Hero Header */}
       <div className="w-full bg-slate-900 py-3 md:py-5 px-8 md:px-12 lg:px-16 border-b-4 border-[#9B2B2C] relative overflow-hidden">
          <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
-         <div className="relative z-10 max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between">
+         <div className="relative z-10 max-w-screen-2xl mx-auto flex flex-col md:flex-row items-center justify-between">
             <div>
               <h1 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter leading-none mb-2">CHECKOUT_PROTOCOL</h1>
               <p className="text-white/40 text-[9px] md:text-[10px] font-black uppercase tracking-[0.4em]">Final Step // Secure Ordering Protocol // SSL_V_01</p>
@@ -156,7 +156,7 @@ const Checkout = () => {
          </div>
       </div>
 
-      <div className="w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-10 py-12 relative z-20">
+      <div className="w-full max-w-screen-2xl mx-auto px-4 md:px-8 lg:px-12 py-12 relative z-20">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
           {/* Main Form Area */}
           <div className="lg:col-span-2 space-y-10">

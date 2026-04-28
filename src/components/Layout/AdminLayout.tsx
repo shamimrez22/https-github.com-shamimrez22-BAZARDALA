@@ -25,7 +25,8 @@ import {
   Image as ImageIcon,
   Timer,
   Zap,
-  CircleUser
+  CircleUser,
+  MoreVertical
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { Button } from '../ui/button';
@@ -33,6 +34,7 @@ import { Input } from '../ui/input';
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -275,7 +277,7 @@ export const AdminLayout: React.FC = () => {
               {isSidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
 
-            {/* Mobile Navigation Dropdown */}
+            {/* Mobile Navigation Trigger - Using 3Dots as requested by user */}
             <div className="lg:hidden">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -283,32 +285,31 @@ export const AdminLayout: React.FC = () => {
                     <Menu className="h-6 w-6 text-[#9B2B2C]" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-72 bg-white border-[#777] p-2 space-y-1 shadow-2xl rounded-lg z-[100]">
-                  <DropdownMenuLabel className="p-3 text-[10px] font-black uppercase tracking-widest text-[#9B2B2C]">Admin_Command_Center</DropdownMenuLabel>
-                  <DropdownMenuSeparator className="bg-[#777]/20" />
-                  <div className="max-h-[70vh] overflow-y-auto custom-scrollbar p-1">
+                <DropdownMenuContent align="start" className="w-72 bg-[#ead9c4] border-2 border-slate-900 p-2 space-y-1 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rounded-none z-[100]">
+                  <DropdownMenuGroup className="max-h-[70vh] overflow-y-auto custom-scrollbar">
+                    <DropdownMenuLabel className="p-3 text-[10px] font-black uppercase tracking-widest text-[#9B2B2C] border-b border-[#777]/30">Admin_Access_Control</DropdownMenuLabel>
                     {menuItems.map(item => (
                       <DropdownMenuItem 
                         key={item.label} 
-                        onClick={() => navigate(item.path)} 
-                        className={`flex items-center justify-between p-4 rounded-md transition-all mb-1 border border-transparent ${location.pathname === item.path ? 'bg-[#9B2B2C] text-white shadow-md' : 'hover:bg-[#ead9c4]/30'}`}
+                        onSelect={() => navigate(item.path)} 
+                        className={`flex items-center justify-between p-4 rounded-none transition-all mb-2 border-2 ${location.pathname === item.path ? 'bg-[#9B2B2C] text-white border-slate-900 shadow-md' : 'bg-white border-[#777]/20 hover:bg-[#ead9c4]/30 hover:border-[#9B2B2C]'}`}
                       >
                         <div className="flex items-center gap-4">
                           <item.icon className={`h-4.5 w-4.5 ${location.pathname === item.path ? 'text-white' : 'text-[#9B2B2C]'}`} />
                           <span className="font-black text-[12px] uppercase tracking-tighter">{item.label}</span>
                         </div>
                         {item.badge && (
-                          <span className={`${location.pathname === item.path ? 'bg-white text-[#9B2B2C]' : 'bg-rose-600 text-white'} text-[9px] min-w-5 h-5 flex items-center justify-center p-0 font-black rounded-full`}>
+                          <span className={`${location.pathname === item.path ? 'bg-white text-[#9B2B2C]' : 'bg-rose-600 text-white'} text-[9px] min-w-5 h-5 flex items-center justify-center p-0 font-black rounded-none border border-slate-900`}>
                             {item.badge}
                           </span>
                         )}
                       </DropdownMenuItem>
                     ))}
-                  </div>
-                  <DropdownMenuSeparator className="bg-[#777]/20" />
-                  <DropdownMenuItem onClick={handleLogout} className="p-4 text-rose-600 font-black text-xs uppercase flex items-center gap-3">
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator className="bg-[#777]/30 h-[2px]" />
+                  <DropdownMenuItem onSelect={handleLogout} className="p-4 text-rose-600 font-black text-xs uppercase flex items-center gap-3 hover:bg-rose-50 rounded-none cursor-pointer">
                     <LogOut className="h-4 w-4" />
-                    Logout Account
+                    Terminate_Session
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -399,7 +400,7 @@ export const AdminLayout: React.FC = () => {
                 <div className="p-4 bg-[#ead9c4] border-b border-[#777]">
                   <p className="text-xs font-black text-slate-900">{user?.email}</p>
                 </div>
-                <div className="p-1">
+                <DropdownMenuGroup className="p-1">
                   <DropdownMenuItem onClick={() => navigate('/admin/profile')} className="rounded-md font-bold text-xs uppercase">
                     My Account / Profile
                   </DropdownMenuItem>
@@ -409,7 +410,7 @@ export const AdminLayout: React.FC = () => {
                   <DropdownMenuItem onClick={handleLogout} className="rounded-md font-bold text-xs uppercase text-rose-600">
                     Logout
                   </DropdownMenuItem>
-                </div>
+                </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

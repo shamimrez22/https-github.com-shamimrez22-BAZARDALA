@@ -200,36 +200,36 @@ const Home = () => {
     <div className="flex flex-col bg-white text-slate-900 pb-20 overflow-x-hidden relative">
       {/* Full Width Hero Section */}
       <section className="pt-0 pb-4 w-full">
-        <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10 overflow-hidden">
+        <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24 overflow-hidden">
           <div className="flex flex-col lg:flex-row items-stretch w-full min-h-[300px] lg:h-[420px] rounded-none overflow-hidden border-2 border-[#777] bg-white">
             {/* Category Sidebar/Offer - FULL WIDTH SIDEBAR */}
             <div className="w-full lg:w-72 bg-white border-b-2 lg:border-b-0 lg:border-r-2 border-[#777] flex flex-col flex-shrink-0 overflow-hidden">
                 {settings?.sidebar?.showCategories ? (
                   <>
-                    <div className="bg-[#f8f8f8] p-3 md:p-5 flex-shrink-0 border-b-2 border-[#777]">
-                      <h2 className="text-[11px] md:text-[14px] font-black text-slate-900 uppercase tracking-[0.2em] flex items-center gap-2 md:gap-3">
-                        <List className="h-4 w-4" /> MENU_DIR
+                    <div className="bg-[#f8f8f8] p-4 md:p-7 flex-shrink-0 border-b-2 border-[#777]">
+                      <h2 className="text-[12px] md:text-[16px] font-black text-slate-900 uppercase tracking-[0.2em] flex items-center gap-2 md:gap-4">
+                        <List className="h-5 w-5" /> MENU_DIR
                       </h2>
                     </div>
-                    <div className="flex-1 overflow-y-auto py-2 bg-white scrollbar-thin scrollbar-thumb-[#9B2B2C]/20">
+                    <div className="flex-1 overflow-y-auto py-4 bg-white scrollbar-thin scrollbar-thumb-[#9B2B2C]/20">
                       <div className="grid grid-cols-1 lg:grid-cols-1">
                         {categories.map((cat, i) => (
                           <Link 
                             key={i} 
                             to={`/shop?cat=${cat.name.toLowerCase()}`}
-                            className="flex items-center justify-between px-3 md:px-5 py-1.5 md:py-3 hover:bg-[#f8f8f8] transition-all group border-b border-[#777]/10"
+                            className="flex items-center justify-between px-4 md:px-7 py-3 md:py-4.5 hover:bg-[#f8f8f8] transition-all group border-b border-[#777]/10"
                           >
-                            <div className="flex items-center gap-2 md:gap-4">
-                              <cat.icon className="h-3 w-3 md:h-4 md:w-4 text-[#9B2B2C]" />
-                              <span className="text-[9px] md:text-[11px] font-black uppercase tracking-widest text-slate-700">{cat.name}</span>
+                            <div className="flex items-center gap-3 md:gap-5">
+                              <cat.icon className="h-3.5 w-3.5 md:h-5 md:w-5 text-[#9B2B2C]" />
+                              <span className="text-[10px] md:text-[12.5px] font-black uppercase tracking-widest text-slate-700">{cat.name}</span>
                             </div>
                             <ChevronRight className="h-3 w-3 md:h-4 md:w-4 text-slate-300 group-hover:text-[#9B2B2C] transition-all" />
                           </Link>
                         ))}
                       </div>
                     </div>
-                    <div className="p-3 md:p-4 bg-white border-t-2 border-[#777] flex-shrink-0">
-                       <Link to="/shop" className="block w-full py-2 md:py-3 bg-[#9B2B2C] text-white text-[10px] md:text-[11px] font-black uppercase tracking-widest hover:bg-slate-900 transition-all text-center rounded-none shadow-md">
+                    <div className="p-4 md:p-6 bg-white border-t-2 border-[#777] flex-shrink-0">
+                       <Link to="/shop" className="block w-full py-3 md:py-4 bg-[#9B2B2C] text-white text-[11px] md:text-[12px] font-black uppercase tracking-widest hover:bg-slate-900 transition-all text-center rounded-none shadow-md">
                          ALL_CATEGORIES
                        </Link>
                     </div>
@@ -241,8 +241,8 @@ const Home = () => {
                         <Zap className="h-2.5 w-2.5 md:h-3 md:w-3" /> {settings?.sidebar?.offerTitle || 'EXCLUSIVE_OFFER'}
                       </h2>
                     </div>
-                    <Link to={settings?.sidebar?.offerLink || '/shop'} className="flex-1 relative overflow-hidden group flex flex-row lg:flex-col">
-                      <div className="w-20 md:w-28 lg:w-full relative shrink-0 lg:flex-1 min-h-[140px] lg:min-h-0 overflow-hidden bg-slate-900">
+                    <Link to={settings?.sidebar?.offerLink || '/shop'} className="flex-1 relative overflow-hidden group flex flex-col">
+                      <div className="w-full relative shrink-0 lg:flex-1 min-h-[180px] lg:min-h-0 overflow-hidden bg-slate-900">
                         {/* Cinematic Video with High Visibility */}
                         <video 
                           autoPlay 
@@ -369,10 +369,9 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Top Banner Ad - Adsterra */}
       {settings?.ads?.adsterra?.bannerOneCode && (
         <section className="py-3 w-full">
-          <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10">
+          <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24">
              <a 
               href={settings.ads.adsterra.bannerOneCode} 
               target="_blank" 
@@ -392,10 +391,9 @@ const Home = () => {
         </section>
       )}
 
-      {/* Dynamic Floating Notice Bar */}
       {settings?.ads?.floatingNotice?.active && settings?.ads?.floatingNotice?.text && (
         <section className="py-2 w-full">
-          <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10">
+          <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24">
             <div 
               className="relative overflow-hidden whitespace-nowrap h-12 md:h-14 flex items-center border-y border-[#777]/10 rounded-sm"
               style={{ backgroundColor: settings.ads.floatingNotice.bgColor }}
@@ -413,9 +411,8 @@ const Home = () => {
         </section>
       )}
 
-      {/* Trust & Features Section / Dynamic Ad */}
       <section className="py-3 w-full">
-        <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10">
+        <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24">
           {settings?.ads?.featuresAd?.active ? (
             <a 
               href={settings.ads.featuresAd.link || '#'} 
@@ -460,10 +457,9 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Adsterra Slot 3 - Below Features */}
       {settings?.ads?.adsterra?.bannerThreeCode && (
         <section className="py-3 w-full">
-          <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10">
+          <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24">
              <a href={settings.ads.adsterra.bannerThreeCode} target="_blank" rel="noopener noreferrer" className="block relative overflow-hidden group">
                <div className="bg-white border-2 border-[#777] p-8 text-center shadow-xl hover:bg-slate-50 transition-all rounded-none relative overflow-hidden">
                   <span className="text-[10px] font-black uppercase text-[#9B2B2C] tracking-[0.4em] mb-3 block animate-pulse">Priority Dispatch Active</span>
@@ -477,7 +473,7 @@ const Home = () => {
 
       {/* Curated Grid Selection */}
       <section className="py-5 w-full">
-        <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10">
+        <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24">
           <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-6 border-b-2 border-[#9B2B2C] pb-4">
             <div>
               <h2 className="text-2xl font-black uppercase tracking-tighter text-slate-900">Collections_DIR</h2>
@@ -522,10 +518,9 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Adsterra Slot 4 - Below Categories */}
       {settings?.ads?.adsterra?.bannerFourCode && (
         <section className="py-2 w-full">
-          <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10">
+          <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24">
              <a href={settings.ads.adsterra.bannerFourCode} target="_blank" rel="noopener noreferrer" className="block group">
                 <div className="bg-slate-900 rounded-none h-24 flex items-center justify-center p-4 relative overflow-hidden shadow-xl border-2 border-[#777] transition-all hover:scale-[1.01]">
                    <div className="absolute top-0 right-0 p-3 opacity-10">
@@ -541,10 +536,9 @@ const Home = () => {
         </section>
       )}
 
-      {/* Middle Banner Ad - Adsterra */}
       {settings?.ads?.adsterra?.bannerTwoCode && (
         <section className="py-2 w-full">
-          <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10">
+          <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24">
             <a 
               href={settings.ads.adsterra.bannerTwoCode} 
               target="_blank" 
@@ -567,7 +561,7 @@ const Home = () => {
 
       {/* High-Alert Dispatch Section (Flash Sale) - ALIGNED */}
       <section className="pb-6 pt-2 w-full">
-        <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10">
+        <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24">
            <div className="bg-[#9B2B2C] relative overflow-hidden rounded-none border-2 border-[#777] shadow-2xl">
             {/* Subtle decorative grid background */}
             <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
@@ -614,10 +608,9 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Adsterra Slot 5 - Below Flash Sale */}
       {settings?.ads?.adsterra?.bannerFiveCode && (
         <section className="py-3 w-full">
-          <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10">
+          <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24">
              <a href={settings.ads.adsterra.bannerFiveCode} target="_blank" rel="noopener noreferrer" className="block relative h-32 group rounded-none overflow-hidden shadow-xl border-2 border-[#777]">
                 <img 
                   src="https://images.unsplash.com/photo-1622675363311-3e1904dc1885?auto=format&fit=crop&q=80&w=1500" 
@@ -633,10 +626,9 @@ const Home = () => {
           </div>
         </section>
       )}
-      {/* Adsterra Slot 6 - Bottom Ad before Footer */}
       {settings?.ads?.adsterra?.bannerSixCode && (
         <section className="pt-1 pb-6 w-full">
-          <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10">
+          <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24">
              <a href={settings.ads.adsterra.bannerSixCode} target="_blank" rel="noopener noreferrer" className="block group">
                 <div className="bg-white rounded-none p-5 flex flex-col md:flex-row items-center justify-between gap-5 hover:bg-[#f8f8f8] transition-all shadow-xl border-2 border-[#777] group overflow-hidden relative">
                    <div className="flex items-center gap-6 relative z-10">

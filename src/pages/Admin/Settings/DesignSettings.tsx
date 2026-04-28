@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
-import { db } from '../../../firebase';
+import { db, storage } from '../../../firebase';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { SiteSettings } from '../../../types';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
 import { Input } from '../../../components/ui/input';
 import { Label } from '../../../components/ui/label';
 import { Button } from '../../../components/ui/button';
 import { Checkbox } from '../../../components/ui/checkbox';
-import { Save, LayoutGrid, Palette, Zap } from 'lucide-react';
+import { Save, LayoutGrid, Palette, Zap, Upload, Loader2, Play } from 'lucide-react';
 import { toast } from 'sonner';
 
 const DesignSettings = () => {
   const [settings, setSettings] = useState<Partial<SiteSettings>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState<{ [key: string]: boolean }>({});
+  const [progress, setProgress] = useState<{ [key: string]: number }>({});
 
   useEffect(() => {
     const unsub = onSnapshot(doc(db, 'settings', 'site'), (snapshot) => {
@@ -24,6 +27,42 @@ const DesignSettings = () => {
     });
     return () => unsub();
   }, []);
+
+  const handleFileUpload = async (file: File, type: 'video' | 'image') => {
+    const key = type === 'video' ? 'offerVideoUrl' : 'offerImageUrl';
+    setUploading(prev => ({ ...prev, [type]: true }));
+    
+    // Create a unique filename
+    const filename = `${Date.now()}_${file.name}`;
+    const storageRef = ref(storage, `offers/${filename}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on('state_changed', 
+      (snapshot) => {
+        const p = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setProgress(prev => ({ ...prev, [type]: p }));
+      }, 
+      (error) => {
+        console.error(error);
+        toast.error(`${type.toUpperCase()} upload failed`);
+        setUploading(prev => ({ ...prev, [type]: false }));
+      }, 
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setSettings(prev => ({
+            ...prev,
+            sidebar: {
+              ...(prev.sidebar || {}),
+              [key]: downloadURL
+            } as any
+          }));
+          toast.success(`${type.toUpperCase()} node linked successfully`);
+          setUploading(prev => ({ ...prev, [type]: false }));
+          setProgress(prev => ({ ...prev, [type]: 0 }));
+        });
+      }
+    );
+  };
 
   const handleSave = async () => {
     setSaving(true);
@@ -139,27 +178,95 @@ const DesignSettings = () => {
             </div>
           </div>
           
-          <div className="space-y-2">
-            <Label className="text-[9px] font-black uppercase text-slate-500">Video Background URL (Direct Link)</Label>
-            <Input 
-              value={settings.sidebar?.offerVideoUrl || ''} 
-              onChange={e => setSettings({...settings, sidebar: { ...(settings.sidebar || {}), offerVideoUrl: e.target.value } as any})}
-              placeholder="https://example.com/video.mp4"
-              className="h-11 border-[#777] rounded-none text-xs border-2 border-slate-900"
-            />
+          <div className="space-y-4">
+            <Label className="text-[9px] font-black uppercase text-slate-500">Video Background Protocol (Direct Upload)</Label>
+            <div className="flex flex-col gap-4">
+              <div className="flex gap-4">
+                <Input 
+                  type="file"
+                  accept="video/*"
+                  onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0], 'video')}
+                  className="hidden"
+                  id="video-upload"
+                />
+                <Button 
+                  asChild 
+                  variant="outline" 
+                  className="w-full h-16 border-2 border-dashed border-slate-900 rounded-none bg-slate-50 hover:bg-slate-100 transition-all group"
+                >
+                  <label htmlFor="video-upload" className="cursor-pointer flex flex-col items-center justify-center gap-2">
+                    {uploading.video ? (
+                      <div className="flex flex-col items-center gap-2">
+                        <Loader2 className="h-5 w-5 animate-spin text-[#9B2B2C]" />
+                        <span className="text-[9px] font-black uppercase tracking-widest">{Math.round(progress.video || 0)}% UPLOADING</span>
+                      </div>
+                    ) : (
+                      <>
+                        <Play className="h-5 w-5 text-slate-400 group-hover:text-[#9B2B2C] transition-colors" />
+                        <span className="text-[9px] font-black uppercase tracking-widest">Select Video File</span>
+                      </>
+                    )}
+                  </label>
+                </Button>
+              </div>
+              
+              <div className="space-y-2">
+                <Label className="text-[8px] font-bold uppercase text-slate-400">Current URL (Manual Override)</Label>
+                <Input 
+                  value={settings.sidebar?.offerVideoUrl || ''} 
+                  onChange={e => setSettings({...settings, sidebar: { ...(settings.sidebar || {}), offerVideoUrl: e.target.value } as any})}
+                  placeholder="https://example.com/video.mp4"
+                  className="h-10 border-[#777] rounded-none text-[10px] font-bold"
+                />
+              </div>
+            </div>
             <p className="text-[8px] text-[#9B2B2C] font-black uppercase tracking-widest leading-relaxed">
-              * Priority link // If provided, this video will play in the sidebar hub.
+              * Priority link // Direct video uploads are stored in Protocol_X Storage Hub.
             </p>
           </div>
 
-          <div className="space-y-2">
-            <Label className="text-[9px] font-black uppercase text-slate-500">Fallback Poster / Image URL</Label>
-            <Input 
-              value={settings.sidebar?.offerImageUrl || ''} 
-              onChange={e => setSettings({...settings, sidebar: { ...(settings.sidebar || {}), offerImageUrl: e.target.value } as any})}
-              placeholder="https://example.com/poster.jpg"
-              className="h-11 border-[#777] rounded-none text-xs"
-            />
+          <div className="space-y-4">
+            <Label className="text-[9px] font-black uppercase text-slate-500">Fallback Poster / Image Upload</Label>
+            <div className="flex flex-col gap-4">
+               <div className="flex gap-4">
+                  <Input 
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0], 'image')}
+                    className="hidden"
+                    id="image-upload"
+                  />
+                  <Button 
+                    asChild 
+                    variant="outline" 
+                    className="w-full h-16 border-2 border-dashed border-slate-900 rounded-none bg-slate-50 hover:bg-slate-100 transition-all group"
+                  >
+                    <label htmlFor="image-upload" className="cursor-pointer flex flex-col items-center justify-center gap-2">
+                      {uploading.image ? (
+                        <div className="flex flex-col items-center gap-2">
+                          <Loader2 className="h-5 w-5 animate-spin text-[#9B2B2C]" />
+                          <span className="text-[9px] font-black uppercase tracking-widest">{Math.round(progress.image || 0)}% SYNCING</span>
+                        </div>
+                      ) : (
+                        <>
+                          <Upload className="h-5 w-5 text-slate-400 group-hover:text-[#9B2B2C] transition-colors" />
+                          <span className="text-[9px] font-black uppercase tracking-widest">Select Cover Image</span>
+                        </>
+                      )}
+                    </label>
+                  </Button>
+               </div>
+
+                <div className="space-y-2">
+                  <Label className="text-[8px] font-bold uppercase text-slate-400">Current URL (Manual Override)</Label>
+                  <Input 
+                    value={settings.sidebar?.offerImageUrl || ''} 
+                    onChange={e => setSettings({...settings, sidebar: { ...(settings.sidebar || {}), offerImageUrl: e.target.value } as any})}
+                    placeholder="https://example.com/poster.jpg"
+                    className="h-10 border-[#777] rounded-none text-[10px] font-bold"
+                  />
+                </div>
+            </div>
           </div>
         </CardContent>
       </Card>

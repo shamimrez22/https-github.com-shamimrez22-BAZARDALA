@@ -69,6 +69,10 @@ export interface SiteSettings {
   footerCompanyLinks: { label: string; url: string }[];
   socialLinks: { platform: string; url: string }[];
   siteDescription: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  contactAddress?: string;
+  siteDescriptionBangla?: string;
   ads?: {
     featuresAd: {
       active: boolean;

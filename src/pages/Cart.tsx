@@ -30,7 +30,7 @@ const Cart = () => {
 
   return (
     <div className="bg-slate-50/30 min-h-screen py-8 md:py-12">
-      <div className="w-full px-4 md:px-6 lg:px-8 xl:px-10 max-w-7xl mx-auto">
+      <div className="w-full px-4 md:px-8 lg:px-12 max-w-screen-2xl mx-auto">
         <div className="mb-8 border-b-2 border-[#9B2B2C] pb-4">
           <h1 className="text-3xl md:text-4xl font-black text-slate-900 uppercase tracking-tighter">Shopping_Bag</h1>
           <div className="flex items-center gap-3 mt-3">

@@ -71,6 +71,47 @@ const categories = [
   { name: 'More Categories', icon: MoreHorizontal },
 ];
 
+const SpecialOfferNode = ({ settings }: { settings: any }) => (
+  <div className="flex-1 flex flex-col overflow-hidden group min-h-[140px] md:min-h-[160px] lg:h-auto bg-white">
+    <div className="bg-[#f8f8f8] p-1.5 md:p-2 border-b-2 border-[#777] flex-shrink-0">
+      <h2 className="text-[8px] md:text-[9px] font-black text-[#9B2B2C] uppercase tracking-[0.2em] flex items-center gap-1.5">
+        <Zap className="h-2.5 w-2.5 md:h-3 md:w-3" /> {settings?.sidebar?.offerTitle || 'OFFER'}
+      </h2>
+    </div>
+    <Link to={settings?.sidebar?.offerLink || '/shop'} className="flex-1 relative overflow-hidden group flex flex-col">
+      <div className="w-full relative shrink-0 lg:flex-1 h-20 md:h-24 lg:h-auto overflow-hidden bg-slate-900 border-b border-[#777]/20">
+        <video 
+          autoPlay 
+          muted 
+          loop 
+          playsInline
+          key={settings?.sidebar?.offerVideoUrl}
+          poster={settings?.sidebar?.offerImageUrl || 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=800'}
+          className="absolute inset-0 w-full h-full object-cover transition-all duration-[3000ms] ease-out group-hover:scale-125 scale-110 opacity-100"
+        >
+          {settings?.sidebar?.offerVideoUrl ? (
+            <source src={settings.sidebar.offerVideoUrl} type="video/mp4" />
+          ) : (
+            <>
+              <source src="https://v1.nitrocdn.com/fMvOidVjXoEVErQZzGNoSvhzYxRzUuXz/assets/static/optimized/rev-8656606/wp-content/uploads/2021/10/product-video-loop.mp4" type="video/mp4" />
+              <source src="https://assets.mixkit.co/videos/preview/mixkit-shoes-on-a-red-background-1234-large.mp4" type="video/mp4" />
+            </>
+          )}
+        </video>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
+      </div>
+      <div className="p-2 md:p-3 relative flex flex-col justify-center">
+        <div className="w-full bg-[#9B2B2C] text-white text-[7px] md:text-[8px] font-black py-0.5 uppercase tracking-[0.3em] mb-1 text-center shadow-sm transform -skew-x-6">
+          PRIORITY_ACCESS
+        </div>
+        <h4 className="text-[10px] md:text-[11px] font-black text-slate-900 uppercase leading-[1.1] tracking-tighter group-hover:text-[#9B2B2C] transition-colors truncate">
+          {settings?.sidebar?.offerTitle || 'Claim Your Premium Offer'}
+        </h4>
+      </div>
+    </Link>
+  </div>
+);
+
 const Home = () => {
   const [currentSlide, setCurrentSlide] = React.useState(0);
   const [variantIndex, setVariantIndex] = React.useState(0);
@@ -201,9 +242,9 @@ const Home = () => {
       {/* Full Width Hero Section */}
       <section className="pt-0 pb-4 w-full">
         <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24 overflow-hidden">
-          <div className="flex flex-col lg:flex-row items-stretch w-full min-h-[350px] md:min-h-[450px] lg:h-[420px] rounded-none overflow-hidden border-2 border-[#777] bg-white">
+          <div className="flex flex-col lg:flex-row items-stretch w-full min-h-[250px] md:min-h-[350px] lg:h-[420px] rounded-none overflow-hidden border-2 border-[#777] bg-white">
             {/* Category Sidebar/Offer - FULL WIDTH SIDEBAR */}
-            <div className="w-full lg:w-72 bg-white border-b-2 lg:border-b-0 lg:border-r-2 border-[#777] flex flex-col flex-shrink-0">
+            <div className="w-full lg:w-72 bg-white border-b-2 lg:border-b-0 lg:border-r-2 border-[#777] flex flex-col flex-shrink-0 overflow-y-auto lg:overflow-visible custom-scrollbar">
                 {settings?.sidebar?.showCategories ? (
                   <>
                     <div className="bg-[#f8f8f8] p-3 md:p-7 flex-shrink-0 border-b-2 border-[#777]">
@@ -211,7 +252,7 @@ const Home = () => {
                         <List className="h-5 w-5" /> MENU_DIR
                       </h2>
                     </div>
-                    <div className="flex-1 overflow-y-auto max-h-[180px] md:max-h-[250px] lg:max-h-none py-2 bg-white scrollbar-thin scrollbar-thumb-[#9B2B2C]/20">
+                    <div className="flex-shrink-0 lg:flex-1 overflow-y-auto max-h-[160px] md:max-h-[200px] lg:max-h-none py-2 bg-white scrollbar-thin scrollbar-thumb-[#9B2B2C]/20 border-b-2 border-[#777] lg:border-b-0">
                       <div className="grid grid-cols-1 lg:grid-cols-1">
                         {categories.map((cat, i) => (
                           <Link 
@@ -228,6 +269,10 @@ const Home = () => {
                         ))}
                       </div>
                     </div>
+                    {/* Hide on Mobile, Show on Desktop when categories are present */}
+                    <div className="hidden lg:block border-t-2 border-[#777]">
+                       <SpecialOfferNode settings={settings} />
+                    </div>
                     <div className="p-4 md:p-6 bg-white border-t-2 border-[#777] flex-shrink-0">
                        <Link to="/shop" className="block w-full py-3 md:py-4 bg-[#9B2B2C] text-white text-[11px] md:text-[12px] font-black uppercase tracking-widest hover:bg-slate-900 transition-all text-center rounded-none shadow-md">
                          ALL_CATEGORIES
@@ -235,53 +280,7 @@ const Home = () => {
                     </div>
                   </>
                 ) : (
-                  <div className="flex-1 flex flex-col overflow-hidden group">
-                    <div className="bg-[#f8f8f8] p-1.5 md:p-2 border-b-2 border-[#777] flex-shrink-0">
-                      <h2 className="text-[8px] md:text-[10px] font-black text-[#9B2B2C] uppercase tracking-[0.2em] flex items-center gap-1.5">
-                        <Zap className="h-2.5 w-2.5 md:h-3 md:w-3" /> {settings?.sidebar?.offerTitle || 'EXCLUSIVE_OFFER'}
-                      </h2>
-                    </div>
-                    <Link to={settings?.sidebar?.offerLink || '/shop'} className="flex-1 relative overflow-hidden group flex flex-col">
-                      <div className="w-full relative shrink-0 lg:flex-1 min-h-[180px] lg:min-h-0 overflow-hidden bg-slate-900">
-                        {/* Cinematic Video with High Visibility */}
-                        <video 
-                          autoPlay 
-                          muted 
-                          loop 
-                          playsInline
-                          key={settings?.sidebar?.offerVideoUrl}
-                          poster={settings?.sidebar?.offerImageUrl || 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=800'}
-                          className="absolute inset-0 w-full h-full object-cover transition-all duration-[3000ms] ease-out group-hover:scale-125 scale-110 opacity-100"
-                        >
-                          {settings?.sidebar?.offerVideoUrl ? (
-                            <source src={settings.sidebar.offerVideoUrl} type="video/mp4" />
-                          ) : (
-                            <>
-                              <source src="https://v1.nitrocdn.com/fMvOidVjXoEVErQZzGNoSvhzYxRzUuXz/assets/static/optimized/rev-8656606/wp-content/uploads/2021/10/product-video-loop.mp4" type="video/mp4" />
-                              <source src="https://assets.mixkit.co/videos/preview/mixkit-shoes-on-a-red-background-1234-large.mp4" type="video/mp4" />
-                            </>
-                          )}
-                        </video>
-                        {/* Dramatic Cinematic Overlays */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_30%,_rgba(0,0,0,0.3)_100%)] pointer-events-none" />
-                        
-                        {/* Scanline Animation */}
-                        <div className="absolute inset-0 w-full h-full pointer-events-none opacity-10">
-                          <div className="w-full h-[1px] bg-white animate-[scanline_4s_linear_infinite]" />
-                        </div>
-                      </div>
-                      <div className="flex-1 bg-white p-3 md:p-4 lg:border-t-2 border-[#777] shadow-lg relative flex flex-col justify-center">
-                        <div className="w-full bg-[#9B2B2C] text-white text-[7px] md:text-[8px] lg:text-[9px] font-black py-1 md:py-1.5 uppercase tracking-[0.3em] mb-2 md:mb-3 text-center shadow-lg transform -skew-x-6">
-                          PRIORITY_ACCESS_GRANTED
-                        </div>
-                        <h4 className="text-[12px] md:text-[14px] lg:text-[16px] font-black text-slate-900 uppercase leading-[1.1] tracking-tighter group-hover:text-[#9B2B2C] transition-colors">
-                          {settings?.sidebar?.offerTitle || 'Claim Your Premium Offer Now'}
-                        </h4>
-                        <div className="h-1 w-0 bg-[#9B2B2C] mt-2 group-hover:w-full transition-all duration-500" />
-                      </div>
-                    </Link>
-                  </div>
+                  <SpecialOfferNode settings={settings} />
                 )}
             </div>
             {/* Main Image Slider */}
@@ -395,7 +394,7 @@ const Home = () => {
         <section className="py-2 w-full">
           <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24">
             <div 
-              className="relative overflow-hidden whitespace-nowrap h-12 md:h-14 flex items-center border-y border-[#777]/10 rounded-sm"
+              className="relative overflow-hidden whitespace-nowrap h-10 md:h-12 flex items-center border-y border-[#777]/10 rounded-sm"
               style={{ backgroundColor: settings.ads.floatingNotice.bgColor }}
             >
               <div 
@@ -566,7 +565,7 @@ const Home = () => {
             {/* Subtle decorative grid background */}
             <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
             
-            <div className="p-6 md:p-8 relative z-10">
+            <div className="p-4 md:p-6 relative z-10">
           <div className="flex flex-col md:flex-row items-center justify-between mb-6 md:mb-8 gap-6 text-center md:text-left">
             <div>
               <div className="flex items-center justify-center md:justify-start gap-2 mb-1.5">
@@ -586,7 +585,7 @@ const Home = () => {
                         { val: timeLeft.secs, label: 'SEC' },
                       ].map((t, i) => (
                         <div key={i} className="flex flex-col items-center">
-                          <div className="bg-white text-[#9B2B2C] w-12 h-12 md:w-14 md:h-14 flex items-center justify-center text-lg md:text-xl font-mono font-black border-2 border-black">{t.val}</div>
+                          <div className="bg-white text-[#9B2B2C] w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-base md:text-lg font-mono font-black border-2 border-black">{t.val}</div>
                           <span className="text-[8px] font-black text-white uppercase mt-1.5 tracking-widest">{t.label}</span>
                         </div>
                       ))}

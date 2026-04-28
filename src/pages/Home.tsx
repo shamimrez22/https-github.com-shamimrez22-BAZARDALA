@@ -201,17 +201,17 @@ const Home = () => {
       {/* Full Width Hero Section */}
       <section className="pt-0 pb-4 w-full">
         <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24 overflow-hidden">
-          <div className="flex flex-col lg:flex-row items-stretch w-full min-h-[300px] lg:h-[420px] rounded-none overflow-hidden border-2 border-[#777] bg-white">
+          <div className="flex flex-col lg:flex-row items-stretch w-full min-h-[350px] md:min-h-[450px] lg:h-[420px] rounded-none overflow-hidden border-2 border-[#777] bg-white">
             {/* Category Sidebar/Offer - FULL WIDTH SIDEBAR */}
-            <div className="w-full lg:w-72 bg-white border-b-2 lg:border-b-0 lg:border-r-2 border-[#777] flex flex-col flex-shrink-0 overflow-hidden">
+            <div className="w-full lg:w-72 bg-white border-b-2 lg:border-b-0 lg:border-r-2 border-[#777] flex flex-col flex-shrink-0">
                 {settings?.sidebar?.showCategories ? (
                   <>
-                    <div className="bg-[#f8f8f8] p-4 md:p-7 flex-shrink-0 border-b-2 border-[#777]">
+                    <div className="bg-[#f8f8f8] p-3 md:p-7 flex-shrink-0 border-b-2 border-[#777]">
                       <h2 className="text-[12px] md:text-[16px] font-black text-slate-900 uppercase tracking-[0.2em] flex items-center gap-2 md:gap-4">
                         <List className="h-5 w-5" /> MENU_DIR
                       </h2>
                     </div>
-                    <div className="flex-1 overflow-y-auto py-4 bg-white scrollbar-thin scrollbar-thumb-[#9B2B2C]/20">
+                    <div className="flex-1 overflow-y-auto max-h-[180px] md:max-h-[250px] lg:max-h-none py-2 bg-white scrollbar-thin scrollbar-thumb-[#9B2B2C]/20">
                       <div className="grid grid-cols-1 lg:grid-cols-1">
                         {categories.map((cat, i) => (
                           <Link 

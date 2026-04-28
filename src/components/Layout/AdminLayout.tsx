@@ -178,12 +178,15 @@ export const AdminLayout: React.FC = () => {
 
     return (
       <div className="mb-2">
-        <Link
-          to={item.path}
-          className={`flex items-center justify-between px-5 py-4 border border-[#777]/40 ${
+        <button
+          onClick={() => {
+            navigate(item.path);
+            if (window.innerWidth < 1024) setIsSidebarOpen(false);
+          }}
+          className={`w-full flex items-center justify-between px-5 py-4 border-2 transition-all cursor-pointer ${
             isActive 
-              ? 'bg-[#9B2B2C] text-white border-[#000] shadow-md' 
-              : 'bg-white text-slate-800 hover:bg-[#ead9c4] border-[#777]/20 shadow-sm'
+              ? 'bg-[#9B2B2C] text-white border-slate-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]' 
+              : 'bg-white text-slate-800 hover:bg-[#ead9c4] border-slate-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
           }`}
         >
           <div className="flex items-center gap-4">
@@ -191,11 +194,11 @@ export const AdminLayout: React.FC = () => {
             <span className="font-black text-[12px] uppercase tracking-tighter">{item.label}</span>
           </div>
           {item.badge && (
-            <Badge className={`${isActive ? 'bg-white text-[#9B2B2C]' : 'bg-rose-600 text-white'} border-none h-5 min-w-5 flex items-center justify-center p-0 text-[9px] font-black`}>
+            <Badge className={`${isActive ? 'bg-white text-[#9B2B2C]' : 'bg-rose-600 text-white'} border-none h-5 min-w-5 flex items-center justify-center p-0 text-[9px] font-black shadow-sm`}>
               {item.badge}
             </Badge>
           )}
-        </Link>
+        </button>
       </div>
     );
   };
@@ -217,13 +220,13 @@ export const AdminLayout: React.FC = () => {
 
       {/* Sidebar */}
       <aside 
-        className={`fixed inset-y-0 left-0 z-50 w-72 bg-[#ead9c4] border-r border-[#777] transition-transform duration-300 lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-[100] w-72 bg-[#ead9c4] border-r border-[#777] transition-transform duration-300 lg:translate-x-0 ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="p-8 border-b border-[#777] bg-[#9B2B2C]">
+          <div className="p-8 border-b border-[#777] bg-[#9B2B2C] flex items-center justify-between">
             <Link to="/admin" className="flex items-center gap-4 group px-2">
               <div className="w-14 h-14 bg-white rounded-lg flex items-center justify-center text-[#9B2B2C] shadow-lg group-hover:rotate-[10deg] transition-all">
                 <ShoppingBasket className="h-7 w-7" />
@@ -238,6 +241,9 @@ export const AdminLayout: React.FC = () => {
                 <p className="text-[9px] font-black text-white/50 uppercase tracking-[0.3em] mt-1.5 font-mono">Store Management // v3.0</p>
               </div>
             </Link>
+            <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(false)} className="lg:hidden text-white/70 hover:text-white">
+              <X className="h-6 w-6" />
+            </Button>
           </div>
 
           {/* Navigation */}
@@ -265,7 +271,12 @@ export const AdminLayout: React.FC = () => {
       {/* Main Content */}
       <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ${isSidebarOpen ? 'lg:ml-72' : 'ml-0'}`}>
         {/* Header */}
-        <header className="h-16 bg-[#ead9c4] border-b border-[#777] fixed top-0 right-0 z-[60] px-6 flex items-center justify-between shadow-md transition-all duration-300" style={{ left: isSidebarOpen ? '288px' : '0' }}>
+        <header 
+          className="h-16 bg-[#ead9c4] border-b border-[#777] fixed top-0 right-0 z-[60] px-6 flex items-center justify-between shadow-md transition-all duration-300 left-0 lg:left-0"
+          style={{ 
+            left: (window.innerWidth >= 1024 && isSidebarOpen) ? '288px' : '0' 
+          }}
+        >
           <div className="flex items-center gap-4">
             {/* Desktop Sidebar Toggle */}
             <Button 
@@ -277,42 +288,16 @@ export const AdminLayout: React.FC = () => {
               {isSidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
 
-            {/* Mobile Navigation Trigger - Using 3Dots as requested by user */}
+            {/* Mobile Navigation Trigger - Using Drawer/Sheet style for "Sidebar" feel */}
             <div className="lg:hidden">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="text-slate-600 hover:bg-[#d4c1ad] rounded-lg border border-[#777]/20">
-                    <Menu className="h-6 w-6 text-[#9B2B2C]" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-72 bg-[#ead9c4] border-2 border-slate-900 p-2 space-y-1 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rounded-none z-[100]">
-                  <DropdownMenuGroup className="max-h-[70vh] overflow-y-auto custom-scrollbar">
-                    <DropdownMenuLabel className="p-3 text-[10px] font-black uppercase tracking-widest text-[#9B2B2C] border-b border-[#777]/30">Admin_Access_Control</DropdownMenuLabel>
-                    {menuItems.map(item => (
-                      <DropdownMenuItem 
-                        key={item.label} 
-                        onSelect={() => navigate(item.path)} 
-                        className={`flex items-center justify-between p-4 rounded-none transition-all mb-2 border-2 ${location.pathname === item.path ? 'bg-[#9B2B2C] text-white border-slate-900 shadow-md' : 'bg-white border-[#777]/20 hover:bg-[#ead9c4]/30 hover:border-[#9B2B2C]'}`}
-                      >
-                        <div className="flex items-center gap-4">
-                          <item.icon className={`h-4.5 w-4.5 ${location.pathname === item.path ? 'text-white' : 'text-[#9B2B2C]'}`} />
-                          <span className="font-black text-[12px] uppercase tracking-tighter">{item.label}</span>
-                        </div>
-                        {item.badge && (
-                          <span className={`${location.pathname === item.path ? 'bg-white text-[#9B2B2C]' : 'bg-rose-600 text-white'} text-[9px] min-w-5 h-5 flex items-center justify-center p-0 font-black rounded-none border border-slate-900`}>
-                            {item.badge}
-                          </span>
-                        )}
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuGroup>
-                  <DropdownMenuSeparator className="bg-[#777]/30 h-[2px]" />
-                  <DropdownMenuItem onSelect={handleLogout} className="p-4 text-rose-600 font-black text-xs uppercase flex items-center gap-3 hover:bg-rose-50 rounded-none cursor-pointer">
-                    <LogOut className="h-4 w-4" />
-                    Terminate_Session
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={() => setIsSidebarOpen(true)}
+                className="text-slate-600 hover:bg-[#d4c1ad] rounded-lg border border-[#777]/20"
+              >
+                <Menu className="h-6 w-6 text-[#9B2B2C]" />
+              </Button>
             </div>
 
             <div className="h-8 w-[1px] bg-[#777]/30 hidden md:block" />

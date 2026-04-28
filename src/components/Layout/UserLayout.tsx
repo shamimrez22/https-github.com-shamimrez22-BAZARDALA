@@ -328,24 +328,45 @@ export const UserLayout: React.FC = () => {
       {/* Mobile Menu */}
       <AnimatePresence>
         {isMenuOpen && (
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="fixed inset-x-4 top-24 z-[55] lg:hidden bg-white/95 backdrop-blur-2xl rounded-[2.5rem] shadow-2xl border border-slate-50 overflow-hidden"
-          >
-            <nav className="flex flex-col p-8 gap-5 text-[14px] font-black uppercase tracking-[0.2em] text-slate-800">
-              <Link to="/" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-between group p-2">
-                HOME <ArrowRight className="h-5 w-5 text-brand-primary opacity-0 group-hover:opacity-100 transition-all -translate-x-4 group-hover:translate-x-0" />
-              </Link>
-              <Link to="/shop" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-between group p-2">
-                SHOP <ArrowRight className="h-5 w-5 text-brand-primary opacity-0 group-hover:opacity-100 transition-all -translate-x-4 group-hover:translate-x-0" />
-              </Link>
-              <Link to="/tracking" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-between group p-2">
-                TRACKING <ArrowRight className="h-5 w-5 text-brand-primary opacity-0 group-hover:opacity-100 transition-all -translate-x-4 group-hover:translate-x-0" />
-              </Link>
-            </nav>
-          </motion.div>
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMenuOpen(false)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[55] lg:hidden"
+            />
+            <motion.div 
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed right-0 top-0 bottom-0 w-[280px] z-[60] lg:hidden bg-white shadow-2xl border-l-2 border-slate-900 overflow-hidden flex flex-col"
+            >
+              <div className="p-6 bg-[#9B2B2C] border-b-2 border-slate-900 flex items-center justify-between">
+                <h2 className="text-white font-black uppercase tracking-widest text-sm">MENU_EXPLORER</h2>
+                <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(false)} className="text-white hover:bg-white/10">
+                  <X className="h-6 w-6" />
+                </Button>
+              </div>
+              <nav className="flex flex-col p-6 gap-4 text-[13px] font-black uppercase tracking-[0.2em] text-slate-800">
+                <Link to="/" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-between group p-3 border-b border-slate-100 hover:text-[#9B2B2C]">
+                  HOME <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link to="/shop" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-between group p-3 border-b border-slate-100 hover:text-[#9B2B2C]">
+                  SHOP <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link to="/tracking" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-between group p-3 border-b border-slate-100 hover:text-[#9B2B2C]">
+                  TRACKING <ArrowRight className="h-4 w-4" />
+                </Link>
+                {isAdmin && (
+                  <Link to="/admin" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-between group p-3 border-b border-slate-100 text-[#9B2B2C]">
+                    ADMIN_CONSOLE <ArrowRight className="h-4 w-4" />
+                  </Link>
+                )}
+              </nav>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
 

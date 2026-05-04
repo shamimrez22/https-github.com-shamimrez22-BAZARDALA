@@ -22,8 +22,8 @@ import {
   MoreHorizontal,
   List,
   PlusCircle,
-  Bell,
-  X
+  Bell as NotificationIcon,
+  X as XIcon
 } from 'lucide-react';
 
 import { collection, getDocs, getDoc, query, orderBy, limit, doc, onSnapshot } from 'firebase/firestore';
@@ -72,14 +72,14 @@ const categories = [
 ];
 
 const SpecialOfferNode = ({ settings }: { settings: any }) => (
-  <div className="flex-1 flex flex-col overflow-hidden group min-h-[140px] md:min-h-[160px] lg:h-auto bg-white">
-    <div className="bg-[#f8f8f8] p-1.5 md:p-2 border-b-2 border-[#777] flex-shrink-0">
-      <h2 className="text-[8px] md:text-[9px] font-black text-[#9B2B2C] uppercase tracking-[0.2em] flex items-center gap-1.5">
-        <Zap className="h-2.5 w-2.5 md:h-3 md:w-3" /> {settings?.sidebar?.offerTitle || 'OFFER'}
+  <div className="flex-1 flex flex-col overflow-hidden group min-h-[300px] lg:min-h-0 bg-white">
+    <div className="bg-[#f8f8f8] p-2 md:p-3 border-b-2 border-[#777] flex-shrink-0">
+      <h2 className="text-[10px] md:text-[11px] font-black text-[#9B2B2C] uppercase tracking-[0.2em] flex items-center gap-2">
+        <Zap className="h-3.5 w-3.5 md:h-4 md:w-4" /> {settings?.sidebar?.offerTitle || 'EXCLUSIVE OFFER'}
       </h2>
     </div>
     <Link to={settings?.sidebar?.offerLink || '/shop'} className="flex-1 relative overflow-hidden group flex flex-col">
-      <div className="w-full relative shrink-0 lg:flex-1 h-20 md:h-24 lg:h-auto overflow-hidden bg-slate-900 border-b border-[#777]/20">
+      <div className="w-full relative shrink-0 lg:flex-1 min-h-[180px] lg:min-h-0 overflow-hidden bg-slate-900 border-b border-[#777]/20">
         <video 
           autoPlay 
           muted 
@@ -99,14 +99,18 @@ const SpecialOfferNode = ({ settings }: { settings: any }) => (
           )}
         </video>
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
-      </div>
-      <div className="p-2 md:p-3 relative flex flex-col justify-center">
-        <div className="w-full bg-[#9B2B2C] text-white text-[7px] md:text-[8px] font-black py-0.5 uppercase tracking-[0.3em] mb-1 text-center shadow-sm transform -skew-x-6">
-          PRIORITY_ACCESS
+        <div className="absolute inset-0 w-full h-full pointer-events-none opacity-5">
+          <div className="w-full h-[1px] bg-white animate-[scanline_4s_linear_infinite]" />
         </div>
-        <h4 className="text-[10px] md:text-[11px] font-black text-slate-900 uppercase leading-[1.1] tracking-tighter group-hover:text-[#9B2B2C] transition-colors truncate">
-          {settings?.sidebar?.offerTitle || 'Claim Your Premium Offer'}
+      </div>
+      <div className="p-3 md:p-4 shadow-sm relative flex flex-col justify-center">
+        <div className="w-full bg-[#9B2B2C] text-white text-[7px] md:text-[8px] font-black py-1 uppercase tracking-[0.3em] mb-1.5 text-center shadow-sm transform -skew-x-6">
+          SPECIAL ACCESS
+        </div>
+        <h4 className="text-[12px] md:text-[13px] font-black text-slate-900 uppercase leading-[1.1] tracking-tighter group-hover:text-[#9B2B2C] transition-colors">
+          {settings?.sidebar?.offerTitle || 'Claim Your Premium Offer Now'}
         </h4>
+        <div className="h-1 w-0 bg-[#9B2B2C] mt-2 group-hover:w-full transition-all duration-500" />
       </div>
     </Link>
   </div>
@@ -249,7 +253,7 @@ const Home = () => {
                   <>
                     <div className="bg-[#f8f8f8] p-3 md:p-7 flex-shrink-0 border-b-2 border-[#777]">
                       <h2 className="text-[12px] md:text-[16px] font-black text-slate-900 uppercase tracking-[0.2em] flex items-center gap-2 md:gap-4">
-                        <List className="h-5 w-5" /> MENU_DIR
+                        <List className="h-5 w-5" /> MENU
                       </h2>
                     </div>
                     <div className="flex-shrink-0 lg:flex-1 overflow-y-auto max-h-[160px] md:max-h-[200px] lg:max-h-none py-2 bg-white scrollbar-thin scrollbar-thumb-[#9B2B2C]/20 border-b-2 border-[#777] lg:border-b-0">
@@ -269,13 +273,13 @@ const Home = () => {
                         ))}
                       </div>
                     </div>
-                    {/* Hide on Mobile, Show on Desktop when categories are present */}
+                    {/* Offer visible below categories on desktop */}
                     <div className="hidden lg:block border-t-2 border-[#777]">
                        <SpecialOfferNode settings={settings} />
                     </div>
                     <div className="p-4 md:p-6 bg-white border-t-2 border-[#777] flex-shrink-0">
                        <Link to="/shop" className="block w-full py-3 md:py-4 bg-[#9B2B2C] text-white text-[11px] md:text-[12px] font-black uppercase tracking-widest hover:bg-slate-900 transition-all text-center rounded-none shadow-md">
-                         ALL_CATEGORIES
+                         VIEW ALL
                        </Link>
                     </div>
                   </>
@@ -313,19 +317,19 @@ const Home = () => {
                             <div className="h-[1px] w-12 bg-white/30" />
                           </div>
                           <h2 className="text-2xl md:text-4xl font-black text-white mb-3 leading-none uppercase tracking-tighter">
-                            {banners[currentSlide].title || 'PREMIUM_MANIFEST'}
+                            {banners[currentSlide].title || 'EXCLUSIVE COLLECTION'}
                           </h2>
                           <p className="text-white/80 text-[10px] md:text-xs font-bold uppercase tracking-widest max-w-xl mb-6 border-l-2 border-white/50 pl-3">
-                            {banners[currentSlide].subtitle || 'SECURED_PRODUCT_LINE // v3.0'}
+                            {banners[currentSlide].subtitle || 'BEST DEALS FOR YOU'}
                           </p>
                           <div className="flex items-center gap-4">
                             <Link to="/shop">
                               <Button className="bg-[#9B2B2C] hover:bg-slate-900 text-white h-12 px-10 rounded-none font-black uppercase text-[11px] tracking-widest shadow-xl border-2 border-slate-900 transition-all active:scale-95">
-                                SHOP_NOW
+                                ORDER NOW
                               </Button>
                             </Link>
                             <div className="hidden md:flex flex-col text-[7px] font-black text-white/70 uppercase tracking-[0.3em] bg-black/40 px-3 py-1.5 backdrop-blur-sm border-l-2 border-[#9B2B2C]">
-                              <span>Product ID // {currentSlide + 1024}</span>
+                              <span>New Arrival 2026</span>
                               <span>Verified Store</span>
                             </div>
                           </div>
@@ -380,9 +384,9 @@ const Home = () => {
               <div className="bg-slate-900 h-24 md:h-28 flex items-center justify-center relative border-2 border-slate-900 hover:border-[#9B2B2C] transition-all">
                 <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '15px 15px' }} />
                 <div className="relative z-10 text-center">
-                  <span className="inline-block px-4 py-1 bg-[#9B2B2C] text-white text-[9px] font-black uppercase tracking-[0.25em] mb-1.5 rounded-none">SPECIAL_PROMO</span>
-                  <h3 className="text-xl md:text-2xl font-black text-white uppercase tracking-tighter">ACTIVATE_ELITE_TERMINAL_ACCESS</h3>
-                  <p className="text-white/30 text-[8px] font-black uppercase tracking-[0.3em] mt-1">Limited Availability // Secured Dispatch</p>
+                  <span className="inline-block px-4 py-1 bg-[#9B2B2C] text-white text-[9px] font-black uppercase tracking-[0.25em] mb-1.5 rounded-none">SPECIAL OFFER</span>
+                  <h3 className="text-xl md:text-2xl font-black text-white uppercase tracking-tighter">GET EXCLUSIVE DISCOUNTS</h3>
+                  <p className="text-white/30 text-[8px] font-black uppercase tracking-[0.3em] mt-1">Limited Time Offer - Fast Delivery</p>
                 </div>
               </div>
             </a>
@@ -410,60 +414,17 @@ const Home = () => {
         </section>
       )}
 
-      <section className="py-3 w-full">
-        <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24">
-          {settings?.ads?.featuresAd?.active ? (
-            <a 
-              href={settings.ads.featuresAd.link || '#'} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="block group"
-            >
-              <div className="bg-[#9B2B2C] rounded-none shadow-xl p-8 relative overflow-hidden flex items-center justify-center min-h-[120px] transition-all hover:scale-[1.01]">
-                <div className="flex items-center gap-6 relative z-10">
-                  <div className="w-16 h-16 rounded-none border-2 border-white flex items-center justify-center bg-white/10 backdrop-blur-md shadow-lg">
-                    <Zap className="h-8 w-8 text-white animate-pulse" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl md:text-2xl font-black text-white uppercase tracking-tighter leading-none mb-2">
-                      {settings.ads.featuresAd.message}
-                    </h3>
-                    <p className="text-white/60 text-[10px] font-black uppercase tracking-[0.3em]">Explore custom curated offers uniquely for you</p>
-                  </div>
-                </div>
-              </div>
-            </a>
-          ) : (
-                <div className="bg-white border-2 border-[#777] shadow-xl grid grid-cols-2 md:grid-cols-4">
-              {[
-                { icon: Truck, title: 'Dispatch', desc: 'Doorstep shipping', extra: 'GLOBAL_SEAL' },
-                { icon: ShieldCheck, title: 'Authenticity', desc: '100% Genuine Items', extra: 'SECURED' },
-                { icon: Zap, title: 'FlashSale', desc: 'Limited time offers', extra: 'ACTIVE_NOW' },
-                { icon: Star, title: 'Premium', desc: 'Elite savings', extra: 'VERIFIED' },
-              ].map((item, i) => (
-                <div key={i} className="flex flex-col md:flex-row items-center gap-4 p-6 hover:bg-[#f8f8f8] transition-all cursor-pointer group border-r-2 border-b-2 border-[#777] last:border-0 last:border-r-0 md:last:border-r-0 md:nth-3:border-r-2">
-                  <div className="w-12 h-12 rounded-none border border-[#777] bg-white flex items-center justify-center text-[#9B2B2C] group-hover:bg-[#9B2B2C] group-hover:text-white transition-all duration-300">
-                    <item.icon className="h-6 w-6" />
-                  </div>
-                  <div className="text-center md:text-left">
-                    <h3 className="text-[12px] font-black uppercase tracking-tight text-slate-900">{item.title}</h3>
-                    <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">{item.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
+      {/* Feature section removed at user request */}
+      {/* Services Grid section removed at user request */}
 
       {settings?.ads?.adsterra?.bannerThreeCode && (
         <section className="py-3 w-full">
           <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24">
              <a href={settings.ads.adsterra.bannerThreeCode} target="_blank" rel="noopener noreferrer" className="block relative overflow-hidden group">
                <div className="bg-white border-2 border-[#777] p-8 text-center shadow-xl hover:bg-slate-50 transition-all rounded-none relative overflow-hidden">
-                  <span className="text-[10px] font-black uppercase text-[#9B2B2C] tracking-[0.4em] mb-3 block animate-pulse">Priority Dispatch Active</span>
-                  <h4 className="text-3xl md:text-4xl font-black text-slate-900 uppercase tracking-tighter">RETRIEVE_VALUED_NODE_ASSETS</h4>
-                  <p className="text-[9px] font-black text-slate-400 uppercase mt-4 tracking-[0.5em]">Verified Secure Protocol // G-Channel_01 // End-to-End Encryption</p>
+                  <span className="text-[10px] font-black uppercase text-[#9B2B2C] tracking-[0.4em] mb-3 block animate-pulse">Fast Delivery Active</span>
+                  <h4 className="text-3xl md:text-4xl font-black text-slate-900 uppercase tracking-tighter">SHOP OUR BESTSELLERS</h4>
+                  <p className="text-[9px] font-black text-slate-400 uppercase mt-4 tracking-[0.5em]">100% Secure Shopping - Satisfaction Guaranteed</p>
                </div>
              </a>
           </div>
@@ -475,14 +436,14 @@ const Home = () => {
         <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24">
           <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-6 border-b-2 border-[#9B2B2C] pb-4">
             <div>
-              <h2 className="text-2xl font-black uppercase tracking-tighter text-slate-900">Collections_DIR</h2>
+              <h2 className="text-2xl font-black uppercase tracking-tighter text-slate-900">COLLECTIONS</h2>
               <div className="flex items-center gap-3 mt-1.5">
                  <div className="w-1.5 h-1.5 bg-[#9B2B2C] rounded-none animate-pulse" />
-                 <p className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.4em]">Browse our high-quality categories // AUTHORIZED_VIEW</p>
+                 <p className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.4em]">Shop our high-quality categories</p>
               </div>
             </div>
             <Link to="/shop" className="group flex items-center gap-4 bg-slate-900 text-white px-6 py-2.5 text-[10px] font-black uppercase tracking-widest hover:bg-[#9B2B2C] transition-all rounded-none shadow-lg hover:scale-[1.02] active:scale-[0.98]">
-              Explore All <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              VIEW ALL <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
           
@@ -526,8 +487,8 @@ const Home = () => {
                       <Zap className="h-16 w-16 text-white" />
                    </div>
                    <div className="text-center relative z-10">
-                      <h5 className="text-white text-lg md:text-xl font-black uppercase tracking-tighter">EXECUTE_MYSTERY_DROP_RECOVERY</h5>
-                      <span className="text-[#9B2B2C] text-[9px] font-black uppercase tracking-[0.5em] mt-1 block animate-pulse">EXCLUSIVE_OPPORTUNITY_77</span>
+                      <h5 className="text-white text-lg md:text-xl font-black uppercase tracking-tighter">SHOP NEW ARRIVALS</h5>
+                      <span className="text-[#9B2B2C] text-[9px] font-black uppercase tracking-[0.5em] mt-1 block animate-pulse">HOT DEALS</span>
                    </div>
                 </div>
              </a>
@@ -546,11 +507,11 @@ const Home = () => {
             >
                <div className="bg-white border-2 border-[#777] rounded-none p-6 text-center hover:bg-[#f8f8f8] transition-all relative overflow-hidden shadow-xl">
                   <div className="relative z-10">
-                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-3">Recommended For User_Session</h4>
+                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-3">Recommended For You</h4>
                     <div className="inline-flex items-center gap-3 bg-[#9B2B2C] text-white px-8 py-3 font-black uppercase text-xl md:text-2xl tracking-tighter shadow-xl border-2 border-slate-900">
-                       DOWNLOAD_PREMIUM_CATALOG <ArrowRight className="h-6 w-6" />
+                       VIEW BEST DEALS <ArrowRight className="h-6 w-6" />
                     </div>
-                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] mt-4">AUTHORIZED_ACCESS_ONLY // SSL_ENCRYPTED</p>
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] mt-4">100% Secure Shopping</p>
                   </div>
                </div>
             </a>
@@ -572,12 +533,12 @@ const Home = () => {
                 <span className="w-8 h-[1.5px] bg-white/40 rounded-none" />
                 <span className="text-white text-[9px] font-black uppercase tracking-[0.3em]">{settings?.countdown?.text || 'FLASH SALE'}</span>
               </div>
-              <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter leading-none mb-1.5">ULTRA_CRITICAL_DISTRIBUTION</h2>
-              <p className="text-white/60 text-[10px] font-black uppercase tracking-[0.2em]">Secure your favorites with authorized priority access</p>
+              <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter leading-none mb-1.5">FLASH SALE</h2>
+              <p className="text-white/60 text-[10px] font-black uppercase tracking-[0.2em]">Get your favorites before they are gone</p>
             </div>
                 
                 <div className="bg-white/10 backdrop-blur-2xl border-2 border-white/20 p-4 md:p-6 rounded-none flex flex-col items-center gap-3 w-full md:w-auto">
-                    <p className="text-[9px] font-black text-white/60 uppercase tracking-[0.2em] mb-0.5">TIME_LIMIT</p>
+                    <p className="text-[9px] font-black text-white/60 uppercase tracking-[0.2em] mb-0.5">LIMITED TIME</p>
                     <div className="flex gap-3">
                       {[
                         { val: timeLeft.hrs, label: 'HR' },
@@ -618,8 +579,8 @@ const Home = () => {
                   referrerPolicy="no-referrer"
                 />
                 <div className="absolute inset-0 bg-slate-900/60 flex flex-col items-center justify-center p-6 backdrop-blur-[2px] transition-all group-hover:backdrop-blur-none group-hover:bg-slate-900/40">
-                   <h3 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter leading-none text-center">RECOVER_HIDDEN_PROTOCOL_BOUNTY</h3>
-                   <span className="bg-[#9B2B2C] text-white px-5 py-1.5 text-[9px] font-black uppercase mt-4 rounded-none tracking-[0.3em] shadow-md border border-white">LIMITED_ACCESS_PROTOCOL</span>
+                   <h3 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter leading-none text-center">SHOP LIMITED OFFERS</h3>
+                   <span className="bg-[#9B2B2C] text-white px-5 py-1.5 text-[9px] font-black uppercase mt-4 rounded-none tracking-[0.3em] shadow-md border border-white">EXCLUSIVE DEALS</span>
                 </div>
              </a>
           </div>
@@ -635,12 +596,12 @@ const Home = () => {
                         <Truck className="h-8 w-8 text-white" />
                       </div>
                       <div className="text-center md:text-left">
-                        <h4 className="text-xl font-black uppercase text-slate-800 tracking-tighter leading-none mb-1.5 underline underline-offset-4 decoration-[#9B2B2C]">LOGISTICS_NEXUS_POINT</h4>
-                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em]">DIRECT_LOGISTICS_PROTOCOL // ACTIVE_SESSION</p>
+                        <h4 className="text-xl font-black uppercase text-slate-800 tracking-tighter leading-none mb-1.5 underline underline-offset-4 decoration-[#9B2B2C]">FAST DELIVERY</h4>
+                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em]">Shipment update - On the way</p>
                       </div>
                    </div>
                    <div className="px-10 py-3 bg-slate-900 text-white font-black uppercase text-[11px] tracking-[0.25em] group-hover:bg-[#9B2B2C] transition-all rounded-none shadow-lg border-2 border-slate-900 relative z-10">
-                      SYNC_DASHBOARD
+                      ORDER NOW
                    </div>
                 </div>
              </a>

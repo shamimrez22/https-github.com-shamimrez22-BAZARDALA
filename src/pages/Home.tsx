@@ -227,28 +227,24 @@ const Home = () => {
     setVariantIndex(Math.floor(Math.random() * 10));
   };
 
-  // Optimized variants for performance (static fade on mobile)
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-  const variants = isMobile ? [
-    { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } }
-  ] : [
-    { initial: { x: '100%', opacity: 0 }, animate: { x: 0, opacity: 1, scale: 1 }, exit: { x: '-100%', opacity: 0 } }, 
-    { initial: { y: '100%', opacity: 0 }, animate: { y: 0, opacity: 1, scale: 1 }, exit: { y: '-100%', opacity: 0 } }, 
+  // Varieties of slide animations
+  const variants = [
+    { initial: { x: '100%', opacity: 0 }, animate: { x: 0, opacity: 1 }, exit: { x: '-100%', opacity: 0 } }, 
+    { initial: { y: '100%', opacity: 0 }, animate: { y: 0, opacity: 1 }, exit: { y: '-100%', opacity: 0 } }, 
     { initial: { scale: 0.8, opacity: 0 }, animate: { scale: 1, opacity: 1 }, exit: { scale: 1.2, opacity: 0 } },
     { initial: { filter: 'blur(20px)', opacity: 0 }, animate: { filter: 'blur(0px)', opacity: 1 }, exit: { filter: 'blur(20px)', opacity: 0 } }
   ];
 
-  const variantIndexToUse = isMobile ? 0 : variantIndex % variants.length;
-  const currentVariant = variants[variantIndexToUse];
+  const currentVariant = variants[variantIndex % variants.length];
 
   return (
     <div className="flex flex-col bg-white text-slate-900 pb-20 overflow-x-hidden relative">
       {/* Full Width Hero Section */}
-      <section className="pt-0 pb-4 w-full">
+      <section className="pt-0 pb-1 md:pb-4 w-full">
         <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24 overflow-hidden">
-          <div className="flex flex-col lg:flex-row items-stretch w-full min-h-[250px] md:min-h-[350px] lg:h-[420px] rounded-none overflow-hidden border-2 border-[#777] bg-white">
-            {/* Category Sidebar/Offer - FULL WIDTH SIDEBAR */}
-            <div className="w-full lg:w-72 bg-white border-b-2 lg:border-b-0 lg:border-r-2 border-[#777] flex flex-col flex-shrink-0 overflow-y-auto lg:overflow-visible custom-scrollbar">
+          <div className="flex flex-col lg:flex-row items-stretch w-full min-h-[180px] md:min-h-[280px] lg:h-[420px] rounded-none overflow-hidden border-2 border-[#777] bg-white">
+            {/* Category Sidebar/Offer - HIDDEN ON MOBILE, VISIBLE ON DESKTOP */}
+            <div className="hidden lg:flex lg:w-72 bg-white lg:border-r-2 border-[#777] flex-col flex-shrink-0 lg:overflow-visible custom-scrollbar">
                 {settings?.sidebar?.showCategories ? (
                   <>
                     <div className="bg-[#f8f8f8] p-3 md:p-7 flex-shrink-0 border-b-2 border-[#777]">
@@ -299,43 +295,12 @@ const Home = () => {
                     className="absolute inset-0"
                   >
                   {banners[currentSlide] && (
-                    <>
-                      <img
-                        src={banners[currentSlide].image || 'https://picsum.photos/seed/slide/1920/1080'}
-                        alt={banners[currentSlide].title || 'Slide Image'}
-                        className="w-full h-full object-cover"
-                        referrerPolicy="no-referrer"
-                      />
-                      <div className="absolute inset-x-0 bottom-0 p-8 md:p-12">
-                        <motion.div
-                          initial={{ y: 30, opacity: 0 }}
-                          animate={{ y: 0, opacity: 1 }}
-                          transition={{ delay: 0.2 }}
-                        >
-                          <div className="flex items-center gap-3 mb-2">
-                            <span className="bg-white text-brand-primary px-1.5 py-0.5 text-[8px] font-black uppercase tracking-[0.2em] border border-brand-primary">New Arrival</span>
-                            <div className="h-[1px] w-12 bg-white/30" />
-                          </div>
-                          <h2 className="text-2xl md:text-4xl font-black text-white mb-3 leading-none uppercase tracking-tighter">
-                            {banners[currentSlide].title || 'EXCLUSIVE COLLECTION'}
-                          </h2>
-                          <p className="text-white/80 text-[10px] md:text-xs font-bold uppercase tracking-widest max-w-xl mb-6 border-l-2 border-white/50 pl-3">
-                            {banners[currentSlide].subtitle || 'BEST DEALS FOR YOU'}
-                          </p>
-                          <div className="flex items-center gap-4">
-                            <Link to="/shop">
-                              <Button className="bg-[#9B2B2C] hover:bg-slate-900 text-white h-12 px-10 rounded-none font-black uppercase text-[11px] tracking-widest shadow-xl border-2 border-slate-900 transition-all active:scale-95">
-                                ORDER NOW
-                              </Button>
-                            </Link>
-                            <div className="hidden md:flex flex-col text-[7px] font-black text-white/70 uppercase tracking-[0.3em] bg-black/40 px-3 py-1.5 backdrop-blur-sm border-l-2 border-[#9B2B2C]">
-                              <span>New Arrival 2026</span>
-                              <span>Verified Store</span>
-                            </div>
-                          </div>
-                        </motion.div>
-                      </div>
-                    </>
+                    <img
+                      src={banners[currentSlide].image || 'https://picsum.photos/seed/slide/1920/1080'}
+                      alt={banners[currentSlide].title || 'Slide Image'}
+                      className="w-full h-full object-cover"
+                      referrerPolicy="no-referrer"
+                    />
                   )}
                 </motion.div>
               </AnimatePresence>
@@ -373,7 +338,7 @@ const Home = () => {
       </section>
 
       {settings?.ads?.adsterra?.bannerOneCode && (
-        <section className="py-3 w-full">
+        <section className="py-1 w-full">
           <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24">
              <a 
               href={settings.ads.adsterra.bannerOneCode} 
@@ -381,12 +346,12 @@ const Home = () => {
               rel="noopener noreferrer"
               className="block group relative overflow-hidden rounded-none"
             >
-              <div className="bg-slate-900 h-24 md:h-28 flex items-center justify-center relative border-2 border-slate-900 hover:border-[#9B2B2C] transition-all">
+              <div className="bg-slate-900 h-20 md:h-28 flex items-center justify-center relative border-2 border-slate-900 hover:border-[#9B2B2C] transition-all">
                 <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '15px 15px' }} />
                 <div className="relative z-10 text-center">
-                  <span className="inline-block px-4 py-1 bg-[#9B2B2C] text-white text-[9px] font-black uppercase tracking-[0.25em] mb-1.5 rounded-none">SPECIAL OFFER</span>
-                  <h3 className="text-xl md:text-2xl font-black text-white uppercase tracking-tighter">GET EXCLUSIVE DISCOUNTS</h3>
-                  <p className="text-white/30 text-[8px] font-black uppercase tracking-[0.3em] mt-1">Limited Time Offer - Fast Delivery</p>
+                  <span className="inline-block px-4 py-1 bg-[#9B2B2C] text-white text-[8px] md:text-[9px] font-black uppercase tracking-[0.25em] mb-1 rounded-none">SPECIAL OFFER</span>
+                  <h3 className="text-lg md:text-2xl font-black text-white uppercase tracking-tighter">GET EXCLUSIVE DISCOUNTS</h3>
+                  <p className="text-white/30 text-[7px] md:text-[8px] font-black uppercase tracking-[0.3em] mt-0.5">Limited Time Offer - Fast Delivery</p>
                 </div>
               </div>
             </a>
@@ -432,18 +397,18 @@ const Home = () => {
       )}
 
       {/* Curated Grid Selection */}
-      <section className="py-5 w-full">
+      <section className="py-1 md:py-5 w-full">
         <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24">
-          <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-6 border-b-2 border-[#9B2B2C] pb-4">
+          <div className="flex flex-col md:flex-row items-center justify-between mb-3 md:mb-8 gap-2 md:gap-6 border-b-2 border-[#9B2B2C] pb-2 md:pb-4">
             <div>
-              <h2 className="text-2xl font-black uppercase tracking-tighter text-slate-900">COLLECTIONS</h2>
-              <div className="flex items-center gap-3 mt-1.5">
-                 <div className="w-1.5 h-1.5 bg-[#9B2B2C] rounded-none animate-pulse" />
-                 <p className="text-[9px] font-bold text-slate-400 uppercase tracking-[0.4em]">Shop our high-quality categories</p>
+              <h2 className="text-sm md:text-2xl font-black uppercase tracking-tighter text-slate-900">COLLECTIONS</h2>
+              <div className="flex items-center gap-3 mt-1">
+                 <div className="w-1 h-1 bg-[#9B2B2C] rounded-none animate-pulse" />
+                 <p className="text-[7px] md:text-[9px] font-bold text-slate-400 uppercase tracking-[0.4em]">Shop our high-quality categories</p>
               </div>
             </div>
-            <Link to="/shop" className="group flex items-center gap-4 bg-slate-900 text-white px-6 py-2.5 text-[10px] font-black uppercase tracking-widest hover:bg-[#9B2B2C] transition-all rounded-none shadow-lg hover:scale-[1.02] active:scale-[0.98]">
-              VIEW ALL <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            <Link to="/shop" className="group flex items-center gap-4 bg-slate-900 text-white px-4 md:px-6 py-2 md:py-2.5 text-[8px] md:text-[10px] font-black uppercase tracking-widest hover:bg-[#9B2B2C] transition-all rounded-none shadow-lg hover:scale-[1.02] active:scale-[0.98]">
+              VIEW ALL <ArrowRight className="h-3 w-3 md:h-4 md:w-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
           
@@ -520,7 +485,7 @@ const Home = () => {
       )}
 
       {/* High-Alert Dispatch Section (Flash Sale) - ALIGNED */}
-      <section className="pb-6 pt-2 w-full">
+      <section className="pb-3 pt-1 w-full text-center md:text-left">
         <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24">
            <div className="bg-[#9B2B2C] relative overflow-hidden rounded-none border-2 border-[#777] shadow-2xl">
             {/* Subtle decorative grid background */}
@@ -569,7 +534,7 @@ const Home = () => {
       </section>
 
       {settings?.ads?.adsterra?.bannerFiveCode && (
-        <section className="py-3 w-full">
+        <section className="py-1 w-full">
           <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24">
              <a href={settings.ads.adsterra.bannerFiveCode} target="_blank" rel="noopener noreferrer" className="block relative h-32 group rounded-none overflow-hidden shadow-xl border-2 border-[#777]">
                 <img 
@@ -587,7 +552,7 @@ const Home = () => {
         </section>
       )}
       {settings?.ads?.adsterra?.bannerSixCode && (
-        <section className="pt-1 pb-6 w-full">
+        <section className="pt-0.5 pb-2 w-full">
           <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24">
              <a href={settings.ads.adsterra.bannerSixCode} target="_blank" rel="noopener noreferrer" className="block group">
                 <div className="bg-white rounded-none p-5 flex flex-col md:flex-row items-center justify-between gap-5 hover:bg-[#f8f8f8] transition-all shadow-xl border-2 border-[#777] group overflow-hidden relative">

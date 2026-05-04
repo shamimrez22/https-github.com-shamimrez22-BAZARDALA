@@ -153,12 +153,12 @@ export const UserLayout: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-slate-900 font-sans overflow-x-hidden pt-[88px] md:pt-[104px]">
+    <div className="min-h-screen flex flex-col bg-white text-slate-900 font-sans overflow-x-hidden pt-[80px] md:pt-[104px]">
       {/* Top Stack (Fixed) */}
-      <div className="fixed top-0 left-0 right-0 z-[60] w-full flex flex-col bg-[#f3f4f6]">
+      <div className="fixed top-0 left-0 right-0 z-[100] w-full flex flex-col bg-white shadow-sm">
         {/* Banner Notice (Topmost) */}
         {settings?.ads?.bannerNotice?.active && (
-          <div className="h-[24px] w-full bg-[#1F6F5F] text-white flex items-center justify-center px-4 md:px-10 relative overflow-hidden shrink-0">
+          <div className="h-[24px] w-full bg-[#1F6F5F] text-white flex items-center justify-center px-4 md:px-10 relative overflow-hidden shrink-0 border-b border-white/10">
              <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
              <p className="text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] relative z-10 animate-pulse">
                {settings.ads.bannerNotice.text}
@@ -167,8 +167,8 @@ export const UserLayout: React.FC = () => {
         )}
 
         {/* Header Navigation */}
-        <header className="w-full border-b-2 border-slate-900 bg-[#f3f4f6] transition-all shadow-sm shrink-0">
-          <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24 h-16 md:h-20 flex items-center justify-between">
+        <header className="w-full border-b-2 border-slate-900 bg-white transition-all shadow-md shrink-0">
+          <div className="w-full max-w-[1536px] mx-auto px-4 md:px-16 lg:px-24 h-14 md:h-20 flex items-center justify-between">
             <div className="flex items-center gap-10">
               <div className="flex items-center gap-2 md:gap-3 group cursor-pointer">
                 <div 
@@ -179,7 +179,7 @@ export const UserLayout: React.FC = () => {
                 </div>
                 <Link to="/" className="text-lg md:text-2xl font-black tracking-tighter text-[#9B2B2C] uppercase flex items-center gap-2 md:gap-3">
                   <div className="whitespace-nowrap underline underline-offset-4 decoration-slate-900 font-black">
-                    <span className="xs:inline md:inline">{(settings?.siteName || 'BAZAR DALA').split(' ')[0]}</span>
+                    <span>{(settings?.siteName || 'BAZAR DALA').split(' ')[0]}</span>
                     <span className="text-slate-800 group-hover:text-[#9B2B2C] transition-colors">
                       {' '}<span className="hidden sm:inline">{(settings?.siteName || 'BAZAR DALA').split(' ').slice(1).join(' ')}</span>
                     </span>

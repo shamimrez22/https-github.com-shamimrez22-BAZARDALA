@@ -181,7 +181,7 @@ export const UserLayout: React.FC = () => {
                   <div className="whitespace-nowrap underline underline-offset-4 decoration-slate-900 font-black">
                     <span>{(settings?.siteName || 'BAZAR DALA').split(' ')[0]}</span>
                     <span className="text-slate-800 group-hover:text-[#9B2B2C] transition-colors">
-                      {' '}<span className="hidden sm:inline">{(settings?.siteName || 'BAZAR DALA').split(' ').slice(1).join(' ')}</span>
+                      {' '}<span>{(settings?.siteName || 'BAZAR DALA').split(' ').slice(1).join(' ')}</span>
                     </span>
                   </div>
                 </Link>

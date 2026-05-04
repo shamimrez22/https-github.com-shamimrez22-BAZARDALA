@@ -85,7 +85,7 @@ const DesignSettings = () => {
           <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
             <Palette className="h-4 w-4" /> Color Protocols
           </CardTitle>
-          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-[#9B2B2C] hover:bg-slate-800 h-8 font-black uppercase text-[9px]">
+          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-brand-primary hover:bg-slate-800 h-8 font-black uppercase text-[9px]">
             {saving ? 'Saving...' : <><Save className="mr-2 h-3 w-3" /> Save Changes</>}
           </Button>
         </CardHeader>
@@ -123,7 +123,7 @@ const DesignSettings = () => {
           <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
             <LayoutGrid className="h-4 w-4" /> Component Display
           </CardTitle>
-          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-[#9B2B2C] hover:bg-slate-800 h-8 font-black uppercase text-[9px]">
+          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-brand-primary hover:bg-slate-800 h-8 font-black uppercase text-[9px]">
             {saving ? 'Saving...' : <><Save className="mr-2 h-3 w-3" /> Save Changes</>}
           </Button>
         </CardHeader>
@@ -142,7 +142,7 @@ const DesignSettings = () => {
                  checked={settings.sidebar?.showOffer || false}
                  onCheckedChange={val => setSettings({...settings, sidebar: { ...(settings.sidebar || {}), showOffer: !!val } as any})}
               />
-              <Label htmlFor="show-offer" className="text-[10px] font-black uppercase text-[#9B2B2C]">Enable Sidebar Flash Offer</Label>
+              <Label htmlFor="show-offer" className="text-[10px] font-black uppercase text-brand-primary">Enable Sidebar Flash Offer</Label>
            </div>
         </CardContent>
       </Card>
@@ -150,9 +150,9 @@ const DesignSettings = () => {
       <Card className="rounded-none border-[#777] bg-white shadow-lg">
         <CardHeader className="bg-slate-900 text-white py-4 flex flex-row items-center justify-between">
           <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
-            <Zap className="h-4 w-4 text-[#9B2B2C]" /> Sidebar Flash Offer Protocol
+            <Zap className="h-4 w-4 text-brand-primary" /> Sidebar Flash Offer Protocol
           </CardTitle>
-          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-[#9B2B2C] hover:bg-slate-800 h-8 font-black uppercase text-[9px]">
+          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-brand-primary hover:bg-slate-800 h-8 font-black uppercase text-[9px]">
             {saving ? 'Saving...' : <><Save className="mr-2 h-3 w-3" /> Save Sidebar Config</>}
           </Button>
         </CardHeader>

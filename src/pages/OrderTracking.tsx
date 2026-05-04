@@ -59,9 +59,9 @@ const OrderTracking = () => {
         <div className="max-w-screen-xl mx-auto">
           <div className="mb-8 flex flex-col md:flex-row items-end justify-between gap-4 px-4 md:px-0">
             <div>
-              <h1 className="text-2xl md:text-3xl font-black text-slate-800 uppercase tracking-tighter leading-none border-b-4 border-[#9B2B2C] pb-3 inline-block">TRACKING_LINK</h1>
+              <h1 className="text-2xl md:text-3xl font-black text-slate-800 uppercase tracking-tighter leading-none border-b-4 border-brand-primary pb-3 inline-block">TRACKING_LINK</h1>
               <div className="flex items-center gap-3 mt-4">
-                 <div className="w-2 h-2 bg-[#9B2B2C] rounded-none animate-pulse" />
+                 <div className="w-2 h-2 bg-brand-primary rounded-none animate-pulse" />
                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Direct access to real-time dispatch data protocol</p>
               </div>
             </div>
@@ -74,7 +74,7 @@ const OrderTracking = () => {
           <div className="bg-white rounded-none p-6 md:p-8 shadow-2xl mb-8 border-2 border-[#777] relative overflow-hidden">
             <form onSubmit={handleTrack} className="flex flex-col sm:flex-row gap-4 relative z-10">
               <div className="relative flex-1 group">
-                <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 group-focus-within:text-[#9B2B2C] transition-colors" />
+                <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 group-focus-within:text-brand-primary transition-colors" />
                 <Input
                   placeholder="INSERT_ORDER_ID (e.g. ORD-XXXXXX)"
                   value={orderId}
@@ -82,7 +82,7 @@ const OrderTracking = () => {
                   className="pl-14 h-12 bg-[#f8f8f8] border-2 border-[#777] rounded-none text-[11px] font-black uppercase tracking-widest focus-visible:ring-0 shadow-inner"
                 />
               </div>
-              <Button type="submit" className="h-12 px-10 bg-slate-900 hover:bg-[#9B2B2C] text-white rounded-none font-black uppercase text-[11px] tracking-widest shadow-xl active:scale-95 transition-all disabled:bg-slate-200" disabled={loading}>
+              <Button type="submit" className="h-12 px-10 bg-slate-900 hover:bg-brand-primary text-white rounded-none font-black uppercase text-[11px] tracking-widest shadow-xl active:scale-95 transition-all disabled:bg-slate-200" disabled={loading}>
                 {loading ? 'INITIALIZING...' : 'TRACK_DISPATCH'}
               </Button>
             </form>
@@ -107,15 +107,15 @@ const OrderTracking = () => {
               <div className="p-10 md:p-16">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 pb-12 border-b-2 border-[#777] gap-10">
                   <div>
-                    <span className="inline-block px-4 py-1 bg-[#9B2B2C] text-white text-[10px] font-black uppercase tracking-[0.4em] rounded-none mb-4">
+                    <span className="inline-block px-4 py-1 bg-brand-primary text-white text-[10px] font-black uppercase tracking-[0.4em] rounded-none mb-4">
                       SESSION_VERIFIED
                     </span>
-                    <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter uppercase leading-none border-l-4 border-[#9B2B2C] pl-6">{order.orderId}</h2>
+                    <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter uppercase leading-none border-l-4 border-brand-primary pl-6">{order.orderId}</h2>
                   </div>
                   <div className="text-left md:text-right bg-[#f8f8f8] border-2 border-[#777] p-6 px-10 rounded-none shadow-inner">
                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-3 opacity-60">Estimated Arrival</p>
                     <div className="flex items-center gap-4 text-slate-800">
-                       <Clock className="h-5 w-5 text-[#9B2B2C]" />
+                       <Clock className="h-5 w-5 text-brand-primary" />
                        <span className="text-xl font-black uppercase tracking-tighter">EXPRESS_DISPATCH_PROTOCOL</span>
                     </div>
                   </div>
@@ -134,7 +134,7 @@ const OrderTracking = () => {
                           ? 'bg-white border-[#777] shadow-lg scale-100' 
                           : 'bg-[#f8f8f8] border-[#777]/20 opacity-30 grayscale'
                         }`}>
-                          <div className={`w-16 h-16 rounded-none border-2 border-slate-900 flex items-center justify-center shadow-lg transition-all duration-500 ${isCompleted ? 'bg-[#9B2B2C] text-white' : 'bg-white text-slate-300'}`}>
+                          <div className={`w-16 h-16 rounded-none border-2 border-slate-900 flex items-center justify-center shadow-lg transition-all duration-500 ${isCompleted ? 'bg-brand-primary text-white' : 'bg-white text-slate-300'}`}>
                             <step.icon className={`h-7 w-7 ${isCurrent ? 'animate-pulse' : ''}`} />
                           </div>
                           <div>
@@ -151,7 +151,7 @@ const OrderTracking = () => {
                         </div>
                         {i < 3 && (
                            <div className="hidden md:flex absolute top-1/2 -right-3 z-10 -translate-y-1/2 items-center justify-center w-6 h-6 bg-white border-2 border-[#777] rounded-none shadow-md">
-                              <div className={`w-1.5 h-1.5 rounded-none ${i < currentStep ? 'bg-[#9B2B2C]' : 'bg-slate-200'}`} />
+                              <div className={`w-1.5 h-1.5 rounded-none ${i < currentStep ? 'bg-brand-primary' : 'bg-slate-200'}`} />
                            </div>
                         )}
                       </div>
@@ -161,10 +161,10 @@ const OrderTracking = () => {
 
                 <div className="bg-[#f8f8f8] border-2 border-[#777] rounded-none p-10 md:p-14 flex flex-col md:flex-row items-center gap-12 shadow-inner group overflow-hidden relative">
                   <div className="w-20 h-20 bg-white border-2 border-slate-900 rounded-none flex items-center justify-center text-slate-400 shadow-lg group-hover:rotate-12 transition-transform duration-500 relative z-10">
-                     <MapPin className="h-10 w-10 text-[#9B2B2C]" />
+                     <MapPin className="h-10 w-10 text-brand-primary" />
                   </div>
                   <div className="relative z-10 flex-1 text-center md:text-left">
-                    <p className="text-[11px] font-black text-[#9B2B2C] uppercase tracking-[0.4em] mb-4 opacity-60">SHIPPING_DESTINATION_NODE</p>
+                    <p className="text-[11px] font-black text-brand-primary uppercase tracking-[0.4em] mb-4 opacity-60">SHIPPING_DESTINATION_NODE</p>
                     <p className="text-xl md:text-2xl font-black text-slate-900 tracking-tight leading-relaxed uppercase">
                        {order?.customerInfo?.address || 'N/A'}
                     </p>

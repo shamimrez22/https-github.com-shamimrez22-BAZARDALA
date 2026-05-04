@@ -74,12 +74,12 @@ const categories = [
 const SpecialOfferNode = ({ settings }: { settings: any }) => (
   <div className="flex-1 flex flex-col overflow-hidden group min-h-[300px] lg:min-h-0 bg-white">
     <div className="bg-[#f8f8f8] p-2 md:p-3 border-b-2 border-[#777] flex-shrink-0">
-      <h2 className="text-[10px] md:text-[11px] font-black text-[#9B2B2C] uppercase tracking-[0.2em] flex items-center gap-2">
+      <h2 className="text-[10px] md:text-[11px] font-black text-brand-primary uppercase tracking-[0.2em] flex items-center gap-2">
         <Zap className="h-3.5 w-3.5 md:h-4 md:w-4" /> {settings?.sidebar?.offerTitle || 'EXCLUSIVE OFFER'}
       </h2>
     </div>
     <Link to={settings?.sidebar?.offerLink || '/shop'} className="flex-1 relative overflow-hidden group flex flex-col">
-      <div className="w-full relative shrink-0 lg:flex-1 min-h-[180px] lg:min-h-0 overflow-hidden bg-slate-900 border-b border-[#777]/20">
+      <div className="w-full relative shrink-0 lg:flex-1 min-h-[140px] lg:min-h-0 overflow-hidden bg-slate-900">
         <video 
           autoPlay 
           muted 
@@ -103,14 +103,14 @@ const SpecialOfferNode = ({ settings }: { settings: any }) => (
           <div className="w-full h-[1px] bg-white animate-[scanline_4s_linear_infinite]" />
         </div>
       </div>
-      <div className="p-3 md:p-4 shadow-sm relative flex flex-col justify-center">
-        <div className="w-full bg-[#9B2B2C] text-white text-[7px] md:text-[8px] font-black py-1 uppercase tracking-[0.3em] mb-1.5 text-center shadow-sm transform -skew-x-6">
+      <div className="p-2 md:p-3 shadow-sm relative flex flex-col justify-center">
+        <div className="w-full bg-brand-primary text-white text-[7px] md:text-[8px] font-black py-1 uppercase tracking-[0.3em] mb-1.5 text-center shadow-sm transform -skew-x-6">
           SPECIAL ACCESS
         </div>
-        <h4 className="text-[12px] md:text-[13px] font-black text-slate-900 uppercase leading-[1.1] tracking-tighter group-hover:text-[#9B2B2C] transition-colors">
+        <h4 className="text-[11px] md:text-[12px] font-black text-slate-900 uppercase leading-[1.1] tracking-tighter group-hover:text-brand-primary transition-colors">
           {settings?.sidebar?.offerTitle || 'Claim Your Premium Offer Now'}
         </h4>
-        <div className="h-1 w-0 bg-[#9B2B2C] mt-2 group-hover:w-full transition-all duration-500" />
+        <div className="h-1 w-0 bg-brand-primary mt-1.5 group-hover:w-full transition-all duration-500" />
       </div>
     </Link>
   </div>
@@ -227,54 +227,70 @@ const Home = () => {
     setVariantIndex(Math.floor(Math.random() * 10));
   };
 
-  // Varieties of slide animations
+  // Clean horizontal slide for consistency
   const variants = [
-    { initial: { x: '100%', opacity: 0 }, animate: { x: 0, opacity: 1 }, exit: { x: '-100%', opacity: 0 } }, 
-    { initial: { y: '100%', opacity: 0 }, animate: { y: 0, opacity: 1 }, exit: { y: '-100%', opacity: 0 } }, 
-    { initial: { scale: 0.8, opacity: 0 }, animate: { scale: 1, opacity: 1 }, exit: { scale: 1.2, opacity: 0 } },
-    { initial: { filter: 'blur(20px)', opacity: 0 }, animate: { filter: 'blur(0px)', opacity: 1 }, exit: { filter: 'blur(20px)', opacity: 0 } }
+    { initial: { x: '100%', opacity: 0 }, animate: { x: 0, opacity: 1 }, exit: { x: '-100%', opacity: 0 } }
   ];
 
-  const currentVariant = variants[variantIndex % variants.length];
+  const currentVariant = variants[0];
 
   return (
     <div className="flex flex-col bg-white text-slate-900 pb-20 overflow-x-hidden relative">
+      {/* Mobile Category Bar (Horizontal Scroll) */}
+      <div className="lg:hidden w-full bg-white border-b border-[#777]/10 py-3 px-4 overflow-x-auto whitespace-nowrap scrollbar-hide flex items-center gap-4">
+        {categories.map((cat, i) => (
+          <Link 
+            key={i} 
+            to={`/shop?cat=${cat.name.toLowerCase()}`}
+            className="flex flex-col items-center gap-2 group shrink-0"
+          >
+            <div className="w-11 h-11 rounded-full bg-[#f8f8f8] border border-[#777]/5 flex items-center justify-center p-2.5 group-hover:bg-brand-primary/10 transition-colors">
+              <cat.icon className="h-4 w-4 text-brand-primary" />
+            </div>
+            <span className="text-[8px] font-black uppercase tracking-tight text-slate-500 group-hover:text-brand-primary">{cat.name.split(' ')[0]}</span>
+          </Link>
+        ))}
+      </div>
+
       {/* Full Width Hero Section */}
-      <section className="pt-0 pb-1 md:pb-4 w-full">
-        <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24 overflow-hidden">
-          <div className="flex flex-col lg:flex-row items-stretch w-full min-h-[100px] md:min-h-[280px] lg:h-[420px] rounded-none overflow-hidden border-2 border-[#777] bg-white">
+      <section className="pt-2 md:pt-0 pb-1 md:pb-4 w-full">
+        <div className="w-full max-w-[1536px] mx-auto px-4 md:px-16 lg:px-24 overflow-hidden">
+          <div className="flex flex-col lg:flex-row items-stretch w-full min-h-[100px] md:min-h-[280px] lg:h-[450px] rounded-none overflow-hidden border-2 border-[#777] bg-white">
             {/* Category Sidebar/Offer - HIDDEN ON MOBILE, VISIBLE ON DESKTOP */}
-            <div className="hidden lg:flex lg:w-72 bg-white lg:border-r-2 border-[#777] flex-col flex-shrink-0 lg:overflow-visible custom-scrollbar">
+            <div className="hidden lg:flex lg:w-72 bg-white lg:border-r-2 border-[#777] flex-col flex-shrink-0 lg:overflow-visible">
                 {settings?.sidebar?.showCategories ? (
                   <>
-                    <div className="bg-[#f8f8f8] p-3 md:p-7 flex-shrink-0 border-b-2 border-[#777]">
-                      <h2 className="text-[12px] md:text-[16px] font-black text-slate-900 uppercase tracking-[0.2em] flex items-center gap-2 md:gap-4">
-                        <List className="h-5 w-5" /> MENU
+                    <div className="bg-[#f8f8f8] p-4 flex-shrink-0 border-b-2 border-[#777] relative overflow-hidden">
+                      <div className="absolute top-0 right-0 p-2 opacity-5">
+                         <List className="h-10 w-10 text-brand-primary" />
+                      </div>
+                      <h2 className="text-[12px] md:text-[14px] font-black text-slate-900 uppercase tracking-[0.2em] flex items-center gap-3 relative z-10">
+                        <List className="h-5 w-5 text-brand-primary" /> CATEGORIES
                       </h2>
                     </div>
-                    <div className="flex-shrink-0 lg:flex-1 overflow-y-auto max-h-[160px] md:max-h-[200px] lg:max-h-none py-2 bg-white scrollbar-thin scrollbar-thumb-[#9B2B2C]/20 border-b-2 border-[#777] lg:border-b-0">
-                      <div className="grid grid-cols-1 lg:grid-cols-1">
-                        {categories.map((cat, i) => (
+                    <div className="flex-shrink-0 lg:flex-1 overflow-y-auto py-1 bg-white scrollbar-thin scrollbar-thumb-brand-primary/20">
+                      <div className="flex flex-col">
+                        {categories.slice(0, 10).map((cat, i) => (
                           <Link 
                             key={i} 
                             to={`/shop?cat=${cat.name.toLowerCase()}`}
-                            className="flex items-center justify-between px-4 md:px-7 py-3 md:py-4.5 hover:bg-[#f8f8f8] transition-all group border-b border-[#777]/10"
+                            className="flex items-center justify-between px-6 py-3.5 hover:bg-[#f8f8f8] transition-all group border-b border-[#777]/5 last:border-0"
                           >
-                            <div className="flex items-center gap-3 md:gap-5">
-                              <cat.icon className="h-3.5 w-3.5 md:h-5 md:w-5 text-[#9B2B2C]" />
-                              <span className="text-[10px] md:text-[12.5px] font-black uppercase tracking-widest text-slate-700">{cat.name}</span>
+                            <div className="flex items-center gap-4">
+                              <cat.icon className="h-4 w-4 text-brand-primary" />
+                              <span className="text-[11px] font-black uppercase tracking-widest text-slate-700">{cat.name}</span>
                             </div>
-                            <ChevronRight className="h-3 w-3 md:h-4 md:w-4 text-slate-300 group-hover:text-[#9B2B2C] transition-all" />
+                            <ChevronRight className="h-3 w-3 text-slate-300 group-hover:text-brand-primary transition-all" />
                           </Link>
                         ))}
                       </div>
                     </div>
                     {/* Offer visible below categories on desktop */}
-                    <div className="hidden lg:block border-t-2 border-[#777]">
+                    <div className="border-t-2 border-[#777] h-[140px] flex-shrink-0">
                        <SpecialOfferNode settings={settings} />
                     </div>
-                    <div className="p-4 md:p-6 bg-white border-t-2 border-[#777] flex-shrink-0">
-                       <Link to="/shop" className="block w-full py-3 md:py-4 bg-[#9B2B2C] text-white text-[11px] md:text-[12px] font-black uppercase tracking-widest hover:bg-slate-900 transition-all text-center rounded-none shadow-md">
+                    <div className="p-4 bg-white border-t-2 border-[#777] flex-shrink-0">
+                       <Link to="/shop" className="block w-full py-3 bg-brand-primary text-white text-[11px] font-black uppercase tracking-widest hover:bg-slate-900 transition-all text-center rounded-none shadow-md">
                          VIEW ALL
                        </Link>
                     </div>
@@ -346,10 +362,10 @@ const Home = () => {
               rel="noopener noreferrer"
               className="block group relative overflow-hidden rounded-none"
             >
-              <div className="bg-slate-900 h-20 md:h-28 flex items-center justify-center relative border-2 border-slate-900 hover:border-[#9B2B2C] transition-all">
+              <div className="bg-slate-900 h-20 md:h-28 flex items-center justify-center relative border-2 border-slate-900 hover:border-brand-primary transition-all">
                 <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '15px 15px' }} />
                 <div className="relative z-10 text-center">
-                  <span className="inline-block px-4 py-1 bg-[#9B2B2C] text-white text-[8px] md:text-[9px] font-black uppercase tracking-[0.25em] mb-1 rounded-none">SPECIAL OFFER</span>
+                  <span className="inline-block px-4 py-1 bg-brand-primary text-white text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] mb-1 rounded-none">SPECIAL OFFER</span>
                   <h3 className="text-lg md:text-2xl font-black text-white uppercase tracking-tighter">GET EXCLUSIVE DISCOUNTS</h3>
                   <p className="text-white/30 text-[7px] md:text-[8px] font-black uppercase tracking-[0.3em] mt-0.5">Limited Time Offer - Fast Delivery</p>
                 </div>
@@ -387,7 +403,7 @@ const Home = () => {
           <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24">
              <a href={settings.ads.adsterra.bannerThreeCode} target="_blank" rel="noopener noreferrer" className="block relative overflow-hidden group">
                <div className="bg-white border-2 border-[#777] p-8 text-center shadow-xl hover:bg-slate-50 transition-all rounded-none relative overflow-hidden">
-                  <span className="text-[10px] font-black uppercase text-[#9B2B2C] tracking-[0.4em] mb-3 block animate-pulse">Fast Delivery Active</span>
+                  <span className="text-[10px] font-black uppercase text-brand-primary tracking-[0.4em] mb-3 block animate-pulse">Fast Delivery Active</span>
                   <h4 className="text-3xl md:text-4xl font-black text-slate-900 uppercase tracking-tighter">SHOP OUR BESTSELLERS</h4>
                   <p className="text-[9px] font-black text-slate-400 uppercase mt-4 tracking-[0.5em]">100% Secure Shopping - Satisfaction Guaranteed</p>
                </div>
@@ -399,15 +415,15 @@ const Home = () => {
       {/* Curated Grid Selection */}
       <section className="py-1 md:py-5 w-full">
         <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24">
-          <div className="flex flex-col md:flex-row items-center justify-between mb-3 md:mb-8 gap-2 md:gap-6 border-b-2 border-[#9B2B2C] pb-2 md:pb-4">
+          <div className="flex flex-col md:flex-row items-center justify-between mb-3 md:mb-8 gap-2 md:gap-6 border-b-2 border-brand-primary pb-2 md:pb-4">
             <div>
               <h2 className="text-sm md:text-2xl font-black uppercase tracking-tighter text-slate-900">COLLECTIONS</h2>
               <div className="flex items-center gap-3 mt-1">
-                 <div className="w-1 h-1 bg-[#9B2B2C] rounded-none animate-pulse" />
+                 <div className="w-1 h-1 bg-brand-primary rounded-none animate-pulse" />
                  <p className="text-[7px] md:text-[9px] font-bold text-slate-400 uppercase tracking-[0.4em]">Shop our high-quality categories</p>
               </div>
             </div>
-            <Link to="/shop" className="group flex items-center gap-4 bg-slate-900 text-white px-4 md:px-6 py-2 md:py-2.5 text-[8px] md:text-[10px] font-black uppercase tracking-widest hover:bg-[#9B2B2C] transition-all rounded-none shadow-lg hover:scale-[1.02] active:scale-[0.98]">
+            <Link to="/shop" className="group flex items-center gap-4 bg-slate-900 text-white px-4 md:px-6 py-2 md:py-2.5 text-[8px] md:text-[10px] font-black uppercase tracking-widest hover:bg-brand-primary transition-all rounded-none shadow-lg hover:scale-[1.02] active:scale-[0.98]">
               VIEW ALL <ArrowRight className="h-3 w-3 md:h-4 md:w-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
@@ -453,7 +469,7 @@ const Home = () => {
                    </div>
                    <div className="text-center relative z-10">
                       <h5 className="text-white text-lg md:text-xl font-black uppercase tracking-tighter">SHOP NEW ARRIVALS</h5>
-                      <span className="text-[#9B2B2C] text-[9px] font-black uppercase tracking-[0.5em] mt-1 block animate-pulse">HOT DEALS</span>
+                      <span className="text-brand-primary text-[9px] font-black uppercase tracking-[0.5em] mt-1 block animate-pulse">HOT DEALS</span>
                    </div>
                 </div>
              </a>
@@ -473,7 +489,7 @@ const Home = () => {
                <div className="bg-white border-2 border-[#777] rounded-none p-6 text-center hover:bg-[#f8f8f8] transition-all relative overflow-hidden shadow-xl">
                   <div className="relative z-10">
                     <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-3">Recommended For You</h4>
-                    <div className="inline-flex items-center gap-3 bg-[#9B2B2C] text-white px-8 py-3 font-black uppercase text-xl md:text-2xl tracking-tighter shadow-xl border-2 border-slate-900">
+                    <div className="inline-flex items-center gap-3 bg-brand-primary text-white px-8 py-3 font-black uppercase text-xl md:text-2xl tracking-tighter shadow-xl border-2 border-slate-900">
                        VIEW BEST DEALS <ArrowRight className="h-6 w-6" />
                     </div>
                     <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] mt-4">100% Secure Shopping</p>
@@ -487,7 +503,7 @@ const Home = () => {
       {/* High-Alert Dispatch Section (Flash Sale) - ALIGNED */}
       <section className="pb-3 pt-1 w-full text-center md:text-left">
         <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24">
-           <div className="bg-[#9B2B2C] relative overflow-hidden rounded-none border-2 border-[#777] shadow-2xl">
+           <div className="bg-brand-primary relative overflow-hidden rounded-none border-2 border-[#777] shadow-2xl">
             {/* Subtle decorative grid background */}
             <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
             
@@ -511,7 +527,7 @@ const Home = () => {
                         { val: timeLeft.secs, label: 'SEC' },
                       ].map((t, i) => (
                         <div key={i} className="flex flex-col items-center">
-                          <div className="bg-white text-[#9B2B2C] w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-base md:text-lg font-mono font-black border-2 border-black">{t.val}</div>
+                          <div className="bg-white text-brand-primary w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-base md:text-lg font-mono font-black border-2 border-black">{t.val}</div>
                           <span className="text-[8px] font-black text-white uppercase mt-1.5 tracking-widest">{t.label}</span>
                         </div>
                       ))}
@@ -545,7 +561,7 @@ const Home = () => {
                 />
                 <div className="absolute inset-0 bg-slate-900/60 flex flex-col items-center justify-center p-6 backdrop-blur-[2px] transition-all group-hover:backdrop-blur-none group-hover:bg-slate-900/40">
                    <h3 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter leading-none text-center">SHOP LIMITED OFFERS</h3>
-                   <span className="bg-[#9B2B2C] text-white px-5 py-1.5 text-[9px] font-black uppercase mt-4 rounded-none tracking-[0.3em] shadow-md border border-white">EXCLUSIVE DEALS</span>
+                   <span className="bg-brand-primary text-white px-5 py-1.5 text-[9px] font-black uppercase mt-4 rounded-none tracking-[0.3em] shadow-md border border-white">EXCLUSIVE DEALS</span>
                 </div>
              </a>
           </div>
@@ -557,15 +573,15 @@ const Home = () => {
              <a href={settings.ads.adsterra.bannerSixCode} target="_blank" rel="noopener noreferrer" className="block group">
                 <div className="bg-white rounded-none p-5 flex flex-col md:flex-row items-center justify-between gap-5 hover:bg-[#f8f8f8] transition-all shadow-xl border-2 border-[#777] group overflow-hidden relative">
                    <div className="flex items-center gap-6 relative z-10">
-                      <div className="w-16 h-16 bg-slate-900 rounded-none border-2 border-slate-900 flex items-center justify-center shadow-lg group-hover:bg-[#9B2B2C] transition-all duration-500">
+                      <div className="w-16 h-16 bg-slate-900 rounded-none border-2 border-slate-900 flex items-center justify-center shadow-lg group-hover:bg-brand-primary transition-all duration-500">
                         <Truck className="h-8 w-8 text-white" />
                       </div>
                       <div className="text-center md:text-left">
-                        <h4 className="text-xl font-black uppercase text-slate-800 tracking-tighter leading-none mb-1.5 underline underline-offset-4 decoration-[#9B2B2C]">FAST DELIVERY</h4>
+                        <h4 className="text-xl font-black uppercase text-slate-800 tracking-tighter leading-none mb-1.5 underline underline-offset-4 decoration-brand-primary">FAST DELIVERY</h4>
                         <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em]">Shipment update - On the way</p>
                       </div>
                    </div>
-                   <div className="px-10 py-3 bg-slate-900 text-white font-black uppercase text-[11px] tracking-[0.25em] group-hover:bg-[#9B2B2C] transition-all rounded-none shadow-lg border-2 border-slate-900 relative z-10">
+                   <div className="px-10 py-3 bg-slate-900 text-white font-black uppercase text-[11px] tracking-[0.25em] group-hover:bg-brand-primary transition-all rounded-none shadow-lg border-2 border-slate-900 relative z-10">
                       ORDER NOW
                    </div>
                 </div>

@@ -21,7 +21,7 @@ const Cart = () => {
         <p className="text-slate-400 mb-10 max-w-sm mx-auto text-[12px] font-black uppercase tracking-[0.2em] leading-relaxed">
           Looks like you haven't added anything to your cart yet. Explore our latest collections.
         </p>
-        <Button size="lg" className="bg-slate-900 hover:bg-[#9B2B2C] rounded-none h-14 px-12 text-[12px] font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all" asChild>
+        <Button size="lg" className="bg-slate-900 hover:bg-brand-primary rounded-none h-14 px-12 text-[12px] font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all" asChild>
           <Link to="/shop">EXPLORE_SHOP</Link>
         </Button>
       </div>
@@ -31,10 +31,10 @@ const Cart = () => {
   return (
     <div className="bg-slate-50/30 min-h-screen py-8 md:py-12">
       <div className="w-full px-4 md:px-8 lg:px-12 max-w-screen-2xl mx-auto">
-        <div className="mb-8 border-b-2 border-[#9B2B2C] pb-4">
+        <div className="mb-8 border-b-2 border-brand-primary pb-4">
           <h1 className="text-3xl md:text-4xl font-black text-slate-900 uppercase tracking-tighter">Shopping_Bag</h1>
           <div className="flex items-center gap-3 mt-3">
-             <div className="w-2 h-2 bg-[#9B2B2C] rounded-none animate-pulse" />
+             <div className="w-2 h-2 bg-brand-primary rounded-none animate-pulse" />
              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Review your items for priority dispatch protocol</p>
           </div>
         </div>
@@ -54,9 +54,9 @@ const Cart = () => {
                   <img src={item.image} alt={item.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" referrerPolicy="no-referrer" />
                 </div>
                 <div className="flex-1 min-w-0 text-center md:text-left">
-                  <p className="text-[10px] font-black text-[#9B2B2C] uppercase tracking-[0.3em] mb-2">AUTH_ID: {item.productId.slice(0,8).toUpperCase()}</p>
+                  <p className="text-[10px] font-black text-brand-primary uppercase tracking-[0.3em] mb-2">AUTH_ID: {item.productId.slice(0,8).toUpperCase()}</p>
                   <h3 className="font-black text-xl text-slate-800 mb-3 line-clamp-1 uppercase tracking-tight">{item.name}</h3>
-                  <p className="text-[#9B2B2C] text-lg font-black tracking-tight">৳{item.price.toLocaleString()}</p>
+                  <p className="text-brand-primary text-lg font-black tracking-tight">৳{item.price.toLocaleString()}</p>
                   
                   <div className="flex flex-wrap items-center justify-center md:justify-start gap-8 mt-6">
                     <div className="flex items-center bg-[#f8f8f8] border-2 border-[#777] rounded-none p-1 shadow-inner">
@@ -64,14 +64,14 @@ const Cart = () => {
                         onClick={() => updateQuantity(item.productId, item.quantity - 1)}
                         className="w-10 h-10 flex items-center justify-center rounded-none hover:bg-white transition-all border-r border-[#777]"
                       >
-                        <Minus className="h-4 w-4 text-[#9B2B2C]" />
+                        <Minus className="h-4 w-4 text-brand-primary" />
                       </button>
                       <span className="w-12 text-center text-[13px] font-black">{item.quantity}</span>
                       <button
                         onClick={() => updateQuantity(item.productId, item.quantity + 1)}
                         className="w-10 h-10 flex items-center justify-center rounded-none hover:bg-white transition-all border-l border-[#777]"
                       >
-                        <Plus className="h-4 w-4 text-[#9B2B2C]" />
+                        <Plus className="h-4 w-4 text-brand-primary" />
                       </button>
                     </div>
                     <button
@@ -116,7 +116,7 @@ const Cart = () => {
                 
                 <div className="pt-6 md:pt-8 border-t-2 border-[#777]">
                    <div className="bg-[#f8f8f8] rounded-none p-6 shadow-inner relative overflow-hidden group border border-[#777]">
-                      <span className="text-[9px] font-black text-[#9B2B2C] uppercase tracking-[0.4em] mb-2 block">GRAND_TOTAL</span>
+                      <span className="text-[9px] font-black text-brand-primary uppercase tracking-[0.4em] mb-2 block">GRAND_TOTAL</span>
                       <div className="flex items-baseline gap-2">
                          <span className="text-3xl font-black text-slate-900 tracking-tighter">
                             ৳{(total + (total > 500 ? 0 : 60) + total * 0.05).toLocaleString()}
@@ -128,7 +128,7 @@ const Cart = () => {
               </div>
 
               <Button
-                className="w-full h-12 bg-slate-900 hover:bg-[#9B2B2C] text-white rounded-none font-black uppercase text-[13px] tracking-[0.2em] shadow-xl active:scale-95 transition-all group"
+                className="w-full h-12 bg-slate-900 hover:bg-brand-primary text-white rounded-none font-black uppercase text-[13px] tracking-[0.2em] shadow-xl active:scale-95 transition-all group"
                 onClick={() => navigate('/checkout')}
               >
                 CHECKOUT <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-2 transition-transform" />

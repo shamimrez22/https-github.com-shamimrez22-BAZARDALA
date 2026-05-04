@@ -47,7 +47,7 @@ const Shop = () => {
           <div>
             <h1 className="text-xl md:text-2xl font-black tracking-tighter text-slate-800 uppercase leading-none">Catalog_DIR</h1>
             <div className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mt-2 flex items-center gap-2">
-               <div className="w-2 h-2 bg-[#9B2B2C] rounded-none animate-pulse" />
+               <div className="w-2 h-2 bg-brand-primary rounded-none animate-pulse" />
                INDEX_SIZE: {filteredProducts.length} RECORDS_FOUND
             </div>
           </div>
@@ -123,7 +123,7 @@ const Shop = () => {
             {[...Array(12)].map((_, i) => (
               <div key={i} className="aspect-square bg-white rounded-none animate-pulse shadow-md p-4 border-2 border-[#777]">
                  <div className="w-full h-full bg-[#f8f8f8] rounded-none flex items-center justify-center">
-                    <div className="w-8 h-8 border-2 border-[#9B2B2C] border-t-transparent animate-spin rounded-none" />
+                    <div className="w-8 h-8 border-2 border-brand-primary border-t-transparent animate-spin rounded-none" />
                  </div>
               </div>
             ))}
@@ -143,7 +143,7 @@ const Shop = () => {
             <p className="text-[12px] font-black text-slate-400 uppercase tracking-[0.2em] mb-12 max-w-sm mx-auto leading-relaxed">We couldn't find anything matching your current filters. Try refining your selection.</p>
             <Button 
               onClick={() => { setSearch(''); setCategory('All'); }}
-              className="bg-slate-900 hover:bg-[#9B2B2C] text-white rounded-none h-14 px-12 text-[12px] font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all"
+              className="bg-slate-900 hover:bg-brand-primary text-white rounded-none h-14 px-12 text-[12px] font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all"
             >
               RESET_ALL_FILTERS
             </Button>

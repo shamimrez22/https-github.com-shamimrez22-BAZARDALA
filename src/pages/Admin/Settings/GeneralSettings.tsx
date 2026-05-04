@@ -45,7 +45,7 @@ const GeneralSettings = () => {
           <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
             <Globe className="h-4 w-4" /> Branding & Info
           </CardTitle>
-          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-[#9B2B2C] hover:bg-slate-800 h-8 font-black uppercase text-[9px]">
+          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-brand-primary hover:bg-slate-800 h-8 font-black uppercase text-[9px]">
             {saving ? 'Saving...' : <><Save className="mr-2 h-3 w-3" /> Save Changes</>}
           </Button>
         </CardHeader>
@@ -83,7 +83,7 @@ const GeneralSettings = () => {
           <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
             <Mail className="h-4 w-4" /> Contact Information
           </CardTitle>
-          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-[#9B2B2C] hover:bg-slate-800 h-8 font-black uppercase text-[9px]">
+          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-brand-primary hover:bg-slate-800 h-8 font-black uppercase text-[9px]">
             {saving ? 'Saving...' : <><Save className="mr-2 h-3 w-3" /> Save Changes</>}
           </Button>
         </CardHeader>
@@ -125,7 +125,7 @@ const GeneralSettings = () => {
           <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
             <Share2 className="h-4 w-4" /> Social Link Matrix
           </CardTitle>
-          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-[#9B2B2C] hover:bg-slate-800 h-8 font-black uppercase text-[9px]">
+          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-brand-primary hover:bg-slate-800 h-8 font-black uppercase text-[9px]">
             {saving ? 'Saving...' : <><Save className="mr-2 h-3 w-3" /> Save Changes</>}
           </Button>
         </CardHeader>
@@ -181,7 +181,7 @@ const GeneralSettings = () => {
           <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
             <Plus className="h-4 w-4" /> Footer Quick Links
           </CardTitle>
-          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-[#9B2B2C] hover:bg-slate-800 h-8 font-black uppercase text-[9px]">
+          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-brand-primary hover:bg-slate-800 h-8 font-black uppercase text-[9px]">
             {saving ? 'Saving...' : <><Save className="mr-2 h-3 w-3" /> Save Changes</>}
           </Button>
         </CardHeader>

@@ -38,12 +38,12 @@ import { SettingsProvider, useSettings } from './context/SettingsContext';
 const LoadingFallback = () => (
   <div className="h-screen flex flex-col items-center justify-center bg-brand-bg">
     <div className="relative mb-12">
-      <div className="w-24 h-24 border-4 border-[#9B2B2C]/20 border-t-[#9B2B2C] rounded-full animate-spin" />
-      <div className="absolute inset-0 flex items-center justify-center text-[#9B2B2C]">
+      <div className="w-24 h-24 border-4 border-brand-primary/20 border-t-brand-primary rounded-full animate-spin" />
+      <div className="absolute inset-0 flex items-center justify-center text-brand-primary">
         <ShoppingBasket className="h-10 w-10 animate-bounce" />
       </div>
     </div>
-    <div className="text-[#9B2B2C] font-black uppercase tracking-[0.5em] text-[10px] animate-pulse">BAZAR_DALA_PROTOCOL_LOADING</div>
+    <div className="text-brand-primary font-black uppercase tracking-[0.5em] text-[10px] animate-pulse">BAZAR_DALA_PROTOCOL_LOADING</div>
   </div>
 );
 

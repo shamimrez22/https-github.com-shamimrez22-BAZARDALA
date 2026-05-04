@@ -27,10 +27,10 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
       <div className="bg-[#f8f8f8] px-4 py-2 border-b border-[#777] flex justify-between items-center relative overflow-hidden">
         <div className="flex items-center gap-2 z-10">
           <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">IDENT_KEY:</span>
-          <span className="text-[10px] font-black text-[#9B2B2C] uppercase tracking-tighter">{product.name.slice(0, 5).toUpperCase()}</span>
+          <span className="text-[10px] font-black text-brand-primary uppercase tracking-tighter">{product.name.slice(0, 5).toUpperCase()}</span>
         </div>
         <div className="flex gap-1 z-10">
-          <div className="w-1.5 h-1.5 bg-[#9B2B2C] rounded-none" />
+          <div className="w-1.5 h-1.5 bg-brand-primary rounded-none" />
         </div>
       </div>
 
@@ -59,21 +59,21 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
 
         {/* Status Overlays */}
         {product.discountPercentage && product.discountPercentage > 0 && (
-          <div className="absolute top-0 right-0 bg-[#9B2B2C] text-white text-[9px] font-black px-2 py-1 rounded-none z-10 uppercase tracking-widest">
+          <div className="absolute top-0 right-0 bg-brand-primary text-white text-[9px] font-black px-2 py-1 rounded-none z-10 uppercase tracking-widest">
             -{product.discountPercentage}%
           </div>
         )}
         
         {product.stock < 5 && product.stock > 0 && (
-          <div className="absolute top-0 left-0 bg-white text-[#9B2B2C] text-[8px] font-black px-2 py-1 uppercase tracking-widest rounded-none flex items-center gap-1 border-b border-r border-[#777]">
-            <span className="w-1 h-1 bg-[#9B2B2C] rounded-none animate-pulse" />
+          <div className="absolute top-0 left-0 bg-white text-brand-primary text-[8px] font-black px-2 py-1 uppercase tracking-widest rounded-none flex items-center gap-1 border-b border-r border-[#777]">
+            <span className="w-1 h-1 bg-brand-primary rounded-none animate-pulse" />
             CRITICAL_INVENTORY
           </div>
         )}
 
         {product.stock === 0 && (
           <div className="absolute inset-0 bg-white/80 flex items-center justify-center z-20">
-            <span className="bg-[#9B2B2C] text-white text-[10px] font-black px-4 py-1.5 uppercase tracking-widest rounded-none">
+            <span className="bg-brand-primary text-white text-[10px] font-black px-4 py-1.5 uppercase tracking-widest rounded-none">
               DEPLETED_NODE
             </span>
           </div>
@@ -86,7 +86,7 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
         </div>
         
         <h3 
-          className="font-black text-slate-900 text-[12px] line-clamp-1 mb-2 hover:text-[#9B2B2C] transition-colors cursor-pointer uppercase tracking-tight"
+          className="font-black text-slate-900 text-[12px] line-clamp-1 mb-2 hover:text-brand-primary transition-colors cursor-pointer uppercase tracking-tight"
           onClick={() => navigate('/checkout', { 
             state: { 
               directOrder: true, 
@@ -110,13 +110,13 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
                 ৳{product.oldPrice.toLocaleString()}
               </span>
             )}
-            <span className="text-[14px] font-black text-[#9B2B2C] tracking-tighter">
+            <span className="text-[14px] font-black text-brand-primary tracking-tighter">
               ৳{product.price.toLocaleString()}
             </span>
           </div>
           
           <button
-            className="w-full bg-slate-900 hover:bg-[#9B2B2C] text-white transition-all h-7 px-3 text-[8px] font-black uppercase tracking-widest rounded-none shadow-md active:scale-95 disabled:bg-slate-300 border border-slate-900"
+            className="w-full bg-slate-900 hover:bg-brand-primary text-white transition-all h-7 px-3 text-[8px] font-black uppercase tracking-widest rounded-none shadow-md active:scale-95 disabled:bg-slate-300 border border-slate-900"
             disabled={product.stock === 0}
             onClick={(e) => {
               e.stopPropagation();

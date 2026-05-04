@@ -47,24 +47,6 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         };
 
         setSettings(sanitizedData as any);
-
-        // Inject Dynamic Colors
-        if (data.theme?.enabled) {
-          const root = document.documentElement;
-          root.style.setProperty('--primary-color', data.theme.primaryColor);
-          root.style.setProperty('--secondary-color', data.theme.secondaryColor);
-          root.style.setProperty('--background-color', data.theme.backgroundColor);
-          root.style.setProperty('--card-color', data.theme.cardColor);
-          root.style.setProperty('--button-color', data.theme.buttonColor);
-        } else {
-          // Reset to defaults
-          const root = document.documentElement;
-          root.style.setProperty('--primary-color', '#9B2B2C');
-          root.style.setProperty('--secondary-color', '#ffffff');
-          root.style.setProperty('--background-color', '#ffffff');
-          root.style.setProperty('--card-color', '#ffffff');
-          root.style.setProperty('--button-color', '#9B2B2C');
-        }
       }
       setLoading(false);
     }, (error) => {
@@ -73,6 +55,32 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     });
     return () => unsub();
   }, []);
+
+  // Centralized Theme Injection Effect
+  useEffect(() => {
+    if (!settings) return;
+
+    const root = document.documentElement;
+    if (settings.theme?.enabled) {
+      const theme = settings.theme;
+      if (theme.primaryColor) root.style.setProperty('--primary-color', theme.primaryColor);
+      if (theme.secondaryColor) root.style.setProperty('--secondary-color', theme.secondaryColor);
+      if (theme.backgroundColor) {
+        root.style.setProperty('--background-color', theme.backgroundColor);
+        root.style.setProperty('--background', theme.backgroundColor); // Sync with CSS
+      }
+      if (theme.cardColor) root.style.setProperty('--card-color', theme.cardColor);
+      if (theme.buttonColor) root.style.setProperty('--button-color', theme.buttonColor);
+    } else {
+      // Default Bazar Dala theme
+      root.style.setProperty('--primary-color', '#9B2B2C');
+      root.style.setProperty('--secondary-color', '#ffffff');
+      root.style.setProperty('--background-color', '#ffffff');
+      root.style.setProperty('--background', '#ffffff');
+      root.style.setProperty('--card-color', '#ffffff');
+      root.style.setProperty('--button-color', '#9B2B2C');
+    }
+  }, [settings]);
 
   return (
     <SettingsContext.Provider value={{ settings, loading }}>

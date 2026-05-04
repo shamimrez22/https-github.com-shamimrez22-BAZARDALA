@@ -103,16 +103,16 @@ const Checkout = () => {
           className="max-w-xl w-full px-8 text-center bg-white p-12 rounded-none shadow-2xl mx-4 border-2 border-[#777]"
         >
           <div className="w-32 h-32 bg-[#f8f8f8] border-2 border-[#777] rounded-none flex items-center justify-center mx-auto mb-10 shadow-inner relative">
-            <CheckCircle2 className="h-16 w-16 text-[#9B2B2C] relative z-10" />
+            <CheckCircle2 className="h-16 w-16 text-brand-primary relative z-10" />
           </div>
           <h1 className="text-3xl font-black text-slate-800 mb-4 uppercase tracking-tighter">PROTOCOL_COMPLETE</h1>
           <p className="text-slate-400 mb-10 text-[12px] font-black uppercase tracking-[0.2em] leading-relaxed max-w-sm mx-auto">
             ধন্যবাদ! আপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে। <br /> 
-            অর্ডার আইডি: <span className="text-[#9B2B2C] font-black px-3 py-1 bg-[#9B2B2C]/5 border border-[#9B2B2C] rounded-none ml-1 uppercase">{orderSuccess}</span>
+            অর্ডার আইডি: <span className="text-brand-primary font-black px-3 py-1 bg-brand-primary/5 border border-brand-primary rounded-none ml-1 uppercase">{orderSuccess}</span>
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-md mx-auto">
             <Button 
-              className="bg-slate-900 hover:bg-[#9B2B2C] py-7 rounded-none text-[11px] font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all" 
+              className="bg-slate-900 hover:bg-brand-primary py-7 rounded-none text-[11px] font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all" 
               onClick={() => navigate(`/tracking?id=${orderSuccess}`)}
             >
               TRACK_ORDER
@@ -137,7 +137,7 @@ const Checkout = () => {
   return (
     <div className="bg-slate-50/50 min-h-screen pb-20 overflow-x-hidden">
       {/* Dynamic Hero Header */}
-      <div className="w-full bg-slate-900 py-3 md:py-5 px-8 md:px-12 lg:px-16 border-b-4 border-[#9B2B2C] relative overflow-hidden">
+      <div className="w-full bg-slate-900 py-3 md:py-5 px-8 md:px-12 lg:px-16 border-b-4 border-brand-primary relative overflow-hidden">
          <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
          <div className="relative z-10 max-w-screen-2xl mx-auto flex flex-col md:flex-row items-center justify-between">
             <div>
@@ -149,7 +149,7 @@ const Checkout = () => {
                 <span className="text-slate-400 text-[9px] font-black uppercase tracking-widest">Est. Delivery</span>
                 <span className="text-slate-900 text-[12px] font-black uppercase">24-48 Hours</span>
               </div>
-              <div className="w-10 h-10 bg-[#9B2B2C] rounded-none flex items-center justify-center text-white border-2 border-slate-900 shadow-lg">
+              <div className="w-10 h-10 bg-brand-primary rounded-none flex items-center justify-center text-white border-2 border-slate-900 shadow-lg">
                 <Truck className="h-5 w-5" />
               </div>
             </div>
@@ -163,7 +163,7 @@ const Checkout = () => {
             <Card className="border-2 border-[#777] shadow-2xl rounded-none overflow-hidden bg-white">
               <CardHeader className="bg-white border-b-2 border-[#777] p-8 md:p-10">
                 <CardTitle className="flex items-center gap-6 text-2xl font-black uppercase tracking-tighter text-slate-800">
-                  <div className="bg-[#f8f8f8] p-4 rounded-none text-[#9B2B2C] border-2 border-[#777] shadow-sm">
+                  <div className="bg-[#f8f8f8] p-4 rounded-none text-brand-primary border-2 border-[#777] shadow-sm">
                     <Truck className="h-7 w-7" />
                   </div>
                   SHIPPING_DETAILS
@@ -244,7 +244,7 @@ const Checkout = () => {
                             <span className={`text-[8px] font-black uppercase tracking-widest opacity-60`}>Verified Method</span>
                           </Label>
                           {formData.paymentMethod === method.id && (
-                            <div className="absolute top-2 right-2 w-1.5 h-1.5 bg-[#9B2B2C] rounded-none animate-pulse" />
+                            <div className="absolute top-2 right-2 w-1.5 h-1.5 bg-brand-primary rounded-none animate-pulse" />
                           )}
                         </div>
                       ))}
@@ -253,7 +253,7 @@ const Checkout = () => {
 
                   <Button
                     type="submit"
-                    className="w-full h-16 bg-slate-900 hover:bg-[#9B2B2C] text-white font-black uppercase tracking-[0.2em] rounded-none mt-10 shadow-xl active:scale-95 text-base transition-all group relative overflow-hidden"
+                    className="w-full h-16 bg-slate-900 hover:bg-brand-primary text-white font-black uppercase tracking-[0.2em] rounded-none mt-10 shadow-xl active:scale-95 text-base transition-all group relative overflow-hidden"
                     disabled={loading}
                   >
                     {loading ? 'PROCESSING_PROTOCOL...' : (
@@ -327,7 +327,7 @@ const Checkout = () => {
                     
                     <div className="pt-8 border-t-2 border-[#777] mt-4">
                       <div className="bg-[#f8f8f8] rounded-none p-8 space-y-2 group shadow-inner border border-[#777]">
-                        <span className="text-[10px] font-black text-[#9B2B2C] uppercase tracking-[0.4em] mb-2 block opacity-60">GRAND_TOTAL</span>
+                        <span className="text-[10px] font-black text-brand-primary uppercase tracking-[0.4em] mb-2 block opacity-60">GRAND_TOTAL</span>
                         <div className="flex items-baseline gap-2">
                            <span className="text-3xl font-black text-slate-900 tracking-tighter">৳{grandTotal.toLocaleString()}</span>
                            <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">BDT</span>

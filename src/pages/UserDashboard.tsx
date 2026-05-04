@@ -160,7 +160,7 @@ const UserDashboard = () => {
                       </div>
                       <span>{item.label}</span>
                     </div>
-                    <div className={`w-2 h-2 rounded-none border-2 border-[#777] transform transition-all ${activeTab === item.id ? 'bg-[#9B2B2C] scale-100' : 'bg-transparent scale-50'}`} />
+                    <div className={`w-2 h-2 rounded-none border-2 border-[#777] transform transition-all ${activeTab === item.id ? 'bg-brand-primary scale-100' : 'bg-transparent scale-50'}`} />
                   </button>
                 ))}
               </div>
@@ -178,9 +178,9 @@ const UserDashboard = () => {
                   className="space-y-10"
                 >
                   <div className="bg-white rounded-none p-8 md:p-10 shadow-2xl border-2 border-[#777] relative overflow-hidden">
-                    <h1 className="text-3xl md:text-4xl font-black text-slate-900 uppercase tracking-tighter leading-none mb-4 relative z-10 border-b-4 border-[#9B2B2C] pb-3 inline-block">DISPATCH_HISTORY</h1>
+                    <h1 className="text-3xl md:text-4xl font-black text-slate-900 uppercase tracking-tighter leading-none mb-4 relative z-10 border-b-4 border-brand-primary pb-3 inline-block">DISPATCH_HISTORY</h1>
                     <div className="flex items-center gap-3 relative z-10 mt-4">
-                       <div className="w-2 h-2 bg-[#9B2B2C] rounded-none animate-pulse" />
+                       <div className="w-2 h-2 bg-brand-primary rounded-none animate-pulse" />
                        <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em]">Accessing verified purchase logs for your session</p>
                     </div>
                   </div>
@@ -213,7 +213,7 @@ const UserDashboard = () => {
                                     </span>
                                     <div className={`px-4 py-1 rounded-none border-2 border-slate-900 text-[10px] font-black uppercase tracking-widest ${
                                       order?.status === 'delivered' ? 'bg-green-600 text-white' : 
-                                      'bg-[#9B2B2C] text-white'
+                                      'bg-brand-primary text-white'
                                     }`}>
                                       {order?.status?.toUpperCase() || 'PENDING'}
                                     </div>
@@ -243,7 +243,7 @@ const UserDashboard = () => {
                                 </div>
                                 <button 
                                   onClick={() => navigate(`/tracking?id=${order.orderId}`)}
-                                  className="px-10 py-4 bg-slate-900 text-white rounded-none text-[10px] font-black uppercase tracking-widest hover:bg-[#9B2B2C] transition-all shadow-lg active:scale-95"
+                                  className="px-10 py-4 bg-slate-900 text-white rounded-none text-[10px] font-black uppercase tracking-widest hover:bg-brand-primary transition-all shadow-lg active:scale-95"
                                 >
                                   TRACE_PARCEL
                                 </button>
@@ -259,7 +259,7 @@ const UserDashboard = () => {
                         </div>
                         <h3 className="text-3xl font-black text-slate-800 uppercase tracking-tighter mb-4">LOGS_REGISTRY_EMPTY</h3>
                         <p className="text-[12px] text-slate-400 font-black uppercase tracking-[0.2em] mb-12 max-w-sm mx-auto leading-relaxed">You haven't initiated any dispatches yet. Access global collections to start.</p>
-                        <button className="bg-slate-900 hover:bg-[#9B2B2C] text-white px-12 py-5 text-[12px] font-black uppercase tracking-widest rounded-none shadow-xl active:scale-95 transition-all" onClick={() => navigate('/shop')}>
+                        <button className="bg-slate-900 hover:bg-brand-primary text-white px-12 py-5 text-[12px] font-black uppercase tracking-widest rounded-none shadow-xl active:scale-95 transition-all" onClick={() => navigate('/shop')}>
                           ACCESS_COLLECTIONS
                         </button>
                       </div>
@@ -276,9 +276,9 @@ const UserDashboard = () => {
                   className="space-y-10"
                 >
                   <div className="bg-white rounded-none p-8 md:p-10 shadow-2xl border-2 border-[#777] relative overflow-hidden">
-                    <h1 className="text-3xl md:text-4xl font-black text-slate-900 uppercase tracking-tighter leading-none mb-4 relative z-10 border-b-4 border-[#9B2B2C] pb-3 inline-block">IDENTITY_CORE</h1>
+                    <h1 className="text-3xl md:text-4xl font-black text-slate-900 uppercase tracking-tighter leading-none mb-4 relative z-10 border-b-4 border-brand-primary pb-3 inline-block">IDENTITY_CORE</h1>
                     <div className="flex items-center gap-3 relative z-10 mt-4">
-                       <div className="w-2 h-2 bg-[#9B2B2C] rounded-none animate-pulse" />
+                       <div className="w-2 h-2 bg-brand-primary rounded-none animate-pulse" />
                        <p className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em]">Modify your authentication identity across the network</p>
                     </div>
                   </div>
@@ -302,7 +302,7 @@ const UserDashboard = () => {
                           </label>
                         </div>
                         <div className="text-center md:text-left flex-1">
-                          <h3 className="text-sm font-black uppercase tracking-widest text-[#9B2B2C] mb-3">AVATAR_DISPATCH</h3>
+                          <h3 className="text-sm font-black uppercase tracking-widest text-brand-primary mb-3">AVATAR_DISPATCH</h3>
                           <p className="text-[11px] font-black text-slate-400 uppercase tracking-widest leading-relaxed">
                             Upload a high-fidelity image for cross-network recognition. Optimized dimensions: [300x300_ENC]
                           </p>
@@ -333,7 +333,7 @@ const UserDashboard = () => {
                       <button 
                         type="submit" 
                         disabled={savingProfile}
-                        className="w-full bg-slate-900 hover:bg-[#9B2B2C] text-white py-6 rounded-none font-black uppercase tracking-widest text-[12px] shadow-xl active:scale-95 transition-all flex items-center justify-center gap-5 group"
+                        className="w-full bg-slate-900 hover:bg-brand-primary text-white py-6 rounded-none font-black uppercase tracking-widest text-[12px] shadow-xl active:scale-95 transition-all flex items-center justify-center gap-5 group"
                       >
                         <Save className="h-5 w-5 group-hover:rotate-12 transition-transform" />
                         {savingProfile ? 'SYNCHRONIZING_ID...' : 'CONFIRM_GLOBAL_CHANGES'}

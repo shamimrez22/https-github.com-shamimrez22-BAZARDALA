@@ -110,6 +110,7 @@ const AppContent = () => {
                     <Route path="about" element={<InfoPage />} />
                     <Route path="careers" element={<InfoPage />} />
                     <Route path="blog" element={<InfoPage />} />
+                    <Route path="*" element={<Navigate to="/" replace />} />
                   </Route>
 
                   {/* Admin Login */}

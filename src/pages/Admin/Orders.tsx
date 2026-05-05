@@ -162,16 +162,17 @@ const AdminOrders = () => {
   }, [statusFilter, isAdmin, authLoading]);
 
   const updateStatus = async (id: string, status: string) => {
-    toast.info(`Updating manifest status...`, { duration: 800 });
+    const originalOrders = [...orders];
     try {
+      // Optimistic Update
+      setOrders(prev => prev.map(o => o.id === id ? { ...o, status } : o));
+      
       const orderRef = doc(db, 'orders', id);
       await updateDoc(orderRef, { status: status });
-      
-      // Update local state
-      setOrders(prev => prev.map(o => o.id === id ? { ...o, status } : o));
       toast.success(`MANIFEST_UPDATED: ${id.slice(0, 5)} -> ${status.toUpperCase()}`);
     } catch (error: any) {
       console.error('Status update failed:', error);
+      setOrders(originalOrders);
       toast.error(`Sync Failure`);
     }
   };
@@ -179,15 +180,16 @@ const AdminOrders = () => {
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const handleDelete = async (id: string) => {
-    setDeletingId(id);
+    const originalOrders = [...orders];
     try {
+      // Optimistic Delete
+      setOrders(prev => prev.filter(o => o.id !== id));
       await deleteDoc(doc(db, 'orders', id));
       toast.success('Order deleted from system');
     } catch (error) {
       console.error('Delete error:', error);
+      setOrders(originalOrders);
       toast.error('Failed to delete order');
-    } finally {
-      setDeletingId(null);
     }
   };
 

@@ -32,31 +32,49 @@ const AdminCoupons = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const tempId = Math.random().toString(36).substr(2, 9);
+    const originalCoupons = [...coupons];
+    const newCouponData = {
+      code: formData.code.toUpperCase(),
+      discount: parseFloat(formData.discount),
+      expiry: new Date(formData.expiry),
+    };
+
     try {
-      await addDoc(collection(db, 'coupons'), {
-        code: formData.code.toUpperCase(),
-        discount: parseFloat(formData.discount),
-        expiry: new Date(formData.expiry),
+      // Optimistic Add
+      const optimisticCoupon = { id: tempId, ...newCouponData, createdAt: new Date() } as any;
+      setCoupons(prev => [optimisticCoupon, ...prev]);
+      
+      setFormData({ code: '', discount: '', expiry: '' });
+      const docRef = await addDoc(collection(db, 'coupons'), {
+        ...newCouponData,
         createdAt: serverTimestamp(),
       });
+      
+      // Update with real ID
+      setCoupons(prev => prev.map(c => c.id === tempId ? { ...c, id: docRef.id } : c));
       toast.success('Coupon created successfully');
-      setFormData({ code: '', discount: '', expiry: '' });
-      fetchCoupons();
     } catch (error) {
+      console.error('Submit coupon error:', error);
+      setCoupons(originalCoupons);
       toast.error('Failed to create coupon');
     }
   };
 
   const handleDelete = (id: string) => {
+    const originalCoupons = [...coupons];
     toast('Delete this coupon permanently?', {
       action: {
         label: 'Delete',
         onClick: async () => {
           try {
+            // Optimistic Delete
+            setCoupons(prev => prev.filter(c => c.id !== id));
             await deleteDoc(doc(db, 'coupons', id));
             toast.success('Coupon deleted');
-            fetchCoupons();
           } catch (error) {
+            console.error('Delete error:', error);
+            setCoupons(originalCoupons);
             toast.error('Failed to delete coupon');
           }
         }

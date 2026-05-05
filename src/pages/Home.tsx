@@ -72,14 +72,10 @@ const categories = [
 ];
 
 const SpecialOfferNode = ({ settings }: { settings: any }) => (
-  <div className="flex-1 flex flex-col overflow-hidden group min-h-[300px] lg:min-h-0 bg-white">
-    <div className="bg-[#f8f8f8] p-2 md:p-3 border-b-2 border-[#777] flex-shrink-0">
-      <h2 className="text-[10px] md:text-[11px] font-black text-brand-primary uppercase tracking-[0.2em] flex items-center gap-2">
-        <Zap className="h-3.5 w-3.5 md:h-4 md:w-4" /> {settings?.sidebar?.offerTitle || 'EXCLUSIVE OFFER'}
-      </h2>
-    </div>
-    <Link to={settings?.sidebar?.offerLink || '/shop'} className="flex-1 relative overflow-hidden group flex flex-col">
-      <div className="w-full relative shrink-0 lg:flex-1 min-h-[140px] lg:min-h-0 overflow-hidden bg-slate-900">
+  <div className="flex-1 flex flex-col overflow-hidden group min-h-[300px] lg:min-h-0 bg-slate-900 border-0">
+    <Link to={settings?.sidebar?.offerLink || '/shop'} className="flex-1 relative overflow-hidden group">
+      {/* Background Media */}
+      <div className="absolute inset-0 w-full h-full overflow-hidden">
         <video 
           autoPlay 
           muted 
@@ -98,19 +94,30 @@ const SpecialOfferNode = ({ settings }: { settings: any }) => (
             </>
           )}
         </video>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
-        <div className="absolute inset-0 w-full h-full pointer-events-none opacity-5">
-          <div className="w-full h-[1px] bg-white animate-[scanline_4s_linear_infinite]" />
-        </div>
+        {/* Dynamic Overlays */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-hover:opacity-0 transition-opacity duration-700" />
       </div>
-      <div className="p-2 md:p-3 shadow-sm relative flex flex-col justify-center">
-        <div className="w-full bg-brand-primary text-white text-[7px] md:text-[8px] font-black py-1 uppercase tracking-[0.3em] mb-1.5 text-center shadow-sm transform -skew-x-6">
-          SPECIAL ACCESS
+
+      {/* Content Overlay */}
+      <div className="relative h-full flex flex-col justify-between p-4 md:p-6 z-10">
+        <div className="flex items-center gap-2">
+          <div className="bg-brand-primary p-1.5 rounded-none shadow-lg">
+            <Zap className="h-4 w-4 text-white" />
+          </div>
+          <h2 className="text-[10px] md:text-[11px] font-black text-white uppercase tracking-[0.3em] drop-shadow-md">
+            {settings?.sidebar?.offerTitle || 'EXCLUSIVE OFFER'}
+          </h2>
         </div>
-        <h4 className="text-[11px] md:text-[12px] font-black text-slate-900 uppercase leading-[1.1] tracking-tighter group-hover:text-brand-primary transition-colors">
-          {settings?.sidebar?.offerTitle || 'Claim Your Premium Offer Now'}
-        </h4>
-        <div className="h-1 w-0 bg-brand-primary mt-1.5 group-hover:w-full transition-all duration-500" />
+
+        <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+          <div className="inline-block bg-white text-brand-primary text-[7px] md:text-[8px] font-black py-1 px-4 uppercase tracking-[0.4em] mb-2 shadow-xl transform -skew-x-12">
+            SPECIAL ACCESS
+          </div>
+          <h4 className="text-[14px] md:text-[18px] font-black text-white uppercase leading-tight tracking-tighter drop-shadow-2xl">
+            {settings?.sidebar?.offerSubtitle || 'Claim Your Premium Offer Now'}
+          </h4>
+          <div className="h-1 w-0 bg-brand-primary mt-3 group-hover:w-full transition-all duration-700" />
+        </div>
       </div>
     </Link>
   </div>
@@ -236,26 +243,10 @@ const Home = () => {
 
   return (
     <div className="flex flex-col bg-white text-slate-900 pb-20 overflow-x-hidden relative">
-      {/* Mobile Category Bar (Horizontal Scroll) */}
-      <div className="lg:hidden w-full bg-white border-b border-[#777]/10 py-3 px-4 overflow-x-auto whitespace-nowrap scrollbar-hide flex items-center gap-4">
-        {categories.map((cat, i) => (
-          <Link 
-            key={i} 
-            to={`/shop?cat=${cat.name.toLowerCase()}`}
-            className="flex flex-col items-center gap-2 group shrink-0"
-          >
-            <div className="w-11 h-11 rounded-full bg-[#f8f8f8] border border-[#777]/5 flex items-center justify-center p-2.5 group-hover:bg-brand-primary/10 transition-colors">
-              <cat.icon className="h-4 w-4 text-brand-primary" />
-            </div>
-            <span className="text-[8px] font-black uppercase tracking-tight text-slate-500 group-hover:text-brand-primary">{cat.name.split(' ')[0]}</span>
-          </Link>
-        ))}
-      </div>
-
       {/* Full Width Hero Section */}
-      <section className="pt-2 md:pt-0 pb-1 md:pb-4 w-full">
-        <div className="w-full max-w-[1536px] mx-auto px-4 md:px-16 lg:px-24 overflow-hidden">
-          <div className="flex flex-col lg:flex-row items-stretch w-full min-h-[100px] md:min-h-[280px] lg:h-[450px] rounded-none overflow-hidden border-2 border-[#777] bg-white">
+      <section className="pt-0 md:pt-0 pb-1 md:pb-4 w-full">
+        <div className="w-full max-w-[1536px] mx-auto px-0 md:px-16 lg:px-24 overflow-hidden">
+          <div className="flex flex-col lg:flex-row items-stretch w-full min-h-[140px] md:min-h-[280px] lg:h-[450px] rounded-none overflow-hidden border-x-0 border-y-2 md:border-2 border-[#777] bg-white">
             {/* Category Sidebar/Offer - HIDDEN ON MOBILE, VISIBLE ON DESKTOP */}
             <div className="hidden lg:flex lg:w-72 bg-white lg:border-r-2 border-[#777] flex-col flex-shrink-0 lg:overflow-visible">
                 {settings?.sidebar?.showCategories ? (
@@ -377,18 +368,18 @@ const Home = () => {
 
       {settings?.ads?.floatingNotice?.active && settings?.ads?.floatingNotice?.text && (
         <section className="py-2 w-full">
-          <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24">
+          <div className="w-full max-w-[1536px] mx-auto px-4 md:px-16 lg:px-24">
             <div 
-              className="relative overflow-hidden whitespace-nowrap h-10 md:h-12 flex items-center border-y border-[#777]/10 rounded-sm"
+              className="relative overflow-hidden whitespace-nowrap h-8 md:h-10 flex items-center border-y border-slate-900/5 bg-slate-50"
               style={{ backgroundColor: settings.ads.floatingNotice.bgColor }}
             >
               <div 
-                className="animate-marquee inline-block font-black uppercase text-[12px] md:text-[14px] tracking-[0.3em] md:tracking-widest whitespace-nowrap"
+                className="animate-marquee inline-block font-bold uppercase text-[9px] md:text-[11px] tracking-[0.3em] whitespace-nowrap"
                 style={{ color: settings.ads.floatingNotice.textColor }}
               >
-                <span className="inline-block px-6">{settings.ads.floatingNotice.text}</span>
-                <span className="inline-block px-6">{settings.ads.floatingNotice.text}</span>
-                <span className="inline-block px-6">{settings.ads.floatingNotice.text}</span>
+                <span className="inline-block px-8">{settings.ads.floatingNotice.text}</span>
+                <span className="inline-block px-8">{settings.ads.floatingNotice.text}</span>
+                <span className="inline-block px-8">{settings.ads.floatingNotice.text}</span>
               </div>
             </div>
           </div>
@@ -413,22 +404,22 @@ const Home = () => {
       )}
 
       {/* Curated Grid Selection */}
-      <section className="py-1 md:py-5 w-full">
-        <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24">
-          <div className="flex flex-col md:flex-row items-center justify-between mb-3 md:mb-8 gap-2 md:gap-6 border-b-2 border-brand-primary pb-2 md:pb-4">
-            <div>
-              <h2 className="text-sm md:text-2xl font-black uppercase tracking-tighter text-slate-900">COLLECTIONS</h2>
-              <div className="flex items-center gap-3 mt-1">
+      <section className="py-2 md:py-6 w-full bg-[#fcfcfc]">
+        <div className="w-full max-w-[1536px] mx-auto px-4 md:px-16 lg:px-24">
+          <div className="flex flex-col md:flex-row items-center justify-between mb-2 md:mb-4 gap-2 md:gap-6 border-b-2 border-brand-primary pb-1.5 md:pb-2">
+            <div className="text-center md:text-left">
+              <h2 className="text-sm md:text-lg font-black uppercase tracking-tighter text-slate-900 leading-none">THE_COLLECTIONS</h2>
+              <div className="flex items-center justify-center md:justify-start gap-2 mt-0.5">
                  <div className="w-1 h-1 bg-brand-primary rounded-none animate-pulse" />
-                 <p className="text-[7px] md:text-[9px] font-bold text-slate-400 uppercase tracking-[0.4em]">Shop our high-quality categories</p>
+                 <p className="text-[6px] md:text-[8px] font-black text-slate-400 uppercase tracking-[0.2em]">Verified Inventory Catalog</p>
               </div>
             </div>
-            <Link to="/shop" className="group flex items-center gap-4 bg-slate-900 text-white px-4 md:px-6 py-2 md:py-2.5 text-[8px] md:text-[10px] font-black uppercase tracking-widest hover:bg-brand-primary transition-all rounded-none shadow-lg hover:scale-[1.02] active:scale-[0.98]">
-              VIEW ALL <ArrowRight className="h-3 w-3 md:h-4 md:w-4 group-hover:translate-x-1 transition-transform" />
+            <Link to="/shop" className="hidden md:flex group items-center gap-4 bg-slate-900 text-white px-6 py-2 text-[8px] font-black uppercase tracking-[0.2em] hover:bg-brand-primary transition-all rounded-none shadow-xl hover:scale-[1.02] active:scale-[0.98]">
+              CATALOG_DIR <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1.5 transition-transform" />
             </Link>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-3 md:gap-8">
             {[
               { name: 'Devices', img: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=400' },
               { name: 'Laptops', img: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400' },
@@ -440,21 +431,26 @@ const Home = () => {
               <Link 
                 key={i} 
                 to={`/shop?cat=${cat.name.toLowerCase()}`}
-                className="bg-white rounded-none border-2 border-[#777] p-2 transition-all group relative hover:shadow-lg flex flex-col items-center"
+                className="flex flex-col items-center group gap-2"
               >
-                <div className="w-full aspect-square overflow-hidden mb-3 transition-all duration-700">
+                <div className="w-full aspect-square overflow-hidden bg-white border border-[#777]/10 transition-all group-hover:border-brand-primary/40 relative shadow-sm">
                   <img
                     src={cat.img}
                     alt={cat.name}
-                    className="w-full h-full object-cover group-hover:grayscale transition-all duration-700"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700 grayscale-[0.2] group-hover:grayscale-0"
                     referrerPolicy="no-referrer"
                   />
+                  <div className="absolute inset-x-0 bottom-0 py-2 bg-slate-900/10 group-hover:bg-brand-primary/10 transition-colors" />
                 </div>
-                <div className="flex flex-col items-center gap-1 pb-2">
-                  <h3 className="text-[13px] font-black uppercase tracking-tight text-slate-800">{cat.name}</h3>
-                </div>
+                <h3 className="text-[8px] md:text-[9px] font-black uppercase tracking-widest text-slate-400 group-hover:text-brand-primary transition-colors text-center">{cat.name}</h3>
               </Link>
             ))}
+          </div>
+
+          <div className="mt-4 md:hidden">
+            <Link to="/shop" className="w-full flex items-center justify-center gap-4 bg-slate-900 text-white py-2.5 text-[8px] font-black uppercase tracking-[0.2em] rounded-none shadow-xl active:scale-95 transition-all">
+               VIEW_ALL_COLLECTIONS <ArrowRight className="h-3 w-3" />
+            </Link>
           </div>
         </div>
       </section>
@@ -500,48 +496,64 @@ const Home = () => {
         </section>
       )}
 
-      {/* High-Alert Dispatch Section (Flash Sale) - ALIGNED */}
-      <section className="pb-3 pt-1 w-full text-center md:text-left">
-        <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24">
-           <div className="bg-brand-primary relative overflow-hidden rounded-none border-2 border-[#777] shadow-2xl">
-            {/* Subtle decorative grid background */}
-            <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
-            
-            <div className="p-4 md:p-6 relative z-10">
-          <div className="flex flex-col md:flex-row items-center justify-between mb-6 md:mb-8 gap-6 text-center md:text-left">
-            <div>
-              <div className="flex items-center justify-center md:justify-start gap-2 mb-1.5">
-                <span className="w-8 h-[1.5px] bg-white/40 rounded-none" />
-                <span className="text-white text-[9px] font-black uppercase tracking-[0.3em]">{settings?.countdown?.text || 'FLASH SALE'}</span>
+      {/* High-Alert Dispatch Section (Flash Sale - Spreadsheet / XL Edition) */}
+      <section className="pb-12 pt-6 w-full">
+        <div className="w-full max-w-[1536px] mx-auto px-4 md:px-16 lg:px-24">
+           {/* Spreadsheet Container */}
+           <div className="bg-white border border-slate-300 rounded-none overflow-hidden shadow-sm">
+            {/* XL Header Bar */}
+            <div className="bg-slate-100 border-b border-slate-300 px-4 py-1.5 flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-1">
+                  <div className="w-2.5 h-2.5 bg-green-500 rounded-full" />
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">Sheet1: Live_Inventory</span>
+                </div>
+                <div className="h-4 w-[1px] bg-slate-300" />
+                <span className="text-[10px] font-black text-brand-primary uppercase tracking-widest">{settings?.countdown?.text || 'SALE_DISPATCH'}</span>
               </div>
-              <h2 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter leading-none mb-1.5">FLASH SALE</h2>
-              <p className="text-white/60 text-[10px] font-black uppercase tracking-[0.2em]">Get your favorites before they are gone</p>
+              <div className="flex gap-2">
+                <div className="w-2 h-2 rounded-full bg-slate-300" />
+                <div className="w-2 h-2 rounded-full bg-slate-300" />
+              </div>
             </div>
+
+            <div className="p-0">
+              {/* Data Controls / Timer Section */}
+              <div className="flex flex-col lg:flex-row border-b border-slate-200">
+                <div className="flex-1 p-6 md:p-10 bg-slate-50/50">
+                  <div className="space-y-1">
+                    <h2 className="text-xl md:text-3xl font-black text-slate-900 uppercase tracking-tighter leading-none">FLASH SALE</h2>
+                    <p className="text-slate-400 text-[8px] md:text-[10px] font-bold uppercase tracking-[0.2em]">{settings?.countdown?.text || 'Limited time inventory clearance'}</p>
+                  </div>
+                </div>
                 
-                <div className="bg-white/10 backdrop-blur-2xl border-2 border-white/20 p-4 md:p-6 rounded-none flex flex-col items-center gap-3 w-full md:w-auto">
-                    <p className="text-[9px] font-black text-white/60 uppercase tracking-[0.2em] mb-0.5">LIMITED TIME</p>
+                <div className="lg:w-auto p-6 md:px-12 flex flex-col justify-center items-center bg-white border-l border-slate-200">
+                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4">EXPIRATION_TIMER</p>
                     <div className="flex gap-3">
                       {[
-                        { val: timeLeft.hrs, label: 'HR' },
-                        { val: timeLeft.mins, label: 'MIN' },
-                        { val: timeLeft.secs, label: 'SEC' },
+                        { val: timeLeft.hrs, label: 'H' },
+                        { val: timeLeft.mins, label: 'M' },
+                        { val: timeLeft.secs, label: 'S' },
                       ].map((t, i) => (
-                        <div key={i} className="flex flex-col items-center">
-                          <div className="bg-white text-brand-primary w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-base md:text-lg font-mono font-black border-2 border-black">{t.val}</div>
-                          <span className="text-[8px] font-black text-white uppercase mt-1.5 tracking-widest">{t.label}</span>
+                        <div key={i} className="flex items-center gap-2">
+                          <div className="bg-slate-900 text-white w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-lg md:text-xl font-mono font-black border border-slate-900">{t.val}</div>
+                          {i < 2 && <span className="text-slate-300 font-black">:</span>}
                         </div>
                       ))}
                     </div>
                 </div>
               </div>
               
-              <div className="grid grid-cols-2 lg:grid-cols-6 gap-6 md:gap-8">
+              {/* The "Sheet" Grid */}
+              <div className="p-4 md:p-8 bg-white grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-0 border-collapse">
                 {loadingProducts ? (
                   [...Array(6)].map((_, i) => (
-                    <div key={i} className="aspect-square bg-white/5 animate-pulse rounded-3xl" />
+                    <div key={i} className="aspect-[3/4] bg-slate-50 animate-pulse border border-slate-100" />
                   ))
                 ) : featuredProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                  <div key={product.id} className="border border-slate-100 p-2 hover:bg-slate-50 transition-colors group">
+                    <ProductCard product={product} />
+                  </div>
                 ))}
               </div>
             </div>

@@ -137,6 +137,9 @@ const AdminProducts = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const tempId = Math.random().toString(36).substr(2, 9);
+    const originalProducts = [...products];
+    
     try {
       const data = {
         name: formData.name,
@@ -149,41 +152,60 @@ const AdminProducts = () => {
         images: formData.images,
         affiliateLink: formData.affiliateLink,
         ratings: 4.5,
-        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
       };
 
+      // Optimistic Update
       if (editingProduct) {
-        await updateDoc(doc(db, 'products', editingProduct.id), data);
-        toast.success('Product updated successfully');
         setProducts(prev => prev.map(p => p.id === editingProduct.id ? { ...p, ...data } : p));
       } else {
-        const docRef = await addDoc(collection(db, 'products'), data);
-        toast.success('Product added successfully');
-        setProducts(prev => [{ id: docRef.id, ...data } as Product, ...prev]);
+        const optimisticProduct = { id: tempId, ...data, createdAt: new Date() } as any;
+        setProducts(prev => [optimisticProduct, ...prev]);
       }
 
       setIsAddOpen(false);
+      const isEditing = !!editingProduct;
+      const editingId = editingProduct?.id;
+      
       setEditingProduct(null);
       setFormData({ name: '', price: '', category: '', stock: '', description: '', images: [], affiliateLink: '' });
+
+      if (isEditing) {
+        await updateDoc(doc(db, 'products', editingId!), data);
+        toast.success('Product updated successfully');
+      } else {
+        const docRef = await addDoc(collection(db, 'products'), { ...data, createdAt: serverTimestamp() });
+        // Update the temp ID with real ID
+        setProducts(prev => prev.map(p => p.id === tempId ? { ...p, id: docRef.id } : p));
+        toast.success('Product added successfully');
+      }
     } catch (error) {
       console.error('Submit product error:', error);
-      toast.error('Failed to save product');
+      setProducts(originalProducts); // Revert on error
+      toast.error('Failed to save product. Reverting changes.');
     }
   };
 
   const handleDelete = async (id: string) => {
-    // Making it "Hard" as requested by user
-    const confirmed = window.confirm('আপনি কি নিশ্চিত যে আপনি এই প্রোডাক্টটি ডিলিট করতে চান?');
-    if (!confirmed) return;
-
-    try {
-      await deleteDoc(doc(db, 'products', id));
-      toast.success('Product deleted successfully');
-      setProducts(prev => prev.filter(p => p.id !== id));
-    } catch (error) {
-      console.error('Delete error:', error);
-      toast.error('Failed to delete product. Please try again.');
-    }
+    const originalProducts = [...products];
+    
+    toast('Delete this product?', {
+      action: {
+        label: 'CONFIRM DELETE',
+        onClick: async () => {
+          try {
+            // Optimistic Delete
+            setProducts(prev => prev.filter(p => p.id !== id));
+            await deleteDoc(doc(db, 'products', id));
+            toast.success('Product deleted successfully');
+          } catch (error) {
+            console.error('Delete error:', error);
+            setProducts(originalProducts); // Revert on error
+            toast.error('Failed to delete product. Reverting changes.');
+          }
+        }
+      }
+    });
   };
 
   const handleAiGenerate = async () => {

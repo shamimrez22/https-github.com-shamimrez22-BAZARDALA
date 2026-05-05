@@ -41,16 +41,19 @@ const AdminCustomers = () => {
   }, []);
 
   const handleDeleteClient = (uid: string) => {
+    const originalCustomers = [...customers];
     toast('Wipe this client profile?', {
       action: {
         label: 'Delete',
         onClick: async () => {
           try {
+            // Optimistic Delete
+            setCustomers(prev => prev.filter(c => c.uid !== uid));
             await deleteDoc(doc(db, 'users', uid));
             toast.success('PROFILE_WIPED: Record removed');
-            fetchCustomers();
           } catch (error) {
             console.error('Delete client error:', error);
+            setCustomers(originalCustomers);
             toast.error('Wipe Failure');
           }
         }

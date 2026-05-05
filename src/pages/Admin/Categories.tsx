@@ -87,7 +87,9 @@ const AdminCategories = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    const tempId = Math.random().toString(36).substr(2, 9);
+    const originalCategories = [...categories];
+    
     try {
       const slug = formData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
       const data = {
@@ -97,26 +99,37 @@ const AdminCategories = () => {
         updatedAt: serverTimestamp(),
       };
 
+      // Optimistic Update
       if (editingCategory) {
-        await updateDoc(doc(db, 'categories', editingCategory.id), data);
-        toast.success('Category updated successfully');
+        setCategories(prev => prev.map(c => c.id === editingCategory.id ? { ...c, ...data } : c));
       } else {
-        await addDoc(collection(db, 'categories'), {
-          ...data,
-          createdAt: serverTimestamp()
-        });
-        toast.success('Category added successfully');
+        const optimisticCategory = { id: tempId, ...data, createdAt: new Date() } as any;
+        setCategories(prev => [...prev, optimisticCategory].sort((a, b) => a.name.localeCompare(b.name)));
       }
 
       setIsAddOpen(false);
+      const isEditing = !!editingCategory;
+      const editingId = editingCategory?.id;
+      
       setEditingCategory(null);
       setFormData({ name: '', image: '' });
-      await fetchCategories();
+
+      if (isEditing) {
+        await updateDoc(doc(db, 'categories', editingId!), data);
+        toast.success('Category updated successfully');
+      } else {
+        const docRef = await addDoc(collection(db, 'categories'), {
+          ...data,
+          createdAt: serverTimestamp()
+        });
+        // Update real ID
+        setCategories(prev => prev.map(c => c.id === tempId ? { ...c, id: docRef.id } : c));
+        toast.success('Category added successfully');
+      }
     } catch (error) {
       console.error('Submit category error:', error);
+      setCategories(originalCategories);
       toast.error('Failed to save category');
-    } finally {
-      setLoading(false);
     }
   };
 

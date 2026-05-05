@@ -57,34 +57,53 @@ const AdminSlider = () => {
       return;
     }
 
-    setLoading(true);
+    const tempId = Math.random().toString(36).substr(2, 9);
+    const originalBanners = [...banners];
+    const bannerData = {
+      image: newBanner.image,
+      title: newBanner.title,
+      subtitle: newBanner.subtitle,
+      link: newBanner.link,
+    };
+
     try {
-      await addDoc(collection(db, 'slider_banners'), {
-        ...newBanner,
-        createdAt: serverTimestamp()
-      });
-      toast.success('Banner added successfully');
+      // Optimistic Add
+      const optimisticBanner = { id: tempId, ...bannerData } as SliderBanner;
+      setBanners(prev => [...prev, optimisticBanner]);
+      
       setNewBanner({ image: '', title: '', subtitle: '', link: '/shop' });
       setIsAdding(false);
-      await fetchBanners();
+
+      const docRef = await addDoc(collection(db, 'slider_banners'), {
+        ...bannerData,
+        createdAt: serverTimestamp()
+      });
+      
+      // Update with real ID
+      setBanners(prev => prev.map(b => b.id === tempId ? { ...b, id: docRef.id } : b));
+      toast.success('Banner added successfully');
     } catch (error: any) {
       console.error('Add banner error:', error);
+      setBanners(originalBanners);
       toast.error(`Failed to add banner: ${error.message || 'Unknown error'}`);
-    } finally {
-      setLoading(false);
     }
   };
 
   const handleDeleteBanner = async (id: string) => {
+    const originalBanners = [...banners];
+    
     toast('Delete this banner?', {
       action: {
         label: 'Confirm Delete',
         onClick: async () => {
           try {
+            // Optimistic Delete
+            setBanners(prev => prev.filter(b => b.id !== id));
             await deleteDoc(doc(db, 'slider_banners', id));
             toast.success('Banner deleted');
-            fetchBanners();
           } catch (error) {
+            console.error('Delete error:', error);
+            setBanners(originalBanners);
             toast.error('Failed to delete banner');
           }
         }

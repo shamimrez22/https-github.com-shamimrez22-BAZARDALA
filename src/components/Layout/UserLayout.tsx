@@ -158,7 +158,7 @@ export const UserLayout: React.FC = () => {
       <div className="fixed top-0 left-0 right-0 z-[100] w-full flex flex-col bg-white shadow-sm">
         {/* Banner Notice (Topmost) */}
         {settings?.ads?.bannerNotice?.active && (
-          <div className="h-[24px] w-full bg-[#1F6F5F] text-white flex items-center justify-center px-4 md:px-10 relative overflow-hidden shrink-0 border-b border-white/10">
+          <div className="h-[24px] w-full bg-brand-primary text-white flex items-center justify-center px-4 md:px-10 relative overflow-hidden shrink-0 border-b border-white/10">
              <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
              <p className="text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] relative z-10 animate-pulse">
                {settings.ads.bannerNotice.text}
@@ -246,12 +246,6 @@ export const UserLayout: React.FC = () => {
                         <User className="mr-4 h-5 w-5 text-brand-primary" />
                         <span>MY_DASHBOARD</span>
                       </DropdownMenuItem>
-                      {isAdmin && (
-                        <DropdownMenuItem onClick={() => navigate('/admin')} className="text-[11px] font-black uppercase p-4 rounded-none border-2 border-transparent focus:border-slate-900 focus:bg-brand-primary focus:text-white cursor-pointer transition-colors">
-                          <Menu className="mr-4 h-5 w-5" />
-                          <span>ADMIN_CONSOLE</span>
-                        </DropdownMenuItem>
-                      )}
                       <DropdownMenuSeparator className="bg-slate-900 h-[2px] my-2" />
                       <DropdownMenuItem onClick={handleLogout} className="text-[11px] font-black uppercase p-4 rounded-none border-2 border-transparent focus:border-slate-900 focus:bg-red-600 focus:text-white cursor-pointer">
                         <LogOut className="mr-4 h-5 w-5" />
@@ -359,11 +353,6 @@ export const UserLayout: React.FC = () => {
                 <Link to="/tracking" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-between group p-3 border-b border-slate-100 hover:text-brand-primary">
                   TRACKING <ArrowRight className="h-4 w-4" />
                 </Link>
-                {isAdmin && (
-                  <Link to="/admin" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-between group p-3 border-b border-slate-100 text-brand-primary">
-                    ADMIN_CONSOLE <ArrowRight className="h-4 w-4" />
-                  </Link>
-                )}
               </nav>
             </motion.div>
           </>
@@ -402,7 +391,7 @@ export const UserLayout: React.FC = () => {
               {adminView === 'login' ? (
                 <>
                   <div className="flex justify-center mb-8">
-                    <div className="w-16 h-16 rounded-none bg-[#ead9c4] border-2 border-slate-900 flex items-center justify-center text-brand-primary shadow-[4px_4px_0px_0px_rgba(155,43,44,1)]">
+                    <div className="w-16 h-16 rounded-none bg-[#ead9c4] border-2 border-slate-900 flex items-center justify-center text-brand-primary shadow-[4px_4px_0px_0px_rgba(0,188,188,1)]">
                       <Lock className="h-8 w-8" />
                     </div>
                   </div>
@@ -441,7 +430,7 @@ export const UserLayout: React.FC = () => {
                     <Button 
                       type="submit" 
                       disabled={isLoggingIn}
-                      className="w-full h-14 bg-slate-900 hover:bg-brand-primary text-white font-black rounded-none shadow-[4px_4px_0px_0px_rgba(155,43,44,1)] uppercase tracking-[0.3em] text-xs transition-all active:translate-y-1 active:shadow-none"
+                      className="w-full h-14 bg-slate-900 hover:bg-brand-primary text-white font-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,188,188,1)] uppercase tracking-[0.3em] text-xs transition-all active:translate-y-1 active:shadow-none"
                     >
                       {isLoggingIn ? 'প্রসেসিং...' : 'লগইন করুন'}
                     </Button>
@@ -509,12 +498,12 @@ export const UserLayout: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
             <div className="space-y-6">
               <Link to="/" className="flex items-center gap-4 group">
-                <div className="w-12 h-12 bg-[#00ead0] flex items-center justify-center text-black font-black text-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)]">
+                <div className="w-12 h-12 bg-brand-primary flex items-center justify-center text-black font-black text-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)]">
                   {(settings?.siteName || 'SS').substring(0, 2).toUpperCase()}
                 </div>
                 <div>
                   <h3 className="text-xl font-black tracking-tight leading-none uppercase">{settings?.siteName || 'SS SMART HAAT'}</h3>
-                  <p className="text-[9px] font-black tracking-[0.2em] text-[#00ead0] mt-1 uppercase">PREMIUM MARKET PLACE</p>
+                  <p className="text-[9px] font-black tracking-[0.2em] text-brand-primary mt-1 uppercase">PREMIUM MARKET PLACE</p>
                 </div>
               </Link>
               
@@ -523,7 +512,7 @@ export const UserLayout: React.FC = () => {
                   {settings?.siteDescription || 'YOUR CURATED DESTINATION FOR SMART FASHION AND MODERN MARKETPLACE ESSENTIALS.'}
                 </p>
                 {settings?.siteDescriptionBangla && (
-                  <div className="border-l-2 border-[#00ead0] pl-4">
+                  <div className="border-l-2 border-brand-primary pl-4">
                     <p className="text-slate-200 text-[13px] leading-relaxed font-medium">
                       {settings.siteDescriptionBangla}
                     </p>
@@ -546,7 +535,7 @@ export const UserLayout: React.FC = () => {
                       href={social.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-10 h-10 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-[#00ead0] hover:border-[#00ead0] transition-all bg-slate-900/50 rounded-sm"
+                      className="w-10 h-10 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-brand-primary hover:border-brand-primary transition-all bg-slate-900/50 rounded-sm"
                     >
                       <Icon className="h-5 w-5" />
                     </a>
@@ -556,7 +545,7 @@ export const UserLayout: React.FC = () => {
             </div>
 
             <div>
-              <h4 className="text-[#00ead0] font-black mb-8 uppercase tracking-[0.2em] text-[12px]">
+              <h4 className="text-brand-primary font-black mb-8 uppercase tracking-[0.2em] text-[12px]">
                 SHOPPING_UNIT
               </h4>
               <ul className="space-y-4 text-[13px] font-black text-white uppercase tracking-widest">
@@ -566,7 +555,7 @@ export const UserLayout: React.FC = () => {
                   { label: 'ACCESSORIES', url: '/shop' }
                 ]).map((link, i) => (
                   <li key={i}>
-                    <Link to={link.url} className="hover:text-[#00ead0] transition-colors inline-block">
+                    <Link to={link.url} className="hover:text-brand-primary transition-colors inline-block">
                       {link.label}
                     </Link>
                   </li>
@@ -575,21 +564,21 @@ export const UserLayout: React.FC = () => {
             </div>
 
             <div>
-              <h4 className="text-[#00ead0] font-black mb-8 uppercase tracking-[0.2em] text-[12px]">
+              <h4 className="text-brand-primary font-black mb-8 uppercase tracking-[0.2em] text-[12px]">
                 GET_IN_TOUCH
               </h4>
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
-                  <Mail className="h-5 w-5 text-[#00ead0] shrink-0" />
+                  <Mail className="h-5 w-5 text-brand-primary shrink-0" />
                   <div>
-                    <span className="block text-[9px] font-black text-[#00ead0] tracking-widest mb-1 uppercase opacity-60">ELECTRONIC_MAIL</span>
+                    <span className="block text-[9px] font-black text-brand-primary tracking-widest mb-1 uppercase opacity-60">ELECTRONIC_MAIL</span>
                     <span className="text-[13px] font-black break-all">{settings?.contactEmail || 'INFO.SMARTHAAT38@GMAIL.COM'}</span>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
-                  <MapPin className="h-5 w-5 text-[#00ead0] shrink-0" />
+                  <MapPin className="h-5 w-5 text-brand-primary shrink-0" />
                   <div>
-                    <span className="block text-[9px] font-black text-[#00ead0] tracking-widest mb-1 uppercase opacity-60">LOCATION_BASE</span>
+                    <span className="block text-[9px] font-black text-brand-primary tracking-widest mb-1 uppercase opacity-60">LOCATION_BASE</span>
                     <span className="text-[13px] font-black uppercase">{settings?.contactAddress || 'DHAKA, BANGLADESH'}</span>
                   </div>
                 </div>
@@ -597,13 +586,13 @@ export const UserLayout: React.FC = () => {
             </div>
 
             <div>
-              <h4 className="text-[#00ead0] font-black mb-8 uppercase tracking-[0.2em] text-[12px]">
+              <h4 className="text-brand-primary font-black mb-8 uppercase tracking-[0.2em] text-[12px]">
                 EMERGENCY_LINK
               </h4>
               <div className="flex items-center gap-4">
-                <Phone className="h-5 w-5 text-[#00ead0]" />
+                <Phone className="h-5 w-5 text-brand-primary" />
                 <div>
-                  <span className="block text-[9px] font-black text-[#00ead0] tracking-widest mb-1 uppercase opacity-60">VOICE_SUPPORT</span>
+                  <span className="block text-[9px] font-black text-brand-primary tracking-widest mb-1 uppercase opacity-60">VOICE_SUPPORT</span>
                   <span className="text-[16px] font-black tracking-tighter text-white">
                     {settings?.contactPhone || '+880 1XXX XXXXXX'}
                   </span>

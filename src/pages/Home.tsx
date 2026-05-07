@@ -246,7 +246,7 @@ const Home = () => {
       {/* Full Width Hero Section */}
       <section className="pt-0 md:pt-0 pb-1 md:pb-4 w-full">
         <div className="w-full max-w-[1536px] mx-auto px-0 md:px-16 lg:px-24 overflow-hidden">
-          <div className="flex flex-col lg:flex-row items-stretch w-full min-h-[140px] md:min-h-[280px] lg:h-[450px] rounded-none overflow-hidden border-x-0 border-y-2 md:border-2 border-[#777] bg-white">
+          <div className="flex flex-col lg:flex-row items-stretch w-full min-h-[100px] md:min-h-[200px] lg:h-[350px] rounded-none overflow-hidden border-x-0 border-y-2 md:border-2 border-[#777] bg-white">
             {/* Category Sidebar/Offer - HIDDEN ON MOBILE, VISIBLE ON DESKTOP */}
             <div className="hidden lg:flex lg:w-72 bg-white lg:border-r-2 border-[#777] flex-col flex-shrink-0 lg:overflow-visible">
                 {settings?.sidebar?.showCategories ? (

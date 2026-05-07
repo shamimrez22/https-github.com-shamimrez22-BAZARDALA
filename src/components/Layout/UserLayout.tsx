@@ -157,8 +157,8 @@ export const UserLayout: React.FC = () => {
       className="min-h-screen flex flex-col bg-white text-slate-900 font-sans overflow-x-hidden transition-all duration-300"
       style={{ 
         paddingTop: settings?.ads?.topScrollingNotice?.active 
-          ? (window.innerWidth < 768 ? '112px' : '144px') 
-          : (window.innerWidth < 768 ? '80px' : '104px') 
+          ? (window.innerWidth < 768 ? '96px' : '120px') 
+          : (window.innerWidth < 768 ? '64px' : '84px') 
       }}
     >
       {/* Top Stack (Fixed) */}
@@ -175,7 +175,7 @@ export const UserLayout: React.FC = () => {
 
         {/* Header Navigation */}
         <header className="w-full border-b-2 border-slate-900 bg-white transition-all shadow-md shrink-0">
-          <div className="w-full max-w-[1536px] mx-auto px-4 md:px-16 lg:px-24 h-14 md:h-20 flex items-center justify-between">
+          <div className="w-full max-w-[1536px] mx-auto px-4 md:px-16 lg:px-24 h-12 md:h-16 flex items-center justify-between">
             <div className="flex items-center gap-10">
               <div className="flex items-center gap-2 md:gap-3 group cursor-pointer">
                 <div 

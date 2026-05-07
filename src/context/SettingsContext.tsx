@@ -42,6 +42,13 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
               textColor: '#000000',
               bgColor: '#ffffff',
               ...(data.ads?.floatingNotice || {})
+            },
+            topScrollingNotice: {
+              active: false,
+              text: '',
+              textColor: '#ffffff',
+              bgColor: '#9B2B2C',
+              ...(data.ads?.topScrollingNotice || {})
             }
           }
         };

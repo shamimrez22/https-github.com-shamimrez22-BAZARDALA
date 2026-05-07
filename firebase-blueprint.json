@@ -80,7 +80,30 @@
         "footerSupportLinks": { "type": "array", "items": { "type": "object", "properties": { "label": { "type": "string" }, "url": { "type": "string" } } } },
         "footerCompanyLinks": { "type": "array", "items": { "type": "object", "properties": { "label": { "type": "string" }, "url": { "type": "string" } } } },
         "socialLinks": { "type": "array", "items": { "type": "object", "properties": { "platform": { "type": "string" }, "url": { "type": "string" } } } },
-        "siteDescription": { "type": "string" }
+        "siteDescription": { "type": "string" },
+        "ads": {
+          "type": "object",
+          "properties": {
+            "topScrollingNotice": {
+              "type": "object",
+              "properties": {
+                "active": { "type": "boolean" },
+                "text": { "type": "string" },
+                "textColor": { "type": "string" },
+                "bgColor": { "type": "string" }
+              }
+            },
+            "floatingNotice": {
+              "type": "object",
+              "properties": {
+                "active": { "type": "boolean" },
+                "text": { "type": "string" },
+                "textColor": { "type": "string" },
+                "bgColor": { "type": "string" }
+              }
+            }
+          }
+        }
       }
     }
   },

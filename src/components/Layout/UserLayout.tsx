@@ -153,7 +153,14 @@ export const UserLayout: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-slate-900 font-sans overflow-x-hidden pt-[80px] md:pt-[104px]">
+    <div 
+      className="min-h-screen flex flex-col bg-white text-slate-900 font-sans overflow-x-hidden transition-all duration-300"
+      style={{ 
+        paddingTop: settings?.ads?.topScrollingNotice?.active 
+          ? (window.innerWidth < 768 ? '112px' : '144px') 
+          : (window.innerWidth < 768 ? '80px' : '104px') 
+      }}
+    >
       {/* Top Stack (Fixed) */}
       <div className="fixed top-0 left-0 right-0 z-[100] w-full flex flex-col bg-white shadow-sm">
         {/* Banner Notice (Topmost) */}
@@ -272,6 +279,24 @@ export const UserLayout: React.FC = () => {
             </div>
           </div>
         </header>
+
+        {/* Global Top Scrolling Notice */}
+        {settings?.ads?.topScrollingNotice?.active && (
+          <div 
+            className="h-[32px] md:h-[40px] w-full relative overflow-hidden whitespace-nowrap flex items-center border-b border-slate-900/10 shrink-0"
+            style={{ backgroundColor: settings.ads.topScrollingNotice.bgColor }}
+          >
+            <div 
+              className="animate-marquee inline-block font-black uppercase text-[10px] md:text-[12px] tracking-[0.3em] whitespace-nowrap"
+              style={{ color: settings.ads.topScrollingNotice.textColor }}
+            >
+              <span className="inline-block px-12">{settings.ads.topScrollingNotice.text}</span>
+              <span className="inline-block px-12">{settings.ads.topScrollingNotice.text}</span>
+              <span className="inline-block px-12">{settings.ads.topScrollingNotice.text}</span>
+              <span className="inline-block px-12">{settings.ads.topScrollingNotice.text}</span>
+            </div>
+          </div>
+        )}
 
         {/* Global Notice Banner (Embedded in Sticky Stack) */}
         <AnimatePresence>

@@ -23,21 +23,33 @@ async function startServer() {
     });
     app.use(vite.middlewares);
 
-    // Fallback for SPA in dev mode - handle all non-API requests
+    // Fallback for SPA in dev mode - handle all non-API and non-source requests
     app.use('*', async (req, res, next) => {
-      // Exclude API routes and files with extensions (likely assets)
-      if (req.originalUrl.startsWith('/api') || req.originalUrl.includes('.')) {
+      const urlPath = req.originalUrl;
+      
+      // EXCLUSIONS:
+      // 1. API routes
+      // 2. Vite internal paths (/@vite, /@fs, /@id)
+      // 3. Source files (/src)
+      // 4. Files with extensions that are NOT .html (assets)
+      if (
+        urlPath.startsWith('/api') || 
+        urlPath.startsWith('/@vite') || 
+        urlPath.startsWith('/@fs') || 
+        urlPath.startsWith('/@id') ||
+        urlPath.startsWith('/src') ||
+        (urlPath.includes('.') && !urlPath.endsWith('.html'))
+      ) {
         return next();
       }
 
-      const url = req.originalUrl;
       try {
         let template = await fs.readFile(
           path.resolve(__dirname, 'index.html'),
           'utf-8',
         );
 
-        template = await vite.transformIndexHtml(url, template);
+        template = await vite.transformIndexHtml(urlPath, template);
         res.status(200).set({ 'Content-Type': 'text/html' }).end(template);
       } catch (e) {
         vite.ssrFixStacktrace(e as Error);

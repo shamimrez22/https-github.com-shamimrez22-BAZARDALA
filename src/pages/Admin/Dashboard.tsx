@@ -8,17 +8,15 @@ import {
   limit, 
   getCountFromServer,
   getDocs,
-  where
+  where,
+  getDoc,
+  setDoc,
+  doc as firestoreDoc
 } from 'firebase/firestore';
 import { db, auth } from '../../firebase';
 import { useAuth } from '../../context/AuthContext';
 import { useSettings } from '../../context/SettingsContext';
 import { Order } from '../../types';
-import { 
-  getDoc,
-  setDoc,
-  doc as firestoreDoc
-} from 'firebase/firestore';
 import { 
   TrendingUp, 
   Users, 

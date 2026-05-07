@@ -102,6 +102,13 @@ export interface SiteSettings {
       bgColor: string;
       speed?: number;
     };
+    topScrollingNotice?: {
+      active: boolean;
+      text: string;
+      textColor: string;
+      bgColor: string;
+      speed?: number;
+    };
     adsterra?: {
       enabled: boolean;
       popunderCode: string;

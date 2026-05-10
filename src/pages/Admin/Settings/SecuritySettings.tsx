@@ -41,11 +41,11 @@ const SecuritySettings = () => {
   return (
     <div className="space-y-6">
       <Card className="rounded-none border-[#777] bg-white shadow-lg overflow-hidden border-t-4 border-t-[#9B2B2C]">
-        <CardHeader className="bg-slate-900 text-white py-4 flex flex-row items-center justify-between">
+        <CardHeader className="bg-brand-primary text-white py-4 flex flex-row items-center justify-between">
           <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
             <Shield className="h-4 w-4" /> Admin Access Vault
           </CardTitle>
-          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-[#9B2B2C] hover:bg-slate-800 h-8 font-black uppercase text-[9px]">
+          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-white text-brand-primary hover:bg-slate-100 h-8 font-black uppercase text-[9px]">
             {saving ? 'Processing...' : <><Save className="mr-2 h-3 w-3" /> Secure Save</>}
           </Button>
         </CardHeader>

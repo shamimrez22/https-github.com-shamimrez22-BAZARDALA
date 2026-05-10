@@ -32,6 +32,23 @@ import { useProducts } from '../context/ProductContext';
 import { ProductCard } from '../components/ProductCard';
 import { SiteSettings } from '../types';
 
+const SmartLink = ({ to, children, className, ...props }: { to?: string; children: React.ReactNode; className?: string; [key: string]: any }) => {
+  if (!to) return <div className={className} {...props}>{children}</div>;
+  const isExternal = to.startsWith('http') || to.startsWith('//');
+  if (isExternal) {
+    return (
+      <a href={to} target="_blank" rel="noopener noreferrer" className={className} {...props}>
+        {children}
+      </a>
+    );
+  }
+  return (
+    <Link to={to} className={className} {...props}>
+      {children}
+    </Link>
+  );
+};
+
 const defaultBanners = [
   {
     id: 1,
@@ -73,7 +90,7 @@ const categories = [
 
 const SpecialOfferNode = ({ settings }: { settings: any }) => (
   <div className="flex-1 flex flex-col overflow-hidden group min-h-[300px] lg:min-h-0 bg-slate-900 border-0">
-    <Link to={settings?.sidebar?.offerLink || '/shop'} className="flex-1 relative overflow-hidden group">
+    <SmartLink to={settings?.sidebar?.offerLink || '/shop'} className="flex-1 relative overflow-hidden group">
       {/* Background Media */}
       <div className="absolute inset-0 w-full h-full overflow-hidden">
         <video 
@@ -119,7 +136,7 @@ const SpecialOfferNode = ({ settings }: { settings: any }) => (
           <div className="h-1 w-0 bg-brand-primary mt-3 group-hover:w-full transition-all duration-700" />
         </div>
       </div>
-    </Link>
+    </SmartLink>
   </div>
 );
 
@@ -246,12 +263,12 @@ const Home = () => {
       {/* Full Width Hero Section */}
       <section className="pt-0 md:pt-0 pb-1 md:pb-4 w-full">
         <div className="w-full max-w-[1536px] mx-auto px-0 md:px-16 lg:px-24 overflow-hidden">
-          <div className="flex flex-col lg:flex-row items-stretch w-full min-h-[140px] md:min-h-[260px] lg:h-[420px] rounded-none overflow-hidden border-x-0 border-y-2 md:border-2 border-[#777] bg-white">
+<div className="flex flex-col lg:flex-row items-stretch w-full min-h-[140px] md:min-h-[260px] lg:h-[420px] rounded-none overflow-hidden border-b border-slate-100 bg-white">
             {/* Category Sidebar/Offer - HIDDEN ON MOBILE, VISIBLE ON DESKTOP */}
-            <div className="hidden lg:flex lg:w-72 bg-white lg:border-r-2 border-[#777] flex-col flex-shrink-0 lg:overflow-visible">
+            <div className="hidden lg:flex lg:w-72 bg-white flex-col flex-shrink-0 lg:overflow-visible">
                 {settings?.sidebar?.showCategories ? (
                   <>
-                    <div className="bg-[#f8f8f8] p-4 flex-shrink-0 border-b-2 border-[#777] relative overflow-hidden">
+                    <div className="bg-[#f8f8f8] p-4 flex-shrink-0 border-b border-slate-100 relative overflow-hidden">
                       <div className="absolute top-0 right-0 p-2 opacity-5">
                          <List className="h-10 w-10 text-brand-primary" />
                       </div>
@@ -265,7 +282,7 @@ const Home = () => {
                           <Link 
                             key={i} 
                             to={`/shop?cat=${cat.name.toLowerCase()}`}
-                            className="flex items-center justify-between px-6 py-3.5 hover:bg-[#f8f8f8] transition-all group border-b border-[#777]/5 last:border-0"
+                            className="flex items-center justify-between px-6 py-3.5 hover:bg-[#f8f8f8] transition-all group border-b border-slate-50 last:border-0"
                           >
                             <div className="flex items-center gap-4">
                               <cat.icon className="h-4 w-4 text-brand-primary" />
@@ -277,11 +294,11 @@ const Home = () => {
                       </div>
                     </div>
                     {/* Offer visible below categories on desktop */}
-                    <div className="border-t-2 border-[#777] h-[140px] flex-shrink-0">
+                    <div className="border-t border-slate-100 h-[140px] flex-shrink-0">
                        <SpecialOfferNode settings={settings} />
                     </div>
-                    <div className="p-4 bg-white border-t-2 border-[#777] flex-shrink-0">
-                       <Link to="/shop" className="block w-full py-3 bg-brand-primary text-white text-[11px] font-black uppercase tracking-widest hover:bg-slate-900 transition-all text-center rounded-none shadow-md">
+                    <div className="p-4 bg-white border-t border-slate-100 flex-shrink-0">
+                       <Link to="/shop" className="block w-full py-3 bg-brand-primary text-white text-[11px] font-black uppercase tracking-widest hover:opacity-90 transition-all text-center rounded-none">
                          VIEW ALL
                        </Link>
                     </div>
@@ -290,6 +307,7 @@ const Home = () => {
                   <SpecialOfferNode settings={settings} />
                 )}
             </div>
+
             {/* Main Image Slider */}
             <div className={`flex-1 relative bg-white overflow-hidden group h-full`}>
               <AnimatePresence mode="wait">
@@ -301,14 +319,16 @@ const Home = () => {
                     transition={{ duration: 0.4, ease: "easeOut" }}
                     className="absolute inset-0"
                   >
-                  {banners[currentSlide] && (
-                    <img
-                      src={banners[currentSlide].image || 'https://picsum.photos/seed/slide/1920/1080'}
-                      alt={banners[currentSlide].title || 'Slide Image'}
-                      className="w-full h-full object-cover"
-                      referrerPolicy="no-referrer"
-                    />
-                  )}
+                  <SmartLink to={banners[currentSlide]?.link || '/shop'} className="block h-full w-full">
+                    {banners[currentSlide] && (
+                      <img
+                        src={banners[currentSlide].image || 'https://picsum.photos/seed/slide/1920/1080'}
+                        alt={banners[currentSlide].title || 'Slide Image'}
+                        className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                        referrerPolicy="no-referrer"
+                      />
+                    )}
+                  </SmartLink>
                 </motion.div>
               </AnimatePresence>
 
@@ -353,7 +373,7 @@ const Home = () => {
               rel="noopener noreferrer"
               className="block group relative overflow-hidden rounded-none"
             >
-              <div className="bg-slate-900 h-20 md:h-28 flex items-center justify-center relative border-2 border-slate-900 hover:border-brand-primary transition-all">
+              <div className="bg-slate-900 h-20 md:h-28 flex items-center justify-center relative hover:bg-black transition-all">
                 <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '15px 15px' }} />
                 <div className="relative z-10 text-center">
                   <span className="inline-block px-4 py-1 bg-brand-primary text-white text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] mb-1 rounded-none">SPECIAL OFFER</span>
@@ -369,8 +389,9 @@ const Home = () => {
       {settings?.ads?.floatingNotice?.active && settings?.ads?.floatingNotice?.text && (
         <section className="py-2 w-full">
           <div className="w-full max-w-[1536px] mx-auto px-4 md:px-16 lg:px-24">
-            <div 
-              className="relative overflow-hidden whitespace-nowrap h-8 md:h-10 flex items-center border-y border-slate-900/5 bg-slate-50"
+            <SmartLink 
+              to={settings.ads.floatingNotice.link}
+              className="relative overflow-hidden whitespace-nowrap h-8 md:h-10 flex items-center border-y border-slate-900/5 bg-slate-50 hover:opacity-90 block"
               style={{ backgroundColor: settings.ads.floatingNotice.bgColor }}
             >
               <div 
@@ -381,7 +402,7 @@ const Home = () => {
                 <span className="inline-block px-8">{settings.ads.floatingNotice.text}</span>
                 <span className="inline-block px-8">{settings.ads.floatingNotice.text}</span>
               </div>
-            </div>
+            </SmartLink>
           </div>
         </section>
       )}
@@ -392,13 +413,14 @@ const Home = () => {
       {settings?.ads?.adsterra?.bannerThreeCode && (
         <section className="py-3 w-full">
           <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24">
-             <a href={settings.ads.adsterra.bannerThreeCode} target="_blank" rel="noopener noreferrer" className="block relative overflow-hidden group">
-               <div className="bg-white border-2 border-[#777] p-8 text-center shadow-xl hover:bg-slate-50 transition-all rounded-none relative overflow-hidden">
-                  <span className="text-[10px] font-black uppercase text-brand-primary tracking-[0.4em] mb-3 block animate-pulse">Fast Delivery Active</span>
-                  <h4 className="text-3xl md:text-4xl font-black text-slate-900 uppercase tracking-tighter">SHOP OUR BESTSELLERS</h4>
-                  <p className="text-[9px] font-black text-slate-400 uppercase mt-4 tracking-[0.5em]">100% Secure Shopping - Satisfaction Guaranteed</p>
+             <a href={settings.ads.adsterra.bannerThreeCode} target="_blank" rel="noopener noreferrer" className="block relative h-full group">
+               <div className="bg-brand-primary p-8 text-center hover:opacity-90 transition-all rounded-none relative overflow-hidden">
+                  <span className="text-[10px] font-black uppercase text-white tracking-[0.4em] mb-3 block animate-pulse">Fast Delivery Active</span>
+                  <h4 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tighter">SHOP OUR BESTSELLERS</h4>
+                  <p className="text-[9px] font-black text-white/50 uppercase mt-4 tracking-[0.5em]">100% Secure Shopping - Satisfaction Guaranteed</p>
                </div>
              </a>
+
           </div>
         </section>
       )}
@@ -406,7 +428,7 @@ const Home = () => {
       {/* Curated Grid Selection */}
       <section className="py-2 md:py-6 w-full bg-[#fcfcfc]">
         <div className="w-full max-w-[1536px] mx-auto px-4 md:px-16 lg:px-24">
-          <div className="flex flex-col md:flex-row items-center justify-between mb-2 md:mb-4 gap-2 md:gap-6 border-b-2 border-brand-primary pb-1.5 md:pb-2">
+          <div className="flex flex-col md:flex-row items-center justify-between mb-2 md:mb-4 gap-2 md:gap-6 border-b border-brand-primary/20 pb-1.5 md:pb-2">
             <div className="text-center md:text-left">
               <h2 className="text-sm md:text-lg font-black uppercase tracking-tighter text-slate-900 leading-none">THE_COLLECTIONS</h2>
               <div className="flex items-center justify-center md:justify-start gap-2 mt-0.5">
@@ -414,10 +436,11 @@ const Home = () => {
                  <p className="text-[6px] md:text-[8px] font-black text-slate-400 uppercase tracking-[0.2em]">Verified Inventory Catalog</p>
               </div>
             </div>
-            <Link to="/shop" className="hidden md:flex group items-center gap-4 bg-slate-900 text-white px-6 py-2 text-[8px] font-black uppercase tracking-[0.2em] hover:bg-brand-primary transition-all rounded-none shadow-xl hover:scale-[1.02] active:scale-[0.98]">
+            <Link to="/shop" className="hidden md:flex group items-center gap-4 bg-slate-900 text-white px-6 py-2 text-[8px] font-black uppercase tracking-[0.2em] hover:bg-brand-primary transition-all rounded-none active:scale-[0.98]">
               CATALOG_DIR <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1.5 transition-transform" />
             </Link>
           </div>
+
           
           <div className="grid grid-cols-3 md:grid-cols-6 gap-3 md:gap-8">
             {[
@@ -459,7 +482,7 @@ const Home = () => {
         <section className="py-2 w-full">
           <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24">
              <a href={settings.ads.adsterra.bannerFourCode} target="_blank" rel="noopener noreferrer" className="block group">
-                <div className="bg-slate-900 rounded-none h-24 flex items-center justify-center p-4 relative overflow-hidden shadow-xl border-2 border-[#777] transition-all hover:scale-[1.01]">
+                <div className="bg-slate-900 rounded-none h-24 flex items-center justify-center p-4 relative overflow-hidden transition-all hover:bg-black">
                    <div className="absolute top-0 right-0 p-3 opacity-10">
                       <Zap className="h-16 w-16 text-white" />
                    </div>
@@ -469,6 +492,7 @@ const Home = () => {
                    </div>
                 </div>
              </a>
+
           </div>
         </section>
       )}
@@ -502,24 +526,24 @@ const Home = () => {
            {/* Spreadsheet Container */}
            <div className="bg-white border border-slate-300 rounded-none overflow-hidden shadow-sm">
             {/* XL Header Bar */}
-            <div className="bg-slate-100 border-b border-slate-300 px-4 py-1.5 flex items-center justify-between">
+            <div className="bg-brand-primary px-4 py-1.5 flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1">
-                  <div className="w-2.5 h-2.5 bg-green-500 rounded-full" />
-                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tight">Sheet1: Live_Inventory</span>
+                  <div className="w-2.5 h-2.5 bg-white rounded-full animate-pulse" />
+                  <span className="text-[10px] font-bold text-white uppercase tracking-tight">Sheet1: Live_Inventory</span>
                 </div>
-                <div className="h-4 w-[1px] bg-slate-300" />
-                <span className="text-[10px] font-black text-brand-primary uppercase tracking-widest">{settings?.countdown?.text || 'SALE_DISPATCH'}</span>
+                <div className="h-4 w-[1px] bg-white/20" />
+                <span className="text-[10px] font-black text-white uppercase tracking-widest">{settings?.countdown?.text || 'SALE_DISPATCH'}</span>
               </div>
               <div className="flex gap-2">
-                <div className="w-2 h-2 rounded-full bg-slate-300" />
-                <div className="w-2 h-2 rounded-full bg-slate-300" />
+                <div className="w-2 h-2 rounded-full bg-white/20" />
+                <div className="w-2 h-2 rounded-full bg-white/20" />
               </div>
             </div>
 
             <div className="p-0">
               {/* Data Controls / Timer Section */}
-              <div className="flex flex-col lg:flex-row border-b border-slate-200">
+              <div className="flex flex-col lg:flex-row border-b border-slate-100">
                 <div className="flex-1 p-6 md:p-10 bg-slate-50/50">
                   <div className="space-y-1">
                     <h2 className="text-xl md:text-3xl font-black text-slate-900 uppercase tracking-tighter leading-none">FLASH SALE</h2>
@@ -527,7 +551,7 @@ const Home = () => {
                   </div>
                 </div>
                 
-                <div className="lg:w-auto p-6 md:px-12 flex flex-col justify-center items-center bg-white border-l border-slate-200">
+                <div className="lg:w-auto p-6 md:px-12 flex flex-col justify-center items-center bg-white border-l border-slate-100">
                     <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4">EXPIRATION_TIMER</p>
                     <div className="flex gap-3">
                       {[
@@ -536,13 +560,14 @@ const Home = () => {
                         { val: timeLeft.secs, label: 'S' },
                       ].map((t, i) => (
                         <div key={i} className="flex items-center gap-2">
-                          <div className="bg-slate-900 text-white w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-lg md:text-xl font-mono font-black border border-slate-900">{t.val}</div>
+                          <div className="bg-slate-900 text-white w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-lg md:text-xl font-mono font-black">{t.val}</div>
                           {i < 2 && <span className="text-slate-300 font-black">:</span>}
                         </div>
                       ))}
                     </div>
                 </div>
               </div>
+
               
               {/* The "Sheet" Grid */}
               <div className="p-4 md:p-8 bg-white grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-0 border-collapse">
@@ -583,9 +608,9 @@ const Home = () => {
         <section className="pt-0.5 pb-2 w-full">
           <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24">
              <a href={settings.ads.adsterra.bannerSixCode} target="_blank" rel="noopener noreferrer" className="block group">
-                <div className="bg-white rounded-none p-5 flex flex-col md:flex-row items-center justify-between gap-5 hover:bg-[#f8f8f8] transition-all shadow-xl border-2 border-[#777] group overflow-hidden relative">
+                <div className="bg-white rounded-none p-5 flex flex-col md:flex-row items-center justify-between gap-5 hover:bg-[#f8f8f8] transition-all border border-slate-100 group overflow-hidden relative">
                    <div className="flex items-center gap-6 relative z-10">
-                      <div className="w-16 h-16 bg-slate-900 rounded-none border-2 border-slate-900 flex items-center justify-center shadow-lg group-hover:bg-brand-primary transition-all duration-500">
+                      <div className="w-16 h-16 bg-slate-900 rounded-none flex items-center justify-center group-hover:bg-brand-primary transition-all duration-500">
                         <Truck className="h-8 w-8 text-white" />
                       </div>
                       <div className="text-center md:text-left">
@@ -593,11 +618,12 @@ const Home = () => {
                         <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em]">Shipment update - On the way</p>
                       </div>
                    </div>
-                   <div className="px-10 py-3 bg-slate-900 text-white font-black uppercase text-[11px] tracking-[0.25em] group-hover:bg-brand-primary transition-all rounded-none shadow-lg border-2 border-slate-900 relative z-10">
+                   <div className="px-10 py-3 bg-slate-900 text-white font-black uppercase text-[11px] tracking-[0.25em] group-hover:bg-brand-primary transition-all rounded-none relative z-10">
                       ORDER NOW
                    </div>
                 </div>
              </a>
+
           </div>
         </section>
       )}

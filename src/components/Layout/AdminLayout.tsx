@@ -51,7 +51,7 @@ import { toast } from 'sonner';
 import { useSettings } from '../../context/SettingsContext';
 
 export const AdminLayout: React.FC = () => {
-  const { user, profile, logoutAdmin, isAdmin, loading: authLoading } = useAuth();
+  const { user, profile, logout, isAdmin, isSuperAdmin, loading: authLoading } = useAuth();
   const { settings } = useSettings();
   const navigate = useNavigate();
   const location = useLocation();
@@ -59,6 +59,24 @@ export const AdminLayout: React.FC = () => {
   const [expandedItems, setExpandedItems] = useState<string[]>(['Products', 'Orders']);
   const [pendingOrdersCount, setPendingOrdersCount] = useState(0);
   const [recentNotifications, setRecentNotifications] = useState<any[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!searchTerm.trim()) return;
+    
+    const term = searchTerm.trim().toLowerCase();
+    
+    // Logic: 
+    // If it looks like an order (numeric or starts with #), go to orders
+    // Otherwise go to customers
+    if (term.startsWith('#') || /^\d+$/.test(term)) {
+      navigate(`/admin/orders?search=${encodeURIComponent(term)}`);
+    } else {
+      navigate(`/admin/customers?search=${encodeURIComponent(term)}`);
+    }
+    setSearchTerm('');
+  };
 
   // Close sidebar on mobile when navigating
   useEffect(() => {
@@ -146,8 +164,7 @@ export const AdminLayout: React.FC = () => {
   }, [navigate, authLoading, isAdmin, recentNotifications.length]);
 
   const handleLogout = async () => {
-    await signOut(auth);
-    logoutAdmin();
+    await logout();
     navigate('/admin/login');
   };
 
@@ -164,6 +181,7 @@ export const AdminLayout: React.FC = () => {
     { label: 'All Orders', icon: ShoppingCart, path: '/admin/orders' },
     { label: 'Pending Orders', icon: Timer, path: '/admin/orders?status=pending', badge: pendingOrdersCount > 0 ? pendingOrdersCount : null },
     { label: 'Customers', icon: Users, path: '/admin/customers' },
+    ...(isSuperAdmin ? [{ label: 'Staff Management', icon: Users, path: '/admin/staff' }] : []),
     { label: 'Slider Banners', icon: ImageIcon, path: '/admin/slider' },
     { label: 'Limited Offers', icon: Zap, path: '/admin/limited-offers' },
     { label: 'Categories', icon: List, path: '/admin/categories' },
@@ -177,26 +195,26 @@ export const AdminLayout: React.FC = () => {
     const isActive = location.pathname === item.path;
 
     return (
-      <div className="mb-2">
+      <div className="mb-0">
         <button
           onClick={() => {
             navigate(item.path);
             if (window.innerWidth < 1024) setIsSidebarOpen(false);
           }}
-          className={`w-full flex items-center justify-between px-5 py-4 border-2 transition-all cursor-pointer ${
+          className={`w-full flex items-center justify-between px-6 py-4 transition-all cursor-pointer border-b border-slate-100 ${
             isActive 
-              ? 'bg-[#9B2B2C] text-white border-slate-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]' 
-              : 'bg-white text-slate-800 hover:bg-[#ead9c4] border-slate-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
+              ? 'bg-brand-primary text-white' 
+              : 'bg-white text-slate-600 hover:bg-slate-50'
           }`}
         >
           <div className="flex items-center gap-4">
-            <item.icon className={`h-4.5 w-4.5 ${isActive ? 'text-white' : 'text-[#9B2B2C]'}`} />
-            <span className="font-black text-[12px] uppercase tracking-tighter">{item.label}</span>
+            <item.icon className={`h-4.5 w-4.5 ${isActive ? 'text-white' : 'text-brand-primary'}`} />
+            <span className="font-black text-[11px] uppercase tracking-tighter">{item.label}</span>
           </div>
           {item.badge && (
-            <Badge className={`${isActive ? 'bg-white text-[#9B2B2C]' : 'bg-rose-600 text-white'} border-none h-5 min-w-5 flex items-center justify-center p-0 text-[9px] font-black shadow-sm`}>
+            <div className={`${isActive ? 'bg-white text-brand-primary' : 'bg-brand-primary text-white'} h-5 min-w-5 px-1.5 flex items-center justify-center text-[9px] font-black`}>
               {item.badge}
-            </Badge>
+            </div>
           )}
         </button>
       </div>
@@ -204,7 +222,7 @@ export const AdminLayout: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex bg-[#f4e4d4] text-slate-900 overflow-x-hidden">
+    <div className="min-h-screen flex bg-slate-100 text-slate-900 overflow-x-hidden">
       {/* Sidebar Overlay for Mobile */}
       <AnimatePresence>
         {isSidebarOpen && (
@@ -213,41 +231,49 @@ export const AdminLayout: React.FC = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsSidebarOpen(false)}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+            className="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-40 lg:hidden"
           />
         )}
       </AnimatePresence>
 
-      {/* Sidebar */}
+      {/* Sidebar - Sheet Selector Style */}
       <aside 
-        className={`fixed inset-y-0 left-0 z-[100] w-72 bg-[#ead9c4] border-r border-[#777] transition-transform duration-300 lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-[100] w-64 bg-white border-r border-slate-200 transition-transform duration-300 lg:translate-x-0 ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        } flex flex-col`}
       >
         <div className="flex flex-col h-full">
-          {/* Logo */}
-          <div className="p-8 border-b border-[#777] bg-[#9B2B2C] flex items-center justify-between">
-            <Link to="/admin" className="flex items-center gap-4 group px-2">
-              <div className="w-14 h-14 bg-white rounded-lg flex items-center justify-center text-[#9B2B2C] shadow-lg group-hover:rotate-[10deg] transition-all">
-                <ShoppingBasket className="h-7 w-7" />
+          {/* Logo / Brand Bar */}
+          <div className="h-12 bg-brand-primary flex items-center px-4 flex-shrink-0">
+            <Link to="/admin" className="flex items-center gap-3 group">
+              <div className="w-8 h-8 bg-white flex items-center justify-center text-brand-primary font-black text-sm">
+                {(settings?.siteName || 'SS').substring(0, 2).toUpperCase()}
               </div>
-              <div>
-                <h1 className="text-xl font-black tracking-tighter text-white uppercase leading-none">
-                  {(settings?.siteName || 'BAZAR DALA').split(' ')[0]}
-                  <span className="text-yellow-400">
-                    {' '}{(settings?.siteName || 'BAZAR DALA').split(' ').slice(1).join(' ')}
-                  </span> Admin
-                </h1>
-                <p className="text-[9px] font-black text-white/50 uppercase tracking-[0.3em] mt-1.5 font-mono">Store Management // v3.0</p>
-              </div>
+              <h1 className="text-sm font-black tracking-tighter text-white uppercase leading-none">
+                ADMIN_PANEL
+              </h1>
             </Link>
-            <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(false)} className="lg:hidden text-white/70 hover:text-white">
-              <X className="h-6 w-6" />
+            <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(false)} className="lg:hidden ml-auto text-white/70 hover:text-white">
+              <X className="h-5 w-5" />
             </Button>
           </div>
 
-          {/* Navigation */}
-          <nav className="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar">
+          {/* User Brief */}
+          <div className="p-4 bg-slate-50 border-b border-slate-200 flex items-center gap-3">
+             <div className="w-10 h-10 bg-slate-200 flex items-center justify-center overflow-hidden">
+                {profile?.photoURL ? <img src={profile.photoURL} className="w-full h-full object-cover" /> : <CircleUser className="h-6 w-6 text-slate-400" />}
+             </div>
+             <div className="min-w-0">
+                <p className="text-[10px] font-black text-slate-900 truncate uppercase">{profile?.name || 'ADMIN'}</p>
+                <div className="flex items-center gap-1">
+                   <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+                   <span className="text-[8px] font-bold text-slate-400 uppercase">Live_Node</span>
+                </div>
+             </div>
+          </div>
+
+          {/* Navigation - Sheet Tabs Look */}
+          <nav className="flex-1 overflow-y-auto p-0 space-y-0 custom-scrollbar">
               {menuItems.map(item => (
                 <div key={item.label}>
                   <SidebarItem item={item} />
@@ -256,84 +282,85 @@ export const AdminLayout: React.FC = () => {
           </nav>
 
           {/* Sidebar Footer */}
-          <div className="p-4 border-t border-[#777] bg-[#ead9c4]">
+          <div className="p-3 border-t border-slate-200 bg-white">
             <button 
               onClick={handleLogout}
-              className="w-full flex items-center gap-3 px-4 py-4 rounded-none text-rose-700 hover:bg-rose-50 transition-colors font-black text-[11px] uppercase border border-rose-200"
+              className="w-full flex items-center gap-3 px-4 py-3 text-rose-700 hover:bg-rose-50 transition-colors font-black text-[10px] uppercase border border-rose-100"
             >
               <LogOut className="h-4 w-4" />
-              <span>Logout Account</span>
+              <span>TERMINATE_SESSION</span>
             </button>
           </div>
         </div>
       </aside>
 
-      {/* Main Content */}
-      <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ${isSidebarOpen ? 'lg:ml-72' : 'ml-0'}`}>
-        {/* Header */}
+      {/* Main Content Area */}
+      <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ${isSidebarOpen ? 'lg:ml-64' : 'ml-0'}`}>
+        {/* Header - Spreadsheet Ribbon Bar */}
         <header 
-          className="h-16 bg-[#ead9c4] border-b border-[#777] fixed top-0 right-0 z-[60] px-6 flex items-center justify-between shadow-md transition-all duration-300 left-0 lg:left-0"
-          style={{ 
-            left: (window.innerWidth >= 1024 && isSidebarOpen) ? '288px' : '0' 
-          }}
+          className="h-12 bg-brand-primary border-b border-white/10 sticky top-0 z-[60] px-4 flex items-center justify-between transition-all duration-300 w-full"
         >
-          <div className="flex items-center gap-4">
-            {/* Desktop Sidebar Toggle */}
+          <div className="flex items-center gap-3">
+            {/* Toggle Button */}
             <Button 
               variant="ghost" 
               size="icon" 
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="text-slate-600 hover:bg-[#d4c1ad] rounded-lg hidden lg:flex"
+              className="text-white/70 hover:bg-white/10 border border-white/10 h-8 w-8"
             >
-              {isSidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              <Menu className="h-4 w-4" />
             </Button>
-
-            {/* Mobile Navigation Trigger - Using Drawer/Sheet style for "Sidebar" feel */}
-            <div className="lg:hidden">
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                onClick={() => setIsSidebarOpen(true)}
-                className="text-slate-600 hover:bg-[#d4c1ad] rounded-lg border border-[#777]/20"
-              >
-                <Menu className="h-6 w-6 text-[#9B2B2C]" />
-              </Button>
-            </div>
-
-            <div className="h-8 w-[1px] bg-[#777]/30 hidden md:block" />
-
-            <nav className="hidden lg:flex items-center gap-4">
-              <Link to="/" className="group flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-[#d4c1ad]">
-                <ExternalLink className="h-4 w-4 text-[#9B2B2C]" />
-                <span className="text-[10px] font-black uppercase tracking-wider text-slate-700">View Store</span>
-              </Link>
-            </nav>
-
-            <div className="h-8 w-[1px] bg-[#777]/30 hidden md:block" />
             
-            <div className="relative hidden md:block w-72">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
-              <Input
-                placeholder="Search..."
-                className="pl-10 bg-white border-[#777] text-slate-900 h-10 rounded-lg focus:ring-1 focus:ring-[#9B2B2C] w-full text-xs"
-              />
+            <div className="h-6 w-[1px] bg-white/10 hidden md:block" />
+            
+            {/* Sheet Identifier */}
+            <div className="flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10">
+               <div className="w-2 h-2 bg-white" />
+               <span className="text-[10px] font-black text-white uppercase tracking-tighter">
+                  {location.pathname.split('/').pop() || 'DASHBOARD'}
+               </span>
             </div>
-          </div>
+ 
+            <div className="h-6 w-[1px] bg-white/10 hidden md:block" />
+ 
+            <Link to="/" className="group flex items-center gap-2 px-3 py-1.5 hover:bg-white/5 transition-colors">
+              <ExternalLink className="h-4 w-4 text-white/50" />
+              <span className="text-[9px] font-black uppercase tracking-tight text-white/50">Live_Storefront</span>
+            </Link>
 
-          <div className="flex items-center gap-3">
+            <div className="h-6 w-[1px] bg-white/10 hidden lg:block mx-2" />
+
+            <form onSubmit={handleSearch} className="hidden md:flex relative group">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-white/40 group-focus-within:text-white transition-colors" />
+              <Input 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="অর্ডার বা কাস্টমার খুঁজুন..."
+                className="h-8 w-48 lg:w-64 bg-white/10 border-white/10 text-white placeholder:text-white/40 text-[10px] font-bold rounded-none pl-10 focus:bg-white/20 focus:border-white/20 transition-all"
+              />
+            </form>
+          </div>
+ 
+          <div className="flex items-center gap-4">
+             <div className="hidden md:flex items-center gap-1 text-[9px] font-bold text-white/40 italic">
+                <Timer className="h-3 w-3" />
+                <span>UPTIME: {format(new Date(), 'HH:mm:ss')}</span>
+             </div>
+ 
+             <div className="h-6 w-[1px] bg-white/10" />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-slate-600 hover:bg-[#d4c1ad] rounded-lg relative">
+                <Button variant="ghost" size="icon" className="text-white/70 hover:bg-white/10 rounded-lg relative">
                   <Bell className="h-5 w-5" />
                   {pendingOrdersCount > 0 && (
-                    <span className="absolute top-1 right-1 w-4 h-4 bg-rose-600 rounded-full border border-white text-[9px] flex items-center justify-center font-black text-white">
+                    <span className="absolute top-1 right-1 w-4 h-4 bg-white rounded-full border border-brand-primary text-[9px] flex items-center justify-center font-black text-brand-primary">
                       {pendingOrdersCount}
                     </span>
                   )}
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-80 bg-white border-[#777] text-slate-900 p-0 rounded-lg shadow-xl">
-                <div className="p-4 bg-[#9B2B2C] text-white flex items-center justify-between">
+                <div className="p-4 bg-brand-primary text-white flex items-center justify-between">
                   <h3 className="font-black uppercase tracking-tight text-sm">Notifications</h3>
                 </div>
                 <div className="max-h-[350px] overflow-y-auto">
@@ -358,13 +385,13 @@ export const AdminLayout: React.FC = () => {
                 </div>
               </DropdownMenuContent>
             </DropdownMenu>
-
-            <div className="h-8 w-[1px] bg-[#777]/30" />
-
+ 
+            <div className="h-8 w-[1px] bg-white/10" />
+ 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-3 p-1 rounded-lg hover:bg-[#d4c1ad] transition-all border border-transparent">
-                  <div className="w-8 h-8 rounded-lg overflow-hidden border border-[#777] bg-white flex items-center justify-center">
+                <button className="flex items-center gap-3 p-1 rounded-lg hover:bg-white/10 transition-all border border-transparent">
+                  <div className="w-8 h-8 rounded-lg overflow-hidden border border-white/20 bg-white flex items-center justify-center">
                     {(profile?.photoURL || user?.photoURL) ? (
                       <img
                         src={profile?.photoURL || user?.photoURL}
@@ -376,8 +403,8 @@ export const AdminLayout: React.FC = () => {
                     )}
                   </div>
               <div className="text-left hidden sm:block">
-                <p className="text-[11px] font-black text-slate-900 leading-none uppercase">{profile?.name || user?.displayName || 'Admin Account'}</p>
-                <p className="text-[8px] font-black text-[#9B2B2C] mt-1">ONLINE_SYNC</p>
+                <p className="text-[11px] font-black text-white leading-none uppercase">{profile?.name || user?.displayName || 'Admin Account'}</p>
+                <p className="text-[8px] font-black text-white/50 mt-1">ONLINE_SYNC</p>
               </div>
                 </button>
               </DropdownMenuTrigger>
@@ -401,9 +428,11 @@ export const AdminLayout: React.FC = () => {
           </div>
         </header>
 
-        {/* Page Content */}
-        <main className="flex-1 p-6 overflow-y-auto mt-16">
-          <Outlet />
+        {/* Page Content - Edge to Edge Sheet Look */}
+        <main className="flex-1 p-0 overflow-y-auto">
+          <div className="h-full w-full bg-white">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

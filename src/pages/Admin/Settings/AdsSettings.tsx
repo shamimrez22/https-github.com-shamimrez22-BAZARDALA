@@ -42,7 +42,7 @@ const AdsSettings = () => {
   return (
     <div className="space-y-6">
       <Card className="rounded-none border-[#777] bg-white shadow-lg overflow-hidden border-t-4 border-t-brand-primary">
-        <CardHeader className="bg-slate-900 text-white py-4 flex flex-row items-center justify-between">
+        <CardHeader className="bg-brand-primary text-white py-4 flex flex-row items-center justify-between">
           <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
             <Megaphone className="h-4 w-4" /> Adsterra Matrix
           </CardTitle>
@@ -57,7 +57,7 @@ const AdsSettings = () => {
                  }}
                />
             </div>
-            <Button onClick={handleSave} disabled={saving} size="sm" className="bg-brand-primary hover:bg-slate-800 h-8 font-black uppercase text-[9px]">
+            <Button onClick={handleSave} disabled={saving} size="sm" className="bg-white text-brand-primary hover:bg-slate-100 h-8 font-black uppercase text-[9px]">
               {saving ? 'Saving...' : <><Save className="mr-2 h-3 w-3" /> Save Module</>}
             </Button>
           </div>
@@ -117,172 +117,341 @@ const AdsSettings = () => {
       </Card>
 
       <Card className="rounded-none border-[#777] bg-white shadow-lg">
-        <CardHeader className="bg-slate-900 text-white py-4 flex flex-row items-center justify-between">
+        <CardHeader className="bg-brand-primary text-white py-4 flex flex-row items-center justify-between">
           <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
             <Zap className="h-4 w-4" /> System Notices & Announcements
           </CardTitle>
-          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-brand-primary hover:bg-slate-800 h-8 font-black uppercase text-[9px]">
+          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-white text-brand-primary hover:bg-slate-100 h-8 font-black uppercase text-[9px]">
             {saving ? 'Saving...' : <><Save className="mr-2 h-3 w-3" /> Save Module</>}
           </Button>
         </CardHeader>
         <CardContent className="p-8 space-y-10">
-           {/* Top Global Scroll */}
-           <div className="p-6 bg-slate-50 border border-slate-200 space-y-6 relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-2 opacity-5">
-                 <Megaphone className="h-20 w-20 text-brand-primary" />
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Switch 
-                    checked={settings.ads?.topScrollingNotice?.active || false}
-                    onCheckedChange={val => {
-                      const newAds = { ...(settings.ads || {}), topScrollingNotice: { ...(settings.ads?.topScrollingNotice || {}), active: val } };
-                      setSettings({...settings, ads: newAds as any});
-                    }}
-                  />
-                  <div>
-                    <Label className="text-[11px] font-black uppercase text-slate-800">Global Top Scroll</Label>
-                    <p className="text-[9px] text-slate-400 font-bold uppercase tracking-tight">Main announcement below header</p>
-                  </div>
-                </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Notice Text</Label>
-                  <Input 
-                    value={settings.ads?.topScrollingNotice?.text || ''}
-                    onChange={e => {
-                      const newAds = { ...(settings.ads || {}), topScrollingNotice: { ...(settings.ads?.topScrollingNotice || {}), text: e.target.value } };
-                      setSettings({...settings, ads: newAds as any});
-                    }}
-                    placeholder="Global important message..."
-                    className="h-12 border-[#777] rounded-none text-[11px] uppercase font-black"
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label className="text-[9px] font-black uppercase text-slate-500">Text Color</Label>
-                    <div className="flex items-center gap-2">
-                      <Input 
-                        type="color" 
-                        value={settings.ads?.topScrollingNotice?.textColor || '#ffffff'}
-                        onChange={e => {
-                          const newAds = { ...(settings.ads || {}), topScrollingNotice: { ...(settings.ads?.topScrollingNotice || {}), textColor: e.target.value } };
-                          setSettings({...settings, ads: newAds as any});
-                        }}
-                        className="h-10 w-12 p-1 border-[#777] rounded-none cursor-pointer"
-                      />
-                      <span className="font-mono text-[9px] font-bold">{settings.ads?.topScrollingNotice?.textColor || '#fff'}</span>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-[9px] font-black uppercase text-slate-500">Notice BG</Label>
-                    <div className="flex items-center gap-2">
-                      <Input 
-                        type="color" 
-                        value={settings.ads?.topScrollingNotice?.bgColor || '#9B2B2C'}
-                        onChange={e => {
-                          const newAds = { ...(settings.ads || {}), topScrollingNotice: { ...(settings.ads?.topScrollingNotice || {}), bgColor: e.target.value } };
-                          setSettings({...settings, ads: newAds as any});
-                        }}
-                        className="h-10 w-12 p-1 border-[#777] rounded-none cursor-pointer"
-                      />
-                      <span className="font-mono text-[9px] font-bold">{settings.ads?.topScrollingNotice?.bgColor || '#9B2B2C'}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-           </div>
+            {/* Top Bar Notice */}
+            <div className="p-6 bg-slate-50 border border-slate-200 space-y-6 relative overflow-hidden">
+               <div className="absolute top-0 right-0 p-2 opacity-5">
+                  <Megaphone className="h-20 w-20 text-brand-primary" />
+               </div>
+               <div className="flex items-center justify-between">
+                 <div className="flex items-center gap-3">
+                   <Switch 
+                     checked={settings.ads?.bannerNotice?.active || false}
+                     onCheckedChange={val => {
+                       const newAds = { ...(settings.ads || {}), bannerNotice: { ...(settings.ads?.bannerNotice || {}), active: val } };
+                       setSettings({...settings, ads: newAds as any});
+                     }}
+                   />
+                   <div>
+                     <Label className="text-[11px] font-black uppercase text-slate-800">Top Bar Notice</Label>
+                     <p className="text-[9px] text-slate-400 font-bold uppercase tracking-tight">Mini banner above header</p>
+                   </div>
+                 </div>
+               </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 <div className="space-y-2">
+                   <Label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Notice Text</Label>
+                   <Input 
+                     value={settings.ads?.bannerNotice?.text || ''}
+                     onChange={e => {
+                       const newAds = { ...(settings.ads || {}), bannerNotice: { ...(settings.ads?.bannerNotice || {}), text: e.target.value } };
+                       setSettings({...settings, ads: newAds as any});
+                     }}
+                     placeholder="Top info bar text..."
+                     className="h-12 border-[#777] rounded-none text-[11px] uppercase font-black"
+                   />
+                 </div>
+                 <div className="space-y-2">
+                   <Label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Notice Link</Label>
+                   <Input 
+                     value={settings.ads?.bannerNotice?.link || ''}
+                     onChange={e => {
+                       const newAds = { ...(settings.ads || {}), bannerNotice: { ...(settings.ads?.bannerNotice || {}), link: e.target.value } };
+                       setSettings({...settings, ads: newAds as any});
+                     }}
+                     placeholder="/shop or https://..."
+                     className="h-12 border-[#777] rounded-none text-[11px]"
+                   />
+                 </div>
+               </div>
+            </div>
 
-           {/* Home/Bottom Scroll */}
-           <div className="p-6 bg-slate-50 border border-slate-200 space-y-6 relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-2 opacity-5">
-                 <Zap className="h-20 w-20 text-brand-primary" />
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Switch 
-                    checked={settings.ads?.floatingNotice?.active || false}
-                    onCheckedChange={val => {
-                      const newAds = { ...(settings.ads || {}), floatingNotice: { ...(settings.ads?.floatingNotice || {}), active: val } };
-                      setSettings({...settings, ads: newAds as any});
-                    }}
-                  />
-                  <div>
-                    <Label className="text-[11px] font-black uppercase text-slate-800">Home/Bottom Scroll</Label>
-                    <p className="text-[9px] text-slate-400 font-bold uppercase tracking-tight">Announcement on Home Page</p>
-                  </div>
-                </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Notice Text</Label>
-                  <Input 
-                    value={settings.ads?.floatingNotice?.text || ''}
-                    onChange={e => {
-                      const newAds = { ...(settings.ads || {}), floatingNotice: { ...(settings.ads?.floatingNotice || {}), text: e.target.value } };
-                      setSettings({...settings, ads: newAds as any});
-                    }}
-                    placeholder="Message for home page..."
-                    className="h-12 border-[#777] rounded-none text-[11px] uppercase font-black"
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label className="text-[9px] font-black uppercase text-slate-500">Text Color</Label>
-                    <div className="flex items-center gap-2">
-                      <Input 
-                        type="color" 
-                        value={settings.ads?.floatingNotice?.textColor || '#000000'}
-                        onChange={e => {
-                          const newAds = { ...(settings.ads || {}), floatingNotice: { ...(settings.ads?.floatingNotice || {}), textColor: e.target.value } };
-                          setSettings({...settings, ads: newAds as any});
-                        }}
-                        className="h-10 w-12 p-1 border-[#777] rounded-none cursor-pointer"
-                      />
-                      <span className="font-mono text-[9px] font-bold">{settings.ads?.floatingNotice?.textColor || '#000'}</span>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-[9px] font-black uppercase text-slate-500">Notice BG</Label>
-                    <div className="flex items-center gap-2">
-                      <Input 
-                        type="color" 
-                        value={settings.ads?.floatingNotice?.bgColor || '#f4e4d4'}
-                        onChange={e => {
-                          const newAds = { ...(settings.ads || {}), floatingNotice: { ...(settings.ads?.floatingNotice || {}), bgColor: e.target.value } };
-                          setSettings({...settings, ads: newAds as any});
-                        }}
-                        className="h-10 w-12 p-1 border-[#777] rounded-none cursor-pointer"
-                      />
-                      <span className="font-mono text-[9px] font-bold">{settings.ads?.floatingNotice?.bgColor || '#f4e4d4'}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-           </div>
+            {/* Top Header Graphic Banner */}
+            <div className="p-6 bg-slate-50 border border-slate-200 space-y-6 relative overflow-hidden">
+               <div className="flex items-center justify-between">
+                 <div className="flex items-center gap-3">
+                   <Switch 
+                     checked={settings.ads?.topHeaderBanner?.active || false}
+                     onCheckedChange={val => {
+                       const newAds = { ...(settings.ads || {}), topHeaderBanner: { ...(settings.ads?.topHeaderBanner || {}), active: val } };
+                       setSettings({...settings, ads: newAds as any});
+                     }}
+                   />
+                   <div>
+                     <Label className="text-[11px] font-black uppercase text-slate-800">Graphic Header Banner</Label>
+                     <p className="text-[9px] text-slate-400 font-bold uppercase tracking-tight">Image banner below header</p>
+                   </div>
+                 </div>
+               </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 <div className="space-y-2">
+                   <Label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Banner Image URL</Label>
+                   <Input 
+                     value={settings.ads?.topHeaderBanner?.imageUrl || ''}
+                     onChange={e => {
+                       const newAds = { ...(settings.ads || {}), topHeaderBanner: { ...(settings.ads?.topHeaderBanner || {}), imageUrl: e.target.value } };
+                       setSettings({...settings, ads: newAds as any});
+                     }}
+                     placeholder="https://..."
+                     className="h-12 border-[#777] rounded-none text-[11px]"
+                   />
+                 </div>
+                 <div className="space-y-2">
+                   <Label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Banner Link</Label>
+                   <Input 
+                     value={settings.ads?.topHeaderBanner?.link || ''}
+                     onChange={e => {
+                       const newAds = { ...(settings.ads || {}), topHeaderBanner: { ...(settings.ads?.topHeaderBanner || {}), link: e.target.value } };
+                       setSettings({...settings, ads: newAds as any});
+                     }}
+                     placeholder="/shop or external"
+                     className="h-12 border-[#777] rounded-none text-[11px]"
+                   />
+                 </div>
+               </div>
+            </div>
 
-           <div className="p-6 bg-slate-50 border border-slate-200 space-y-4">
-              <div className="flex items-center gap-3">
-                <Switch 
-                  checked={settings.ads?.globalNotice?.active || false}
-                  onCheckedChange={val => {
-                    const newAds = { ...(settings.ads || {}), globalNotice: { ...(settings.ads?.globalNotice || {}), active: val } };
-                    setSettings({...settings, ads: newAds as any});
-                  }}
-                />
-                <Label className="text-[11px] font-black uppercase">Service Status Alert</Label>
-              </div>
-              <textarea 
-                value={settings.ads?.globalNotice?.message || ''}
-                onChange={e => {
-                  const newAds = { ...(settings.ads || {}), globalNotice: { ...(settings.ads?.globalNotice || {}), message: e.target.value } };
-                  setSettings({...settings, ads: newAds as any});
-                }}
-                placeholder="Central status message..."
-                className="w-full min-h-[80px] p-4 border border-[#777] text-[11px] font-black uppercase tracking-widest bg-white"
-              />
-           </div>
+            {/* Top Global Scroll */}
+            <div className="p-6 bg-slate-50 border border-slate-200 space-y-6 relative overflow-hidden">
+               <div className="absolute top-0 right-0 p-2 opacity-5">
+                  <Megaphone className="h-20 w-20 text-brand-primary" />
+               </div>
+               <div className="flex items-center justify-between">
+                 <div className="flex items-center gap-3">
+                   <Switch 
+                     checked={settings.ads?.topScrollingNotice?.active || false}
+                     onCheckedChange={val => {
+                       const newAds = { ...(settings.ads || {}), topScrollingNotice: { ...(settings.ads?.topScrollingNotice || {}), active: val } };
+                       setSettings({...settings, ads: newAds as any});
+                     }}
+                   />
+                   <div>
+                     <Label className="text-[11px] font-black uppercase text-slate-800">Global Top Scroll</Label>
+                     <p className="text-[9px] text-slate-400 font-bold uppercase tracking-tight">Main announcement below header</p>
+                   </div>
+                 </div>
+               </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 <div className="space-y-2">
+                   <Label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Notice Text</Label>
+                   <Input 
+                     value={settings.ads?.topScrollingNotice?.text || ''}
+                     onChange={e => {
+                       const newAds = { ...(settings.ads || {}), topScrollingNotice: { ...(settings.ads?.topScrollingNotice || {}), text: e.target.value } };
+                       setSettings({...settings, ads: newAds as any});
+                     }}
+                     placeholder="Global important message..."
+                     className="h-12 border-[#777] rounded-none text-[11px] uppercase font-black"
+                   />
+                 </div>
+                 <div className="space-y-2">
+                   <Label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Link Protocol</Label>
+                   <Input 
+                     value={settings.ads?.topScrollingNotice?.link || ''}
+                     onChange={e => {
+                       const newAds = { ...(settings.ads || {}), topScrollingNotice: { ...(settings.ads?.topScrollingNotice || {}), link: e.target.value } };
+                       setSettings({...settings, ads: newAds as any});
+                     }}
+                     placeholder="/promos or external link"
+                     className="h-12 border-[#777] rounded-none text-[11px]"
+                   />
+                 </div>
+               </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 <div className="grid grid-cols-2 gap-4">
+                   <div className="space-y-2">
+                     <Label className="text-[9px] font-black uppercase text-slate-500">Text Color</Label>
+                     <div className="flex items-center gap-2">
+                       <Input 
+                         type="color" 
+                         value={settings.ads?.topScrollingNotice?.textColor || '#ffffff'}
+                         onChange={e => {
+                           const newAds = { ...(settings.ads || {}), topScrollingNotice: { ...(settings.ads?.topScrollingNotice || {}), textColor: e.target.value } };
+                           setSettings({...settings, ads: newAds as any});
+                         }}
+                         className="h-10 w-12 p-1 border-[#777] rounded-none cursor-pointer"
+                       />
+                       <span className="font-mono text-[9px] font-bold">{settings.ads?.topScrollingNotice?.textColor || '#fff'}</span>
+                     </div>
+                   </div>
+                   <div className="space-y-2">
+                     <Label className="text-[9px] font-black uppercase text-slate-500">Notice BG</Label>
+                     <div className="flex items-center gap-2">
+                       <Input 
+                         type="color" 
+                         value={settings.ads?.topScrollingNotice?.bgColor || '#9B2B2C'}
+                         onChange={e => {
+                           const newAds = { ...(settings.ads || {}), topScrollingNotice: { ...(settings.ads?.topScrollingNotice || {}), bgColor: e.target.value } };
+                           setSettings({...settings, ads: newAds as any});
+                         }}
+                         className="h-10 w-12 p-1 border-[#777] rounded-none cursor-pointer"
+                       />
+                       <span className="font-mono text-[9px] font-bold">{settings.ads?.topScrollingNotice?.bgColor || '#9B2B2C'}</span>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+            </div>
+
+            {/* Home/Bottom Scroll */}
+            <div className="p-6 bg-slate-50 border border-slate-200 space-y-6 relative overflow-hidden">
+               <div className="absolute top-0 right-0 p-2 opacity-5">
+                  <Zap className="h-20 w-20 text-brand-primary" />
+               </div>
+               <div className="flex items-center justify-between">
+                 <div className="flex items-center gap-3">
+                   <Switch 
+                     checked={settings.ads?.floatingNotice?.active || false}
+                     onCheckedChange={val => {
+                       const newAds = { ...(settings.ads || {}), floatingNotice: { ...(settings.ads?.floatingNotice || {}), active: val } };
+                       setSettings({...settings, ads: newAds as any});
+                     }}
+                   />
+                   <div>
+                     <Label className="text-[11px] font-black uppercase text-slate-800">Home/Bottom Scroll</Label>
+                     <p className="text-[9px] text-slate-400 font-bold uppercase tracking-tight">Announcement on Home Page</p>
+                   </div>
+                 </div>
+               </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 <div className="space-y-2">
+                   <Label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Notice Text</Label>
+                   <Input 
+                     value={settings.ads?.floatingNotice?.text || ''}
+                     onChange={e => {
+                       const newAds = { ...(settings.ads || {}), floatingNotice: { ...(settings.ads?.floatingNotice || {}), text: e.target.value } };
+                       setSettings({...settings, ads: newAds as any});
+                     }}
+                     placeholder="Message for home page..."
+                     className="h-12 border-[#777] rounded-none text-[11px] uppercase font-black"
+                   />
+                 </div>
+                 <div className="space-y-2">
+                   <Label className="text-[10px] font-black uppercase text-slate-600 tracking-widest">Notice Link</Label>
+                   <Input 
+                     value={settings.ads?.floatingNotice?.link || ''}
+                     onChange={e => {
+                       const newAds = { ...(settings.ads || {}), floatingNotice: { ...(settings.ads?.floatingNotice || {}), link: e.target.value } };
+                       setSettings({...settings, ads: newAds as any});
+                     }}
+                     placeholder="Click destination..."
+                     className="h-12 border-[#777] rounded-none text-[11px]"
+                   />
+                 </div>
+               </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 <div className="grid grid-cols-2 gap-4">
+                   <div className="space-y-2">
+                     <Label className="text-[9px] font-black uppercase text-slate-500">Text Color</Label>
+                     <div className="flex items-center gap-2">
+                       <Input 
+                         type="color" 
+                         value={settings.ads?.floatingNotice?.textColor || '#000000'}
+                         onChange={e => {
+                           const newAds = { ...(settings.ads || {}), floatingNotice: { ...(settings.ads?.floatingNotice || {}), textColor: e.target.value } };
+                           setSettings({...settings, ads: newAds as any});
+                         }}
+                         className="h-10 w-12 p-1 border-[#777] rounded-none cursor-pointer"
+                       />
+                       <span className="font-mono text-[9px] font-bold">{settings.ads?.floatingNotice?.textColor || '#000'}</span>
+                     </div>
+                   </div>
+                   <div className="space-y-2">
+                     <Label className="text-[9px] font-black uppercase text-slate-500">Notice BG</Label>
+                     <div className="flex items-center gap-2">
+                       <Input 
+                         type="color" 
+                         value={settings.ads?.floatingNotice?.bgColor || '#f4e4d4'}
+                         onChange={e => {
+                           const newAds = { ...(settings.ads || {}), floatingNotice: { ...(settings.ads?.floatingNotice || {}), bgColor: e.target.value } };
+                           setSettings({...settings, ads: newAds as any});
+                         }}
+                         className="h-10 w-12 p-1 border-[#777] rounded-none cursor-pointer"
+                       />
+                       <span className="font-mono text-[9px] font-bold">{settings.ads?.floatingNotice?.bgColor || '#f4e4d4'}</span>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+            </div>
+
+            <div className="p-6 bg-slate-50 border border-slate-200 space-y-4">
+               <div className="flex items-center gap-3">
+                 <Switch 
+                   checked={settings.ads?.globalNotice?.active || false}
+                   onCheckedChange={val => {
+                     const newAds = { ...(settings.ads || {}), globalNotice: { ...(settings.ads?.globalNotice || {}), active: val } };
+                     setSettings({...settings, ads: newAds as any});
+                   }}
+                 />
+                 <Label className="text-[11px] font-black uppercase">Service Status Alert</Label>
+               </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <textarea 
+                    value={settings.ads?.globalNotice?.message || ''}
+                    onChange={e => {
+                      const newAds = { ...(settings.ads || {}), globalNotice: { ...(settings.ads?.globalNotice || {}), message: e.target.value } };
+                      setSettings({...settings, ads: newAds as any});
+                    }}
+                    placeholder="Central status message..."
+                    className="w-full min-h-[80px] p-4 border border-[#777] text-[11px] font-black uppercase tracking-widest bg-white"
+                  />
+                  <div className="space-y-4">
+                    <Label className="text-[10px] font-black uppercase tracking-widest">Alert Link</Label>
+                    <Input 
+                      value={settings.ads?.globalNotice?.link || ''}
+                      onChange={e => {
+                        const newAds = { ...(settings.ads || {}), globalNotice: { ...(settings.ads?.globalNotice || {}), link: e.target.value } };
+                        setSettings({...settings, ads: newAds as any});
+                      }}
+                      placeholder="Info link..."
+                      className="h-12 border-[#777] rounded-none text-[11px]"
+                    />
+                  </div>
+               </div>
+            </div>
+
+            {/* Social Bar Ad */}
+            <div className="p-6 bg-slate-50 border border-slate-200 space-y-4">
+               <div className="flex items-center gap-3">
+                 <Switch 
+                   checked={settings.ads?.socialBarAd?.active || false}
+                   onCheckedChange={val => {
+                     const newAds = { ...(settings.ads || {}), socialBarAd: { ...(settings.ads?.socialBarAd || {}), active: val } };
+                     setSettings({...settings, ads: newAds as any});
+                   }}
+                 />
+                 <Label className="text-[11px] font-black uppercase text-slate-800">Social Bar CTA</Label>
+               </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Input 
+                    value={settings.ads?.socialBarAd?.message || ''}
+                    onChange={e => {
+                      const newAds = { ...(settings.ads || {}), socialBarAd: { ...(settings.ads?.socialBarAd || {}), message: e.target.value } };
+                      setSettings({...settings, ads: newAds as any});
+                    }}
+                    placeholder="Social CTA message..."
+                    className="h-12 border-[#777] rounded-none text-[11px] font-black uppercase"
+                  />
+                  <Input 
+                    value={settings.ads?.socialBarAd?.link || ''}
+                    onChange={e => {
+                      const newAds = { ...(settings.ads || {}), socialBarAd: { ...(settings.ads?.socialBarAd || {}), link: e.target.value } };
+                      setSettings({...settings, ads: newAds as any});
+                    }}
+                    placeholder="CTA Link (External or /shop)"
+                    className="h-12 border-[#777] rounded-none text-[11px]"
+                  />
+               </div>
+            </div>
         </CardContent>
       </Card>
     </div>

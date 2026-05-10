@@ -103,12 +103,12 @@ const UserDashboard = () => {
         <div className="flex flex-col xl:flex-row gap-8">
           {/* Sidebar / Identity Hub */}
           <div className="w-full xl:w-[350px] space-y-6">
-            <div className="bg-white rounded-none shadow-xl overflow-hidden relative border-2 border-[#777]">
+            <div className="bg-white rounded-none border border-slate-100 overflow-hidden relative">
               <div className="bg-slate-900 h-32 border-b-2 border-slate-900 relative overflow-hidden">
                  <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
               </div>
               <div className="px-6 pb-8 -mt-16 text-center relative z-10">
-                <div className="w-32 h-32 rounded-none bg-white p-2 mx-auto mb-6 shadow-lg border-2 border-[#777] group">
+                <div className="w-32 h-32 rounded-none bg-white p-2 mx-auto mb-6 border border-slate-100 group">
                   <div className="w-full h-full rounded-none overflow-hidden bg-[#f8f8f8] relative">
                     <img
                       src={user?.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.email}`}
@@ -120,11 +120,11 @@ const UserDashboard = () => {
                 <h2 className="text-2xl font-black text-slate-800 uppercase tracking-tighter leading-none mb-2">
                   {user?.displayName || 'User Session'}
                 </h2>
-                <div className="inline-block px-4 py-1.5 bg-[#f8f8f8] border border-[#777] rounded-none text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6">
+                <div className="inline-block px-4 py-1.5 bg-[#f8f8f8] border border-slate-100 rounded-none text-[10px] font-black uppercase tracking-widest text-slate-400 mb-6">
                   {user?.email}
                 </div>
                 
-                <div className="flex items-center justify-between p-4 bg-[#f8f8f8] border-2 border-[#777] rounded-none shadow-inner">
+                <div className="flex items-center justify-between p-4 bg-[#f8f8f8] border border-slate-100 rounded-none">
                   <div className="flex-1 text-center">
                     <p className="text-2xl font-black text-slate-900 tracking-tighter leading-none mb-1">{orders.length}</p>
                     <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest opacity-60">Total Logs</p>
@@ -148,20 +148,21 @@ const UserDashboard = () => {
                   <button
                     key={i}
                     onClick={() => setActiveTab(item.id)}
-                    className={`group w-full flex items-center justify-between px-6 py-4 rounded-none text-[12px] font-black uppercase tracking-widest transition-all border-2 ${
+                    className={`group w-full flex items-center justify-between px-6 py-4 rounded-none text-[12px] font-black uppercase tracking-widest transition-all border ${
                       activeTab === item.id 
-                      ? 'bg-slate-900 border-slate-900 text-white shadow-lg' 
-                      : 'bg-white border-[#777] text-slate-400 hover:bg-[#f8f8f8] shadow-sm'
+                      ? 'bg-slate-900 border-slate-900 text-white' 
+                      : 'bg-white border-slate-100 text-slate-400 hover:bg-[#f8f8f8]'
                     }`}
                   >
                     <div className="flex items-center gap-4">
-                      <div className={`p-2 rounded-none border-2 transition-colors ${activeTab === item.id ? 'bg-white border-transparent text-slate-900' : 'bg-[#f8f8f8] border-[#777] text-slate-300'}`}>
+                      <div className={`p-2 rounded-none border transition-colors ${activeTab === item.id ? 'bg-white border-transparent text-slate-900' : 'bg-[#f8f8f8] border-slate-100 text-slate-300'}`}>
                         <item.icon className="h-4 w-4" />
                       </div>
                       <span>{item.label}</span>
                     </div>
-                    <div className={`w-2 h-2 rounded-none border-2 border-[#777] transform transition-all ${activeTab === item.id ? 'bg-brand-primary scale-100' : 'bg-transparent scale-50'}`} />
+                    <div className={`w-2 h-2 rounded-none border ${activeTab === item.id ? 'bg-brand-primary border-brand-primary scale-100' : 'bg-transparent border-slate-200 scale-50'}`} />
                   </button>
+
                 ))}
               </div>
           </div>
@@ -188,7 +189,7 @@ const UserDashboard = () => {
                   {loading ? (
                     <div className="space-y-6">
                       {[...Array(3)].map((_, i) => (
-                        <div key={i} className="h-40 bg-white rounded-none animate-pulse border-2 border-[#777]" />
+                        <div key={i} className="h-40 bg-white rounded-none animate-pulse border border-slate-100" />
                       ))}
                     </div>
                   ) : orders.length > 0 ? (
@@ -198,20 +199,20 @@ const UserDashboard = () => {
                             key={order.id}
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
-                            className="bg-white rounded-none p-8 md:p-10 shadow-xl border-2 border-[#777] group relative overflow-hidden"
+                            className="bg-white rounded-none p-8 md:p-10 border border-slate-100 group relative overflow-hidden"
                           >
                             <div className="flex flex-col lg:flex-row justify-between items-center gap-10 relative z-10">
                               <div className="flex flex-col md:flex-row gap-8 items-center w-full lg:w-auto">
-                                <div className="w-24 h-24 bg-[#f8f8f8] border-2 border-[#777] rounded-none flex items-center justify-center relative shadow-inner">
+                                <div className="w-24 h-24 bg-[#f8f8f8] border border-slate-100 rounded-none flex items-center justify-center relative">
                                   <ShoppingBag className="h-10 w-10 text-slate-400" />
                                 </div>
                                 
                                 <div className="text-center md:text-left">
                                   <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mb-3">
-                                    <span className="text-[12px] font-black text-slate-400 px-4 py-1 bg-[#f8f8f8] border border-[#777] rounded-none">
+                                    <span className="text-[12px] font-black text-slate-400 px-4 py-1 bg-[#f8f8f8] border border-slate-100 rounded-none">
                                       #{order?.orderId || order?.id?.slice(0, 8).toUpperCase() || 'UNKNOWN'}
                                     </span>
-                                    <div className={`px-4 py-1 rounded-none border-2 border-slate-900 text-[10px] font-black uppercase tracking-widest ${
+                                    <div className={`px-4 py-1 rounded-none border border-slate-900 text-[10px] font-black uppercase tracking-widest ${
                                       order?.status === 'delivered' ? 'bg-green-600 text-white' : 
                                       'bg-brand-primary text-white'
                                     }`}>
@@ -223,12 +224,12 @@ const UserDashboard = () => {
                                   </p>
                                   <div className="flex justify-center md:justify-start gap-3">
                                     {order?.items?.slice(0, 4).map((item: any, i: number) => (
-                                      <div key={i} className="w-12 h-12 rounded-none border-2 border-slate-900 overflow-hidden bg-white p-1">
+                                      <div key={i} className="w-12 h-12 rounded-none border border-slate-900 overflow-hidden bg-white p-1">
                                         <img src={item?.image || 'https://picsum.photos/seed/thumb/100/100'} alt="" className="w-full h-full object-cover rounded-none" />
                                       </div>
                                     ))}
                                     {order?.items && order.items.length > 4 && (
-                                      <div className="w-12 h-12 rounded-none border-2 border-[#777] bg-[#f8f8f8] flex items-center justify-center text-[10px] font-black text-slate-400">
+                                      <div className="w-12 h-12 rounded-none border border-slate-100 bg-[#f8f8f8] flex items-center justify-center text-[10px] font-black text-slate-400">
                                         +{order.items.length - 4}
                                       </div>
                                     )}
@@ -236,33 +237,35 @@ const UserDashboard = () => {
                                 </div>
                               </div>
 
-                              <div className="flex flex-row lg:flex-col justify-between items-center lg:items-end w-full lg:w-auto pt-8 lg:pt-0 border-t-2 lg:border-t-0 lg:border-l-2 border-[#777] lg:pl-10">
+                              <div className="flex flex-row lg:flex-col justify-between items-center lg:items-end w-full lg:w-auto pt-8 lg:pt-0 border-t lg:border-t-0 lg:border-l border-slate-100 lg:pl-10">
                                 <div className="text-right lg:mb-6">
                                   <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 opacity-60">VALUATION</p>
                                   <p className="text-4xl font-black text-slate-900 tracking-tighter">৳{(order?.total || 0).toLocaleString()}</p>
                                 </div>
                                 <button 
                                   onClick={() => navigate(`/tracking?id=${order.orderId}`)}
-                                  className="px-10 py-4 bg-slate-900 text-white rounded-none text-[10px] font-black uppercase tracking-widest hover:bg-brand-primary transition-all shadow-lg active:scale-95"
+                                  className="px-10 py-4 bg-slate-900 text-white rounded-none text-[10px] font-black uppercase tracking-widest hover:bg-brand-primary transition-all active:scale-95"
                                 >
                                   TRACE_PARCEL
                                 </button>
                               </div>
                             </div>
                           </motion.div>
+
                         ))}
                       </div>
                   ) : (
-                      <div className="text-center py-40 bg-white rounded-none shadow-2xl border-2 border-[#777]">
-                        <div className="w-32 h-32 bg-[#f8f8f8] border-2 border-[#777] rounded-none flex items-center justify-center mx-auto mb-10 shadow-inner">
+                      <div className="text-center py-40 bg-white rounded-none border border-slate-100">
+                        <div className="w-32 h-32 bg-[#f8f8f8] border border-slate-100 rounded-none flex items-center justify-center mx-auto mb-10">
                           <ShoppingBag className="h-12 w-12 text-slate-400" />
                         </div>
                         <h3 className="text-3xl font-black text-slate-800 uppercase tracking-tighter mb-4">LOGS_REGISTRY_EMPTY</h3>
                         <p className="text-[12px] text-slate-400 font-black uppercase tracking-[0.2em] mb-12 max-w-sm mx-auto leading-relaxed">You haven't initiated any dispatches yet. Access global collections to start.</p>
-                        <button className="bg-slate-900 hover:bg-brand-primary text-white px-12 py-5 text-[12px] font-black uppercase tracking-widest rounded-none shadow-xl active:scale-95 transition-all" onClick={() => navigate('/shop')}>
+                        <button className="bg-slate-900 hover:bg-brand-primary text-white px-12 py-5 text-[12px] font-black uppercase tracking-widest rounded-none active:scale-95 transition-all" onClick={() => navigate('/shop')}>
                           ACCESS_COLLECTIONS
                         </button>
                       </div>
+
                   )}
                 </motion.div>
               )}
@@ -275,7 +278,7 @@ const UserDashboard = () => {
                   exit={{ opacity: 0, scale: 0.98 }}
                   className="space-y-10"
                 >
-                  <div className="bg-white rounded-none p-8 md:p-10 shadow-2xl border-2 border-[#777] relative overflow-hidden">
+                  <div className="bg-white rounded-none p-8 md:p-10 border border-slate-100 relative overflow-hidden">
                     <h1 className="text-3xl md:text-4xl font-black text-slate-900 uppercase tracking-tighter leading-none mb-4 relative z-10 border-b-4 border-brand-primary pb-3 inline-block">IDENTITY_CORE</h1>
                     <div className="flex items-center gap-3 relative z-10 mt-4">
                        <div className="w-2 h-2 bg-brand-primary rounded-none animate-pulse" />
@@ -283,12 +286,12 @@ const UserDashboard = () => {
                     </div>
                   </div>
 
-                  <div className="bg-white rounded-none p-12 md:p-16 shadow-2xl border-2 border-[#777]">
+                  <div className="bg-white rounded-none p-12 md:p-16 border border-slate-100">
                     <form onSubmit={handleProfileSave} className="max-w-3xl mx-auto space-y-12">
-                      <div className="flex flex-col md:flex-row items-center gap-12 pb-12 border-b-2 border-[#777]">
+                      <div className="flex flex-col md:flex-row items-center gap-12 pb-12 border-b border-slate-100">
                         <div className="relative group">
-                          <div className="w-44 h-44 bg-[#f8f8f8] rounded-none shadow-inner overflow-hidden flex items-center justify-center p-2 border-2 border-[#777]">
-                            <div className="w-full h-full rounded-none overflow-hidden border-2 border-slate-900">
+                          <div className="w-44 h-44 bg-[#f8f8f8] rounded-none overflow-hidden flex items-center justify-center p-2 border border-slate-100">
+                            <div className="w-full h-full rounded-none overflow-hidden border border-slate-200">
                               {profileData.photoURL ? (
                                 <img src={profileData.photoURL} alt="Preview" className="w-full h-full object-cover" />
                               ) : (
@@ -315,7 +318,7 @@ const UserDashboard = () => {
                           <Input 
                             value={profileData.name}
                             onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
-                            className="bg-[#f8f8f8] border-2 border-[#777] h-16 rounded-none font-black text-sm uppercase tracking-widest px-6 shadow-inner focus-visible:ring-0"
+                            className="bg-[#f8f8f8] border border-slate-100 h-16 rounded-none font-black text-sm uppercase tracking-widest px-6 focus-visible:ring-0"
                             placeholder="SET_ALIAS"
                             required
                           />
@@ -325,7 +328,7 @@ const UserDashboard = () => {
                           <Input 
                             value={user?.email || ''} 
                             disabled 
-                            className="bg-[#f8f8f8] border-2 border-[#777]/20 h-16 rounded-none font-black text-sm text-slate-300 px-6 cursor-not-allowed"
+                            className="bg-[#f8f8f8] border border-slate-100 h-16 rounded-none font-black text-sm text-slate-300 px-6 cursor-not-allowed"
                           />
                         </div>
                       </div>
@@ -333,13 +336,14 @@ const UserDashboard = () => {
                       <button 
                         type="submit" 
                         disabled={savingProfile}
-                        className="w-full bg-slate-900 hover:bg-brand-primary text-white py-6 rounded-none font-black uppercase tracking-widest text-[12px] shadow-xl active:scale-95 transition-all flex items-center justify-center gap-5 group"
+                        className="w-full bg-slate-900 hover:bg-brand-primary text-white py-6 rounded-none font-black uppercase tracking-widest text-[12px] active:scale-95 transition-all flex items-center justify-center gap-5 group"
                       >
                         <Save className="h-5 w-5 group-hover:rotate-12 transition-transform" />
                         {savingProfile ? 'SYNCHRONIZING_ID...' : 'CONFIRM_GLOBAL_CHANGES'}
                       </button>
                     </form>
                   </div>
+
                 </motion.div>
               )}
             </AnimatePresence>

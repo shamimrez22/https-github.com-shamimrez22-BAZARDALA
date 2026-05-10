@@ -100,7 +100,7 @@ const InfoPage = () => {
                 {title}
               </h1>
               <div className="flex items-center justify-center md:justify-start gap-3">
-                 <div className="w-1.5 h-1.5 bg-[#9B2B2C] rounded-none animate-pulse" />
+                 <div className="w-1.5 h-1.5 bg-brand-primary rounded-none animate-pulse" />
                  <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em]">Authorized Information Resource // 2026</p>
               </div>
             </div>
@@ -114,7 +114,7 @@ const InfoPage = () => {
             {details.map((item, index) => (
               <div key={index} className="p-6 bg-slate-50 rounded-none border-2 border-transparent hover:border-brand-primary/10 hover:bg-white hover:shadow-xl transition-all group">
                 <div className="flex items-center gap-4 mb-4">
-                  <div className="w-8 h-1 bg-[#9B2B2C]/20 rounded-none group-hover:w-12 group-hover:bg-[#9B2B2C] transition-all duration-500" />
+                  <div className="w-8 h-1 bg-brand-primary/20 rounded-none group-hover:w-12 group-hover:bg-brand-primary transition-all duration-500" />
                   <span className="text-[12px] font-black uppercase tracking-widest text-slate-800">{item}</span>
                 </div>
                 <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest leading-loose">

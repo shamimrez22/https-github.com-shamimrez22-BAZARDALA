@@ -9,29 +9,31 @@ import { Toaster } from './components/ui/sonner';
 import { SmoothScroll } from './components/SmoothScroll';
 import { ShoppingBasket } from 'lucide-react';
 
-const Home = lazy(() => import('@/pages/Home'));
-const Shop = lazy(() => import('@/pages/Shop'));
-const Cart = lazy(() => import('@/pages/Cart'));
-const Checkout = lazy(() => import('@/pages/Checkout'));
-const OrderTracking = lazy(() => import('@/pages/OrderTracking'));
-const UserDashboard = lazy(() => import('@/pages/UserDashboard'));
-const InfoPage = lazy(() => import('@/pages/Static/InfoPage'));
+const Home = lazy(() => import('./pages/Home'));
+const Shop = lazy(() => import('./pages/Shop'));
+const Cart = lazy(() => import('./pages/Cart'));
+const Checkout = lazy(() => import('./pages/Checkout'));
+const OrderTracking = lazy(() => import('./pages/OrderTracking'));
+const UserDashboard = lazy(() => import('./pages/UserDashboard'));
+const InfoPage = lazy(() => import('./pages/Static/InfoPage'));
 
 import AdminErrorBoundary from './components/AdminErrorBoundary';
 
 // Admin Pages - Lazy Loaded
-const AdminDashboard = lazy(() => import('@/pages/Admin/Dashboard'));
-const AdminProducts = lazy(() => import('@/pages/Admin/Products'));
-const AdminOrders = lazy(() => import('@/pages/Admin/Orders'));
-const AdminAnalytics = lazy(() => import('@/pages/Admin/Analytics'));
-const AdminCustomers = lazy(() => import('@/pages/Admin/Customers'));
-const AdminCoupons = lazy(() => import('@/pages/Admin/Coupons'));
-const AdminSlider = lazy(() => import('@/pages/Admin/Slider'));
-const AdminSettings = lazy(() => import('@/pages/Admin/Settings'));
-const AdminCategories = lazy(() => import('@/pages/Admin/Categories'));
-const AdminLimitedOffers = lazy(() => import('@/pages/Admin/LimitedOffers'));
-const AdminProfile = lazy(() => import('@/pages/Admin/Profile'));
-const AdminLogin = lazy(() => import('@/pages/Admin/Login'));
+const AdminDashboard = lazy(() => import('./pages/Admin/Dashboard'));
+const AdminProducts = lazy(() => import('./pages/Admin/Products'));
+const AdminOrders = lazy(() => import('./pages/Admin/Orders'));
+const AdminAnalytics = lazy(() => import('./pages/Admin/Analytics'));
+const AdminCustomers = lazy(() => import('./pages/Admin/Customers'));
+const AdminCoupons = lazy(() => import('./pages/Admin/Coupons'));
+const AdminSlider = lazy(() => import('./pages/Admin/Slider'));
+const AdminSettings = lazy(() => import('./pages/Admin/Settings'));
+const AdminCategories = lazy(() => import('./pages/Admin/Categories'));
+const AdminLimitedOffers = lazy(() => import('./pages/Admin/LimitedOffers'));
+const AdminProfile = lazy(() => import('./pages/Admin/Profile'));
+const AdminLogin = lazy(() => import('./pages/Admin/Login'));
+const AdminStaff = lazy(() => import('./pages/Admin/Staff'));
+const AdminVerify = lazy(() => import('./pages/Admin/Verify'));
 
 import { SettingsProvider, useSettings } from './context/SettingsContext';
 
@@ -113,8 +115,9 @@ const AppContent = () => {
                     <Route path="*" element={<Navigate to="/" replace />} />
                   </Route>
 
-                  {/* Admin Login */}
+                  {/* Admin Login & Recovery */}
                   <Route path="/admin/login" element={<AdminLogin />} />
+                  <Route path="/admin/verify" element={<AdminVerify />} />
 
                   {/* Admin Routes */}
                   <Route path="/admin" element={
@@ -134,6 +137,7 @@ const AppContent = () => {
                     <Route path="slider" element={<AdminSlider />} />
                     <Route path="limited-offers" element={<AdminLimitedOffers />} />
                     <Route path="categories" element={<AdminCategories />} />
+                    <Route path="staff" element={<AdminStaff />} />
                     <Route path="reports" element={<AdminAnalytics />} />
                     <Route path="settings/*" element={<AdminSettings />} />
                     <Route path="profile" element={<AdminProfile />} />

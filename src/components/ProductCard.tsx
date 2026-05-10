@@ -15,128 +15,110 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
   const { addToCart } = useCart();
   const navigate = useNavigate();
 
+  const handleAction = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (product.affiliateLink) {
+      window.open(product.affiliateLink, '_blank', 'noopener,noreferrer');
+      return;
+    }
+    navigate('/checkout', { 
+      state: { 
+        directOrder: true, 
+        product: {
+          productId: product.id,
+          name: product.name,
+          price: product.price,
+          image: product.images?.[0] || product.image,
+          quantity: 1
+        } 
+      } 
+    });
+  };
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 10 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      whileHover={{ y: -5 }}
-      transition={{ duration: 0.4 }}
-      className="bg-white rounded-none shadow-sm hover:shadow-2xl transition-all group relative flex flex-col overflow-hidden border border-[#777]"
+      transition={{ duration: 0.3 }}
+      className="bg-white rounded-none group relative flex flex-col h-full overflow-hidden"
     >
-      <div className="bg-[#f8f8f8] px-4 py-2 border-b border-[#777] flex justify-between items-center relative overflow-hidden">
-        <div className="flex items-center gap-2 z-10">
-          <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">IDENT_KEY:</span>
-          <span className="text-[10px] font-black text-brand-primary uppercase tracking-tighter">{product.name.slice(0, 5).toUpperCase()}</span>
-        </div>
-        <div className="flex gap-1 z-10">
-          <div className="w-1.5 h-1.5 bg-brand-primary rounded-none" />
-        </div>
-      </div>
-
+      {/* Product Image */}
       <div 
-        className="relative aspect-square overflow-hidden bg-white border-b border-[#777] cursor-pointer"
-        onClick={() => navigate('/checkout', { 
-          state: { 
-            directOrder: true, 
-            product: {
-              productId: product.id,
-              name: product.name,
-              price: product.price,
-              image: product.images?.[0] || product.image,
-              quantity: 1
-            } 
-          } 
-        })}
+        className="relative aspect-[4/5] bg-slate-50 cursor-pointer overflow-hidden"
+        onClick={handleAction}
       >
         <img
           src={product.images?.[0] || product.image}
           alt={product.name}
           loading="lazy"
-          className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           referrerPolicy="no-referrer"
         />
 
-        {/* Status Overlays */}
-        {product.discountPercentage && product.discountPercentage > 0 && (
-          <div className="absolute top-0 right-0 bg-brand-primary text-white text-[9px] font-black px-2 py-1 rounded-none z-10 uppercase tracking-widest">
-            -{product.discountPercentage}%
-          </div>
-        )}
-        
-        {product.stock < 5 && product.stock > 0 && (
-          <div className="absolute top-0 left-0 bg-white text-brand-primary text-[8px] font-black px-2 py-1 uppercase tracking-widest rounded-none flex items-center gap-1 border-b border-r border-[#777]">
-            <span className="w-1 h-1 bg-brand-primary rounded-none animate-pulse" />
-            CRITICAL_INVENTORY
-          </div>
-        )}
-
-        {product.stock === 0 && (
-          <div className="absolute inset-0 bg-white/80 flex items-center justify-center z-20">
-            <span className="bg-brand-primary text-white text-[10px] font-black px-4 py-1.5 uppercase tracking-widest rounded-none">
-              DEPLETED_NODE
+        {product.stock === 0 && !product.affiliateLink && (
+          <div className="absolute inset-0 bg-white/60 flex items-center justify-center z-20">
+            <span className="bg-red-500 text-white text-[10px] font-bold px-3 py-1 uppercase rounded-none">
+              STOCK OUT
             </span>
           </div>
         )}
       </div>
 
-      <div className="p-3 flex-1 flex flex-col bg-white relative">
-        <div className="flex items-center gap-2 mb-1">
-           <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">{product.category}</span>
+      {/* Product Details */}
+      <div className="p-4 flex-1 flex flex-col pt-2 pb-1">
+        {/* Title */}
+        <div className="h-[36px] mb-1.5 overflow-hidden">
+          <h3 
+            className="font-bold text-slate-900 text-[13px] leading-[1.4] line-clamp-2 hover:text-brand-primary transition-colors cursor-pointer uppercase tracking-tight"
+            onClick={handleAction}
+          >
+            {product.name}
+          </h3>
+        </div>
+
+        {/* Stock Status */}
+        <div className="flex items-center gap-1.5 mb-3">
+          <div className={`w-1.5 h-1.5 rounded-none ${product.stock > 0 || product.affiliateLink ? 'bg-brand-primary' : 'bg-red-500'}`} />
+          <span className={`text-[10px] font-bold uppercase tracking-wider ${product.stock > 0 || product.affiliateLink ? 'text-brand-primary' : 'text-red-500'}`}>
+            {product.stock > 0 || product.affiliateLink ? 'IN STOCK' : 'OUT OF STOCK'}
+          </span>
         </div>
         
-        <h3 
-          className="font-black text-slate-900 text-[12px] line-clamp-1 mb-2 hover:text-brand-primary transition-colors cursor-pointer uppercase tracking-tight"
-          onClick={() => navigate('/checkout', { 
-            state: { 
-              directOrder: true, 
-              product: {
-                productId: product.id,
-                name: product.name,
-                price: product.price,
-                image: product.images?.[0] || product.image,
-                quantity: 1
-              } 
-            } 
-          })}
-        >
-          {product.name}
-        </h3>
-        
-        <div className="flex flex-col mt-auto pt-2">
-          <div className="flex items-center justify-between mb-2">
+        {/* Price Section */}
+        <div className="flex items-end justify-between mt-auto mb-2">
+          <div className="flex flex-col">
+            <div className="flex items-center gap-1">
+              <span className="text-[18px] font-black text-slate-900">
+                <span className="text-brand-primary">৳</span> {product.price.toLocaleString()}
+              </span>
+            </div>
             {product.oldPrice && product.oldPrice > 0 && (
-              <span className="text-[9px] font-black text-slate-300 line-through tracking-tighter">
+              <span className="text-[12px] font-bold text-slate-400 line-through">
                 ৳{product.oldPrice.toLocaleString()}
               </span>
             )}
-            <span className="text-[14px] font-black text-brand-primary tracking-tighter">
-              ৳{product.price.toLocaleString()}
-            </span>
           </div>
-          
-          <button
-            className="w-full bg-slate-900 hover:bg-brand-primary text-white transition-all h-7 px-3 text-[8px] font-black uppercase tracking-widest rounded-none shadow-md active:scale-95 disabled:bg-slate-300 border border-slate-900"
-            disabled={product.stock === 0}
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate('/checkout', { 
-                state: { 
-                  directOrder: true, 
-                  product: {
-                    productId: product.id,
-                    name: product.name,
-                    price: product.price,
-                    image: product.images?.[0] || product.image,
-                    quantity: 1
-                  } 
-                } 
-              });
-            }}
-          >
-            ORDER_NOW
-          </button>
+
+          {product.discountPercentage && product.discountPercentage > 0 && (
+            <div className="bg-[#e0f7f7] border border-[#b2ebeb] px-2 py-1 flex items-center justify-center">
+              <span className="text-brand-primary text-[11px] font-bold">
+                -{product.discountPercentage}%
+              </span>
+            </div>
+          )}
         </div>
+      </div>
+
+      {/* Action Button - Full Width at Bottom */}
+      <div className="flex w-full h-[52px]">
+        <button
+          className="w-full bg-brand-primary hover:bg-[#88705c] text-white transition-all text-[12px] font-black border-t border-brand-primary flex items-center justify-center gap-1.5 uppercase tracking-tighter"
+          disabled={product.stock === 0 && !product.affiliateLink}
+          onClick={handleAction}
+        >
+          অর্ডার করুন
+        </button>
       </div>
     </motion.div>
   );

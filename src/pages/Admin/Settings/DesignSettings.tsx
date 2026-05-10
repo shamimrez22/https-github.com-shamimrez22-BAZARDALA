@@ -81,11 +81,11 @@ const DesignSettings = () => {
   return (
     <div className="space-y-6">
       <Card className="rounded-none border-[#777] bg-white shadow-lg">
-        <CardHeader className="bg-slate-900 text-white py-4 flex flex-row items-center justify-between">
+        <CardHeader className="bg-brand-primary text-white py-4 flex flex-row items-center justify-between">
           <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
             <Palette className="h-4 w-4" /> Color Protocols
           </CardTitle>
-          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-brand-primary hover:bg-slate-800 h-8 font-black uppercase text-[9px]">
+          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-white text-brand-primary hover:bg-slate-100 h-8 font-black uppercase text-[9px]">
             {saving ? 'Saving...' : <><Save className="mr-2 h-3 w-3" /> Save Changes</>}
           </Button>
         </CardHeader>
@@ -119,11 +119,11 @@ const DesignSettings = () => {
       </Card>
 
       <Card className="rounded-none border-[#777] bg-white shadow-lg">
-        <CardHeader className="bg-slate-900 text-white py-4 flex flex-row items-center justify-between">
+        <CardHeader className="bg-brand-primary text-white py-4 flex flex-row items-center justify-between">
           <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
             <LayoutGrid className="h-4 w-4" /> Component Display
           </CardTitle>
-          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-brand-primary hover:bg-slate-800 h-8 font-black uppercase text-[9px]">
+          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-white text-brand-primary hover:bg-slate-100 h-8 font-black uppercase text-[9px]">
             {saving ? 'Saving...' : <><Save className="mr-2 h-3 w-3" /> Save Changes</>}
           </Button>
         </CardHeader>
@@ -148,11 +148,11 @@ const DesignSettings = () => {
       </Card>
 
       <Card className="rounded-none border-[#777] bg-white shadow-lg">
-        <CardHeader className="bg-slate-900 text-white py-4 flex flex-row items-center justify-between">
+        <CardHeader className="bg-brand-primary text-white py-4 flex flex-row items-center justify-between">
           <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
             <Zap className="h-4 w-4 text-brand-primary" /> Sidebar Flash Offer Protocol
           </CardTitle>
-          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-brand-primary hover:bg-slate-800 h-8 font-black uppercase text-[9px]">
+          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-white text-brand-primary hover:bg-slate-100 h-8 font-black uppercase text-[9px]">
             {saving ? 'Saving...' : <><Save className="mr-2 h-3 w-3" /> Save Sidebar Config</>}
           </Button>
         </CardHeader>
@@ -192,7 +192,7 @@ const DesignSettings = () => {
                 <Button 
                   asChild 
                   variant="outline" 
-                  className="w-full h-16 border-2 border-dashed border-slate-900 rounded-none bg-slate-50 hover:bg-slate-100 transition-all group"
+                  className="w-full h-16 border-2 border-dashed border-brand-primary rounded-none bg-slate-50 hover:bg-slate-100 transition-all group"
                 >
                   <label htmlFor="video-upload" className="cursor-pointer flex flex-col items-center justify-center gap-2">
                     {uploading.video ? (
@@ -239,7 +239,7 @@ const DesignSettings = () => {
                   <Button 
                     asChild 
                     variant="outline" 
-                    className="w-full h-16 border-2 border-dashed border-slate-900 rounded-none bg-slate-50 hover:bg-slate-100 transition-all group"
+                    className="w-full h-16 border-2 border-dashed border-brand-primary rounded-none bg-slate-50 hover:bg-slate-100 transition-all group"
                   >
                     <label htmlFor="image-upload" className="cursor-pointer flex flex-col items-center justify-center gap-2">
                       {uploading.image ? (

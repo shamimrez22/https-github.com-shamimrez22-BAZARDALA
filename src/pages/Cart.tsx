@@ -14,14 +14,14 @@ const Cart = () => {
   if (items.length === 0) {
     return (
       <div className="container mx-auto px-4 py-24 text-center">
-        <div className="w-32 h-32 bg-[#f8f8f8] border-2 border-[#777] rounded-none flex items-center justify-center mx-auto mb-10 shadow-inner">
+        <div className="w-32 h-32 bg-[#f8f8f8] border border-slate-100 rounded-none flex items-center justify-center mx-auto mb-10">
           <ShoppingBag className="h-16 w-16 text-[#777]/30" />
         </div>
         <h1 className="text-3xl font-black text-slate-800 mb-4 uppercase tracking-tighter">EMPTY_BAG_DETECTED</h1>
         <p className="text-slate-400 mb-10 max-w-sm mx-auto text-[12px] font-black uppercase tracking-[0.2em] leading-relaxed">
           Looks like you haven't added anything to your cart yet. Explore our latest collections.
         </p>
-        <Button size="lg" className="bg-slate-900 hover:bg-brand-primary rounded-none h-14 px-12 text-[12px] font-black uppercase tracking-widest shadow-xl active:scale-95 transition-all" asChild>
+        <Button size="lg" className="bg-slate-900 hover:bg-brand-primary rounded-none h-14 px-12 text-[12px] font-black uppercase tracking-widest active:scale-95 transition-all" asChild>
           <Link to="/shop">EXPLORE_SHOP</Link>
         </Button>
       </div>
@@ -48,9 +48,9 @@ const Cart = () => {
                 layout
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="flex flex-col md:flex-row items-center gap-8 p-6 md:p-8 bg-white rounded-none shadow-lg border-2 border-[#777] group transition-all"
+                className="flex flex-col md:flex-row items-center gap-8 p-6 md:p-8 bg-white rounded-none border border-slate-100 group transition-all"
               >
-                <div className="w-32 h-32 rounded-none overflow-hidden bg-[#f8f8f8] flex-shrink-0 shadow-sm border-2 border-[#777]">
+                <div className="w-32 h-32 rounded-none overflow-hidden bg-[#f8f8f8] flex-shrink-0 border border-slate-100">
                   <img src={item.image} alt={item.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" referrerPolicy="no-referrer" />
                 </div>
                 <div className="flex-1 min-w-0 text-center md:text-left">
@@ -59,17 +59,17 @@ const Cart = () => {
                   <p className="text-brand-primary text-lg font-black tracking-tight">৳{item.price.toLocaleString()}</p>
                   
                   <div className="flex flex-wrap items-center justify-center md:justify-start gap-8 mt-6">
-                    <div className="flex items-center bg-[#f8f8f8] border-2 border-[#777] rounded-none p-1 shadow-inner">
+                    <div className="flex items-center bg-[#f8f8f8] border border-slate-100 rounded-none p-1">
                       <button
                         onClick={() => updateQuantity(item.productId, item.quantity - 1)}
-                        className="w-10 h-10 flex items-center justify-center rounded-none hover:bg-white transition-all border-r border-[#777]"
+                        className="w-10 h-10 flex items-center justify-center rounded-none hover:bg-white transition-all border-r border-slate-100"
                       >
                         <Minus className="h-4 w-4 text-brand-primary" />
                       </button>
                       <span className="w-12 text-center text-[13px] font-black">{item.quantity}</span>
                       <button
                         onClick={() => updateQuantity(item.productId, item.quantity + 1)}
-                        className="w-10 h-10 flex items-center justify-center rounded-none hover:bg-white transition-all border-l border-[#777]"
+                        className="w-10 h-10 flex items-center justify-center rounded-none hover:bg-white transition-all border-l border-slate-100"
                       >
                         <Plus className="h-4 w-4 text-brand-primary" />
                       </button>
@@ -95,8 +95,8 @@ const Cart = () => {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-none p-6 md:p-8 shadow-2xl sticky top-24 border-2 border-[#777]">
-              <h2 className="text-xl font-black text-slate-800 mb-6 md:mb-8 uppercase tracking-tighter border-b-2 border-[#777] pb-3">SUMMARY_DIR</h2>
+            <div className="bg-white rounded-none p-6 md:p-8 sticky top-24 border border-slate-100">
+              <h2 className="text-xl font-black text-slate-800 mb-6 md:mb-8 uppercase tracking-tighter border-b border-slate-100 pb-3">SUMMARY_DIR</h2>
               
               <div className="space-y-4 mb-8">
                 <div className="flex justify-between items-center text-[12px] font-black uppercase tracking-widest text-slate-400">
@@ -114,8 +114,8 @@ const Cart = () => {
                   <span className="text-slate-800">৳{(total * 0.05).toLocaleString()}</span>
                 </div>
                 
-                <div className="pt-6 md:pt-8 border-t-2 border-[#777]">
-                   <div className="bg-[#f8f8f8] rounded-none p-6 shadow-inner relative overflow-hidden group border border-[#777]">
+                <div className="pt-6 md:pt-8 border-t border-slate-100">
+                   <div className="bg-[#f8f8f8] rounded-none p-6 relative overflow-hidden group border border-slate-50">
                       <span className="text-[9px] font-black text-brand-primary uppercase tracking-[0.4em] mb-2 block">GRAND_TOTAL</span>
                       <div className="flex items-baseline gap-2">
                          <span className="text-3xl font-black text-slate-900 tracking-tighter">
@@ -128,11 +128,12 @@ const Cart = () => {
               </div>
 
               <Button
-                className="w-full h-12 bg-slate-900 hover:bg-brand-primary text-white rounded-none font-black uppercase text-[13px] tracking-[0.2em] shadow-xl active:scale-95 transition-all group"
+                className="w-full h-12 bg-slate-900 hover:bg-brand-primary text-white rounded-none font-black uppercase text-[13px] tracking-[0.2em] active:scale-95 transition-all group"
                 onClick={() => navigate('/checkout')}
               >
                 CHECKOUT <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-2 transition-transform" />
               </Button>
+
               
               <div className="mt-8 flex items-center justify-center gap-3">
                  <ShieldCheck className="h-5 w-5 text-green-600" />

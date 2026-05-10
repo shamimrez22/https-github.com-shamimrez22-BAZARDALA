@@ -125,7 +125,7 @@ const AdminLimitedOffers = () => {
         <Button 
           onClick={handleSave}
           disabled={saving}
-          className="bg-[#9B2B2C] hover:bg-slate-900 text-white rounded-none h-12 px-8 font-black text-[11px] uppercase tracking-widest shadow-xl flex items-center gap-3"
+          className="bg-brand-primary hover:bg-slate-900 text-white rounded-none h-12 px-8 font-black text-[11px] uppercase tracking-widest shadow-xl flex items-center gap-3"
         >
           <Save className="h-4 w-4" /> {saving ? 'SYNCING...' : 'Save Configuration'}
         </Button>
@@ -271,7 +271,7 @@ const AdminLimitedOffers = () => {
                        </div>
                        <Button 
                         onClick={() => toggleProduct(product.id)}
-                        className="bg-slate-900 hover:bg-[#9B2B2C] text-white rounded-none h-8 px-4 font-black text-[9px] uppercase tracking-widest"
+                        className="bg-brand-primary hover:bg-slate-900 text-white rounded-none h-8 px-4 font-black text-[9px] uppercase tracking-widest"
                        >
                          <Plus className="h-3 w-3 mr-2" /> Add
                        </Button>

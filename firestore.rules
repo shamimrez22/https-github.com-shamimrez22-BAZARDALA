@@ -1,24 +1,36 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Default Deny
+    // ===============================================================
+    // DEFAULT DENY
+    // ===============================================================
     match /{document=**} {
       allow read, write: if false;
     }
 
     // ===============================================================
-    // Helper Functions
+    // HELPER FUNCTIONS
     // ===============================================================
     function isSignedIn() {
       return request.auth != null;
     }
 
-    // Role-based admin check
+    function isEmailVerified() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    // The "Sovereign" - Ultimate authority
+    function isMasterAdmin() {
+      return isEmailVerified() && request.auth.token.email == "shamimrez22@gmail.com";
+    }
+
+    // Check if user is an active admin or the master admin
     function isAdmin() {
-      return isSignedIn() && (
-        request.auth.token.email == "shamimrez22@gmail.com" ||
-        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
-         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')
+      return isMasterAdmin() || (
+        isSignedIn() && 
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.status == 'active'
       );
     }
 
@@ -26,59 +38,67 @@ service cloud.firestore {
       return isSignedIn() && request.auth.uid == userId;
     }
 
+    function incoming() {
+      return request.resource.data;
+    }
+
     // ===============================================================
-    // Rules
+    // COLLECTION RULES
     // ===============================================================
 
-    // Site Settings
+    // Site Settings - Publicly readable, admin writable
     match /settings/{docId} {
       allow read: if true;
-      allow write: if true; // Local admin bypass
+      allow write: if isAdmin();
     }
 
-    // Homepage Slider
+    // Layout Assets - Publicly readable, admin writable
     match /slider_banners/{bannerId} {
       allow read: if true;
-      allow write: if true; // Local admin bypass
+      allow write: if isAdmin();
     }
 
-    // Orders
+    // Orders - Private by default, Admin can see all, User can see own
     match /orders/{orderId} {
-      allow list, get: if true; // Bypass as per user request (Warning: Insecure)
-      allow create: if true; 
-      allow update, delete: if true; // Enabled for local admin session functionality
+      allow create: if true; // Allow guest checkout or signed in
+      allow get: if isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid);
+      allow list: if isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid);
+      allow update: if isAdmin();
+      allow delete: if isMasterAdmin(); // Only Master can delete orders for security
     }
 
-    // Notifications
-    match /notifications/{notifId} {
-      allow list, get: if true; // Bypass as per user request
-      allow create: if true;
-      allow update, delete: if true;
-    }
-
-    // Products
+    // Products - Publicly readable, admin writable
     match /products/{productId} {
       allow read: if true;
-      allow write: if true; // Local admin bypass
+      allow write: if isAdmin();
     }
 
-    // Coupons
+    // Coupons - Publicly readable, admin writable
     match /coupons/{couponId} {
       allow read: if true;
-      allow write: if true;
+      allow write: if isAdmin();
     }
 
-    // Categories
+    // Categories - Publicly readable, admin writable
     match /categories/{catId} {
       allow read: if true;
-      allow write: if true;
+      allow write: if isAdmin();
+    }
+
+    // Notifications - Admin only
+    match /notifications/{notifId} {
+      allow read, write: if isAdmin();
     }
 
     // User Profiles
     match /users/{userId} {
-      allow list, get: if true; // Bypass for admin panel functionality
+      allow get: if isOwner(userId) || isAdmin();
+      allow list: if isAdmin();
       allow create: if isSignedIn();
-      allow update: if isOwner(userId) || true;
+      allow update: if 
+        (isOwner(userId) && !incoming().diff(resource.data).affectedKeys().hasAny(['role', 'status'])) || 
+        isMasterAdmin() ||
+        (isAdmin() && !incoming().diff(resource.data).affectedKeys().hasAny(['role', 'status']) && resource.data.role == 'customer');
     }
   }
 }

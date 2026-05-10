@@ -155,14 +155,17 @@ const AdminCategories = () => {
   );
 
   return (
-    <div className="space-y-6">
-      <div className="bg-[#ead9c4] border border-[#777] p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div className="flex flex-col min-h-screen bg-white">
+      <div className="bg-slate-50 border-b border-slate-200 p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h1 className="text-2xl font-black text-[#9B2B2C] uppercase tracking-tight flex items-center gap-3">
-            Product <span className="text-slate-900">Categories</span>
-          </h1>
-          <p className="text-slate-600 font-bold text-[10px] uppercase mt-1">
-            Manage your store hierarchy // Categories
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-2 h-6 bg-brand-primary" />
+            <h1 className="text-2xl font-black text-slate-900 uppercase tracking-tighter">
+              Registered Categories
+            </h1>
+          </div>
+          <p className="text-slate-400 font-bold text-[9px] uppercase tracking-[0.2em]">
+            Manage store sections // {categories.length} Categories
           </p>
         </div>
         <Dialog open={isAddOpen} onOpenChange={(open) => {
@@ -173,47 +176,48 @@ const AdminCategories = () => {
           }
         }}>
           <DialogTrigger asChild>
-            <Button className="bg-[#9B2B2C] hover:bg-[#7a1f1f] text-white rounded-none h-10 px-6 font-black text-[10px] uppercase tracking-widest border border-white/20 shadow-lg">
-              <Plus className="mr-2 h-4 w-4" /> Add New Category
-            </Button>
+            <button className="bg-brand-primary hover:bg-slate-900 text-white h-10 px-6 font-black text-[10px] uppercase tracking-widest active:scale-95 transition-all">
+              <Plus className="mr-2 h-4 w-4" /> Add Category
+            </button>
           </DialogTrigger>
-          <DialogContent className="max-w-md rounded-none p-0 border border-[#777] shadow-2xl bg-[#f4e4d4]">
+          <DialogContent className="max-w-md rounded-none p-0 border border-slate-200 shadow-2xl bg-white">
             <div className="p-8">
-              <DialogHeader className="mb-6 border-b border-[#777]/30 pb-4">
-                <DialogTitle className="text-2xl font-black text-[#9B2B2C] uppercase tracking-tight">
-                  {editingCategory ? 'Edit' : 'Add'} <span className="text-slate-900">Category</span>
+              <DialogHeader className="mb-8 border-b border-slate-100 pb-6">
+                <DialogTitle className="text-2xl font-black text-slate-900 uppercase tracking-tighter">
+                  {editingCategory ? 'Edit' : 'Add'} <span className="text-brand-primary">Category</span>
                 </DialogTitle>
+                <p className="text-slate-400 font-bold text-[10px] uppercase mt-1">Update category information</p>
               </DialogHeader>
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-8">
                 <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase tracking-widest text-[#9B2B2C]">Category Name</Label>
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Category Name</Label>
                   <Input 
                     value={formData.name} 
                     onChange={e => setFormData({ ...formData, name: e.target.value })}
                     placeholder="e.g. ELECTRONICS, CLOTHING"
-                    className="h-10 bg-white border-[#777] text-slate-900 rounded-none font-bold text-xs focus:ring-0 focus:border-[#9B2B2C] uppercase"
+                    className="h-10 bg-slate-50 border-slate-200 text-slate-900 rounded-none font-bold text-xs focus:border-brand-primary outline-none focus-visible:ring-0 uppercase"
                     required 
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label className="text-[10px] font-black uppercase tracking-widest text-[#9B2B2C]">Category Image</Label>
-                  <div className="relative aspect-square w-32 border-2 border-dashed border-[#777]/30 flex flex-col items-center justify-center bg-white group cursor-pointer overflow-hidden">
+                <div className="space-y-4">
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Category Image</Label>
+                  <div className="relative aspect-square w-32 border border-slate-200 flex flex-col items-center justify-center bg-slate-50 group cursor-pointer overflow-hidden transition-colors hover:border-brand-primary">
                     {formData.image ? (
                       <>
-                        <img src={formData.image} alt="Preview" className="w-full h-full object-cover" />
+                        <img src={formData.image} alt="Preview" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" />
                         <button 
                           type="button"
                           onClick={() => setFormData(prev => ({ ...prev, image: '' }))}
-                          className="absolute top-1 right-1 bg-rose-600 text-white p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="absolute inset-0 bg-rose-600/90 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all font-black text-[8px]"
                         >
-                          <X className="h-3 w-3" />
+                          Remove
                         </button>
                       </>
                     ) : (
                       <>
-                        <ImageIcon className="h-6 w-6 text-slate-400" />
-                        <span className="text-[8px] font-black text-slate-400 mt-1">UPLOAD</span>
+                        <ImageIcon className="h-5 w-5 text-slate-300 group-hover:text-brand-primary transition-colors" />
+                        <span className="text-[8px] font-black text-slate-400 mt-2 tracking-widest">Upload Image</span>
                         <input 
                           type="file" 
                           accept="image/*"
@@ -228,7 +232,7 @@ const AdminCategories = () => {
                 <Button 
                   type="submit" 
                   disabled={loading}
-                  className="w-full h-12 bg-[#9B2B2C] hover:bg-[#7a1f1f] text-white rounded-none font-black text-[11px] uppercase tracking-widest shadow-xl disabled:opacity-50"
+                  className="w-full h-12 bg-brand-primary hover:bg-slate-900 text-white rounded-none font-black text-[11px] uppercase tracking-widest shadow-xl transition-all active:scale-95"
                 >
                   {loading ? 'Processing...' : editingCategory ? 'Save Changes' : 'Create Category'}
                 </Button>
@@ -238,89 +242,86 @@ const AdminCategories = () => {
         </Dialog>
       </div>
 
-      <div className="bg-[#ead9c4] border border-[#777] overflow-hidden">
-        <div className="p-6 border-b border-[#777]/30">
-          <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
-            <input
-              placeholder="Search Categories..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 h-10 bg-white border border-[#777] text-xs font-bold focus:ring-0 focus:border-[#9B2B2C] outline-none text-slate-900 placeholder:text-slate-400 placeholder:uppercase"
-            />
+      <div className="p-8">
+        <div className="bg-white border border-slate-200 overflow-hidden">
+          <div className="p-4 bg-slate-50 border-b border-slate-200">
+            <div className="relative max-w-md">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <input
+                placeholder="Search categories..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                className="w-full pl-10 pr-4 h-10 bg-white border border-slate-200 text-[10px] font-black uppercase tracking-widest focus:border-brand-primary outline-none transition-colors"
+                />
+            </div>
           </div>
-        </div>
-        <div className="overflow-x-auto">
-          <Table className="w-full text-left border-collapse">
-            <TableHeader className="bg-[#9B2B2C] text-white">
-              <TableRow className="hover:bg-[#9B2B2C] border-none">
-                <TableHead className="w-20 px-6 py-4 text-[10px] font-black uppercase tracking-widest text-white border-r border-white/20">Image</TableHead>
-                <TableHead className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-white border-r border-white/20">Name</TableHead>
-                <TableHead className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-white border-r border-white/20">Slug</TableHead>
-                <TableHead className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-white">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody className="divide-y divide-[#777]/30 bg-white/20">
-              {loading ? (
-                <TableRow>
-                  <TableCell colSpan={3} className="text-center py-20 font-black text-[10px] uppercase text-slate-500">Loading Categories...</TableCell>
-                </TableRow>
-              ) : filteredCategories.map((category) => (
-                <TableRow key={category.id} className="hover:bg-[#ead9c4]/30 transition-all font-bold group">
-                  <TableCell className="px-6 py-6 border-r border-[#777]/20">
-                    <div className="w-12 h-12 border border-[#777] bg-white overflow-hidden">
-                      {category.image ? (
-                        <img src={category.image} alt="" className="w-full h-full object-cover" />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-slate-300">
-                          <ImageIcon className="h-4 w-4" />
-                        </div>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell className="px-6 py-6 border-r border-[#777]/20">
-                    <div className="flex items-center gap-3">
-                      <span className="text-xs font-black uppercase text-slate-900">{category.name}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="px-6 py-6 border-r border-[#777]/20">
-                    <code className="text-[10px] font-mono text-slate-500 bg-white/50 px-2 py-1">/{category.slug}</code>
-                  </TableCell>
-                  <TableCell className="px-6 py-6">
-                    <div className="flex gap-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="h-8 px-4 rounded-none bg-white border-[#777] text-[8px] font-black uppercase hover:bg-[#ead9c4]"
-                        onClick={() => {
-                          setEditingCategory(category);
-                          setFormData({ 
-                            name: category.name,
-                            image: category.image || ''
-                          });
-                          setIsAddOpen(true);
-                        }}
-                      >
-                        Edit
-                      </Button>
-                      <Button 
-                        size="sm" 
-                        className="h-8 px-4 rounded-none bg-[#9B2B2C] text-white text-[8px] font-black uppercase"
-                        onClick={() => handleDelete(category.id)}
-                      >
-                        Delete
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-              {filteredCategories.length === 0 && !loading && (
-                <TableRow>
-                  <TableCell colSpan={3} className="text-center py-20 font-black text-[10px] uppercase text-slate-500">No Categories Found</TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead className="bg-brand-primary text-white">
+                <tr>
+                  <th className="px-6 py-3 text-[9px] font-black uppercase tracking-[0.2em] border-r border-white/10">Icon</th>
+                  <th className="px-6 py-3 text-[9px] font-black uppercase tracking-[0.2em] border-r border-white/10">Category Name</th>
+                  <th className="px-6 py-3 text-[9px] font-black uppercase tracking-[0.2em] border-r border-white/10">URL Slug</th>
+                  <th className="px-6 py-3 text-[9px] font-black uppercase tracking-[0.2em]">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {loading ? (
+                  <tr>
+                    <td colSpan={4} className="text-center py-20 font-black text-[10px] uppercase text-slate-300 italic tracking-[0.2em]">Loading Categories...</td>
+                  </tr>
+                ) : filteredCategories.map((category) => (
+                  <tr key={category.id} className="hover:bg-slate-50 transition-all font-bold group">
+                    <td className="px-6 py-4 border-r border-slate-100">
+                      <div className="w-12 h-12 border border-slate-100 bg-slate-50 overflow-hidden">
+                        {category.image ? (
+                          <img src={category.image} alt="" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-slate-200 bg-slate-50">
+                            <ImageIcon className="h-4 w-4" />
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 border-r border-slate-100">
+                      <span className="text-[11px] font-black uppercase text-slate-900 tracking-tight">{category.name}</span>
+                    </td>
+                    <td className="px-6 py-4 border-r border-slate-100">
+                      <code className="text-[9px] font-mono text-slate-400 bg-slate-50 px-2 py-1 tracking-tight">/{category.slug}</code>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex gap-2">
+                        <button 
+                          onClick={() => {
+                            setEditingCategory(category);
+                            setFormData({ 
+                              name: category.name,
+                              image: category.image || ''
+                            });
+                            setIsAddOpen(true);
+                          }}
+                          className="h-8 px-4 bg-slate-50 border border-slate-200 text-slate-900 text-[8px] font-black uppercase hover:bg-white transition-all"
+                        >
+                          Edit
+                        </button>
+                        <button 
+                          onClick={() => handleDelete(category.id)}
+                          className="h-8 px-4 bg-rose-50 border border-rose-100 text-rose-600 text-[8px] font-black uppercase hover:bg-rose-600 hover:text-white transition-all"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+                {filteredCategories.length === 0 && !loading && (
+                  <tr>
+                    <td colSpan={4} className="py-20 text-center font-black text-[10px] uppercase text-slate-300 tracking-[0.2em]">No categories found</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

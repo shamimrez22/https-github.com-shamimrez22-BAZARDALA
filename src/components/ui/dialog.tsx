@@ -11,16 +11,34 @@ function Dialog({ ...props }: DialogPrimitive.Root.Props) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />
 }
 
-function DialogTrigger({ ...props }: DialogPrimitive.Trigger.Props) {
-  return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />
+function DialogTrigger({ ...props }: DialogPrimitive.Trigger.Props & { asChild?: boolean }) {
+  const { asChild, children, ...rest } = props as any
+  return (
+    <DialogPrimitive.Trigger 
+      data-slot="dialog-trigger" 
+      render={asChild ? children : undefined}
+      {...rest}
+    >
+      {asChild ? null : children}
+    </DialogPrimitive.Trigger>
+  )
 }
 
 function DialogPortal({ ...props }: DialogPrimitive.Portal.Props) {
   return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />
 }
 
-function DialogClose({ ...props }: DialogPrimitive.Close.Props) {
-  return <DialogPrimitive.Close data-slot="dialog-close" {...props} />
+function DialogClose({ ...props }: DialogPrimitive.Close.Props & { asChild?: boolean }) {
+  const { asChild, children, ...rest } = props as any
+  return (
+    <DialogPrimitive.Close 
+      data-slot="dialog-close" 
+      render={asChild ? children : undefined}
+      {...rest}
+    >
+      {asChild ? null : children}
+    </DialogPrimitive.Close>
+  )
 }
 
 function DialogOverlay({
@@ -68,7 +86,7 @@ function DialogContent({
               render={
                 <Button
                   variant="ghost"
-                  className="absolute top-4 right-4 z-[1200] bg-black/5 hover:bg-[#9B2B2C] hover:text-white transition-all h-8 w-8 p-0 border border-black/10 rounded-none shadow-sm flex items-center justify-center cursor-pointer"
+                  className="absolute top-4 right-4 z-[1200] bg-black/5 hover:bg-brand-primary hover:text-white transition-all h-8 w-8 p-0 border border-black/10 rounded-none shadow-sm flex items-center justify-center cursor-pointer"
                 />
               }
             >

@@ -84,85 +84,95 @@ const AdminCoupons = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="bg-[#ead9c4] border border-[#777] p-6">
-        <h1 className="text-2xl font-black text-[#9B2B2C] uppercase tracking-tight flex items-center gap-3">
-          Discount <span className="text-slate-900">Coupons</span>
-        </h1>
-        <p className="text-slate-600 font-bold text-[10px] uppercase mt-1">
-          Discount Tokens // Manage store discounts and vouchers
-        </p>
+    <div className="flex flex-col min-h-screen bg-white">
+      <div className="bg-slate-50 border-b border-slate-200 p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-2 h-6 bg-brand-primary" />
+            <h1 className="text-2xl font-black text-slate-900 uppercase tracking-tighter">
+              Discount Coupons
+            </h1>
+          </div>
+          <p className="text-slate-400 font-bold text-[9px] uppercase tracking-[0.2em]">
+            Manage store vouchers // {coupons.length} Active Coupons
+          </p>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-1 bg-[#ead9c4] border border-[#777] p-6">
-          <h2 className="text-sm font-black text-[#9B2B2C] uppercase mb-6 border-b border-[#777]/30 pb-4">Create New Coupon</h2>
-          <form onSubmit={handleSubmit} className="space-y-5">
+      <div className="p-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-1 bg-white border border-slate-200 p-8 hover:border-brand-primary transition-all">
+          <h2 className="text-xs font-black text-slate-900 uppercase mb-8 border-b border-slate-100 pb-4 flex items-center gap-2">
+            <Plus className="h-4 w-4 text-brand-primary" /> Create New Coupon
+          </h2>
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase tracking-widest text-slate-700">Coupon Code</Label>
+              <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Coupon Code</Label>
               <Input 
                 value={formData.code} 
                 onChange={e => setFormData({...formData, code: e.target.value})}
                 placeholder="e.g. SAVE100"
-                className="h-10 bg-white border-[#777] text-slate-900 rounded-none font-bold text-xs focus:ring-0 focus:border-[#9B2B2C] uppercase"
+                className="h-10 bg-slate-50 border-slate-200 text-slate-900 rounded-none font-bold text-xs focus:border-brand-primary outline-none focus-visible:ring-0 uppercase"
                 required 
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase tracking-widest text-slate-700">Discount Amount (৳)</Label>
+              <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Discount Amount (৳)</Label>
               <Input 
                 type="number"
                 value={formData.discount} 
                 onChange={e => setFormData({...formData, discount: e.target.value})}
                 placeholder="0.00"
-                className="h-10 bg-white border-[#777] text-slate-900 rounded-none font-bold text-xs focus:ring-0 focus:border-[#9B2B2C]"
+                className="h-10 bg-slate-50 border-slate-200 text-slate-900 rounded-none font-bold text-xs focus:border-brand-primary outline-none focus-visible:ring-0"
                 required 
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase tracking-widest text-slate-700">Expiry Date</Label>
+              <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Expiry Date</Label>
               <Input 
                 type="date"
                 value={formData.expiry} 
                 onChange={e => setFormData({...formData, expiry: e.target.value})}
-                className="h-10 bg-white border-[#777] text-slate-900 rounded-none font-bold text-xs focus:ring-0 focus:border-[#9B2B2C]"
+                className="h-10 bg-slate-50 border-slate-200 text-slate-900 rounded-none font-bold text-xs focus:border-brand-primary outline-none focus-visible:ring-0"
                 required 
               />
             </div>
-            <Button type="submit" className="w-full bg-[#9B2B2C] hover:bg-[#7a1f1f] text-white rounded-none font-black text-[10px] uppercase h-10 tracking-widest">
-              <Plus className="mr-2 h-4 w-4" /> Create Coupon
+            <Button type="submit" className="w-full bg-brand-primary hover:bg-slate-900 text-white rounded-none font-black text-[10px] uppercase h-12 tracking-widest transition-all active:scale-95 shadow-xl">
+              <Plus className="mr-2 h-4 w-4" /> Save Coupon
             </Button>
           </form>
         </div>
 
-        <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
           {coupons.map((coupon) => (
-            <div key={coupon.id} className="bg-[#ead9c4] border border-[#777] p-5 relative group">
-              <div className="flex justify-between items-start mb-4">
-                <div className="p-2 border border-[#777] bg-white text-[#9B2B2C]">
-                  <Ticket className="h-5 w-5" />
+            <div key={coupon.id} className="bg-white border border-slate-200 p-6 relative group hover:border-brand-primary transition-all">
+              <div className="flex justify-between items-start mb-6">
+                <div className="p-2 bg-slate-50 border border-slate-100 text-brand-primary">
+                  <Ticket className="h-4 w-4" />
                 </div>
                 <button 
                   onClick={() => handleDelete(coupon.id)}
-                  className="text-slate-400 hover:text-[#9B2B2C] uppercase text-[9px] font-black tracking-widest opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="bg-rose-50 text-rose-600 px-3 py-1 text-[8px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all hover:bg-rose-600 hover:text-white"
                 >
                   Delete
                 </button>
               </div>
-              <h3 className="text-xl font-black tracking-[0.2em] text-[#9B2B2C] mb-1 uppercase">{coupon.code}</h3>
-              <p className="text-slate-900 font-black text-sm mb-4">৳{(coupon.discount || 0).toLocaleString()} DISCOUNT</p>
-              <div className="flex items-center gap-2 text-[9px] text-[#9B2B2C] font-black uppercase bg-white/50 p-2 border border-[#777]/20">
-                <Calendar className="h-3 w-3" />
-                EXPIRES: {coupon.expiry && typeof coupon.expiry.toDate === 'function' 
+              <h3 className="text-2xl font-black tracking-tighter text-slate-900 mb-2 uppercase">{coupon.code}</h3>
+              <p className="text-brand-primary font-black text-sm mb-6 flex items-center gap-2">
+                <span className="w-1.5 h-4 bg-brand-primary/20" />
+                Discount: ৳{(coupon.discount || 0).toLocaleString()}
+              </p>
+              <div className="flex items-center gap-2 text-[9px] text-slate-400 font-black uppercase bg-slate-50 p-3 border border-slate-100">
+                <Calendar className="h-3 w-3 text-slate-300" />
+                Expires: {coupon.expiry && typeof coupon.expiry.toDate === 'function' 
                   ? format(coupon.expiry.toDate(), 'dd MMM yyyy') 
-                  : 'PERMANENT'}
+                  : 'Permanent'}
               </div>
             </div>
           ))}
           {coupons.length === 0 && !loading && (
-            <div className="col-span-2 py-10 text-center bg-[#ead9c4]/50 border-2 border-dashed border-[#777]/30 flex flex-col items-center justify-center">
-              <Ticket className="h-10 w-10 text-slate-400/50 mb-2" />
-              <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">No active coupons found.</p>
+            <div className="col-span-2 py-20 text-center border-2 border-dashed border-slate-100 flex flex-col items-center justify-center">
+              <Ticket className="h-10 w-10 text-slate-100 mb-4" />
+              <p className="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em]">Zero_Tokens_Detected</p>
             </div>
           )}
         </div>

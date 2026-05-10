@@ -42,10 +42,12 @@ export interface UserProfile {
   uid: string;
   name: string;
   email: string;
-  role: 'admin' | 'customer';
+  role: 'super_admin' | 'admin' | 'customer';
+  status: 'active' | 'suspended';
   photoURL?: string;
   wishlist: string[];
   cart: OrderItem[];
+  createdAt?: string;
 }
 
 export interface Coupon {
@@ -94,6 +96,17 @@ export interface SiteSettings {
       active: boolean;
       message: string;
       type: 'info' | 'urgent' | 'promo';
+      link?: string;
+    };
+    bannerNotice?: {
+      active: boolean;
+      text: string;
+      link?: string;
+    };
+    topHeaderBanner?: {
+      active: boolean;
+      imageUrl: string;
+      link: string;
     };
     floatingNotice?: {
       active: boolean;
@@ -101,6 +114,7 @@ export interface SiteSettings {
       textColor: string;
       bgColor: string;
       speed?: number;
+      link?: string;
     };
     topScrollingNotice?: {
       active: boolean;
@@ -108,6 +122,7 @@ export interface SiteSettings {
       textColor: string;
       bgColor: string;
       speed?: number;
+      link?: string;
     };
     adsterra?: {
       enabled: boolean;
@@ -122,12 +137,15 @@ export interface SiteSettings {
       bannerSixCode?: string;
       customAdScript?: string;
     };
-    adminCredentials?: {
-      username: string;
-      pass: string;
-    };
-    adminEmails?: string[];
   };
+  adminCredentials?: {
+    username: string;
+    pass: string;
+    adminGmail?: string;
+    adminGmailPassword?: string;
+    masterPin?: string;
+  };
+  adminEmails?: string[];
   theme?: {
     enabled: boolean;
     primaryColor: string;

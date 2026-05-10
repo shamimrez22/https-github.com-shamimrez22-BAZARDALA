@@ -24,45 +24,47 @@ const SettingsLayout = () => {
   const currentItem = menuItems.find(item => location.pathname === item.path) || menuItems[0];
 
   return (
-    <div className="space-y-6 pb-10">
-      <div className="bg-[#ead9c4] border border-[#777] p-8 shadow-md flex flex-col md:flex-row justify-between items-center gap-6">
+    <div className="flex flex-col min-h-screen bg-white">
+      <div className="bg-slate-50 border-b border-slate-200 p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h1 className="text-3xl font-black text-[#9B2B2C] uppercase tracking-tighter flex items-center gap-3">
-            <SettingsIcon className="h-8 w-8" /> System <span className="text-slate-900">Control</span>
-          </h1>
-          <p className="text-[11px] md:text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mt-2">
-            Independent Module Management // V4.0
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-2 h-6 bg-brand-primary" />
+            <h1 className="text-2xl font-black text-slate-900 uppercase tracking-tighter">
+              SYSTEM_CORE_CONFIG
+            </h1>
+          </div>
+          <p className="text-slate-400 font-bold text-[9px] uppercase tracking-[0.2em]">
+            Global_Parameters // Protocol_v4.5 // Maintenance: Nominal
           </p>
         </div>
         
-        <Button 
+        <button 
           onClick={() => setShowMobileView(true)} 
-          variant="outline"
-          className="w-full md:w-auto border-[#9B2B2C] text-[#9B2B2C] hover:bg-[#9B2B2C] hover:text-white font-black uppercase text-[11px] tracking-widest h-12 rounded-none transition-all px-6"
+          className="h-10 px-6 bg-brand-primary hover:bg-slate-900 text-white font-black uppercase text-[10px] tracking-widest transition-all active:scale-95"
         >
-          <Smartphone className="mr-2 h-4 w-4" /> Preview Mobile
-        </Button>
+          <Smartphone className="mr-2 h-4 w-4" /> PREVIEW_MOBILE_COMMS
+        </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="p-8 grid grid-cols-1 lg:grid-cols-12 gap-10">
         {/* Mobile Dropdown Navigation */}
-        <div className="lg:hidden px-1">
+        <div className="lg:hidden">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className="w-full bg-slate-900 text-white h-14 rounded-none font-black uppercase text-xs tracking-widest flex justify-between px-6 shadow-lg">
+              <button className="w-full bg-brand-primary text-white h-12 rounded-none font-black uppercase text-[10px] tracking-widest flex justify-between items-center px-6 transition-all active:scale-95">
                 <div className="flex items-center gap-3">
-                  <currentItem.icon className="h-4 w-4" />
+                  <currentItem.icon className="h-4 w-4 text-white" />
                   {currentItem.label}
                 </div>
-                <ChevronDown className="h-4 w-4" />
-              </Button>
+                <ChevronDown className="h-4 w-4 text-white/50" />
+              </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-[calc(100vw-42px)] mx-4 bg-white border-2 border-slate-900 rounded-none p-2 shadow-2xl z-[150]">
+            <DropdownMenuContent className="w-[calc(100vw-64px)] bg-white border border-slate-200 rounded-none p-1 shadow-2xl z-[150]">
               {menuItems.map((item) => (
                 <DropdownMenuItem 
                   key={item.path} 
                   onClick={() => navigate(item.path)}
-                  className="flex items-center gap-3 p-4 font-black uppercase text-[12px] tracking-widest focus:bg-[#ead9c4] focus:text-[#9B2B2C]"
+                  className="flex items-center gap-3 p-4 font-black uppercase text-[10px] tracking-widest hover:bg-slate-50 focus:bg-slate-50 focus:text-brand-primary cursor-pointer transition-colors"
                 >
                   <item.icon className="h-4 w-4" />
                   {item.label}
@@ -73,36 +75,39 @@ const SettingsLayout = () => {
         </div>
 
         {/* Sidebar Navigation - Hidden on Mobile */}
-        <div className="hidden lg:block lg:col-span-3 space-y-2">
+        <div className="hidden lg:block lg:col-span-3 space-y-1">
+          <div className="mb-4 px-4 py-2 bg-slate-50 border-l-2 border-brand-primary">
+            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Navigation_Cluster</span>
+          </div>
           {menuItems.map((item) => (
             <NavLink
               key={item.path}
               to={item.path}
               className={({ isActive }) => `
-                flex items-center gap-3 p-4 font-black uppercase text-[10px] tracking-widest border transition-all
+                flex items-center gap-3 p-4 font-black uppercase text-[10px] tracking-[0.1em] border transition-all duration-300
                 ${isActive 
-                  ? 'bg-slate-900 text-white border-slate-900 shadow-lg' 
-                  : 'bg-white text-slate-600 border-[#777] hover:border-[#9B2B2C] hover:text-[#9B2B2C]'}
+                  ? 'bg-brand-primary text-white border-brand-primary shadow-xl translate-x-2' 
+                  : 'bg-white text-slate-400 border-slate-100 hover:border-brand-primary/30 hover:text-slate-900'}
               `}
             >
-              <item.icon className="h-4 w-4" />
+              <item.icon className={`h-4 w-4 transition-colors ${location.pathname === item.path ? 'text-white' : 'text-slate-300 group-hover:text-slate-500'}`} />
               {item.label}
             </NavLink>
           ))}
           
-          <div className="mt-8 p-4 bg-yellow-50 border border-yellow-200">
-             <h4 className="text-[10px] font-black text-yellow-900 uppercase mb-2 flex items-center gap-2">
-               <Zap className="h-3 w-3" /> Information
+          <div className="mt-10 p-5 bg-slate-50 border border-slate-100 border-dashed">
+             <h4 className="text-[10px] font-black text-slate-900 uppercase mb-3 flex items-center gap-2">
+               <Zap className="h-3 w-3 text-brand-primary" /> SYSTEM_LOG
              </h4>
-             <p className="text-[9px] font-bold text-yellow-700 uppercase leading-relaxed">
-               Each section operates independently. Changes in one module do not affect others until saved.
+             <p className="text-[9px] font-bold text-slate-400 uppercase leading-relaxed tracking-wider">
+               Isolated Operability Protocols // Delta changes impact local node cache only.
              </p>
           </div>
         </div>
 
         {/* Dynamic Content */}
-        <div className="lg:col-span-9 px-1">
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="lg:col-span-9">
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 bg-white border border-slate-200">
             <Outlet />
           </div>
         </div>

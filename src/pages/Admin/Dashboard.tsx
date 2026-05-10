@@ -171,36 +171,45 @@ const AdminDashboard = () => {
   ];
 
   const StatCard = ({ title, value, icon: Icon, color, description }: any) => (
-    <div className="bg-[#ead9c4] border border-[#777] shadow-sm flex flex-col">
-      <div className="bg-[#9B2B2C] p-2 flex items-center justify-between">
-        <span className="text-[10px] font-black text-white uppercase tracking-wider">{title}</span>
-        <Icon className="h-3 w-3 text-white/70" />
+    <div className="bg-white border border-slate-200 flex flex-col group">
+      <div className="bg-slate-50 px-3 py-2 border-b border-slate-200 flex items-center justify-between">
+        <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{title}</span>
+        <Icon className="h-3 w-3 text-brand-primary" />
       </div>
-      <div className="p-4 flex flex-col items-center justify-center flex-1 bg-white/30">
+      <div className="p-5 flex flex-col items-center justify-center flex-1">
         <h3 className="text-2xl font-black text-slate-900 tracking-tight">{value}</h3>
-        <p className="text-[9px] font-bold text-slate-600 uppercase mt-1">{description}</p>
+        <p className="text-[9px] font-bold text-slate-400 uppercase mt-1 tracking-tight">{description}</p>
       </div>
     </div>
   );
 
   return (
-    <div className="space-y-8">
-      <div className="bg-[#ead9c4] border border-[#777] p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div className="flex flex-col min-h-full">
+      <div className="bg-slate-50 border-b border-slate-200 p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h1 className="text-2xl font-black text-[#9B2B2C] uppercase tracking-tight flex items-center gap-3">
-            Admin <span className="text-slate-900">Dashboard</span>
-          </h1>
-          <p className="text-slate-600 font-bold text-[10px] uppercase mt-1">
-            Control Center // {new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase()}
+          <div className="flex items-center gap-2 mb-2">
+             <div className="w-2 h-6 bg-brand-primary" />
+             <h1 className="text-2xl font-black text-slate-900 uppercase tracking-tighter">
+                Admin Dashboard
+             </h1>
+          </div>
+          <p className="text-slate-400 font-bold text-[9px] uppercase tracking-[0.2em]">
+            Status: Active // Session: {auth.currentUser?.uid.slice(0, 8)}
           </p>
         </div>
-        <div className="flex items-center gap-2">
-            <span className="text-[10px] font-black text-slate-500 uppercase">Status:</span>
-            <div className="bg-[#9B2B2C] text-white px-3 py-1 text-[10px] font-black rounded uppercase tracking-widest">Online</div>
+        <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200">
+               <div className="w-2 h-2 bg-green-500 animate-pulse" />
+               <span className="text-[10px] font-black text-slate-800 uppercase tracking-widest">System Online</span>
+            </div>
+            <button className="h-10 px-6 bg-brand-primary text-white font-black uppercase text-[10px] tracking-widest hover:opacity-90 active:scale-95 transition-all">
+               Generate Report
+            </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="p-8 space-y-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard 
           title="Total Revenue" 
           value={`৳${stats.revenue.toLocaleString()}`} 
@@ -231,71 +240,89 @@ const AdminDashboard = () => {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-[#ead9c4] border border-[#777] flex flex-col">
-          <div className="bg-[#9B2B2C] p-3">
-            <h2 className="text-sm font-black text-white uppercase tracking-widest flex items-center gap-2">
-              <TrendingUp className="h-4 w-4" /> Sales Analytics
-            </h2>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 bg-white border border-slate-200 flex flex-col">
+            <div className="bg-slate-50 border-b border-slate-200 p-4 flex items-center justify-between">
+              <h2 className="text-[11px] font-black text-slate-900 uppercase tracking-widest flex items-center gap-3">
+                <TrendingUp className="h-4 w-4 text-brand-primary" /> Revenue Overview
+              </h2>
+              <div className="flex items-center gap-2">
+                 <div className="w-2 h-2 bg-brand-primary" />
+                 <span className="text-[8px] font-bold text-slate-400 capitalize">Sales Graph</span>
+              </div>
+            </div>
+            <div className="h-[400px] p-8">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                  <XAxis 
+                    dataKey="name" 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{ fontSize: 10, fill: '#64748B', fontWeight: 700 }} 
+                  />
+                  <YAxis 
+                    axisLine={false} 
+                    tickLine={false} 
+                    tick={{ fontSize: 10, fill: '#64748B', fontWeight: 700 }} 
+                  />
+                  <Tooltip 
+                    contentStyle={{ borderRadius: '0px', border: '1px solid #E2E8F0', boxShadow: 'none' }}
+                  />
+                  <Area type="monotone" dataKey="sales" stroke="#00BCBC" strokeWidth={3} fill="url(#colorSales)" fillOpacity={1} />
+                  <defs>
+                    <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#00BCBC" stopOpacity={0.1}/>
+                      <stop offset="95%" stopColor="#00BCBC" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
           </div>
-          <div className="h-[350px] p-4 bg-white/30">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData}>
-                <CartesianGrid strokeDasharray="1 1" stroke="#77777733" />
-                <XAxis 
-                  dataKey="name" 
-                  axisLine={true} 
-                  tickLine={true} 
-                  tick={{ fontSize: 9, fill: '#334155', fontWeight: 800 }} 
-                />
-                <YAxis 
-                  axisLine={true} 
-                  tickLine={true} 
-                  tick={{ fontSize: 9, fill: '#334155', fontWeight: 800 }} 
-                />
-                <Tooltip />
-                <Area type="monotone" dataKey="sales" stroke="#9B2B2C" strokeWidth={2} fill="#9B2B2C22" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
 
-        <div className="bg-[#ead9c4] border border-[#777] flex flex-col">
-          <div className="bg-[#9B2B2C] p-3">
-            <h2 className="text-sm font-black text-white uppercase tracking-widest">Recent Orders</h2>
-          </div>
-          <div className="p-0 bg-white/20 divide-y divide-[#777]/30">
-            {recentOrders.map((order, i) => (
-              <div key={order?.id || i} className="p-3 hover:bg-[#ead9c4]/50 transition-all">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <p className="text-[10px] font-black text-[#9B2B2C]">
-                      #{order?.orderId || (order?.id ? order.id.slice(0, 8).toUpperCase() : 'UNKNOWN')}
-                    </p>
-                    <p className="text-[9px] font-bold text-slate-700 uppercase mt-0.5">
-                      {order?.customerInfo?.name || (order as any)?.name || 'Guest'}
-                    </p>
-                    <p className="text-[8px] text-slate-500 font-bold uppercase mt-0.5 truncate max-w-[150px]">
-                      {order?.items?.[0]?.name || (order as any)?.productName || 'Multiple Items'}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-[10px] font-black text-slate-900">৳{(order?.total || 0).toLocaleString()}</p>
-                    <span className="text-[7px] font-black text-[#9B2B2C] uppercase">{order?.status || 'PENDING'}</span>
+          <div className="bg-white border border-slate-200 flex flex-col">
+            <div className="bg-slate-50 border-b border-slate-200 p-4">
+              <h2 className="text-[11px] font-black text-slate-900 uppercase tracking-widest">Recent Orders</h2>
+            </div>
+            <div className="p-0 divide-y divide-slate-100 flex-1 overflow-y-auto max-h-[400px]">
+              {recentOrders.map((order, i) => (
+                <div key={order?.id || i} className="p-4 hover:bg-slate-50 transition-all cursor-pointer group" onClick={() => navigate('/admin/orders')}>
+                  <div className="flex justify-between items-start">
+                    <div className="flex flex-col">
+                      <span className="text-[10px] font-black text-brand-primary tracking-tighter">
+                        #{order?.orderId || 'PENDING_ID'}
+                      </span>
+                      <p className="text-[11px] font-bold text-slate-800 uppercase mt-1 leading-none">
+                        {order?.customerInfo?.name || 'GUEST_USER'}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-[12px] font-black text-slate-900">৳{(order?.total || 0).toLocaleString()}</p>
+                      <div className={`mt-1 inline-block px-2 py-0.5 text-[7px] font-black uppercase tracking-widest ${
+                        order?.status === 'delivered' ? 'bg-green-100 text-green-700' : 'bg-brand-primary/10 text-brand-primary'
+                      }`}>
+                         {order?.status || 'Active'}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-            {recentOrders.length === 0 && (
-              <div className="text-center py-10 px-4">
-                <p className="text-slate-500 font-bold uppercase tracking-widest text-[9px]">No Data Available</p>
-              </div>
-            )}
-          </div>
-          <div className="p-3 bg-[#ead9c4] border-t border-[#777]">
-            <button onClick={() => navigate('/admin/orders')} className="w-full py-2 bg-[#9B2B2C] text-white text-[9px] font-black uppercase tracking-widest hover:bg-[#7e2323] transition-all">
-              View All Orders
-            </button>
+              ))}
+              {recentOrders.length === 0 && (
+                <div className="text-center py-20">
+                  <ShoppingBag className="h-10 w-10 text-slate-100 mx-auto mb-4" />
+                  <p className="text-slate-300 font-bold uppercase tracking-widest text-[8px]">Empty_Registry</p>
+                </div>
+              )}
+            </div>
+            <div className="p-4 bg-slate-50 border-t border-slate-200">
+              <button 
+                onClick={() => navigate('/admin/orders')} 
+                className="w-full py-3 bg-brand-primary text-white text-[10px] font-black uppercase tracking-widest hover:bg-slate-900 transition-all active:scale-95"
+              >
+                View All Orders
+              </button>
+            </div>
           </div>
         </div>
       </div>

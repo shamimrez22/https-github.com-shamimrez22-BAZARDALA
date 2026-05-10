@@ -152,6 +152,23 @@ export const UserLayout: React.FC = () => {
     }
   };
 
+  const SmartLink = ({ to, children, className, ...props }: { to?: string; children: React.ReactNode; className?: string; [key: string]: any }) => {
+    if (!to) return <div className={className} {...props}>{children}</div>;
+    const isExternal = to.startsWith('http') || to.startsWith('//');
+    if (isExternal) {
+      return (
+        <a href={to} target="_blank" rel="noopener noreferrer" className={className} {...props}>
+          {children}
+        </a>
+      );
+    }
+    return (
+      <Link to={to} className={className} {...props}>
+        {children}
+      </Link>
+    );
+  };
+
   return (
     <div 
       className="min-h-screen flex flex-col bg-white text-slate-900 font-sans overflow-x-hidden transition-all duration-300"
@@ -161,68 +178,75 @@ export const UserLayout: React.FC = () => {
           : (window.innerWidth < 768 ? '64px' : '84px') 
       }}
     >
-      {/* Top Stack (Fixed) */}
-      <div className="fixed top-0 left-0 right-0 z-[100] w-full flex flex-col bg-white shadow-sm">
+      <div className="fixed top-0 left-0 right-0 z-[100] w-full flex flex-col bg-brand-primary">
         {/* Banner Notice (Topmost) */}
         {settings?.ads?.bannerNotice?.active && (
-          <div className="h-[24px] w-full bg-brand-primary text-white flex items-center justify-center px-4 md:px-10 relative overflow-hidden shrink-0 border-b border-white/10">
+          <SmartLink to={settings.ads.bannerNotice.link} className="h-[24px] w-full bg-brand-primary text-white flex items-center justify-center px-4 md:px-10 relative overflow-hidden shrink-0 border-b border-white/10 hover:bg-black/20 transition-colors">
              <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
              <p className="text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] relative z-10 animate-pulse">
                {settings.ads.bannerNotice.text}
              </p>
-          </div>
+          </SmartLink>
         )}
 
         {/* Header Navigation */}
-        <header className="w-full border-b-2 border-slate-900 bg-white transition-all shadow-md shrink-0">
-          <div className="w-full max-w-[1536px] mx-auto px-4 md:px-16 lg:px-24 h-12 md:h-16 flex items-center justify-between">
+        <header className="w-full bg-brand-primary transition-all shrink-0">
+          <div className="w-full px-4 md:px-16 lg:px-24 h-12 md:h-16 flex items-center justify-between">
             <div className="flex items-center gap-10">
               <div className="flex items-center gap-2 md:gap-3 group cursor-pointer">
                 <div 
                   onClick={() => setIsAdminLoginOpen(true)}
-                  className="bg-brand-primary text-white p-1.5 md:p-2.5 rounded-none shadow-lg border-2 border-slate-900 group-hover:rotate-6 transition-transform duration-500"
+                  className="bg-white text-brand-primary p-1.5 md:p-2.5 rounded-none group-hover:rotate-6 transition-transform duration-500"
                 >
                   <ShoppingBasket className="h-5 w-5 md:h-6 md:w-6" />
                 </div>
-                <Link to="/" className="text-xs sm:text-base md:text-2xl font-black tracking-tighter text-brand-primary uppercase flex items-center gap-1.5 md:gap-3 shrink-0">
-                  <div className="whitespace-nowrap underline underline-offset-4 decoration-slate-900 font-black">
+                <Link to="/" className="text-xs sm:text-base md:text-2xl font-black tracking-tighter text-white uppercase flex items-center gap-1.5 md:gap-3 shrink-0">
+                  <div className="whitespace-nowrap underline underline-offset-4 decoration-white font-black">
                     <span>{(settings?.siteName || 'BAZAR DALA').split(' ')[0]}</span>
-                    <span className="text-slate-800 group-hover:text-brand-primary transition-colors">
+                    <span className="text-white/80 group-hover:text-white transition-colors">
                       {' '}<span>{(settings?.siteName || 'BAZAR DALA').split(' ').slice(1).join(' ')}</span>
                     </span>
                   </div>
                 </Link>
               </div>
-              <nav className="hidden xl:flex items-center gap-8 text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
-                <Link to="/" onMouseEnter={() => import('../../pages/Home')} className="hover:text-brand-primary transition-colors relative group py-2">
+              <nav className="hidden xl:flex items-center gap-8 text-[11px] font-black uppercase tracking-[0.2em] text-white/60">
+                <Link to="/" onMouseEnter={() => import('../../pages/Home')} className="hover:text-white transition-colors relative group py-2">
                   HOME
                 </Link>
-                <Link to="/shop" onMouseEnter={() => import('../../pages/Shop')} className="hover:text-brand-primary transition-colors relative group py-2">
+                <Link to="/shop" onMouseEnter={() => import('../../pages/Shop')} className="hover:text-white transition-colors relative group py-2">
                   SHOP
                 </Link>
-                <Link to="/tracking" className="hover:text-brand-primary transition-colors relative group py-2">
+                <Link to="/tracking" className="hover:text-white transition-colors relative group py-2">
                   TRACKING
                 </Link>
               </nav>
             </div>
 
             <div className="flex-1 max-w-lg mx-12 hidden lg:block">
-              <div className="relative group">
-                <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 group-focus-within:text-brand-primary transition-colors" />
+              <form 
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const query = (e.currentTarget.elements.namedItem('search') as HTMLInputElement).value;
+                  if (query) navigate(`/shop?q=${encodeURIComponent(query)}`);
+                }}
+                className="relative group "
+              >
+                <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-white/50 group-focus-within:text-white transition-colors" />
                 <Input
+                  name="search"
                   placeholder="LOOKING_FOR_SOMETHING?"
-                  className="pl-14 bg-white border-2 border-slate-900 rounded-none h-12 text-[12px] font-black uppercase tracking-widest focus-visible:ring-0 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] placeholder:text-slate-400"
+                  className="pl-14 bg-white/10 border-none rounded-none h-12 text-[12px] font-black uppercase tracking-widest focus-visible:ring-0 text-white placeholder:text-white/30"
                 />
-              </div>
+              </form>
             </div>
 
             <div className="flex items-center gap-2 md:gap-5">
               <Link to="/cart" className="relative group">
-                <div className="p-2 md:p-3 bg-white border-2 border-slate-900 rounded-none group-hover:bg-brand-primary/10 transition-all text-slate-900 group-hover:text-brand-primary shadow-sm">
+                <div className="p-2 md:p-3 bg-white/10 text-white rounded-none group-hover:bg-white/20 transition-all">
                   <ShoppingCart className="h-5 w-5 md:h-6 md:w-6" />
                 </div>
                 {items.length > 0 && (
-                  <span className="absolute -top-1 -right-1 h-5 min-w-[20px] md:h-6 md:min-w-[24px] bg-brand-primary text-white text-[9px] md:text-[10px] font-black flex items-center justify-center px-1 md:px-1.5 rounded-none border-2 border-slate-900 shadow-md">
+                  <span className="absolute -top-1 -right-1 h-5 min-w-[20px] md:h-6 md:min-w-[24px] bg-white text-brand-primary text-[9px] md:text-[10px] font-black flex items-center justify-center px-1 md:px-1.5 rounded-none">
                     {items.length}
                   </span>
                 )}
@@ -231,8 +255,8 @@ export const UserLayout: React.FC = () => {
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="flex items-center gap-2 md:gap-3 p-1 rounded-none border-2 border-transparent hover:border-slate-900 transition-all">
-                      <div className="w-8 h-8 md:w-10 md:h-10 rounded-none overflow-hidden shadow-sm border-2 border-slate-900 bg-[#f8f8f8]">
+                    <button className="flex items-center gap-2 md:gap-3 p-1 rounded-none border-2 border-transparent hover:border-white transition-all">
+                      <div className="w-8 h-8 md:w-10 md:h-10 rounded-none overflow-hidden bg-white/10">
                         <img
                           src={user.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`}
                           alt="Avatar"
@@ -241,20 +265,20 @@ export const UserLayout: React.FC = () => {
                       </div>
                     </button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-64 bg-white border-4 border-slate-900 rounded-none p-2 shadow-2xl mt-4 overflow-hidden">
+                  <DropdownMenuContent align="end" className="w-64 bg-white border border-slate-100 rounded-none p-2 mt-4 overflow-hidden">
                     <DropdownMenuGroup className="space-y-1">
-                      <DropdownMenuLabel className="p-5 border-b-2 border-slate-900 mb-2">
+                      <DropdownMenuLabel className="p-5 border-b border-slate-100 mb-2">
                         <div className="flex flex-col">
                           <p className="text-[12px] font-black uppercase tracking-widest text-slate-800">{user.displayName}</p>
                           <p className="text-[10px] font-black text-slate-400 mt-1 uppercase opacity-60">{user.email}</p>
                         </div>
                       </DropdownMenuLabel>
-                      <DropdownMenuItem onClick={() => navigate('/dashboard')} className="text-[11px] font-black uppercase p-4 rounded-none border-2 border-transparent focus:border-slate-900 focus:bg-[#f8f8f8] cursor-pointer">
+                      <DropdownMenuItem onClick={() => navigate('/dashboard')} className="text-[11px] font-black uppercase p-4 rounded-none focus:bg-brand-primary/5 cursor-pointer">
                         <User className="mr-4 h-5 w-5 text-brand-primary" />
                         <span>MY_DASHBOARD</span>
                       </DropdownMenuItem>
-                      <DropdownMenuSeparator className="bg-slate-900 h-[2px] my-2" />
-                      <DropdownMenuItem onClick={handleLogout} className="text-[11px] font-black uppercase p-4 rounded-none border-2 border-transparent focus:border-slate-900 focus:bg-red-600 focus:text-white cursor-pointer">
+                      <DropdownMenuSeparator className="bg-slate-100 h-[1px] my-2" />
+                      <DropdownMenuItem onClick={handleLogout} className="text-[11px] font-black uppercase p-4 rounded-none focus:bg-red-600 focus:text-white cursor-pointer">
                         <LogOut className="mr-4 h-5 w-5" />
                         <span>END_SESSION</span>
                       </DropdownMenuItem>
@@ -262,7 +286,7 @@ export const UserLayout: React.FC = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <Button onClick={handleLogin} className="bg-slate-900 hover:bg-brand-primary text-white rounded-none h-10 md:h-12 px-3 md:px-8 text-[11px] font-black uppercase tracking-widest shadow-md active:scale-95 transition-all border-2 border-slate-900">
+                <Button onClick={handleLogin} className="bg-white text-brand-primary hover:bg-white/90 rounded-none h-10 md:h-12 px-3 md:px-8 text-[11px] font-black uppercase tracking-widest transition-all">
                   <span className="hidden sm:inline">AUTH_LOGIN</span>
                   <User className="sm:hidden h-5 w-5" />
                 </Button>
@@ -271,7 +295,7 @@ export const UserLayout: React.FC = () => {
               <Button
                 variant="ghost"
                 size="icon"
-                className="lg:hidden bg-white border-2 border-slate-900 rounded-none h-10 w-10 md:h-12 md:w-12 hover:bg-slate-900 hover:text-white transition-all text-brand-primary"
+                className="lg:hidden bg-white/10 text-white rounded-none h-10 w-10 md:h-12 md:w-12 hover:bg-white/20 transition-all font-black"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
               >
                 {isMenuOpen ? <X className="h-5 w-5 md:h-6 md:w-6" /> : <Menu className="h-5 w-5 md:h-6 md:w-6" />}
@@ -280,10 +304,23 @@ export const UserLayout: React.FC = () => {
           </div>
         </header>
 
+        {/* Top Header Graphic Banner */}
+        {settings?.ads?.topHeaderBanner?.active && settings?.ads?.topHeaderBanner?.imageUrl && (
+          <SmartLink to={settings.ads.topHeaderBanner.link} className="w-full bg-white block overflow-hidden shrink-0">
+            <img 
+              src={settings.ads.topHeaderBanner.imageUrl} 
+              alt="Promo Banner" 
+              className="w-full h-auto max-h-[40px] md:max-h-[60px] object-cover w-full transition-transform hover:scale-[1.02] duration-500"
+              referrerPolicy="no-referrer"
+            />
+          </SmartLink>
+        )}
+
         {/* Global Top Scrolling Notice */}
         {settings?.ads?.topScrollingNotice?.active && (
-          <div 
-            className="h-[32px] md:h-[40px] w-full relative overflow-hidden whitespace-nowrap flex items-center border-b border-slate-900/10 shrink-0"
+          <SmartLink 
+            to={settings.ads.topScrollingNotice.link}
+            className="h-[32px] md:h-[40px] w-full relative overflow-hidden whitespace-nowrap flex items-center shrink-0 hover:opacity-90"
             style={{ backgroundColor: settings.ads.topScrollingNotice.bgColor }}
           >
             <div 
@@ -295,7 +332,7 @@ export const UserLayout: React.FC = () => {
               <span className="inline-block px-12">{settings.ads.topScrollingNotice.text}</span>
               <span className="inline-block px-12">{settings.ads.topScrollingNotice.text}</span>
             </div>
-          </div>
+          </SmartLink>
         )}
 
         {/* Global Notice Banner (Embedded in Sticky Stack) */}
@@ -305,9 +342,9 @@ export const UserLayout: React.FC = () => {
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="w-full flex justify-center bg-[#f3f4f6]"
+              className="w-full flex justify-center bg-brand-primary"
             >
-              <div className="w-full bg-brand-primary shadow-lg text-white py-2 px-8 relative overflow-hidden rounded-none border-b-2 border-slate-900">
+              <SmartLink to={settings.ads.globalNotice.link} className="w-full bg-brand-primary text-white py-2 px-8 relative overflow-hidden rounded-none hover:bg-black/10 transition-colors block">
                 <div className="flex items-center justify-center gap-5 relative z-10">
                   <div className="w-2 h-2 bg-white rounded-none animate-ping hidden sm:block" />
                   <p className="text-[10px] md:text-[12px] font-black uppercase tracking-[0.25em] text-center">
@@ -315,15 +352,15 @@ export const UserLayout: React.FC = () => {
                   </p>
                   <div className="w-2 h-2 bg-white rounded-none animate-ping hidden sm:block" />
                 </div>
-              </div>
+              </SmartLink>
             </motion.div>
           )}
         </AnimatePresence>
 
         {/* Social Bar Ad (Embedded in Sticky Stack) */}
         {settings?.ads?.socialBarAd?.active && (
-          <div className="w-full flex justify-center bg-[#f3f4f6]">
-            <div className="w-full bg-white shadow-lg text-slate-800 py-3 px-4 md:px-10 border-b-2 border-slate-900 rounded-none flex flex-row items-center justify-between gap-2 md:gap-6 overflow-hidden relative">
+          <div className="w-full flex justify-center bg-white border-b border-slate-100">
+            <div className="w-full bg-white text-slate-800 py-3 px-4 md:px-10 rounded-none flex flex-row items-center justify-between gap-2 md:gap-6 overflow-hidden relative">
               <div className="flex items-center gap-2 md:gap-4 relative z-10">
                 <Zap className="h-4 w-4 md:h-5 md:w-5 text-brand-primary" />
                 <p className="text-[8px] md:text-[12px] font-black uppercase tracking-widest text-left">
@@ -331,17 +368,18 @@ export const UserLayout: React.FC = () => {
                 </p>
               </div>
               {settings.ads.socialBarAd.link && (
-                <Link 
+                <SmartLink 
                   to={settings.ads.socialBarAd.link} 
-                  className="relative z-10 bg-slate-900 text-white text-[8px] md:text-[9px] font-black uppercase px-3 md:px-6 py-1.5 md:py-2 rounded-none hover:bg-brand-primary transition-all shadow-md active:scale-95 border-2 border-slate-900 shrink-0"
+                  className="relative z-10 bg-slate-900 text-white text-[8px] md:text-[9px] font-black uppercase px-3 md:px-6 py-1.5 md:py-2 rounded-none hover:bg-brand-primary transition-all active:scale-95 shrink-0"
                 >
                   LINK
-                </Link>
+                </SmartLink>
               )}
             </div>
           </div>
         )}
       </div>
+
 
 
       {/* Mobile Menu */}
@@ -360,9 +398,9 @@ export const UserLayout: React.FC = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 bottom-0 w-[280px] z-[60] lg:hidden bg-white shadow-2xl border-l-2 border-slate-900 overflow-hidden flex flex-col"
+              className="fixed right-0 top-0 bottom-0 w-[280px] z-[60] lg:hidden bg-white border-l border-slate-100 overflow-hidden flex flex-col"
             >
-              <div className="p-6 bg-brand-primary border-b-2 border-slate-900 flex items-center justify-between">
+              <div className="p-6 bg-brand-primary border-b border-white/10 flex items-center justify-between">
                 <h2 className="text-white font-black uppercase tracking-widest text-sm">MENU_EXPLORER</h2>
                 <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(false)} className="text-white hover:bg-white/10">
                   <X className="h-6 w-6" />
@@ -392,12 +430,12 @@ export const UserLayout: React.FC = () => {
       <div className="flex flex-col gap-6 py-10 bg-slate-50/20">
         {settings?.ads?.adsterra?.bannerOneCode && (
           <div className="flex justify-center overflow-hidden px-4">
-             <div ref={bannerOneRef} className="min-h-[90px] w-full max-w-4xl bg-white rounded-3xl shadow-sm border border-slate-50 flex items-center justify-center p-4" />
+             <div ref={bannerOneRef} className="min-h-[90px] w-full max-w-4xl bg-white border border-slate-100 flex items-center justify-center p-4" />
           </div>
         )}
         {settings?.ads?.adsterra?.bannerTwoCode && (
           <div className="flex justify-center overflow-hidden px-4">
-             <div ref={bannerTwoRef} className="min-h-[90px] w-full max-w-4xl bg-white rounded-3xl shadow-sm border border-slate-50 flex items-center justify-center p-4" />
+             <div ref={bannerTwoRef} className="min-h-[90px] w-full max-w-4xl bg-white border border-slate-100 flex items-center justify-center p-4" />
           </div>
         )}
       </div>
@@ -405,8 +443,8 @@ export const UserLayout: React.FC = () => {
       {/* Admin Login Dialog */}
       <Dialog open={isAdminLoginOpen} onOpenChange={setIsAdminLoginOpen}>
         <DialogContent className="p-0 border-none bg-transparent shadow-none w-full max-w-md [&>button]:text-white">
-          <div className="bg-[#ead9c4] border-4 border-slate-900 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] rounded-none overflow-hidden font-sans">
-            <div className="bg-brand-primary p-4 text-white flex items-center justify-between border-b-2 border-slate-900">
+          <div className="bg-[#ead9c4] border border-slate-100 rounded-none overflow-hidden font-sans">
+            <div className="bg-brand-primary p-4 text-white flex items-center justify-between">
               <h2 className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
                 <ShoppingBasket className="h-4 w-4" /> সিকিউর লগইন
               </h2>
@@ -416,7 +454,7 @@ export const UserLayout: React.FC = () => {
               {adminView === 'login' ? (
                 <>
                   <div className="flex justify-center mb-8">
-                    <div className="w-16 h-16 rounded-none bg-[#ead9c4] border-2 border-slate-900 flex items-center justify-center text-brand-primary shadow-[4px_4px_0px_0px_rgba(0,188,188,1)]">
+                    <div className="w-16 h-16 rounded-none bg-[#ead9c4] border border-slate-100 flex items-center justify-center text-brand-primary">
                       <Lock className="h-8 w-8" />
                     </div>
                   </div>
@@ -430,7 +468,7 @@ export const UserLayout: React.FC = () => {
                           type="text"
                           value={adminUser}
                           onChange={(e) => setAdminUser(e.target.value)}
-                          className="pl-12 bg-white border-2 border-slate-900 text-slate-900 rounded-none h-14 font-black text-xs focus-visible:ring-0 focus-visible:border-brand-primary shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)]"
+                          className="pl-12 bg-white border border-slate-200 text-slate-900 rounded-none h-14 font-black text-xs focus-visible:ring-0 focus-visible:border-brand-primary"
                           placeholder="ADMIN_ID"
                           required
                         />
@@ -445,7 +483,7 @@ export const UserLayout: React.FC = () => {
                           type="password"
                           value={adminPass}
                           onChange={(e) => setAdminPass(e.target.value)}
-                          className="pl-12 bg-white border-2 border-slate-900 text-slate-900 rounded-none h-14 font-black text-xs focus-visible:ring-0 focus-visible:border-brand-primary shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)]"
+                          className="pl-12 bg-white border border-slate-200 text-slate-900 rounded-none h-14 font-black text-xs focus-visible:ring-0 focus-visible:border-brand-primary"
                           placeholder="••••••••"
                           required
                         />
@@ -455,7 +493,7 @@ export const UserLayout: React.FC = () => {
                     <Button 
                       type="submit" 
                       disabled={isLoggingIn}
-                      className="w-full h-14 bg-slate-900 hover:bg-brand-primary text-white font-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,188,188,1)] uppercase tracking-[0.3em] text-xs transition-all active:translate-y-1 active:shadow-none"
+                      className="w-full h-14 bg-brand-primary hover:opacity-90 text-white font-black rounded-none uppercase tracking-[0.3em] text-xs transition-all active:scale-95"
                     >
                       {isLoggingIn ? 'প্রসেসিং...' : 'লগইন করুন'}
                     </Button>
@@ -463,21 +501,22 @@ export const UserLayout: React.FC = () => {
 
                   <div className="relative my-8">
                     <div className="absolute inset-0 flex items-center">
-                      <div className="w-full border-t-2 border-slate-900/10"></div>
+                      <div className="w-full border-t border-slate-100"></div>
                     </div>
                     <div className="relative flex justify-center text-[10px] font-black uppercase tracking-widest">
-                      <span className="bg-[#ead9c4]/20 px-4 text-slate-400">OR RECOVER VIA</span>
+                      <span className="bg-white/40 px-4 text-slate-400">OR RECOVER VIA</span>
                     </div>
                   </div>
 
                   <Button 
                     onClick={handleAdminGoogleLogin}
                     variant="outline"
-                    className="w-full h-14 border-2 border-slate-900 bg-white text-slate-900 font-black rounded-none uppercase tracking-[0.2em] text-[10px] transition-all flex items-center justify-center gap-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] hover:bg-slate-50"
+                    className="w-full h-14 border border-slate-200 bg-white text-slate-900 font-black rounded-none uppercase tracking-[0.2em] text-[10px] transition-all flex items-center justify-center gap-3 hover:bg-slate-50"
                   >
                     <img src="https://www.google.com/favicon.ico" className="w-4 h-4 grayscale" alt="Google" />
                     GOOGLE ADMIN RECOVERY
                   </Button>
+
 
                   <div className="mt-8 text-center pt-4 border-t border-slate-900/10">
                     <button 
@@ -500,10 +539,11 @@ export const UserLayout: React.FC = () => {
 
                   <Button 
                     onClick={handleAdminGoogleLogin}
-                    className="w-full h-14 bg-brand-primary hover:bg-slate-900 text-white font-black rounded-none shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] uppercase tracking-[0.2em] text-xs transition-all flex items-center justify-center gap-3"
+                    className="w-full h-14 bg-brand-primary hover:opacity-90 text-white font-black rounded-none uppercase tracking-[0.2em] text-xs transition-all flex items-center justify-center gap-3"
                   >
                     <Mail className="h-4 w-4" /> গুগল দিয়ে লগইন
                   </Button>
+
 
                   <button 
                     onClick={() => setAdminView('login')}
@@ -523,7 +563,7 @@ export const UserLayout: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
             <div className="space-y-6">
               <Link to="/" className="flex items-center gap-4 group">
-                <div className="w-12 h-12 bg-brand-primary flex items-center justify-center text-black font-black text-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)]">
+                <div className="w-12 h-12 bg-brand-primary flex items-center justify-center text-black font-black text-xl">
                   {(settings?.siteName || 'SS').substring(0, 2).toUpperCase()}
                 </div>
                 <div>
@@ -560,7 +600,7 @@ export const UserLayout: React.FC = () => {
                       href={social.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-10 h-10 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-brand-primary hover:border-brand-primary transition-all bg-slate-900/50 rounded-sm"
+                      className="w-10 h-10 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-brand-primary hover:border-brand-primary transition-all bg-slate-900/50 rounded-none"
                     >
                       <Icon className="h-5 w-5" />
                     </a>
@@ -658,21 +698,21 @@ export const UserLayout: React.FC = () => {
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 40 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-              className="relative w-full max-w-xl bg-white rounded-none shadow-2xl p-0 overflow-hidden border-4 border-slate-900"
+              className="relative w-full max-w-xl bg-white rounded-none p-0 overflow-hidden border border-slate-200"
             >
               <button 
                 onClick={() => {
                   setShowPopup(false);
                   sessionStorage.setItem('popup_displayed', 'true');
                 }}
-                className="absolute top-6 right-6 z-20 p-3 bg-white border-2 border-slate-900 rounded-none text-slate-800 hover:bg-brand-primary hover:text-white transition-all shadow-lg"
+                className="absolute top-6 right-6 z-20 p-3 bg-white border border-slate-200 rounded-none text-slate-800 hover:bg-brand-primary hover:text-white transition-all"
               >
                 <X className="h-6 w-6" />
               </button>
               
               <div className="flex flex-col">
                 {settings.ads.popupAd.imageUrl && (
-                  <div className="w-full aspect-[4/3] overflow-hidden group border-b-4 border-slate-900">
+                  <div className="w-full aspect-[4/3] overflow-hidden group border-b border-slate-100">
                     <img 
                       src={settings.ads.popupAd.imageUrl} 
                       alt="Promotion"
@@ -682,8 +722,8 @@ export const UserLayout: React.FC = () => {
                   </div>
                 )}
                 <div className="p-10 md:p-14 space-y-8 text-center relative z-10 bg-white">
-                   <div className="bg-white rounded-none p-10 shadow-xl space-y-6 relative z-10 border-2 border-slate-900">
-                     <span className="inline-block px-5 py-1.5 bg-brand-primary text-white text-[10px] font-black uppercase tracking-[0.4em] rounded-none shadow-md border border-white italic">
+                   <div className="bg-white rounded-none p-10 space-y-6 relative z-10 border border-slate-100">
+                     <span className="inline-block px-5 py-1.5 bg-brand-primary text-white text-[10px] font-black uppercase tracking-[0.4em] rounded-none border border-white italic">
                        PRIVATE_OFFER_NODE
                      </span>
                      <h2 className="text-3xl md:text-3xl font-black text-slate-900 uppercase tracking-tighter leading-none italic underline decoration-brand-primary decoration-4">
@@ -697,11 +737,12 @@ export const UserLayout: React.FC = () => {
                              setShowPopup(false);
                              sessionStorage.setItem('popup_displayed', 'true');
                            }}
-                           className="bg-slate-900 text-white font-black uppercase tracking-widest py-5 rounded-none hover:bg-brand-primary transition-all text-sm shadow-xl active:scale-95 border-2 border-slate-900"
+                           className="bg-slate-900 text-white font-black uppercase tracking-widest py-5 rounded-none hover:bg-brand-primary transition-all text-sm active:scale-95"
                          >
                            REDEEM_SPEC_PROTOCOL
                          </Link>
                        )}
+
                        <button 
                          onClick={() => {
                            setShowPopup(false);

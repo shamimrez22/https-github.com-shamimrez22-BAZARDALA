@@ -45,9 +45,11 @@
       "properties": {
         "name": { "type": "string" },
         "email": { "type": "string" },
-        "role": { "type": "string", "enum": ["admin", "customer"] },
+        "role": { "type": "string", "enum": ["super_admin", "admin", "customer"] },
+        "status": { "type": "string", "enum": ["active", "suspended"] },
         "wishlist": { "type": "array", "items": { "type": "string" } },
-        "cart": { "type": "array", "items": { "$ref": "OrderItem" } }
+        "cart": { "type": "array", "items": { "$ref": "OrderItem" } },
+        "createdAt": { "type": "string", "format": "date-time" }
       }
     },
     "Coupon": {

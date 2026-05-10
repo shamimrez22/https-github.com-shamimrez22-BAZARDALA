@@ -115,7 +115,7 @@ const Checkout = () => {
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="max-w-md w-full bg-white border border-slate-200 shadow-2xl relative p-12 text-center"
+          className="max-w-md w-full bg-white border border-slate-100 relative p-12 text-center"
         >
           {/* Close Button UI */}
           <button 
@@ -128,7 +128,7 @@ const Checkout = () => {
           {/* Icon Area */}
           <div className="relative w-32 h-32 mx-auto mb-8">
             <div className="absolute inset-0 bg-brand-primary/5 rounded-full blur-2xl animate-pulse" />
-            <div className="relative w-full h-full border-4 border-brand-primary rounded-full flex items-center justify-center bg-white shadow-lg">
+            <div className="relative w-full h-full border-4 border-brand-primary rounded-full flex items-center justify-center bg-white">
                <div className="relative">
                  <CheckCircle2 className="h-14 w-14 text-brand-primary" />
                  {/* Decorative Confetti Effect Dots */}
@@ -157,7 +157,7 @@ const Checkout = () => {
           <div className="mt-10 pt-8 border-t border-slate-100 flex flex-col gap-4">
              <Button 
                 variant="outline"
-                className="w-full h-12 border-2 border-slate-900 rounded-none text-[10px] font-black uppercase tracking-widest hover:bg-slate-50"
+                className="w-full h-12 border border-slate-200 rounded-none text-[10px] font-black uppercase tracking-widest hover:bg-slate-50"
                 onClick={() => navigate(`/tracking?id=${orderSuccess}`)}
              >
                VIEW_ORDER_ID: {orderSuccess}
@@ -175,7 +175,7 @@ const Checkout = () => {
       <motion.div 
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-5xl w-full bg-white border border-slate-200 shadow-2xl relative flex flex-col md:flex-row overflow-hidden"
+        className="max-w-5xl w-full bg-white border border-slate-100 relative flex flex-col md:flex-row overflow-hidden"
       >
         {/* Close Button UI representation since it's a modal look */}
         <button 
@@ -187,7 +187,7 @@ const Checkout = () => {
 
         {/* Left Column: Product Info */}
         <div className="w-full md:w-[42%] p-6 md:p-10 bg-slate-50 flex flex-col">
-          <div className="w-full aspect-square bg-white border border-slate-200 mb-8 overflow-hidden group shadow-sm">
+          <div className="w-full aspect-square bg-white border border-slate-200 mb-8 overflow-hidden group">
             <img 
               src={currentItem?.image || currentItem?.images?.[0] || 'https://picsum.photos/seed/placeholder/400/400'} 
               alt={currentItem?.name} 
@@ -204,7 +204,7 @@ const Checkout = () => {
               <span className="text-3xl font-black text-brand-primary tracking-tighter">৳{(currentItem?.price || 0).toLocaleString()}</span>
             </div>
 
-            <div className="bg-white border border-slate-200 p-6 space-y-4 shadow-sm">
+            <div className="bg-white border border-slate-200 p-6 space-y-4">
                <div className="flex items-center gap-3">
                   <Truck className="h-5 w-5 text-brand-primary" />
                   <h3 className="text-[11px] font-black uppercase tracking-widest text-slate-800">DELIVERY INFO</h3>
@@ -236,7 +236,7 @@ const Checkout = () => {
                         key={size}
                         type="button"
                         onClick={() => setSelectedSize(size)}
-                        className={`w-10 h-10 flex items-center justify-center text-[11px] font-black transition-all ${selectedSize === size ? 'bg-brand-primary text-white scale-110 shadow-lg' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`}
+                        className={`w-10 h-10 flex items-center justify-center text-[11px] font-black transition-all ${selectedSize === size ? 'bg-brand-primary text-white scale-110' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`}
                       >
                         {size}
                       </button>
@@ -303,14 +303,14 @@ const Checkout = () => {
               <Button 
                 type="submit"
                 disabled={loading}
-                className="w-full h-16 bg-brand-primary hover:bg-brand-primary/90 text-white text-lg md:text-xl font-bold uppercase rounded-none shadow-[0px_4px_10px_rgba(0,188,188,0.2)] active:scale-95 transition-all"
+                className="w-full h-16 bg-brand-primary hover:opacity-90 text-white text-lg md:text-xl font-bold uppercase rounded-none active:scale-95 transition-all"
               >
                 {loading ? 'প্রক্রিয়াধীন...' : 'অর্ডার নিশ্চিত করুন'}
               </Button>
 
               <button
                 type="button"
-                className="w-full h-14 border-2 border-brand-primary text-brand-primary font-black uppercase tracking-widest flex items-center justify-center gap-4 hover:bg-brand-primary/5 transition-all text-[11px] active:scale-95"
+                className="w-full h-14 border border-brand-primary text-brand-primary font-black uppercase tracking-widest flex items-center justify-center gap-4 hover:bg-brand-primary/5 transition-all text-[11px] active:scale-95 rounded-none"
               >
                 <MessageCircle className="h-5 w-5" /> CHAT WITH ADMIN
               </button>

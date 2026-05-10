@@ -72,6 +72,13 @@ const AdminOrders = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const statusFilter = searchParams.get('status');
+  const searchQuery = searchParams.get('search');
+
+  useEffect(() => {
+    if (searchQuery) {
+      setSearch(searchQuery);
+    }
+  }, [searchQuery]);
 
   const ORDERS_PER_PAGE = 15;
 
@@ -169,11 +176,11 @@ const AdminOrders = () => {
       
       const orderRef = doc(db, 'orders', id);
       await updateDoc(orderRef, { status: status });
-      toast.success(`MANIFEST_UPDATED: ${id.slice(0, 5)} -> ${status.toUpperCase()}`);
+      toast.success(`Order Updated: ${id.slice(0, 5)} -> ${status.toUpperCase()}`);
     } catch (error: any) {
       console.error('Status update failed:', error);
       setOrders(originalOrders);
-      toast.error(`Sync Failure`);
+      toast.error(`Update Failed`);
     }
   };
 
@@ -234,7 +241,7 @@ const AdminOrders = () => {
     doc.setTextColor(...darkColor);
     doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
-    doc.text('ORDER_MANIFEST', 25, 65);
+    doc.text('ORDER INVOICE', 25, 65);
     
     doc.setDrawColor(...primaryColor);
     doc.setLineWidth(1);
@@ -243,12 +250,12 @@ const AdminOrders = () => {
     // Meta Grid
     doc.setFontSize(9);
     doc.setTextColor(100, 116, 139);
-    doc.text('MANIFEST_ID:', 25, 80);
+    doc.text('ORDER ID:', 25, 80);
     doc.setTextColor(...darkColor);
     doc.text(`#${(order.orderId || order.id).toUpperCase()}`, 55, 80);
     
     doc.setTextColor(100, 116, 139);
-    doc.text('ISSUED_DATE:', 25, 87);
+    doc.text('ORDER DATE:', 25, 87);
     doc.setTextColor(...darkColor);
     const orderDate = order.createdAt?.toDate ? format(order.createdAt.toDate(), 'PPP p') : format(new Date(), 'PPP p');
     doc.text(orderDate, 55, 87);
@@ -258,7 +265,7 @@ const AdminOrders = () => {
     doc.rect(120, 70, 65, 30, 'F');
     doc.setTextColor(...primaryColor);
     doc.setFont('helvetica', 'bold');
-    doc.text('BILL_TO:', 125, 78);
+    doc.text('BILL TO:', 125, 78);
     
     doc.setTextColor(...darkColor);
     doc.setFontSize(8);
@@ -280,7 +287,7 @@ const AdminOrders = () => {
     autoTable(doc, {
       startY: 110,
       margin: { left: 25, right: 25 },
-      head: [['PRODUCT_SPECIFICATION', 'QTY', 'UNIT_PRICE', 'SUBTOTAL']],
+      head: [['PRODUCT NAME', 'QTY', 'UNIT PRICE', 'SUBTOTAL']],
       body: tableData,
       theme: 'grid',
       headStyles: {
@@ -319,7 +326,7 @@ const AdminOrders = () => {
     doc.text(`BTD ${(order.total || 0).toLocaleString()}`, 185, finalY + 5, { align: 'right' });
     
     doc.setTextColor(100, 116, 139);
-    doc.text('FEE_ADJUST:', 120, finalY + 12);
+    doc.text('SHIPPING:', 120, finalY + 12);
     doc.setTextColor(...darkColor);
     doc.text('BTD 0', 185, finalY + 12, { align: 'right' });
     
@@ -327,7 +334,7 @@ const AdminOrders = () => {
     doc.rect(120, finalY + 18, 65, 12, 'F');
     doc.setTextColor(255, 255, 255);
     doc.setFont('helvetica', 'bold');
-    doc.text('TOTAL_MANIFEST:', 125, finalY + 26);
+    doc.text('TOTAL AMOUNT:', 125, finalY + 26);
     doc.text(`BTD ${(order.total || 0).toLocaleString()}`, 180, finalY + 26, { align: 'right' });
 
     // Footer Stamp
@@ -378,97 +385,87 @@ const AdminOrders = () => {
   };
 
   return (
-    <div className="space-y-6 min-h-screen">
-      <Card className="bg-[#ead9c4] border border-[#777] rounded-none shadow-none">
-        <CardContent className="p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div>
-            <h1 className="text-2xl font-black text-[#9B2B2C] uppercase tracking-tight flex items-center gap-3">
-              Customer <span className="text-slate-900">Orders</span>
+    <div className="flex flex-col min-h-screen bg-white">
+      <div className="bg-slate-50 border-b border-slate-200 p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-2 h-6 bg-brand-primary" />
+            <h1 className="text-2xl font-black text-slate-900 uppercase tracking-tighter">
+              Order Management
             </h1>
-            <p className="text-slate-600 font-bold text-[10px] uppercase mt-1">
-              Order Records // {statusFilter ? `Filtered: ${statusFilter.toUpperCase()}` : 'All Orders'}
-            </p>
           </div>
-          
-          <div className="flex flex-wrap items-center gap-2">
-             <Button 
+          <p className="text-slate-400 font-bold text-[9px] uppercase tracking-[0.2em]">
+            Manage store orders // {orders.length} Total // {statusFilter ? `Status: ${statusFilter.toUpperCase()}` : 'All Orders'}
+          </p>
+        </div>
+        
+        <div className="flex flex-wrap items-center gap-2 overflow-x-auto pb-2 md:pb-0">
+             <button 
                onClick={() => navigate('/admin/orders')}
-               className={`h-8 px-4 rounded-none text-[9px] font-black uppercase transition-all ${
-                 !statusFilter ? 'bg-[#9B2B2C] text-white shadow-md' : 'bg-white border border-[#777] text-[#9B2B2C] hover:bg-[#ead9c4]'
+               className={`h-8 px-4 text-[9px] font-black uppercase transition-all tracking-widest ${
+                 !statusFilter ? 'bg-brand-primary text-white' : 'bg-white border border-slate-200 text-slate-500 hover:bg-slate-50'
                }`}
              >
-               All Logs
-             </Button>
-             <Button 
+               All Orders
+             </button>
+             <button 
                onClick={() => navigate('/admin/orders?status=pending')}
-               className={`h-8 px-4 rounded-none text-[9px] font-black uppercase transition-all relative ${
-                 statusFilter === 'pending' ? 'bg-[#9B2B2C] text-white shadow-md' : 'bg-white border border-[#777] text-[#9B2B2C] hover:bg-[#ead9c4]'
+               className={`h-8 px-4 text-[9px] font-black uppercase transition-all tracking-widest ${
+                 statusFilter === 'pending' ? 'bg-brand-primary text-white' : 'bg-white border border-slate-200 text-slate-500 hover:bg-slate-50'
                }`}
              >
                Pending
-               {(orders || []).filter(o => o?.status === 'pending').length > 0 && (
-                 <span className="ml-2 bg-white text-[#9B2B2C] px-1 rounded-sm text-[8px]">
-                    {(orders || []).filter(o => o?.status === 'pending').length}
-                 </span>
-               )}
-             </Button>
-             <Button 
+             </button>
+             <button 
                onClick={() => navigate('/admin/orders?status=confirmed')}
-               className={`h-8 px-4 rounded-none text-[9px] font-black uppercase transition-all relative ${
-                 statusFilter === 'confirmed' ? 'bg-[#9B2B2C] text-white shadow-md' : 'bg-white border border-[#777] text-[#9B2B2C] hover:bg-[#ead9c4]'
+               className={`h-8 px-4 text-[9px] font-black uppercase transition-all tracking-widest ${
+                 statusFilter === 'confirmed' ? 'bg-slate-800 text-white' : 'bg-white border border-slate-200 text-slate-500 hover:bg-slate-50'
                }`}
              >
                Confirmed
-               {(orders || []).filter(o => o?.status === 'confirmed').length > 0 && (
-                 <span className="ml-2 bg-white text-[#9B2B2C] px-1 rounded-sm text-[8px]">
-                    {(orders || []).filter(o => o?.status === 'confirmed').length}
-                 </span>
-               )}
-             </Button>
-             <div className="h-6 w-[1px] bg-[#777]/30 mx-2" />
-             <Button 
+             </button>
+             <div className="h-6 w-[1px] bg-slate-200 mx-2 hidden md:block" />
+             <button 
                onClick={() => window.location.reload()}
-               variant="outline"
-               className="h-8 px-3 rounded-none text-[9px] font-black uppercase border-[#777] text-slate-600"
+               className="h-8 px-3 text-[9px] font-black uppercase border border-slate-200 text-slate-400 hover:bg-slate-50"
              >
-               Force Refresh
-             </Button>
-          </div>
+               Refresh
+             </button>
+        </div>
 
-          <div className="flex items-center gap-3 w-full md:w-auto">
-            <div className="relative flex-1 md:w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-[#9B2B2C]" />
-              <Input
-                placeholder="Search Orders..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-9 bg-white border-[#777] text-xs h-9 rounded-none ring-offset-0 focus:ring-0 focus:border-[#9B2B2C]"
-              />
-            </div>
+        <div className="flex items-center gap-3 w-full md:w-auto">
+          <div className="relative flex-1 md:w-64">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
+            <input
+              placeholder="Search Order ID..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full pl-10 pr-4 h-10 bg-white border border-slate-200 text-[10px] font-black uppercase tracking-widest focus:border-brand-primary outline-none transition-colors"
+            />
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      <Card className="bg-[#ead9c4] border border-[#777] rounded-none shadow-none overflow-hidden min-h-[500px]">
-        <div className="overflow-x-auto">
+      <div className="flex-1 p-8">
+        <div className="bg-white border border-slate-200 overflow-hidden min-h-[500px]">
           <Table className="w-full text-left border-collapse table-fixed">
-            <TableHeader className="bg-[#9B2B2C] text-white uppercase sticky top-0 z-10 border-none">
-              <TableRow className="border-none hover:bg-[#9B2B2C]">
-                <TableHead className="w-32 px-4 py-3 text-[10px] font-black uppercase tracking-widest text-white border-r border-white/20">Order ID</TableHead>
-                <TableHead className="px-4 py-3 text-[10px] font-black uppercase tracking-widest text-white border-r border-white/20">Customer Details</TableHead>
-                <TableHead className="px-4 py-3 text-[10px] font-black uppercase tracking-widest text-white border-r border-white/20">Products</TableHead>
-                <TableHead className="w-40 px-4 py-3 text-[10px] font-black uppercase tracking-widest text-white border-r border-white/20">Pricing</TableHead>
-                <TableHead className="w-32 px-4 py-3 text-[10px] font-black uppercase tracking-widest text-white border-r border-white/20">Order Status</TableHead>
-                <TableHead className="w-48 px-4 py-3 text-[10px] font-black uppercase tracking-widest text-white">Controls</TableHead>
+            <TableHeader className="bg-brand-primary text-white uppercase sticky top-0 z-10 border-none">
+              <TableRow className="border-none hover:bg-brand-primary">
+                <TableHead className="w-32 px-6 py-3 text-[9px] font-black uppercase tracking-[0.2em] text-white border-r border-white/10">Order ID</TableHead>
+                <TableHead className="px-6 py-3 text-[9px] font-black uppercase tracking-[0.2em] text-white border-r border-white/10">Customer</TableHead>
+                <TableHead className="px-6 py-3 text-[9px] font-black uppercase tracking-[0.2em] text-white border-r border-white/10">Items</TableHead>
+                <TableHead className="w-40 px-6 py-3 text-[9px] font-black uppercase tracking-[0.2em] text-white border-r border-white/10">Amount</TableHead>
+                <TableHead className="w-32 px-6 py-3 text-[9px] font-black uppercase tracking-[0.2em] text-white border-r border-white/10">Status</TableHead>
+                <TableHead className="w-64 px-6 py-3 text-[9px] font-black uppercase tracking-[0.2em] text-white">Actions</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody className="divide-y divide-[#777]/30 bg-white/20">
+            <TableBody className="divide-y divide-slate-100">
               {loading && (orders || []).length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-32">
+                  <TableCell colSpan={6} className="text-center py-40">
                     <div className="flex flex-col items-center gap-3">
-                      <div className="w-10 h-10 border-4 border-[#9B2B2C] border-t-transparent rounded-full animate-spin" />
-                      <p className="text-slate-500 font-black uppercase text-[10px] tracking-[0.2em] animate-pulse">Synchronizing Delta Logs...</p>
+                      <div className="w-8 h-8 border-2 border-slate-200 border-t-brand-primary animate-spin" />
+                      <p className="text-slate-300 font-black uppercase text-[9px] tracking-[0.2em]">Syncing_Global_Registry_Delta...</p>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -477,101 +474,84 @@ const AdminOrders = () => {
                   {filteredOrders.map((order) => {
                     if (!order) return null;
                     return (
-                      <TableRow key={order.id || Math.random().toString()} className="hover:bg-[#ead9c4]/30 transition-all font-bold group border-b border-[#777]/20">
-                        <TableCell className="px-4 py-4 text-[10px] border-r border-[#777]/20 whitespace-nowrap align-top">
-                          <span className="font-black text-[#9B2B2C]">#{order?.orderId || (order?.id ? order.id.slice(0, 8).toUpperCase() : 'UNKNOWN')}</span>
-                          <div className="text-[8px] text-slate-500 mt-0.5">
-                            {order?.createdAt?.toDate ? format(order.createdAt.toDate(), 'dd/MM/yy HH:mm') : 'PENDING SYNC'}
+                      <TableRow key={order.id || Math.random().toString()} className="hover:bg-slate-50 transition-all font-bold group">
+                        <TableCell className="px-6 py-4 text-[10px] border-r border-slate-100 whitespace-nowrap align-top">
+                          <span className="font-black text-slate-900 tracking-tighter">#{order?.orderId || 'NULL_ID'}</span>
+                          <div className="text-[8px] text-slate-400 mt-1 uppercase font-mono tracking-tight">
+                            {order?.createdAt?.toDate ? format(order.createdAt.toDate(), 'dd/MM/yy.HHmm') : 'WAIT_SYNC'}
                           </div>
                         </TableCell>
-                        <TableCell className="px-4 py-4 border-r border-[#777]/20 overflow-hidden align-top">
-                          <div className="text-[10px] text-slate-900 uppercase truncate">{order?.customerInfo?.name || (order as any)?.name || 'N/A'}</div>
-                          <div className="text-[9px] text-slate-500 font-mono">{order?.customerInfo?.phone || (order as any)?.phone || 'N/A'}</div>
-                          <div className="text-[8px] text-slate-400 truncate opacity-0 group-hover:opacity-100 transition-opacity mt-1">
-                            {order?.customerInfo?.address || (order as any)?.address || ''}
+                        <TableCell className="px-6 py-4 border-r border-slate-100 overflow-hidden align-top">
+                          <div className="text-[11px] font-black text-slate-900 uppercase truncate leading-none">{order?.customerInfo?.name || 'GUEST'}</div>
+                          <div className="text-[9px] text-slate-400 font-mono mt-1 opacity-60">{order?.customerInfo?.phone || 'NO_PHONE'}</div>
+                          <div className="text-[8px] text-slate-300 truncate mt-2 uppercase tracking-tight">
+                            {order?.customerInfo?.address || 'NO_ADDRESS_NODE'}
                           </div>
                         </TableCell>
-                        <TableCell className="px-4 py-4 border-r border-[#777]/20 overflow-hidden align-top">
-                          <div className="space-y-1">
+                        <TableCell className="px-6 py-4 border-r border-slate-100 overflow-hidden align-top">
+                          <div className="flex flex-col gap-1">
                             {order?.items?.slice(0, 2).map((item: any, i: number) => (
-                              <div key={i} className="text-[9px] text-slate-700 uppercase truncate">
-                                {item?.quantity || 1}x {item?.name || 'Unknown Product'}
+                              <div key={i} className="text-[9px] text-slate-500 uppercase truncate leading-none">
+                                <span className="text-slate-400">[{item?.quantity || 1}x]</span> {item?.name}
                               </div>
                             ))}
                             {order?.items && order.items.length > 2 && (
-                              <div className="text-[8px] text-slate-400 font-black">+{order.items.length - 2} more items</div>
+                              <div className="text-[8px] text-slate-300 font-black">+{order.items.length - 2} ADDTL_ITEMS</div>
                             )}
-                            {(!order?.items || order.items.length === 0) && <div className="text-[9px] text-slate-700 uppercase truncate">{(order as any)?.productName || 'No Items'}</div>}
                           </div>
                         </TableCell>
-                        <TableCell className="px-4 py-4 border-r border-[#777]/20 align-top">
-                          <div className="text-sm font-black text-slate-900">৳{(order?.total || 0).toLocaleString()}</div>
-                          <div className="text-[8px] text-slate-500 uppercase tracking-widest font-black">{order?.paymentMethod || 'COD'}</div>
+                        <TableCell className="px-6 py-4 border-r border-slate-100 align-top">
+                          <div className="text-[13px] font-black text-slate-900 tracking-tighter">৳{(order?.total || 0).toLocaleString()}</div>
+                          <div className="text-[8px] text-slate-400 uppercase tracking-widest font-black mt-1">{order?.paymentMethod || 'COD_PROTOCOL'}</div>
                         </TableCell>
-                        <TableCell className="px-4 py-4 border-r border-[#777]/20 align-top">
+                        <TableCell className="px-6 py-4 border-r border-slate-100 align-top">
                           <div className="flex items-center gap-2">
-                            <div className={`w-2 h-2 rounded-full animate-pulse ${getOrderStatusColor(order?.status)}`} />
-                            <span className="text-[9px] font-black uppercase text-slate-700">{order?.status || 'UNKNOWN'}</span>
+                            <div className={`w-1.5 h-1.5 animate-pulse ${getOrderStatusColor(order?.status)}`} />
+                            <span className="text-[9px] font-black uppercase text-slate-800 tracking-widest">{order?.status || 'Active'}</span>
                           </div>
                         </TableCell>
-                        <TableCell className="px-4 py-4 align-top">
-                          <div className="flex items-center gap-2 opacity-100 transition-opacity">
-                             {String(order.status || '').toLowerCase() === 'pending' && (
-                               <Button 
-                                 size="sm" 
-                                 onClick={() => updateStatus(order.id, 'confirmed')}
-                                 className="h-7 px-4 bg-emerald-600 hover:bg-emerald-700 text-white text-[9px] font-black uppercase rounded-none shadow-md animate-pulse hover:animate-none"
+                        <TableCell className="px-6 py-4 align-top">
+                          <div className="flex flex-col gap-2">
+                             <div className="flex items-center gap-2">
+                               <select 
+                                 value={order.status || 'pending'}
+                                 onChange={(e) => updateStatus(order.id, e.target.value)}
+                                 className="h-8 px-2 bg-slate-50 border border-slate-200 text-slate-900 text-[8px] font-black uppercase focus:outline-none transition-all flex-1"
                                >
-                                 Confirm Order
-                               </Button>
-                             )}
-                             <Button 
-                               size="sm" 
-                               variant="outline"
-                               onClick={() => generateInvoice(order)}
-                               className="h-7 px-3 bg-white border-[#777] text-[#9B2B2C] text-[8px] font-black uppercase rounded-none hover:bg-[#ead9c4]"
-                             >
-                               <FileText className="h-3 w-3 mr-1" />
-                               Report
-                             </Button>
-                             
-                             <Button 
-                               size="sm" 
-                               variant="outline"
-                               disabled={deletingId === order.id}
-                               onClick={() => {
-                                 toast('PROTOCOL_WIPE: Permanent delete?', {
-                                   action: {
-                                     label: 'Delete',
-                                     onClick: () => handleDelete(order.id)
-                                   },
-                                   cancel: { label: 'Cancel', onClick: () => {} }
-                                 });
-                               }}
-                               className="h-7 px-3 bg-white border-rose-200 text-rose-600 text-[8px] font-black uppercase rounded-none hover:bg-rose-50 transition-all font-black"
-                             >
-                               <Trash2 className="h-3 w-3 mr-1" />
-                               Delete
-                             </Button>
+                                 {['pending', 'confirmed', 'processing', 'shipped', 'completed', 'cancelled'].map((status) => (
+                                   <option key={status} value={status}>{status}</option>
+                                 ))}
+                               </select>
+                               
+                               <button 
+                                 onClick={() => generateInvoice(order)}
+                                 className="h-8 w-8 flex items-center justify-center bg-slate-50 border border-slate-200 text-slate-900 hover:bg-white transition-all flex-shrink-0"
+                                 title="Invoice"
+                               >
+                                 <FileText className="h-3.5 w-3.5" />
+                               </button>
 
-                             <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="outline" size="sm" className="h-7 px-3 bg-white border-[#777] text-[8px] font-black uppercase rounded-none hover:bg-[#ead9c4]">
-                                  <ChevronDown className="h-3 w-3 mr-1" /> Update
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end" className="bg-white border-[#777] p-1 rounded-none shadow-xl">
-                                {['pending', 'confirmed', 'processing', 'shipped', 'completed', 'cancelled'].map((status) => (
-                                  <DropdownMenuItem 
-                                    key={status}
-                                    onSelect={() => updateStatus(order.id, status)}
-                                    className="text-[9px] font-bold uppercase p-2 cursor-pointer focus:bg-[#ead9c4] focus:text-slate-900"
-                                  >
-                                    {order.status === status ? 'CURRENT: ' : 'Move to: '} {status}
-                                  </DropdownMenuItem>
-                                ))}
-                              </DropdownMenuContent>
-                            </DropdownMenu>
+                               <button 
+                                 onClick={() => {
+                                   if (window.confirm('Delete this order?')) {
+                                     handleDelete(order.id);
+                                   }
+                                 }}
+                                 className="h-8 w-8 flex items-center justify-center bg-rose-50 border border-rose-100 text-rose-600 hover:bg-rose-100 transition-all flex-shrink-0"
+                                 title="Delete"
+                                >
+                                  <Trash2 className="h-3.5 w-3.5" />
+                                </button>
+                             </div>
+                             
+                             {String(order.status || '').toLowerCase() === 'pending' && (
+                               <button 
+                                 onClick={() => updateStatus(order.id, 'confirmed')}
+                                 className="w-full h-8 px-4 bg-brand-primary text-white text-[8px] font-black uppercase hover:bg-slate-900 transition-all active:scale-95"
+                               >
+                                 CONFIRM ORDER
+                               </button>
+                             )}
                           </div>
                         </TableCell>
                       </TableRow>
@@ -579,14 +559,14 @@ const AdminOrders = () => {
                   })}
                   {hasMore && (
                     <TableRow>
-                      <TableCell colSpan={6} className="p-4 text-center border-t border-[#777]/20">
-                        <Button
+                      <TableCell colSpan={6} className="p-10 text-center">
+                        <button
                           onClick={() => fetchOrders(true)}
                           disabled={loadingMore}
-                          className="bg-[#9B2B2C] hover:bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest px-8 rounded-none h-10"
+                          className="bg-brand-primary hover:bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] px-12 py-4 active:scale-95 transition-all"
                         >
-                          {loadingMore ? 'SYNCING...' : 'LOAD MORE RECORDS'}
-                        </Button>
+                          {loadingMore ? 'Loading...' : 'Load More'}
+                        </button>
                       </TableCell>
                     </TableRow>
                   )}
@@ -594,18 +574,16 @@ const AdminOrders = () => {
               ) : (
                 <TableRow>
                   <TableCell colSpan={6} className="py-40 text-center">
-                    <div className="w-20 h-20 bg-[#ead9c4] rounded-none border border-[#777] flex items-center justify-center mx-auto mb-6 shadow-lg">
-                      <Package className="h-10 w-10 text-[#9B2B2C]" />
-                    </div>
-                    <h3 className="text-lg font-black text-slate-800 uppercase tracking-tighter">No Orders Found</h3>
-                    <p className="text-[10px] text-slate-500 font-black uppercase mt-2 tracking-[0.2em]">There are no orders to display in this list.</p>
+                    <Package className="h-12 w-12 text-slate-100 mx-auto mb-6" />
+                    <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest">No Orders Found</h3>
+                    <p className="text-[9px] text-slate-300 font-black uppercase mt-2 tracking-[0.2em]">Zero transactions detected in store</p>
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
         </div>
-      </Card>
+      </div>
     </div>
   );
 };

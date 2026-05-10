@@ -47,7 +47,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
               active: false,
               text: '',
               textColor: '#ffffff',
-              bgColor: '#9B2B2C',
+              bgColor: '#0A7C6E',
               ...(data.ads?.topScrollingNotice || {})
             }
           }
@@ -80,12 +80,12 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       if (theme.buttonColor) root.style.setProperty('--button-color', theme.buttonColor);
     } else {
       // Default Bazar Dala theme
-      root.style.setProperty('--primary-color', '#9B2B2C');
+      root.style.setProperty('--primary-color', '#0A7C6E');
       root.style.setProperty('--secondary-color', '#ffffff');
       root.style.setProperty('--background-color', '#ffffff');
       root.style.setProperty('--background', '#ffffff');
       root.style.setProperty('--card-color', '#ffffff');
-      root.style.setProperty('--button-color', '#9B2B2C');
+      root.style.setProperty('--button-color', '#0A7C6E');
     }
   }, [settings]);
 

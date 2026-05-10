@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, query, where, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { useSearchParams } from 'react-router-dom';
 import { db } from '../../firebase';
 import { UserProfile } from '../../types';
-import { Card, CardContent } from '../../components/ui/card';
+import { useAuth } from '../../context/AuthContext';
 import {
   Table,
   TableBody,
@@ -12,16 +13,21 @@ import {
   TableRow,
 } from '../../components/ui/table';
 import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
-import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
-import { Search, Mail, Phone, MapPin, Trash2 } from 'lucide-react';
-import { Input } from '../../components/ui/input';
+import { Search, ShieldPlus, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 const AdminCustomers = () => {
   const [customers, setCustomers] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
+  const [searchParams] = useSearchParams();
+  const [search, setSearch] = useState(searchParams.get('search') || '');
+  const { isSuperAdmin } = useAuth();
+
+  useEffect(() => {
+    const q = searchParams.get('search');
+    if (q) setSearch(q);
+  }, [searchParams]);
 
   const fetchCustomers = async () => {
     setLoading(true);
@@ -39,6 +45,19 @@ const AdminCustomers = () => {
   useEffect(() => {
     fetchCustomers();
   }, []);
+
+  const handlePromote = async (uid: string) => {
+    try {
+      await updateDoc(doc(db, 'users', uid), { 
+        role: 'admin',
+        status: 'active'
+      });
+      setCustomers(prev => prev.filter(c => c.uid !== uid));
+      toast.success('User promoted to Staff Admin');
+    } catch (error) {
+      toast.error('Promotion failed - check permissions');
+    }
+  };
 
   const handleDeleteClient = (uid: string) => {
     const originalCustomers = [...customers];
@@ -68,87 +87,99 @@ const AdminCustomers = () => {
   );
 
   return (
-    <div className="space-y-6">
-      <div className="bg-[#ead9c4] border border-[#777] p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div className="flex flex-col min-h-screen bg-white">
+      <div className="bg-slate-50 border-b border-slate-200 p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h1 className="text-2xl font-black text-[#9B2B2C] uppercase tracking-tight flex items-center gap-3">
-            Customer <span className="text-slate-900">List</span>
-          </h1>
-          <p className="text-slate-600 font-bold text-[10px] uppercase mt-1">
-            User Profiles // All Customers
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-2 h-6 bg-brand-primary" />
+            <h1 className="text-2xl font-black text-slate-900 uppercase tracking-tighter">
+              Customers
+            </h1>
+          </div>
+          <p className="text-slate-400 font-bold text-[9px] uppercase tracking-[0.2em]">
+            Registered customer profiles // {customers.length} Active Records
           </p>
         </div>
         <div className="relative flex-1 w-full md:max-w-xs">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
-          <Input
-            placeholder="Search Customer..."
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+          <input
+            placeholder="Search customers..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="pl-10 bg-white border-[#777] h-10 rounded-none text-xs font-bold focus:ring-0 focus:border-[#9B2B2C]"
+            className="w-full pl-10 pr-4 h-10 bg-white border border-slate-200 text-[10px] font-black uppercase tracking-widest focus:border-brand-primary outline-none transition-all"
           />
         </div>
       </div>
 
-      <div className="bg-[#ead9c4] border border-[#777] overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead className="bg-[#9B2B2C] text-white">
-              <tr>
-                <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest border-r border-white/20">Customer</th>
-                <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest border-r border-white/20">Email Address</th>
-                <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest border-r border-white/20">User Role</th>
-                <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest border-r border-white/20">Wishlist</th>
-                <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest">Controls</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[#777]/30 bg-white/20">
-              {loading ? (
+      <div className="p-8">
+        <div className="bg-white border border-slate-200 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead className="bg-brand-primary text-white">
                 <tr>
-                  <td colSpan={5} className="text-center py-20 font-black text-[10px] uppercase text-slate-500">Finding customers...</td>
+                  <th className="px-6 py-3 text-[9px] font-black uppercase tracking-[0.2em] border-r border-white/10">Customer Name</th>
+                  <th className="px-6 py-3 text-[9px] font-black uppercase tracking-[0.2em] border-r border-white/10">Email</th>
+                  <th className="px-6 py-3 text-[9px] font-black uppercase tracking-[0.2em] border-r border-white/10">Role</th>
+                  <th className="px-6 py-3 text-[9px] font-black uppercase tracking-[0.2em] border-r border-white/10">Recent Activity</th>
+                  <th className="px-6 py-3 text-[9px] font-black uppercase tracking-[0.2em]">Actions</th>
                 </tr>
-              ) : filteredCustomers.map((customer) => (
-                <tr key={customer.uid} className="hover:bg-[#ead9c4]/30 transition-all font-bold">
-                  <td className="px-6 py-4 border-r border-[#777]/20">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 border border-[#777] bg-white rounded-none flex items-center justify-center p-1">
-                        <Avatar className="h-full w-full rounded-none">
-                          <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${customer.email}`} />
-                          <AvatarFallback className="rounded-none bg-[#ead9c4] text-[#9B2B2C] font-black">{(customer.name || 'U')[0]}</AvatarFallback>
-                        </Avatar>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {loading ? (
+                  <tr>
+                    <td colSpan={5} className="text-center py-20 font-black text-[10px] uppercase text-slate-300 italic tracking-[0.2em]">Loading customers...</td>
+                  </tr>
+                ) : filteredCustomers.map((customer) => (
+                  <tr key={customer.uid} className="hover:bg-slate-50 transition-all font-bold group">
+                    <td className="px-6 py-4 border-r border-slate-100">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 border border-slate-100 bg-slate-50 overflow-hidden p-0.5">
+                          <Avatar className="h-full w-full rounded-none">
+                            <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${customer.email}`} className="grayscale group-hover:grayscale-0 transition-all" />
+                            <AvatarFallback className="rounded-none bg-slate-100 text-slate-400 font-black text-[10px]">{(customer.name || 'U')[0]}</AvatarFallback>
+                          </Avatar>
+                        </div>
+                        <span className="text-[11px] font-black text-slate-900 uppercase tracking-tight">{customer.name || 'Guest'}</span>
                       </div>
-                      <span className="text-[11px] font-black text-slate-900 uppercase tracking-tighter">{customer.name || 'Anonymous'}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 border-r border-[#777]/20">
-                    <div className="text-[10px] text-slate-600 lowercase font-mono">{customer.email}</div>
-                  </td>
-                  <td className="px-6 py-4 border-r border-[#777]/20">
-                    <span className="text-[9px] font-black uppercase py-1 px-3 border border-[#777]/30 bg-[#ead9c4] text-slate-700">
-                      {customer.role}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 border-r border-[#777]/20">
-                    <div className="text-[10px] text-slate-500 uppercase tracking-tight">
-                      {customer.wishlist?.length || 0} Items
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 flex items-center gap-2">
-                    <Button variant="outline" size="sm" className="h-8 px-4 rounded-none bg-white border-[#777] text-[9px] font-black uppercase hover:bg-[#ead9c4]">
-                      View
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={() => handleDeleteClient(customer.uid)}
-                      className="h-8 px-3 rounded-none bg-white border-rose-200 text-rose-600 text-[9px] font-black uppercase hover:bg-rose-50"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    </td>
+                    <td className="px-6 py-4 border-r border-slate-100">
+                      <div className="text-[10px] text-slate-400 lowercase font-mono tracking-tight group-hover:text-slate-900 transition-colors">{customer.email}</div>
+                    </td>
+                    <td className="px-6 py-4 border-r border-slate-100">
+                      <span className="text-[8px] font-black uppercase py-1 px-3 bg-slate-50 border border-slate-100 text-slate-500 group-hover:text-brand-primary group-hover:border-brand-primary/20 transition-all tracking-[0.1em]">
+                        {customer.role}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 border-r border-slate-100">
+                      <div className="text-[10px] text-slate-400 uppercase tracking-tighter">
+                        WISHLIST ITEMS: <span className="text-slate-900">{customer.wishlist?.length || 0}</span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 flex items-center gap-2">
+                      {isSuperAdmin && (
+                        <button 
+                          onClick={() => handlePromote(customer.uid)}
+                          title="Promote to Staff Admin"
+                          className="h-8 px-4 bg-brand-primary/10 border border-brand-primary/20 text-brand-primary text-[8px] font-black uppercase hover:bg-brand-primary hover:text-white transition-all shadow-none"
+                        >
+                          <ShieldPlus className="h-4 w-4" />
+                        </button>
+                      )}
+                      <button className="h-8 px-4 bg-slate-50 border border-slate-200 text-slate-900 text-[8px] font-black uppercase hover:bg-white transition-all">
+                        Details
+                      </button>
+                      <button 
+                        onClick={() => handleDeleteClient(customer.uid)}
+                        className="h-8 w-8 flex items-center justify-center bg-rose-50 border border-rose-100 text-rose-600 text-[8px] font-black uppercase hover:bg-rose-600 hover:text-white transition-all shadow-none"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

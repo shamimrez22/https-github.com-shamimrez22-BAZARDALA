@@ -116,9 +116,11 @@ export const UserLayout: React.FC = () => {
 
   const handleLogin = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
-    } catch (error) {
+      await loginWithGoogle();
+      toast.success('সফলভাবে লগইন করেছেন');
+    } catch (error: any) {
       console.error('Login failed', error);
+      toast.error(error.message || 'লগইন করতে ব্যর্থ হয়েছে');
     }
   };
 

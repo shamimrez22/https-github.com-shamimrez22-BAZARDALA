@@ -8,7 +8,7 @@ import {
   updateProfile as firebaseUpdateProfile
 } from 'firebase/auth';
 import { doc, getDoc, setDoc, onSnapshot, updateDoc } from 'firebase/firestore';
-import { auth, db } from '../firebase';
+import { auth, db, googleProvider } from '../firebase';
 import { UserProfile } from '../types';
 
 interface AuthContextType {
@@ -49,6 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const unsubAuth = onAuthStateChanged(auth, async (firebaseUser) => {
       try {
+        console.log('Current Auth State User:', firebaseUser?.email);
         setUser(firebaseUser);
         if (firebaseUser) {
           const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
@@ -56,16 +57,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           
           if (userDoc.exists()) {
             const currentProfile = userDoc.data() as UserProfile;
+            console.log('User Profile found:', currentProfile.role);
             
             // Auto-upgrade role if it's the master email but role is different
             if (isMaster && currentProfile.role !== 'super_admin') {
-              const updatedProfile = { ...currentProfile, role: 'super_admin' as const, status: 'active' as const };
               await updateDoc(doc(db, 'users', firebaseUser.uid), { role: 'super_admin', status: 'active' });
+              const updatedProfile = { ...currentProfile, role: 'super_admin' as const, status: 'active' as const };
               setProfile(updatedProfile);
             } else {
               setProfile(currentProfile);
             }
           } else {
+            console.log('Creating new profile for:', firebaseUser.email);
             // First time login - Create profile
             const newProfile: UserProfile = {
               uid: firebaseUser.uid,
@@ -84,7 +87,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setProfile(null);
         }
       } catch (error) {
-        console.error('Auth check error:', error);
+        console.error('CRITICAL Auth Error:', error);
       } finally {
         setLoading(false);
       }
@@ -106,8 +109,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const loginWithGoogle = async () => {
-    const provider = new GoogleAuthProvider();
-    await signInWithPopup(auth, provider);
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (error: any) {
+      console.error('Google login error:', error);
+      // Better error message for user
+      let message = 'গুগল লগইন করতে সমস্যা হয়েছে।';
+      if (error.code === 'auth/popup-blocked') {
+        message = 'আপনার ব্রাউজারে পপ-আপ ব্লক করা আছে। দয়া করে পপ-আপ এলাউ করুন।';
+      } else if (error.code === 'auth/cancelled-popup-request' || error.code === 'auth/popup-closed-by-user') {
+        message = 'লগইন পপ-আপ বন্ধ করে দেওয়া হয়েছে।';
+      } else if (error.code === 'auth/operation-not-allowed') {
+        message = 'গুগল লগইন বর্তমানে ডিজেবল আছে। অ্যাডমিনের সাথে যোগাযোগ করুন।';
+      }
+      throw new Error(message);
+    }
   };
 
   const logout = async () => {

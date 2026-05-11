@@ -7,7 +7,9 @@ import {
   getRedirectResult,
   GoogleAuthProvider,
   signOut as firebaseSignOut,
-  updateProfile as firebaseUpdateProfile
+  updateProfile as firebaseUpdateProfile,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword
 } from 'firebase/auth';
 import { doc, getDoc, setDoc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { auth, db, googleProvider } from '../firebase';
@@ -23,6 +25,8 @@ interface AuthContextType {
   adminCreds: any;
   loginAdmin: (username: string, pass: string) => boolean;
   loginWithGoogle: () => Promise<void>;
+  register: (email: string, pass: string, name: string) => Promise<void>;
+  login: (email: string, pass: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshProfile: () => Promise<void>;
   updateUserProfile: (data: { name: string; photoURL?: string }) => Promise<void>;
@@ -62,9 +66,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.error('Redirect login error:', error);
         if (error.code === 'auth/unauthorized-domain') {
           const domain = window.location.hostname;
-          const message = `Firebase-এ ডোমেইন অনুমোদিত নয়! দয়া করে Firebase Console -> Auth -> Settings -> Authorized Domains-এ গিয়ে এই ডোমেইনটি যুক্ত করুন: ${domain}`;
+          const message = `Firebase-এ ডোমেইন অনুমোদিত নয়! ডোমেইনটি যুক্ত করুন: ${domain}`;
+          
+          // Hard alert for critical setting
+          if (domain.includes('vercel.app')) {
+            alert(`গুরুত্বপূর্ণ: Firebase Console-এ এই ডোমেইনটি (${domain}) Authorized Domains-এ যুক্ত না করলে লগইন কাজ করবে না।`);
+          }
+
           toast.error(message, { 
-            duration: 10000,
+            duration: 20000,
+            description: "Firebase Console -> Auth -> Settings -> Authorized Domains",
             action: {
               label: 'Copy Domain',
               onClick: () => {
@@ -191,6 +202,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const register = async (email: string, pass: string, name: string) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+      await firebaseUpdateProfile(userCredential.user, { displayName: name });
+      
+      // The onAuthStateChanged listener will handle profile creation in Firestore
+      toast.success('রেজিস্ট্রেশন সফল হয়েছে');
+    } catch (error: any) {
+      console.error('Registration error:', error);
+      let message = 'রেজিস্ট্রেশন করতে সমস্যা হয়েছে।';
+      if (error.code === 'auth/email-already-in-use') message = 'এই ইমেইলটি ইতিমধ্যে ব্যবহার করা হয়েছে।';
+      if (error.code === 'auth/weak-password') message = 'পাসওয়ার্ডটি অন্তত ৬ অক্ষরের হতে হবে।';
+      if (error.code === 'auth/invalid-email') message = 'সঠিক ইমেইল দিন।';
+      toast.error(message);
+      throw new Error(message);
+    }
+  };
+
+  const login = async (email: string, pass: string) => {
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+      toast.success('লগইন সফল হয়েছে');
+    } catch (error: any) {
+      console.error('Login error:', error);
+      let message = 'লগইন করতে সমস্যা হয়েছে।';
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') message = 'ইমেইল বা পাসওয়ার্ড ভুল।';
+      if (error.code === 'auth/too-many-requests') message = 'ভুল পাসওয়ার্ড দেওয়ার কারণে অ্যাকাউন্টটি সাময়িকভাবে লক হয়েছে। একটু পরে চেষ্টা করুন।';
+      toast.error(message);
+      throw new Error(message);
+    }
+  };
+
   const logout = async () => {
     setIsAdminSession(false);
     localStorage.removeItem('isAdmin');
@@ -260,6 +303,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       adminCreds,
       loginAdmin,
       loginWithGoogle,
+      register,
+      login,
       logout,
       refreshProfile,
       updateUserProfile

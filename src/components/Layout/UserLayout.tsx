@@ -36,6 +36,13 @@ export const UserLayout: React.FC = () => {
   const [showPopup, setShowPopup] = React.useState(false);
   
   // Admin Login Dialog State
+  const [isLoginModalOpen, setIsLoginModalOpen] = React.useState(false);
+  const [authMode, setAuthMode] = React.useState<'login' | 'register'>('login');
+  const [formData, setFormData] = React.useState({
+    name: '',
+    email: '',
+    password: ''
+  });
   const [isAdminLoginOpen, setIsAdminLoginOpen] = React.useState(false);
   const [adminUser, setAdminUser] = React.useState('');
   const [adminPass, setAdminPass] = React.useState('');
@@ -111,14 +118,32 @@ export const UserLayout: React.FC = () => {
     settings?.ads?.adsterra?.bannerTwoCode
   ]);
 
-  const handleLogin = async () => {
+  const handleAuthSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoggingIn(true);
     try {
-      await loginWithGoogle();
-      toast.success('সফলভাবে লগইন করেছেন');
-    } catch (error: any) {
-      console.error('Login failed', error);
-      toast.error(error.message || 'লগইন করতে ব্যর্থ হয়েছে');
+      if (authMode === 'login') {
+        await login(formData.email, formData.password);
+      } else {
+        if (!formData.name) {
+          toast.error('দয়া করে নাম প্রদান করুন');
+          setIsLoggingIn(false);
+          return;
+        }
+        await register(formData.email, formData.password, formData.name);
+      }
+      setIsLoginModalOpen(false);
+      setFormData({ name: '', email: '', password: '' });
+    } catch (err) {
+      // Errors handled in context
+    } finally {
+      setIsLoggingIn(false);
     }
+  };
+
+  const handleLogin = () => {
+    setAuthMode('login');
+    setIsLoginModalOpen(true);
   };
 
   const handleLogout = async () => {
@@ -174,9 +199,9 @@ export const UserLayout: React.FC = () => {
       <div className="fixed top-0 left-0 right-0 z-[100] flex flex-col bg-white overflow-hidden">
         {/* Banner Notice (Topmost) */}
         {settings?.ads?.bannerNotice?.active && (
-          <div className="w-full bg-white flex justify-center">
-            <SmartLink to={settings.ads.bannerNotice.link} className="h-[24px] w-full max-w-[1400px] bg-brand-primary text-white flex items-center justify-center px-4 md:px-10 relative overflow-hidden shrink-0 transition-colors">
-               <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+          <div className="w-full bg-white flex justify-center overflow-hidden border-b border-slate-100">
+            <SmartLink to={settings.ads.bannerNotice.link} className="h-[24px] w-full max-w-[1400px] bg-white text-brand-primary flex items-center justify-center px-4 md:px-10 relative overflow-hidden shrink-0 transition-colors">
+               <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(var(--brand-primary) 1px, transparent 1px)', backgroundSize: '16px 16px' }} />
                <p className="text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] relative z-10 animate-pulse">
                  {settings.ads.bannerNotice.text}
                </p>
@@ -282,7 +307,7 @@ export const UserLayout: React.FC = () => {
                 </DropdownMenu>
               ) : (
                 <Button onClick={handleLogin} className="bg-brand-primary text-white hover:opacity-90 rounded-none h-10 md:h-12 px-3 md:px-8 text-[11px] font-black uppercase tracking-widest transition-all">
-                  <span className="hidden sm:inline">AUTH_LOGIN</span>
+                  <span className="hidden sm:inline">লগইন / রেজিস্ট্রেশন</span>
                   <User className="sm:hidden h-5 w-5" />
                 </Button>
               )}
@@ -489,13 +514,37 @@ export const UserLayout: React.FC = () => {
                       </div>
                     </div>
 
-                    <Button 
-                      type="submit" 
-                      disabled={isLoggingIn}
-                      className="w-full h-14 bg-brand-primary hover:opacity-90 text-white font-black rounded-none uppercase tracking-[0.3em] text-xs transition-all active:scale-95"
-                    >
-                      {isLoggingIn ? 'প্রসেসিং...' : 'লগইন করুন'}
-                    </Button>
+                <div className="flex flex-col gap-4">
+                  <Button 
+                    type="submit" 
+                    disabled={isLoggingIn}
+                    className="w-full h-14 bg-brand-primary hover:opacity-90 text-white font-black rounded-none uppercase tracking-[0.3em] text-xs transition-all active:scale-95"
+                  >
+                    {isLoggingIn ? 'প্রসেসিং...' : 'লগইন করুন'}
+                  </Button>
+
+                  <div className="relative my-2">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-slate-100"></div>
+                    </div>
+                    <div className="relative flex justify-center text-[8px] font-black uppercase tracking-[0.2em] text-slate-400">
+                      <span className="bg-white px-4">OR</span>
+                    </div>
+                  </div>
+
+                  <Button 
+                    type="button" 
+                    onClick={async () => {
+                      try {
+                        await loginWithGoogle();
+                      } catch (err) {}
+                    }}
+                    className="w-full h-14 bg-white border border-slate-200 hover:bg-slate-50 text-slate-900 font-black rounded-none uppercase tracking-[0.2em] text-[10px] transition-all flex items-center justify-center gap-3"
+                  >
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" className="w-5 h-5" alt="Google" />
+                    গুগল দিয়ে প্রবেশ করুন
+                  </Button>
+                </div>
                   </form>
 
                   <div className="mt-8 text-center pt-4 border-t border-slate-900/10">
@@ -769,6 +818,103 @@ export const UserLayout: React.FC = () => {
            </span>
         </a>
       )}
+      {/* User Login/Register Modal */}
+      <Dialog open={isLoginModalOpen} onOpenChange={setIsLoginModalOpen}>
+        <DialogContent className="max-w-md bg-white border border-slate-200 rounded-none p-0 overflow-hidden outline-none">
+          <div className="flex flex-col">
+            <div className="bg-brand-primary h-2 w-full" />
+            <div className="p-8 space-y-6">
+              <DialogHeader>
+                <DialogTitle className="text-2xl font-black text-slate-900 uppercase tracking-tighter text-center">
+                  {authMode === 'login' ? 'লগইন করুন' : 'নতুন একাউন্ট তৈরি করুন'}
+                </DialogTitle>
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-center">
+                  {authMode === 'login' ? 'আপনার একাউন্টে প্রবেশ করুন' : 'সহজেই একাউন্ট তৈরি করুন'}
+                </p>
+              </DialogHeader>
+
+              <form onSubmit={handleAuthSubmit} className="space-y-4">
+                {authMode === 'register' && (
+                  <div className="space-y-1.5">
+                    <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">আপনার নাম</Label>
+                    <Input 
+                      required
+                      placeholder="নাম লিখুন"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="h-12 border-slate-200 rounded-none text-xs font-black focus-visible:ring-0 focus-visible:border-brand-primary/50" 
+                    />
+                  </div>
+                )}
+                <div className="space-y-1.5">
+                  <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">ইমেইল এড্রেস</Label>
+                  <Input 
+                    type="email"
+                    required
+                    placeholder="example@gmail.com"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="h-12 border-slate-200 rounded-none text-xs font-black focus-visible:ring-0 focus-visible:border-brand-primary/50" 
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">পাসওয়ার্ড</Label>
+                  <Input 
+                    type="password"
+                    required
+                    placeholder="পাসওয়ার্ড দিন"
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    className="h-12 border-slate-200 rounded-none text-xs font-black focus-visible:ring-0 focus-visible:border-brand-primary/50" 
+                  />
+                </div>
+
+                <div className="flex flex-col gap-4 pt-2">
+                  <Button 
+                    type="submit" 
+                    disabled={isLoggingIn}
+                    className="w-full h-14 bg-brand-primary hover:opacity-90 text-white font-black rounded-none uppercase tracking-[0.3em] text-xs transition-all active:scale-95"
+                  >
+                    {isLoggingIn ? 'প্রসেসিং...' : (authMode === 'login' ? 'লগইন করুন' : 'একাউন্ট তৈরি করুন')}
+                  </Button>
+
+                  <div className="relative my-2">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-slate-100"></div>
+                    </div>
+                    <div className="relative flex justify-center text-[8px] font-black uppercase tracking-[0.2em] text-slate-400">
+                      <span className="bg-white px-4">অথবা জিমেইল ব্যবহার করুন</span>
+                    </div>
+                  </div>
+
+                  <Button 
+                    type="button" 
+                    onClick={async () => {
+                      try {
+                        await loginWithGoogle();
+                        setIsLoginModalOpen(false);
+                      } catch (err) {}
+                    }}
+                    className="w-full h-14 bg-white border border-slate-200 hover:bg-slate-50 text-slate-900 font-black rounded-none uppercase tracking-[0.2em] text-[10px] transition-all flex items-center justify-center gap-3"
+                  >
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" className="w-5 h-5" alt="Google" />
+                    গুগল দিয়ে প্রবেশ করুন
+                  </Button>
+                </div>
+              </form>
+
+              <div className="text-center pt-2">
+                <button 
+                  onClick={() => setAuthMode(authMode === 'login' ? 'register' : 'login')}
+                  className="text-[11px] font-bold text-brand-primary hover:underline transition-all"
+                >
+                  {authMode === 'login' ? 'একাউন্ট নেই? নতুন একাউন্ট তৈরি করুন' : 'আগে থেকেই একাউন্ট আছে? লগইন করুন'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

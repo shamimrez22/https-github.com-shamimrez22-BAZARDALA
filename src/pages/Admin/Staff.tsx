@@ -86,11 +86,11 @@ const AdminStaff = () => {
       <div className="p-8 max-w-7xl mx-auto w-full">
         <div className="grid grid-cols-1 gap-4">
           {loading ? (
-             <div className="py-20 text-center font-black text-slate-300 uppercase tracking-widest animate-pulse italic">
+             <div className="py-20 text-center font-black text-slate-300 uppercase tracking-widest animate-pulse">
                 Scanning_Registry_Nodes...
              </div>
           ) : filteredStaff.length === 0 ? (
-             <div className="py-20 text-center font-black text-slate-300 uppercase tracking-widest italic border-2 border-dashed border-slate-100">
+             <div className="py-20 text-center font-black text-slate-300 uppercase tracking-widest border-2 border-dashed border-slate-100">
                 No_Authorized_Sub_Admins_Found
              </div>
           ) : filteredStaff.map((member) => (

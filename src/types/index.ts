@@ -73,6 +73,7 @@ export interface SiteSettings {
   siteDescription: string;
   contactEmail?: string;
   contactPhone?: string;
+  whatsappNumber?: string;
   contactAddress?: string;
   siteDescriptionBangla?: string;
   ads?: {

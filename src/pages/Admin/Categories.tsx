@@ -268,7 +268,7 @@ const AdminCategories = () => {
               <tbody className="divide-y divide-slate-100">
                 {loading ? (
                   <tr>
-                    <td colSpan={4} className="text-center py-20 font-black text-[10px] uppercase text-slate-300 italic tracking-[0.2em]">Loading Categories...</td>
+                    <td colSpan={4} className="text-center py-20 font-black text-[10px] uppercase text-slate-300 tracking-[0.2em]">Loading Categories...</td>
                   </tr>
                 ) : filteredCategories.map((category) => (
                   <tr key={category.id} className="hover:bg-slate-50 transition-all font-bold group">

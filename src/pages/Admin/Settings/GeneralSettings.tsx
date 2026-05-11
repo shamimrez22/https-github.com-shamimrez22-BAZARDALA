@@ -97,6 +97,16 @@ const GeneralSettings = () => {
         <CardContent className="p-8 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
+              <Label className="text-[10px] font-black uppercase text-brand-primary">WhatsApp Number (For Floating Button & Footer)</Label>
+              <Input 
+                value={settings.whatsappNumber || ''} 
+                onChange={e => setSettings({...settings, whatsappNumber: e.target.value})}
+                className="h-12 border-brand-primary border-2 rounded-none font-black text-sm bg-brand-primary/5"
+                placeholder="+880 1XXXXX"
+              />
+              <p className="text-[9px] text-slate-400 font-bold uppercase">প্লাস (+) ছাড়াই নম্বর দিন (যেমন: 8801700000000)</p>
+            </div>
+            <div className="space-y-2">
               <Label className="text-[10px] font-black uppercase text-slate-600">Contact Email</Label>
               <Input 
                 value={settings.contactEmail || ''} 
@@ -105,6 +115,8 @@ const GeneralSettings = () => {
                 placeholder="info@example.com"
               />
             </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label className="text-[10px] font-black uppercase text-slate-600">Contact Phone</Label>
               <Input 
@@ -114,15 +126,15 @@ const GeneralSettings = () => {
                 placeholder="+880 1XXX XXXXXX"
               />
             </div>
-          </div>
-          <div className="space-y-2">
-            <Label className="text-[10px] font-black uppercase text-slate-600">Contact Address</Label>
-            <Input 
-              value={settings.contactAddress || ''} 
-              onChange={e => setSettings({...settings, contactAddress: e.target.value})}
-              className="h-12 border-[#777] rounded-none font-black text-sm"
-              placeholder="Dhaka, Bangladesh"
-            />
+            <div className="space-y-2">
+              <Label className="text-[10px] font-black uppercase text-slate-600">Contact Address</Label>
+              <Input 
+                value={settings.contactAddress || ''} 
+                onChange={e => setSettings({...settings, contactAddress: e.target.value})}
+                className="h-12 border-[#777] rounded-none font-black text-sm"
+                placeholder="Dhaka, Bangladesh"
+              />
+            </div>
           </div>
         </CardContent>
       </Card>

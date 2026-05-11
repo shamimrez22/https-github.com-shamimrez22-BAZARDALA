@@ -220,7 +220,7 @@ const Checkout = () => {
         {/* Right Column: Order Form */}
         <div className="w-full md:w-[58%] p-6 md:p-12 flex flex-col bg-white">
           <div className="mb-10">
-            <h1 className="text-2xl md:text-4xl font-serif italic font-black text-slate-900 leading-none mb-1">ORDER NOW</h1>
+            <h1 className="text-2xl md:text-4xl font-serif font-black text-slate-900 leading-none mb-1">ORDER NOW</h1>
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">PREMIUM SECURE CHECKOUT</p>
           </div>
 

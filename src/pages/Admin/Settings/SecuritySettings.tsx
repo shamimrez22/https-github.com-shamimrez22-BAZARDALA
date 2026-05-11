@@ -56,10 +56,9 @@ const SecuritySettings = () => {
                   <User className="h-3 w-3" /> System Username
                 </Label>
                 <Input 
-                  value={settings.ads?.adminCredentials?.username || ''} 
+                  value={settings.adminCredentials?.username || ''} 
                   onChange={e => {
-                    const newAds = { ...(settings.ads || {}), adminCredentials: { ...(settings.ads?.adminCredentials || {}), username: e.target.value } };
-                    setSettings({...settings, ads: newAds as any});
+                    setSettings({...settings, adminCredentials: { ...(settings.adminCredentials || {}), username: e.target.value }});
                   }}
                   className="h-12 border-[#777] rounded-none font-black text-sm bg-slate-50"
                 />
@@ -69,10 +68,9 @@ const SecuritySettings = () => {
                   <Lock className="h-3 w-3" /> System Password
                 </Label>
                 <Input 
-                  value={settings.ads?.adminCredentials?.pass || ''} 
+                  value={settings.adminCredentials?.pass || ''} 
                   onChange={e => {
-                    const newAds = { ...(settings.ads || {}), adminCredentials: { ...(settings.ads?.adminCredentials || {}), pass: e.target.value } };
-                    setSettings({...settings, ads: newAds as any});
+                    setSettings({...settings, adminCredentials: { ...(settings.adminCredentials || {}), pass: e.target.value }});
                   }}
                   className="h-12 border-[#777] rounded-none font-black text-sm bg-slate-50"
                 />
@@ -89,10 +87,9 @@ const SecuritySettings = () => {
                 </div>
                 <Button 
                   onClick={() => {
-                    const newList = [...(settings.ads?.adminEmails || [])];
+                    const newList = [...(settings.adminEmails || [])];
                     newList.push('');
-                    const newAds = { ...(settings.ads || {}), adminEmails: newList };
-                    setSettings({...settings, ads: newAds as any});
+                    setSettings({...settings, adminEmails: newList});
                   }}
                   variant="outline"
                   size="sm"
@@ -103,15 +100,14 @@ const SecuritySettings = () => {
               </div>
 
               <div className="space-y-3">
-                {(settings.ads?.adminEmails || []).map((email, i) => (
+                {(settings.adminEmails || []).map((email, i) => (
                   <div key={i} className="flex gap-2">
                     <Input 
                       value={email}
                       onChange={e => {
-                        const newList = [...(settings.ads?.adminEmails || [])];
+                        const newList = [...(settings.adminEmails || [])];
                         newList[i] = e.target.value;
-                        const newAds = { ...(settings.ads || {}), adminEmails: newList };
-                        setSettings({...settings, ads: newAds as any});
+                        setSettings({...settings, adminEmails: newList});
                       }}
                       placeholder="admin@gmail.com"
                       className="h-10 border-[#777] rounded-none text-xs font-bold"
@@ -119,9 +115,8 @@ const SecuritySettings = () => {
                     <Button 
                       variant="ghost" 
                       onClick={() => {
-                         const newList = (settings.ads?.adminEmails || []).filter((_, idx) => idx !== i);
-                         const newAds = { ...(settings.ads || {}), adminEmails: newList };
-                         setSettings({...settings, ads: newAds as any});
+                         const newList = (settings.adminEmails || []).filter((_, idx) => idx !== i);
+                         setSettings({...settings, adminEmails: newList});
                       }}
                       className="h-10 w-10 text-red-500 hover:bg-red-50"
                     >

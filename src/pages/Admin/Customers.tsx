@@ -127,7 +127,7 @@ const AdminCustomers = () => {
               <tbody className="divide-y divide-slate-100">
                 {loading ? (
                   <tr>
-                    <td colSpan={5} className="text-center py-20 font-black text-[10px] uppercase text-slate-300 italic tracking-[0.2em]">Loading customers...</td>
+                    <td colSpan={5} className="text-center py-20 font-black text-[10px] uppercase text-slate-300 tracking-[0.2em]">Loading customers...</td>
                   </tr>
                 ) : filteredCustomers.map((customer) => (
                   <tr key={customer.uid} className="hover:bg-slate-50 transition-all font-bold group">

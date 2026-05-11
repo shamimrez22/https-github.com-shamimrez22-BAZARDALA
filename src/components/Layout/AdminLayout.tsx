@@ -342,7 +342,7 @@ export const AdminLayout: React.FC = () => {
           </div>
  
           <div className="flex items-center gap-4">
-             <div className="hidden md:flex items-center gap-1 text-[9px] font-bold text-white/40 italic">
+             <div className="hidden md:flex items-center gap-1 text-[9px] font-bold text-white/40">
                 <Timer className="h-3 w-3" />
                 <span>UPTIME: {format(new Date(), 'HH:mm:ss')}</span>
              </div>

@@ -234,15 +234,6 @@ const AdminLogin = () => {
                   </div>
                 </div>
 
-                <Button 
-                  onClick={handleGoogleRecovery}
-                  variant="outline"
-                  className="w-full h-14 border border-brand-primary/20 bg-white text-slate-900 font-black rounded-none uppercase tracking-[0.2em] text-[10px]"
-                >
-                  <img src="https://www.google.com/favicon.ico" className="w-4 h-4 mr-2" alt="Google" />
-                  গুগল দিয়ে লগইন করুন
-                </Button>
-
                 <button 
                   onClick={() => setShowRecovery(false)}
                   className="w-full text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-brand-primary mt-4 block"

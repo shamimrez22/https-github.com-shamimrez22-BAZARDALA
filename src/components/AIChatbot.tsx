@@ -72,7 +72,7 @@ export const AIChatbot: React.FC = () => {
                   <Bot className="h-6 w-6" />
                 </div>
                 <div>
-                  <h3 className="font-black uppercase tracking-widest text-brand-primary italic leading-none mb-2 underline">AI_STATION_77</h3>
+                  <h3 className="font-black uppercase tracking-widest text-brand-primary leading-none mb-2 underline">AI_STATION_77</h3>
                   <p className="text-[10px] font-black opacity-60 uppercase tracking-[0.3em]">SECURE_FEED_ACTIVE</p>
                 </div>
               </div>

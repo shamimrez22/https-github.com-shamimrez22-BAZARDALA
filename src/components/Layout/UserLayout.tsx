@@ -23,15 +23,12 @@ import {
   DialogTitle,
 } from '../ui/dialog';
 import { toast } from 'sonner';
-import { auth, googleProvider, db } from '../../firebase';
-import { signInWithPopup, signOut } from 'firebase/auth';
-import { doc, onSnapshot } from 'firebase/firestore';
 import { Badge } from '../ui/badge';
 import { SiteSettings } from '../../types';
 import { useSettings } from '../../context/SettingsContext';
 
 export const UserLayout: React.FC = () => {
-  const { user, profile, isAdmin, loginAdmin, loginWithGoogle } = useAuth();
+  const { user, profile, isAdmin, loginAdmin, loginWithGoogle, logout } = useAuth();
   const { items } = useCart();
   const { settings } = useSettings();
   const navigate = useNavigate();
@@ -125,8 +122,14 @@ export const UserLayout: React.FC = () => {
   };
 
   const handleLogout = async () => {
-    await signOut(auth);
-    navigate('/');
+    try {
+      await logout();
+      navigate('/');
+      toast.success('সফলভাবে লগআউট করেছেন');
+    } catch (error: any) {
+      console.error('Logout failed', error);
+      toast.error('লগআউট করতে সমস্যা হয়েছে');
+    }
   };
 
   const handleAdminLogin = (e: React.FormEvent) => {
@@ -140,18 +143,6 @@ export const UserLayout: React.FC = () => {
       toast.error('ভুল ইউজারনেম বা পাসওয়ার্ড');
     }
     setIsLoggingIn(false);
-  };
-
-  const handleAdminGoogleLogin = async () => {
-    try {
-      await loginWithGoogle();
-      toast.success('Google এর মাধ্যমে সফলভাবে লগইন করেছেন');
-      setIsAdminLoginOpen(false);
-      navigate('/admin');
-    } catch (err: any) {
-      console.error(err);
-      toast.error('Google লগইন ব্যর্থ হয়েছে');
-    }
   };
 
   const SmartLink = ({ to, children, className, ...props }: { to?: string; children: React.ReactNode; className?: string; [key: string]: any }) => {
@@ -192,8 +183,8 @@ export const UserLayout: React.FC = () => {
         )}
 
         {/* Header Navigation */}
-        <header className="w-full bg-brand-primary transition-all shrink-0">
-          <div className="w-full px-4 md:px-16 lg:px-24 h-12 md:h-16 flex items-center justify-between">
+        <div className="w-full bg-white flex justify-center border-b border-brand-primary/5">
+          <header className="w-full max-w-[1400px] bg-brand-primary h-12 md:h-16 flex items-center justify-between px-4 md:px-6">
             <div className="flex items-center gap-10">
               <div className="flex items-center gap-2 md:gap-3 group cursor-pointer">
                 <div 
@@ -303,38 +294,42 @@ export const UserLayout: React.FC = () => {
                 {isMenuOpen ? <X className="h-5 w-5 md:h-6 md:w-6" /> : <Menu className="h-5 w-5 md:h-6 md:w-6" />}
               </Button>
             </div>
-          </div>
-        </header>
+          </header>
+        </div>
 
         {/* Top Header Graphic Banner */}
         {settings?.ads?.topHeaderBanner?.active && settings?.ads?.topHeaderBanner?.imageUrl && (
-          <SmartLink to={settings.ads.topHeaderBanner.link} className="w-full bg-white block overflow-hidden shrink-0">
-            <img 
-              src={settings.ads.topHeaderBanner.imageUrl} 
-              alt="Promo Banner" 
-              className="w-full h-auto max-h-[40px] md:max-h-[60px] object-cover w-full transition-transform hover:scale-[1.02] duration-500"
-              referrerPolicy="no-referrer"
-            />
-          </SmartLink>
+          <div className="w-full bg-white flex justify-center">
+            <SmartLink to={settings.ads.topHeaderBanner.link} className="w-full max-w-[1400px] block overflow-hidden shrink-0">
+              <img 
+                src={settings.ads.topHeaderBanner.imageUrl} 
+                alt="Promo Banner" 
+                className="w-full h-auto max-h-[40px] md:max-h-[60px] object-cover transition-transform hover:scale-[1.02] duration-500"
+                referrerPolicy="no-referrer"
+              />
+            </SmartLink>
+          </div>
         )}
 
         {/* Global Top Scrolling Notice */}
         {settings?.ads?.topScrollingNotice?.active && (
-          <SmartLink 
-            to={settings.ads.topScrollingNotice.link}
-            className="h-[32px] md:h-[40px] w-full relative overflow-hidden whitespace-nowrap flex items-center shrink-0 hover:opacity-90"
-            style={{ backgroundColor: settings.ads.topScrollingNotice.bgColor }}
-          >
-            <div 
-              className="animate-marquee inline-block font-black uppercase text-[10px] md:text-[12px] tracking-[0.3em] whitespace-nowrap"
-              style={{ color: settings.ads.topScrollingNotice.textColor }}
+          <div className="w-full flex justify-center bg-white">
+            <SmartLink 
+              to={settings.ads.topScrollingNotice.link}
+              className="h-[32px] md:h-[40px] w-full max-w-[1400px] relative overflow-hidden whitespace-nowrap flex items-center shrink-0 hover:opacity-90"
+              style={{ backgroundColor: settings.ads.topScrollingNotice.bgColor }}
             >
-              <span className="inline-block px-12">{settings.ads.topScrollingNotice.text}</span>
-              <span className="inline-block px-12">{settings.ads.topScrollingNotice.text}</span>
-              <span className="inline-block px-12">{settings.ads.topScrollingNotice.text}</span>
-              <span className="inline-block px-12">{settings.ads.topScrollingNotice.text}</span>
-            </div>
-          </SmartLink>
+              <div 
+                className="animate-marquee inline-block font-black uppercase text-[10px] md:text-[12px] tracking-[0.3em] whitespace-nowrap"
+                style={{ color: settings.ads.topScrollingNotice.textColor }}
+              >
+                <span className="inline-block px-12">{settings.ads.topScrollingNotice.text}</span>
+                <span className="inline-block px-12">{settings.ads.topScrollingNotice.text}</span>
+                <span className="inline-block px-12">{settings.ads.topScrollingNotice.text}</span>
+                <span className="inline-block px-12">{settings.ads.topScrollingNotice.text}</span>
+              </div>
+            </SmartLink>
+          </div>
         )}
 
         {/* Global Notice Banner (Embedded in Sticky Stack) */}
@@ -344,9 +339,9 @@ export const UserLayout: React.FC = () => {
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="w-full flex justify-center bg-brand-primary"
+              className="w-full flex justify-center bg-white"
             >
-              <SmartLink to={settings.ads.globalNotice.link} className="w-full bg-brand-primary text-white py-2 px-8 relative overflow-hidden rounded-none hover:bg-black/10 transition-colors block">
+              <SmartLink to={settings.ads.globalNotice.link} className="w-full max-w-[1400px] bg-brand-primary text-white py-2 px-4 md:px-6 relative overflow-hidden rounded-none hover:bg-black/10 transition-colors block">
                 <div className="flex items-center justify-center gap-5 relative z-10">
                   <div className="w-2 h-2 bg-white rounded-none animate-ping hidden sm:block" />
                   <p className="text-[10px] md:text-[12px] font-black uppercase tracking-[0.25em] text-center">
@@ -362,7 +357,7 @@ export const UserLayout: React.FC = () => {
         {/* Social Bar Ad (Embedded in Sticky Stack) */}
         {settings?.ads?.socialBarAd?.active && (
           <div className="w-full flex justify-center bg-white border-b border-slate-100">
-            <div className="w-full bg-white text-slate-800 py-3 px-4 md:px-10 rounded-none flex flex-row items-center justify-between gap-2 md:gap-6 overflow-hidden relative">
+            <div className="w-full max-w-[1400px] bg-white text-slate-800 py-3 px-4 md:px-6 rounded-none flex flex-row items-center justify-between gap-2 md:gap-6 overflow-hidden relative">
               <div className="flex items-center gap-2 md:gap-4 relative z-10">
                 <Zap className="h-4 w-4 md:h-5 md:w-5 text-brand-primary" />
                 <p className="text-[8px] md:text-[12px] font-black uppercase tracking-widest text-left">
@@ -501,25 +496,6 @@ export const UserLayout: React.FC = () => {
                     </Button>
                   </form>
 
-                  <div className="relative my-8">
-                    <div className="absolute inset-0 flex items-center">
-                      <div className="w-full border-t border-slate-100"></div>
-                    </div>
-                    <div className="relative flex justify-center text-[10px] font-black uppercase tracking-widest">
-                      <span className="bg-white/40 px-4 text-slate-400">OR RECOVER VIA</span>
-                    </div>
-                  </div>
-
-                  <Button 
-                    onClick={handleAdminGoogleLogin}
-                    variant="outline"
-                    className="w-full h-14 border border-slate-200 bg-white text-slate-900 font-black rounded-none uppercase tracking-[0.2em] text-[10px] transition-all flex items-center justify-center gap-3 hover:bg-slate-50"
-                  >
-                    <img src="https://www.google.com/favicon.ico" className="w-4 h-4 grayscale" alt="Google" />
-                    GOOGLE ADMIN RECOVERY
-                  </Button>
-
-
                   <div className="mt-8 text-center pt-4 border-t border-slate-900/10">
                     <button 
                       onClick={() => setAdminView('forgot')}
@@ -536,15 +512,8 @@ export const UserLayout: React.FC = () => {
                   </div>
                   <h3 className="text-sm font-black uppercase tracking-tighter text-slate-900">অ্যাডমিন রিকভারি প্রোটোকল</h3>
                   <p className="text-[10px] font-bold text-slate-500 uppercase leading-relaxed">
-                    আপনার রেজিস্টার্ড <span className="text-brand-primary">Google Account</span> দিয়ে সরাসরি লগইন করতে পারেন।
+                    পাসওয়ার্ড রিকভার করার জন্য দয়া করে সরাসরি অ্যাডমিনের সাথে যোগাযোগ করুন।
                   </p>
-
-                  <Button 
-                    onClick={handleAdminGoogleLogin}
-                    className="w-full h-14 bg-brand-primary hover:opacity-90 text-white font-black rounded-none uppercase tracking-[0.2em] text-xs transition-all flex items-center justify-center gap-3"
-                  >
-                    <Mail className="h-4 w-4" /> গুগল দিয়ে লগইন
-                  </Button>
 
 
                   <button 
@@ -588,12 +557,27 @@ export const UserLayout: React.FC = () => {
               </div>
 
               <div className="flex gap-3">
+                {settings?.whatsappNumber && (
+                   <a 
+                     href={`https://wa.me/${settings.whatsappNumber.replace(/\D/g, '')}`}
+                     target="_blank"
+                     rel="noopener noreferrer"
+                     className="w-10 h-10 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-[#25D366] hover:border-[#25D366] transition-all bg-slate-900/50 rounded-none"
+                   >
+                     <svg 
+                       viewBox="0 0 24 24" 
+                       className="h-5 w-5 fill-current"
+                       xmlns="http://www.w3.org/2000/svg"
+                     >
+                       <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                     </svg>
+                   </a>
+                )}
                 {(settings?.socialLinks || []).map((social, i) => {
                    const platform = social.platform.toUpperCase();
                    let Icon = Mail;
                    if (platform.includes('FB')) Icon = Facebook;
                    else if (platform.includes('IG')) Icon = Instagram;
-                   else if (platform.includes('WA')) Icon = MessageSquare;
                    else if (platform.includes('YT')) Icon = Youtube;
 
                    return (
@@ -725,10 +709,10 @@ export const UserLayout: React.FC = () => {
                 )}
                 <div className="p-10 md:p-14 space-y-8 text-center relative z-10 bg-white">
                    <div className="bg-white rounded-none p-10 space-y-6 relative z-10 border border-slate-100">
-                     <span className="inline-block px-5 py-1.5 bg-brand-primary text-white text-[10px] font-black uppercase tracking-[0.4em] rounded-none border border-white italic">
+                     <span className="inline-block px-5 py-1.5 bg-brand-primary text-white text-[10px] font-black uppercase tracking-[0.4em] rounded-none border border-white">
                        PRIVATE_OFFER_NODE
                      </span>
-                     <h2 className="text-3xl md:text-3xl font-black text-slate-900 uppercase tracking-tighter leading-none italic underline decoration-brand-primary decoration-4">
+                     <h2 className="text-3xl md:text-3xl font-black text-slate-900 uppercase tracking-tighter leading-none underline decoration-brand-primary decoration-4">
                        {settings.ads.popupAd.message}
                      </h2>
                      <div className="flex flex-col gap-4 pt-6">
@@ -750,7 +734,7 @@ export const UserLayout: React.FC = () => {
                            setShowPopup(false);
                            sessionStorage.setItem('popup_displayed', 'true');
                          }}
-                         className="text-[11px] font-black uppercase text-slate-400 hover:text-brand-primary tracking-[0.3em] transition-colors italic"
+                         className="text-[11px] font-black uppercase text-slate-400 hover:text-brand-primary tracking-[0.3em] transition-colors"
                        >
                          DISMISS_MANIFEST
                        </button>
@@ -762,6 +746,27 @@ export const UserLayout: React.FC = () => {
           </div>
         )}
       </AnimatePresence>
+
+      {/* Floating WhatsApp Button */}
+      {settings?.whatsappNumber && (
+        <a 
+          href={`https://wa.me/${settings.whatsappNumber.replace(/\D/g, '')}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="fixed bottom-6 right-6 z-[90] w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform active:scale-95 group"
+        >
+          <svg 
+             viewBox="0 0 24 24" 
+             className="h-8 w-8 fill-current"
+             xmlns="http://www.w3.org/2000/svg"
+           >
+             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+           </svg>
+           <span className="absolute right-full mr-4 bg-slate-900 text-white text-[10px] font-black py-2 px-4 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity uppercase tracking-widest hidden md:block">
+             Chat with us
+           </span>
+        </a>
+      )}
     </div>
   );
 };

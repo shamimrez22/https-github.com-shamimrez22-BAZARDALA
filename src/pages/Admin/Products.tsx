@@ -93,6 +93,29 @@ const AdminProducts = () => {
     fetchCategories();
   }, [authLoading, isAdmin]);
 
+  // Automatic Discount Percentage Calculation
+  useEffect(() => {
+    const price = parseFloat(formData.price);
+    const oldPrice = parseFloat(formData.oldPrice);
+    
+    if (price && oldPrice && oldPrice > price) {
+      const discount = Math.round(((oldPrice - price) / oldPrice) * 100);
+      if (formData.discountPercentage !== discount.toString()) {
+        setFormData(prev => ({
+          ...prev,
+          discountPercentage: discount.toString()
+        }));
+      }
+    } else if (price && oldPrice && oldPrice <= price) {
+      if (formData.discountPercentage !== '0') {
+        setFormData(prev => ({
+          ...prev,
+          discountPercentage: '0'
+        }));
+      }
+    }
+  }, [formData.price, formData.oldPrice]);
+
   const fetchCategories = async () => {
     try {
       const q = query(collection(db, 'categories'), orderBy('name', 'asc'));
@@ -323,7 +346,10 @@ const AdminProducts = () => {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Discount %</Label>
+                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex justify-between">
+                      Discount %
+                      <span className="text-[8px] text-brand-primary opacity-70">AUTO-CALCULATED</span>
+                    </Label>
                     <Input 
                       type="number" 
                       value={formData.discountPercentage} 
@@ -448,7 +474,7 @@ const AdminProducts = () => {
               <tbody className="divide-y divide-slate-100">
                 {loading ? (
                   <tr>
-                    <td colSpan={6} className="text-center py-20 font-black text-[10px] uppercase text-slate-300 italic">Loading Catalog...</td>
+                    <td colSpan={6} className="text-center py-20 font-black text-[10px] uppercase text-slate-300">Loading Catalog...</td>
                   </tr>
                 ) : filteredProducts.map((product) => (
                   <tr key={product.id} className="hover:bg-slate-50 transition-all font-bold group">

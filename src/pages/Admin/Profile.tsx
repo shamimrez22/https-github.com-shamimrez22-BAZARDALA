@@ -133,7 +133,7 @@ const AdminProfile = () => {
                     <Input 
                       value={user?.email || ''}
                       disabled
-                      className="h-10 bg-slate-100 border-slate-200 text-slate-400 rounded-none font-bold text-xs cursor-not-allowed italic"
+                      className="h-10 bg-slate-100 border-slate-200 text-slate-400 rounded-none font-bold text-xs cursor-not-allowed"
                     />
                   </div>
                 </div>
@@ -154,7 +154,7 @@ const AdminProfile = () => {
               <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-900 mb-4 flex items-center gap-2">
                 <Zap className="h-3 w-3 text-brand-primary" /> SECURITY_NOTICE
               </h3>
-              <p className="text-[9px] leading-relaxed font-bold text-slate-400 uppercase tracking-widest italic">
+              <p className="text-[9px] leading-relaxed font-bold text-slate-400 uppercase tracking-widest">
                 Identity changes are broadcasted system-wide. 
                 Any modification to administrative personas will be logged in the global auditing registry for verification.
               </p>

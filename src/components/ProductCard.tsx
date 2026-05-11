@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ShoppingCart, Heart, Eye } from 'lucide-react';
+import { ShoppingCart, Heart, Eye, MessageCircle } from 'lucide-react';
 import { Product } from '../types';
 import { Button } from './ui/button';
 import { Card, CardContent, CardFooter } from './ui/card';
 import { useCart } from '../context/CartContext';
+import { useSettings } from '../context/SettingsContext';
 import { motion } from 'motion/react';
 
 interface ProductCardProps {
@@ -13,6 +14,7 @@ interface ProductCardProps {
 
 export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) => {
   const { addToCart } = useCart();
+  const { settings } = useSettings();
   const navigate = useNavigate();
 
   const handleAction = (e: React.MouseEvent) => {
@@ -21,6 +23,15 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
       window.open(product.affiliateLink, '_blank', 'noopener,noreferrer');
       return;
     }
+    
+    // Direct to WhatsApp if number exists, otherwise checkout
+    if (settings?.whatsappNumber) {
+      const text = `আসসালামু আলাইকুম, আমি এই প্রোডাক্টটি অর্ডার করতে চাই: \n\nনাম: ${product.name}\nদাম: ৳${product.price}\nলিঙ্ক: ${window.location.origin}/shop?q=${encodeURIComponent(product.name)}`;
+      const url = `https://wa.me/${settings.whatsappNumber.replace(/\D/g, '')}?text=${encodeURIComponent(text)}`;
+      window.open(url, '_blank');
+      return;
+    }
+
     navigate('/checkout', { 
       state: { 
         directOrder: true, 
@@ -110,15 +121,23 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
         </div>
       </div>
 
-      {/* Action Button - Full Width at Bottom */}
-      <div className="flex w-full h-[52px]">
-        <button
-          className="w-full bg-brand-primary hover:bg-[#88705c] text-white transition-all text-[12px] font-black border-t border-brand-primary flex items-center justify-center gap-1.5 uppercase tracking-tighter"
-          disabled={product.stock === 0 && !product.affiliateLink}
-          onClick={handleAction}
-        >
-          অর্ডার করুন
-        </button>
+      {/* Action Buttons */}
+      <div className="flex flex-col w-full">
+        <div className="flex w-full h-[52px]">
+          <button
+            className="w-full bg-brand-primary hover:bg-[#88705c] text-white transition-all text-[12px] font-black border-t border-brand-primary flex items-center justify-center gap-1.5 uppercase tracking-tighter"
+            disabled={product.stock === 0 && !product.affiliateLink}
+            onClick={handleAction}
+          >
+            {settings?.whatsappNumber && !product.affiliateLink ? (
+              <>
+                <MessageCircle className="h-4 w-4" /> WhatsApp-এ অর্ডার
+              </>
+            ) : (
+              'অর্ডার করুন'
+            )}
+          </button>
+        </div>
       </div>
     </motion.div>
   );

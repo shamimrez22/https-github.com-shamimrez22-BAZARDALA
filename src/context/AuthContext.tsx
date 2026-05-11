@@ -3,6 +3,8 @@ import {
   onAuthStateChanged, 
   User, 
   signInWithPopup, 
+  signInWithRedirect,
+  getRedirectResult,
   GoogleAuthProvider,
   signOut as firebaseSignOut,
   updateProfile as firebaseUpdateProfile
@@ -47,29 +49,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     });
 
+    // Handle redirected sign-ins
+    const checkRedirect = async () => {
+      try {
+        const result = await getRedirectResult(auth);
+        if (result?.user) {
+          console.log('Redirect login success:', result.user.email);
+        }
+      } catch (error) {
+        console.error('Redirect login error:', error);
+      }
+    };
+    checkRedirect();
+
     const unsubAuth = onAuthStateChanged(auth, async (firebaseUser) => {
       try {
         console.log('Current Auth State User:', firebaseUser?.email);
         setUser(firebaseUser);
         if (firebaseUser) {
           const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
-          const isMaster = firebaseUser.email?.toLowerCase() === MASTER_EMAIL;
           
           if (userDoc.exists()) {
             const currentProfile = userDoc.data() as UserProfile;
             console.log('User Profile found:', currentProfile.role);
-            
-            // Auto-upgrade role if it's the master email but role is different
-            if (isMaster && currentProfile.role !== 'super_admin') {
-              await updateDoc(doc(db, 'users', firebaseUser.uid), { role: 'super_admin', status: 'active' });
-              const updatedProfile = { ...currentProfile, role: 'super_admin' as const, status: 'active' as const };
-              setProfile(updatedProfile);
-            } else {
-              setProfile(currentProfile);
-            }
+            setProfile(currentProfile);
           } else {
             console.log('Creating new profile for:', firebaseUser.email);
             // First time login - Create profile
+            const isMaster = firebaseUser.email?.toLowerCase() === MASTER_EMAIL;
             const newProfile: UserProfile = {
               uid: firebaseUser.uid,
               name: firebaseUser.displayName || 'User',
@@ -85,6 +92,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
         } else {
           setProfile(null);
+          // If logged out from Firebase, also clear admin session
+          setIsAdminSession(false);
+          localStorage.removeItem('isAdmin');
         }
       } catch (error) {
         console.error('CRITICAL Auth Error:', error);
@@ -110,15 +120,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const loginWithGoogle = async () => {
     try {
+      console.log('Starting Google Login...');
+      // Try popup first
       await signInWithPopup(auth, googleProvider);
+      console.log('Google Popup success');
     } catch (error: any) {
-      console.error('Google login error:', error);
+      console.error('Google login error (popup):', error);
+      
+      // If popup is blocked or fails, try redirect as a fallback for a "hard" fix
+      if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user' || error.code === 'auth/cancelled-popup-request') {
+        try {
+          console.log('Attempting redirect fallback...');
+          await signInWithRedirect(auth, googleProvider);
+          return; // The page will redirect, so we don't need to do anything else
+        } catch (redirectError) {
+          console.error('Google login error (redirect):', redirectError);
+        }
+      }
+
       // Better error message for user
       let message = 'গুগল লগইন করতে সমস্যা হয়েছে।';
       if (error.code === 'auth/popup-blocked') {
-        message = 'আপনার ব্রাউজারে পপ-আপ ব্লক করা আছে। দয়া করে পপ-আপ এলাউ করুন।';
+        message = 'আপনার ব্রাউজারে পপ-আপ ব্লক করা আছে। আমরা রিডাইরেক্ট করার চেষ্টা করছি...';
       } else if (error.code === 'auth/cancelled-popup-request' || error.code === 'auth/popup-closed-by-user') {
-        message = 'লগইন পপ-আপ বন্ধ করে দেওয়া হয়েছে।';
+        message = 'লগইন প্রসেস বাতিল করা হয়েছে।';
       } else if (error.code === 'auth/operation-not-allowed') {
         message = 'গুগল লগইন বর্তমানে ডিজেবল আছে। অ্যাডমিনের সাথে যোগাযোগ করুন।';
       }
@@ -177,8 +202,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const isAdmin = isAdminSession || (!!profile && (profile.role === 'admin' || profile.role === 'super_admin') && profile.status === 'active');
-  const isSuperAdmin = !!profile && profile.role === 'super_admin' && profile.status === 'active';
+  // Tighten isAdmin logic: Must have an active admin session (from login form) 
+  // AND either have a super_admin role or just be in a valid admin session.
+  // This prevents Google Login from automatically granting admin access.
+  const isAdmin = isAdminSession && (!!profile && (profile.role === 'admin' || profile.role === 'super_admin') && profile.status === 'active');
+  const isSuperAdmin = isAdminSession && !!profile && profile.role === 'super_admin' && profile.status === 'active';
 
   return (
     <AuthContext.Provider value={{ 

@@ -55,9 +55,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const result = await getRedirectResult(auth);
         if (result?.user) {
           console.log('Redirect login success:', result.user.email);
+          toast.success('লগইন সফল হয়েছে');
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error('Redirect login error:', error);
+        if (error.code === 'auth/unauthorized-domain') {
+          toast.error('Firebase Console এ এই ডোমেইনটি (Domain) অ্যাড করা নেই। দয়া করে Authorized Domains এ ডোমেইনটি যুক্ত করুন।');
+        } else if (error.code !== 'auth/operation-not-supported-in-this-environment') {
+           // Ignore this common error in some development environments
+           toast.error('লগইন ত্রুটি: ' + error.message);
+        }
       }
     };
     checkRedirect();
@@ -124,29 +131,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Try popup first
       await signInWithPopup(auth, googleProvider);
       console.log('Google Popup success');
+      toast.success('সফলভাবে লগইন করেছেন');
     } catch (error: any) {
       console.error('Google login error (popup):', error);
       
-      // If popup is blocked or fails, try redirect as a fallback for a "hard" fix
+      // Better error message for user
+      let message = 'গুগল লগইন করতে সমস্যা হয়েছে।';
+      
+      if (error.code === 'auth/unauthorized-domain') {
+        message = 'এই ডোমেইনটি (Domain) Firebase এ অনুমোদিত নয়। দয়া করে Firebase Console এ গিয়ে Authorized Domains এ এই ডোমেইনটি যুক্ত করুন।';
+        toast.error(message, { duration: 10000 });
+        throw new Error(message);
+      }
+
+      // If popup is blocked or fails, try redirect as a fallback
       if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user' || error.code === 'auth/cancelled-popup-request') {
         try {
           console.log('Attempting redirect fallback...');
+          toast.info('পপ-আপ ব্যবহার করা যাচ্ছে না, রিডাইরেক্ট করা হচ্ছে...');
           await signInWithRedirect(auth, googleProvider);
-          return; // The page will redirect, so we don't need to do anything else
-        } catch (redirectError) {
+          return; 
+        } catch (redirectError: any) {
           console.error('Google login error (redirect):', redirectError);
         }
       }
 
-      // Better error message for user
-      let message = 'গুগল লগইন করতে সমস্যা হয়েছে।';
       if (error.code === 'auth/popup-blocked') {
-        message = 'আপনার ব্রাউজারে পপ-আপ ব্লক করা আছে। আমরা রিডাইরেক্ট করার চেষ্টা করছি...';
+        message = 'আপনার ব্রাউজারে পপ-আপ ব্লক করা আছে।';
       } else if (error.code === 'auth/cancelled-popup-request' || error.code === 'auth/popup-closed-by-user') {
         message = 'লগইন প্রসেস বাতিল করা হয়েছে।';
       } else if (error.code === 'auth/operation-not-allowed') {
         message = 'গুগল লগইন বর্তমানে ডিজেবল আছে। অ্যাডমিনের সাথে যোগাযোগ করুন।';
       }
+      
+      toast.error(message);
       throw new Error(message);
     }
   };
@@ -202,11 +220,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // Tighten isAdmin logic: Must have an active admin session (from login form) 
-  // AND either have a super_admin role or just be in a valid admin session.
-  // This prevents Google Login from automatically granting admin access.
-  const isAdmin = isAdminSession && (!!profile && (profile.role === 'admin' || profile.role === 'super_admin') && profile.status === 'active');
-  const isSuperAdmin = isAdminSession && !!profile && profile.role === 'super_admin' && profile.status === 'active';
+  // Tighten isAdmin logic: A super_admin (Master Owner) can always access admin if logged in via Firebase.
+  // Others need BOTH a valid Firebase profile with admin role AND an active admin session (from login form).
+  const isAdmin = !!profile && profile.status === 'active' && (
+    profile.role === 'super_admin' || 
+    (isAdminSession && profile.role === 'admin')
+  );
+  
+  const isSuperAdmin = !!profile && profile.role === 'super_admin' && profile.status === 'active';
 
   return (
     <AuthContext.Provider value={{ 

@@ -143,6 +143,28 @@ const AdminLogin = () => {
                   লগইন করুন
                 </Button>
 
+                <div className="relative my-6">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-[#777]/20"></div>
+                  </div>
+                  <div className="relative flex justify-center text-[10px] font-black uppercase tracking-widest">
+                    <span className="bg-white/40 px-4 text-slate-400">অথবা</span>
+                  </div>
+                </div>
+
+                <Button 
+                  type="button" 
+                  onClick={async () => {
+                    try {
+                      await loginWithGoogle();
+                    } catch (err) {}
+                  }}
+                  className="w-full h-14 bg-white hover:bg-slate-50 text-slate-900 font-black rounded-none shadow-xl uppercase tracking-[0.2em] text-[10px] transition-all active:scale-[0.98] border border-[#777]/20 flex items-center justify-center gap-3"
+                >
+                  <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" className="w-5 h-5" alt="Google" />
+                  গুগল দিয়ে প্রবেশ (সুপার অ্যাডমিন)
+                </Button>
+
                 <div className="pt-4 text-center">
                   <button 
                     type="button"

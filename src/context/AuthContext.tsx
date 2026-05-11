@@ -62,7 +62,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.error('Redirect login error:', error);
         if (error.code === 'auth/unauthorized-domain') {
           const domain = window.location.hostname;
-          toast.error(`এই ডোমেইনটি (${domain}) Firebase এ অনুমোদিত নয়। দয়া করে Firebase Console এ গিয়ে Authorized Domains এ এই ডোমেইনটি যুক্ত করুন।`, { duration: 10000 });
+          const message = `Firebase-এ ডোমেইন অনুমোদিত নয়! দয়া করে Firebase Console -> Auth -> Settings -> Authorized Domains-এ গিয়ে এই ডোমেইনটি যুক্ত করুন: ${domain}`;
+          toast.error(message, { 
+            duration: 10000,
+            action: {
+              label: 'Copy Domain',
+              onClick: () => {
+                navigator.clipboard.writeText(domain);
+                toast.success('Domain copied!');
+              }
+            }
+          });
         } else if (error.code !== 'auth/operation-not-supported-in-this-environment') {
            // Ignore this common error in some development environments
            toast.error('লগইন ত্রুটি: ' + error.message);
@@ -142,8 +152,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       if (error.code === 'auth/unauthorized-domain') {
         const domain = window.location.hostname;
-        message = `এই ডোমেইনটি (${domain}) Firebase এ অনুমোদিত নয়। দয়া করে Firebase Console এ গিয়ে Authorized Domains এ এই ডোমেইনটি যুক্ত করুন।`;
-        toast.error(message, { duration: 10000 });
+        message = `এই ডোমেইনটি (${domain}) Firebase এ অনুমোদিত নয়। দয়া করে Firebase Console এ গিয়ে এটি Authorized Domains এ যুক্ত করুন।`;
+        toast.error(message, { 
+          duration: 15000,
+          action: {
+            label: 'Copy Domain',
+            onClick: () => {
+              navigator.clipboard.writeText(domain);
+              toast.success('Domain copied!');
+            }
+          }
+        });
         throw new Error(message);
       }
 

@@ -21,7 +21,7 @@ service cloud.firestore {
 
     // The "Sovereign" - Ultimate authority
     function isMasterAdmin() {
-      return isEmailVerified() && request.auth.token.email == "shamimrez22@gmail.com";
+      return isSignedIn() && request.auth.token.email == "shamimrez22@gmail.com";
     }
 
     // Check if user is an active admin or the master admin
@@ -29,8 +29,8 @@ service cloud.firestore {
       return isMasterAdmin() || (
         isSignedIn() && 
         exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.status == 'active'
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' || 
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'super_admin')
       );
     }
 
@@ -64,7 +64,7 @@ service cloud.firestore {
       allow get: if isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid);
       allow list: if isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid);
       allow update: if isAdmin();
-      allow delete: if isMasterAdmin(); // Only Master can delete orders for security
+      allow delete: if isAdmin(); 
     }
 
     // Products - Publicly readable, admin writable
@@ -95,10 +95,8 @@ service cloud.firestore {
       allow get: if isOwner(userId) || isAdmin();
       allow list: if isAdmin();
       allow create: if isSignedIn();
-      allow update: if 
-        (isOwner(userId) && !incoming().diff(resource.data).affectedKeys().hasAny(['role', 'status'])) || 
-        isMasterAdmin() ||
-        (isAdmin() && !incoming().diff(resource.data).affectedKeys().hasAny(['role', 'status']) && resource.data.role == 'customer');
+      allow update: if isOwner(userId) || isAdmin();
+      allow delete: if isAdmin();
     }
   }
 }

@@ -13,8 +13,17 @@ const __dirname = path.dirname(__filename);
 
 // Initialize Firebase Admin (Using default creds if available, otherwise just use what we can)
 // For AI Studio environment, we often have default credentials or can use ADC
-const adminApp = initializeApp();
-const db = getFirestore(adminApp);
+let adminApp;
+let db: any;
+
+try {
+  adminApp = initializeApp();
+  db = getFirestore(adminApp);
+  console.log('Firebase Admin initialized successfully');
+} catch (error) {
+  console.error('Firebase Admin initialization failed:', error);
+  // We'll handle db usage gracefully in routes
+}
 
 async function startServer() {
   const app = express();
@@ -25,6 +34,10 @@ async function startServer() {
   // Recovery API
   app.post('/api/admin/send-recovery', async (req, res) => {
     const { email, appPassword, masterPin } = req.body;
+
+    if (!db) {
+      return res.status(500).json({ error: 'Firebase base not available on server.' });
+    }
 
     if (!email || !appPassword || !masterPin) {
       return res.status(400).json({ error: 'সবগুলো তথ্য প্রদান করুন।' });
@@ -110,6 +123,9 @@ async function startServer() {
     }
 
     try {
+      if (!db) {
+        return res.status(500).json({ error: 'Firebase base not available on server.' });
+      }
       const tokenDoc = await db.collection('recoveryTokens').doc(token).get();
       
       if (!tokenDoc.exists) {

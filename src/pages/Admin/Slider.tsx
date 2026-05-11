@@ -24,6 +24,7 @@ const AdminSlider = () => {
   const { isAdmin, loading: authLoading } = useAuth();
   const [banners, setBanners] = useState<SliderBanner[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [isAdding, setIsAdding] = useState(false);
   const [newBanner, setNewBanner] = useState({
     image: '',
@@ -90,25 +91,19 @@ const AdminSlider = () => {
   };
 
   const handleDeleteBanner = async (id: string) => {
-    const originalBanners = [...banners];
+    if (!window.confirm('Are you sure you want to delete this banner?')) return;
     
-    toast('Delete this banner?', {
-      action: {
-        label: 'Confirm Delete',
-        onClick: async () => {
-          try {
-            // Optimistic Delete
-            setBanners(prev => prev.filter(b => b.id !== id));
-            await deleteDoc(doc(db, 'slider_banners', id));
-            toast.success('Banner deleted');
-          } catch (error) {
-            console.error('Delete error:', error);
-            setBanners(originalBanners);
-            toast.error('Failed to delete banner');
-          }
-        }
-      }
-    });
+    const originalBanners = [...banners];
+    try {
+      // Optimistic Delete
+      setBanners(prev => prev.filter(b => b.id !== id));
+      await deleteDoc(doc(db, 'slider_banners', id));
+      toast.success('Banner deleted');
+    } catch (error) {
+      console.error('Delete error:', error);
+      setBanners(originalBanners);
+      toast.error('Failed to delete banner');
+    }
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -231,12 +226,31 @@ const AdminSlider = () => {
                   </div>
                 </div>
               </div>
-              <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0 duration-300">
+              <div className="absolute top-2 right-2 z-10">
                 <button 
-                  className="h-8 w-8 flex items-center justify-center bg-rose-600 text-white shadow-2xl hover:bg-rose-700 active:scale-95 transition-all"
-                  onClick={() => handleDeleteBanner(banner.id)}
+                  className={`h-8 flex items-center justify-center transition-all rounded-none shadow-2xl ${
+                    deletingId === banner.id 
+                      ? "bg-rose-700 text-white px-3" 
+                      : "w-8 bg-rose-600 text-white hover:bg-rose-700"
+                  }`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (deletingId === banner.id) {
+                      handleDeleteBanner(banner.id);
+                      setDeletingId(null);
+                    } else {
+                      setDeletingId(banner.id);
+                      setTimeout(() => setDeletingId(null), 3000);
+                    }
+                  }}
+                  title={deletingId === banner.id ? "Confirm Delete" : "Delete Banner"}
                 >
-                  <Trash2 className="h-4 w-4" />
+                  {deletingId === banner.id ? (
+                    <span className="text-[8px] font-black uppercase">SURE?</span>
+                  ) : (
+                    <Trash2 className="h-4 w-4" />
+                  )}
                 </button>
               </div>
             </div>

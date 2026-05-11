@@ -83,11 +83,11 @@
 }
 
 :root {
-    --primary-color: #9B2B2C;
+    --primary-color: #0A7C6E;
     --secondary-color: #ffffff;
-    --background-color: #ead9c4;
+    --background-color: #ffffff;
     --card-color: #ffffff;
-    --button-color: #9B2B2C;
+    --button-color: #0A7C6E;
 
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);

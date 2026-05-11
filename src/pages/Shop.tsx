@@ -40,10 +40,10 @@ const Shop = () => {
   const categories = ['All', ...new Set(allProducts.map(p => p.category).filter(Boolean))];
 
   return (
-    <div className="bg-slate-50/30 min-h-screen pb-20 font-sans relative overflow-x-hidden">
-      <div className="w-full max-w-[1536px] mx-auto px-6 md:px-16 lg:px-24 py-6 md:py-10">
+    <div className="bg-white min-h-screen pb-20 font-sans relative overflow-x-hidden">
+      <div className="w-full max-w-[1400px] mx-auto px-4 md:px-6 py-2 md:py-4">
         {/* Sub-Header / Control Panel */}
-        <div className="bg-white rounded-none p-4 md:p-6 flex flex-col xl:flex-row xl:items-center justify-between gap-4 mb-8 border-b border-slate-100">
+        <div className="bg-white rounded-none p-3 md:p-4 flex flex-col xl:flex-row xl:items-center justify-between gap-4 mb-4 border-b border-slate-100">
           <div>
             <h1 className="text-xl md:text-2xl font-black tracking-tighter text-slate-800 uppercase leading-none">Catalog_DIR</h1>
             <div className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mt-2 flex items-center gap-2">
@@ -99,7 +99,7 @@ const Shop = () => {
 
         {/* Adsterra Slot 7 - Top of Shop */}
         {settings?.ads?.adsterra?.bannerFiveCode && (
-           <div className="mb-12">
+           <div className="mb-6">
               <a href={settings.ads.adsterra.bannerFiveCode} target="_blank" rel="noopener noreferrer" className="block group">
                  <div className="bg-slate-900 rounded-none p-6 flex items-center justify-between border-2 border-slate-900 transition-all overflow-hidden relative shadow-lg">
                     <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
@@ -121,7 +121,7 @@ const Shop = () => {
         )}
 
         {globalLoading && allProducts.length === 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 md:gap-6">
             {[...Array(12)].map((_, i) => (
               <div key={i} className="aspect-square bg-white rounded-none animate-pulse p-4 border border-slate-100">
                  <div className="w-full h-full bg-[#f8f8f8] rounded-none flex items-center justify-center">
@@ -132,7 +132,7 @@ const Shop = () => {
           </div>
 
         ) : filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-1.5 md:gap-4">
             {filteredProducts.map(product => (
               <ProductCard key={product.id} product={product} />
             ))}
@@ -146,7 +146,7 @@ const Shop = () => {
             <p className="text-[12px] font-black text-slate-400 uppercase tracking-[0.2em] mb-12 max-w-sm mx-auto leading-relaxed">We couldn't find anything matching your current filters. Try refining your selection.</p>
             <Button 
               onClick={() => { setSearch(''); setCategory('All'); }}
-              className="bg-brand-primary hover:opacity-90 text-white rounded-none h-14 px-12 text-[12px] font-black uppercase tracking-widest active:scale-95 transition-all"
+              className="bg-brand-primary hover:opacity-90 text-white rounded-none h-12 px-12 text-[12px] font-black uppercase tracking-widest active:scale-95 transition-all"
             >
               RESET_ALL_FILTERS
             </Button>
@@ -156,7 +156,7 @@ const Shop = () => {
 
         {/* Adsterra Slot 8 - Bottom of Shop */}
         {settings?.ads?.adsterra?.bannerSixCode && (
-           <div className="mt-16">
+           <div className="mt-8">
               <a href={settings.ads.adsterra.bannerSixCode} target="_blank" rel="noopener noreferrer" className="block relative group">
                  <div className="bg-[#f8f8f8] rounded-none p-16 text-center hover:bg-white transition-all border-2 border-[#777] shadow-2xl relative overflow-hidden group">
                     <h5 className="text-[12px] font-black uppercase text-slate-400 tracking-[0.4em] mb-8">END_OF_CATALOG // ACCESSING_REDUNDANT_PROTOCOL</h5>

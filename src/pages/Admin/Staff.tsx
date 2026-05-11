@@ -11,6 +11,8 @@ const AdminStaff = () => {
   const [staff, setStaff] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [confirmingUid, setConfirmingUid] = useState<string | null>(null);
+  const [confirmType, setConfirmType] = useState<'suspend' | 'remove' | 'restore' | null>(null);
 
   const fetchStaff = async () => {
     setLoading(true);
@@ -31,6 +33,7 @@ const AdminStaff = () => {
   }, []);
 
   const handleUpdateRole = async (uid: string, newRole: 'admin' | 'customer') => {
+    if (newRole === 'customer' && !window.confirm('Are you sure you want to remove admin access for this user?')) return;
     try {
       await updateDoc(doc(db, 'users', uid), { role: newRole });
       setStaff(prev => prev.map(s => s.uid === uid ? { ...s, role: newRole } : s));
@@ -44,6 +47,7 @@ const AdminStaff = () => {
   };
 
   const handleUpdateStatus = async (uid: string, newStatus: 'active' | 'suspended') => {
+    if (newStatus === 'suspended' && !window.confirm('Suspend all access for this admin node?')) return;
     try {
       await updateDoc(doc(db, 'users', uid), { status: newStatus });
       setStaff(prev => prev.map(s => s.uid === uid ? { ...s, status: newStatus } : s));
@@ -130,15 +134,38 @@ const AdminStaff = () => {
                     <>
                       {member.status === 'active' ? (
                         <Button 
-                          onClick={() => handleUpdateStatus(member.uid, 'suspended')}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (confirmingUid === member.uid && confirmType === 'suspend') {
+                              handleUpdateStatus(member.uid, 'suspended');
+                              setConfirmingUid(null);
+                              setConfirmType(null);
+                            } else {
+                              setConfirmingUid(member.uid);
+                              setConfirmType('suspend');
+                              setTimeout(() => {
+                                setConfirmingUid(null);
+                                setConfirmType(null);
+                              }, 3000);
+                            }
+                          }}
                           variant="outline" 
-                          className="h-10 px-4 border-rose-200 text-rose-600 hover:bg-rose-600 hover:text-white rounded-none font-black text-[9px] uppercase tracking-widest transition-all"
+                          className={`h-10 px-4 rounded-none font-black text-[9px] uppercase tracking-widest transition-all ${
+                            confirmingUid === member.uid && confirmType === 'suspend'
+                              ? "bg-rose-600 text-white border-rose-600 px-6"
+                              : "border-rose-200 text-rose-600 hover:bg-rose-600 hover:text-white"
+                          }`}
                         >
-                          <ShieldAlert className="h-3.5 w-3.5 mr-2" /> Suspend Access
+                          {confirmingUid === member.uid && confirmType === 'suspend' ? "SURE? SUSPEND" : <><ShieldAlert className="h-3.5 w-3.5 mr-2" /> Suspend Access</>}
                         </Button>
                       ) : (
                         <Button 
-                          onClick={() => handleUpdateStatus(member.uid, 'active')}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleUpdateStatus(member.uid, 'active');
+                          }}
                           variant="outline" 
                           className="h-10 px-4 border-green-200 text-green-600 hover:bg-green-600 hover:text-white rounded-none font-black text-[9px] uppercase tracking-widest transition-all"
                         >
@@ -147,11 +174,30 @@ const AdminStaff = () => {
                       )}
                       
                       <Button 
-                        onClick={() => handleUpdateRole(member.uid, 'customer')}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          if (confirmingUid === member.uid && confirmType === 'remove') {
+                            handleUpdateRole(member.uid, 'customer');
+                            setConfirmingUid(null);
+                            setConfirmType(null);
+                          } else {
+                            setConfirmingUid(member.uid);
+                            setConfirmType('remove');
+                            setTimeout(() => {
+                              setConfirmingUid(null);
+                              setConfirmType(null);
+                            }, 3000);
+                          }
+                        }}
                         variant="outline" 
-                        className="h-10 px-4 border-slate-200 text-slate-600 hover:bg-slate-900 hover:text-white rounded-none font-black text-[9px] uppercase tracking-widest transition-all"
+                        className={`h-10 px-4 rounded-none font-black text-[9px] uppercase tracking-widest transition-all ${
+                          confirmingUid === member.uid && confirmType === 'remove'
+                            ? "bg-slate-900 text-white border-slate-900 px-6"
+                            : "border-slate-200 text-slate-600 hover:bg-slate-900 hover:text-white"
+                        }`}
                       >
-                        <UserMinus className="h-3.5 w-3.5 mr-2" /> Remove Admin
+                        {confirmingUid === member.uid && confirmType === 'remove' ? "SURE? REMOVE ROLE" : <><UserMinus className="h-3.5 w-3.5 mr-2" /> Remove Admin</>}
                       </Button>
                     </>
                   ) : (

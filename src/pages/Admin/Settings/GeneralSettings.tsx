@@ -178,7 +178,11 @@ const GeneralSettings = () => {
                <Button 
                 variant="destructive" 
                 size="icon" 
-                onClick={() => setSettings({...settings, socialLinks: settings.socialLinks?.filter((_, idx) => idx !== i)})}
+                onClick={() => {
+                  if (window.confirm('Delete this social link?')) {
+                    setSettings({...settings, socialLinks: settings.socialLinks?.filter((_, idx) => idx !== i)});
+                  }
+                }}
                 className="rounded-none h-10 w-10 shrink-0"
                >
                  <Trash2 className="h-4 w-4" />
@@ -234,7 +238,11 @@ const GeneralSettings = () => {
                <Button 
                 variant="destructive" 
                 size="icon" 
-                onClick={() => setSettings({...settings, footerSupportLinks: settings.footerSupportLinks?.filter((_, idx) => idx !== i)})}
+                onClick={() => {
+                  if (window.confirm('Delete this footer link?')) {
+                    setSettings({...settings, footerSupportLinks: settings.footerSupportLinks?.filter((_, idx) => idx !== i)});
+                  }
+                }}
                 className="rounded-none h-10 w-10 shrink-0"
                >
                  <Trash2 className="h-4 w-4" />

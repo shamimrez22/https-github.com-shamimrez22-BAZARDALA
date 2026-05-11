@@ -222,7 +222,7 @@ export const AdminLayout: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex bg-slate-100 text-slate-900 overflow-x-hidden">
+    <div className="h-[100dvh] flex bg-slate-100 text-slate-900 overflow-hidden">
       {/* Sidebar Overlay for Mobile */}
       <AnimatePresence>
         {isSidebarOpen && (
@@ -273,7 +273,7 @@ export const AdminLayout: React.FC = () => {
           </div>
 
           {/* Navigation - Sheet Tabs Look */}
-          <nav className="flex-1 overflow-y-auto p-0 space-y-0 custom-scrollbar">
+          <nav className="flex-1 overflow-y-auto p-0 space-y-0 custom-scrollbar" data-lenis-prevent>
               {menuItems.map(item => (
                 <div key={item.label}>
                   <SidebarItem item={item} />
@@ -295,10 +295,10 @@ export const AdminLayout: React.FC = () => {
       </aside>
 
       {/* Main Content Area */}
-      <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ${isSidebarOpen ? 'lg:ml-64' : 'ml-0'}`}>
+      <div className={`flex-1 flex flex-col min-w-0 h-[100dvh] overflow-hidden transition-all duration-300 ${isSidebarOpen ? 'lg:ml-64' : 'ml-0'}`}>
         {/* Header - Spreadsheet Ribbon Bar */}
         <header 
-          className="h-12 bg-brand-primary border-b border-white/10 sticky top-0 z-[60] px-4 flex items-center justify-between transition-all duration-300 w-full"
+          className="h-12 bg-brand-primary border-b border-white/10 z-[60] px-4 flex items-center justify-between shrink-0 transition-all duration-300 w-full"
         >
           <div className="flex items-center gap-3">
             {/* Toggle Button */}
@@ -429,7 +429,7 @@ export const AdminLayout: React.FC = () => {
         </header>
 
         {/* Page Content - Edge to Edge Sheet Look */}
-        <main className="flex-1 p-0 overflow-y-auto">
+        <main className="flex-1 p-0 overflow-y-auto custom-scrollbar" data-lenis-prevent>
           <div className="h-full w-full bg-white">
             <Outlet />
           </div>

@@ -303,14 +303,23 @@ const Checkout = () => {
               <Button 
                 type="submit"
                 disabled={loading}
-                className="w-full h-16 bg-brand-primary hover:opacity-90 text-white text-lg md:text-xl font-bold uppercase rounded-none active:scale-95 transition-all"
+                className="w-full h-14 bg-brand-primary hover:opacity-90 text-white text-lg font-bold uppercase rounded-none active:scale-95 transition-all"
               >
                 {loading ? 'প্রক্রিয়াধীন...' : 'অর্ডার নিশ্চিত করুন'}
               </Button>
 
               <button
                 type="button"
-                className="w-full h-14 border border-brand-primary text-brand-primary font-black uppercase tracking-widest flex items-center justify-center gap-4 hover:bg-brand-primary/5 transition-all text-[11px] active:scale-95 rounded-none"
+                onClick={() => {
+                  if (settings?.whatsappNumber) {
+                    const text = `আসসালামু আলাইকুম, আমি অর্ডার সংক্রান্ত বিষয় নিয়ে কথা বলতে চাই।`;
+                    const url = `https://wa.me/${settings.whatsappNumber.replace(/\D/g, '')}?text=${encodeURIComponent(text)}`;
+                    window.open(url, '_blank');
+                  } else {
+                    toast.error('WhatsApp support is not configured');
+                  }
+                }}
+                className="w-full h-12 border border-brand-primary text-brand-primary font-black uppercase tracking-widest flex items-center justify-center gap-4 hover:bg-brand-primary/5 transition-all text-[11px] active:scale-95 rounded-none"
               >
                 <MessageCircle className="h-5 w-5" /> CHAT WITH ADMIN
               </button>

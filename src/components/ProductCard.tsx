@@ -76,12 +76,12 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
         )}
       </div>
 
-      {/* Product Details */}
-      <div className="p-4 flex-1 flex flex-col pt-2 pb-1">
+        {/* Product Details */}
+      <div className="p-1 flex-1 flex flex-col pt-1 pb-1">
         {/* Title */}
-        <div className="h-[36px] mb-1.5 overflow-hidden">
+        <div className="h-[22px] mb-0.5 overflow-hidden">
           <h3 
-            className="font-bold text-slate-900 text-[13px] leading-[1.4] line-clamp-2 hover:text-brand-primary transition-colors cursor-pointer uppercase tracking-tight"
+            className="font-bold text-slate-900 text-[9px] leading-tight line-clamp-2 hover:text-brand-primary transition-colors cursor-pointer uppercase"
             onClick={handleAction}
           >
             {product.name}
@@ -89,31 +89,30 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
         </div>
 
         {/* Stock Status */}
-        <div className="flex items-center gap-1.5 mb-3">
-          <div className={`w-1.5 h-1.5 rounded-none ${product.stock > 0 || product.affiliateLink ? 'bg-brand-primary' : 'bg-red-500'}`} />
-          <span className={`text-[10px] font-bold uppercase tracking-wider ${product.stock > 0 || product.affiliateLink ? 'text-brand-primary' : 'text-red-500'}`}>
-            {product.stock > 0 || product.affiliateLink ? 'IN STOCK' : 'OUT OF STOCK'}
+        <div className="flex items-center gap-1 mb-1">
+          <span className={`text-[7px] font-black uppercase tracking-tight ${product.stock > 0 || product.affiliateLink ? 'text-brand-primary' : 'text-rose-600'}`}>
+            • {product.stock > 0 || product.affiliateLink ? 'IN STOCK' : 'OUT OF STOCK'}
           </span>
         </div>
         
         {/* Price Section */}
-        <div className="flex items-end justify-between mt-auto mb-2">
+        <div className="flex items-end justify-between mt-auto">
           <div className="flex flex-col">
-            <div className="flex items-center gap-1">
-              <span className="text-[18px] font-black text-slate-900">
-                <span className="text-brand-primary">৳</span> {product.price.toLocaleString()}
+            <div className="flex items-center gap-0.5">
+              <span className="text-[12px] font-black text-slate-900 leading-none">
+                <span className="text-[10px] mr-1">৳</span>{product.price.toLocaleString()}
               </span>
             </div>
             {product.oldPrice && product.oldPrice > 0 && (
-              <span className="text-[12px] font-bold text-slate-400 line-through">
+              <span className="text-[7.5px] font-medium text-slate-400 line-through">
                 ৳{product.oldPrice.toLocaleString()}
               </span>
             )}
           </div>
 
           {product.discountPercentage && product.discountPercentage > 0 && (
-            <div className="bg-[#e0f7f7] border border-[#b2ebeb] px-2 py-1 flex items-center justify-center">
-              <span className="text-brand-primary text-[11px] font-bold">
+            <div className="bg-brand-primary/5 border border-brand-primary/20 px-0.5 py-0.1 flex items-center justify-center">
+              <span className="text-brand-primary text-[7.5px] font-bold">
                 -{product.discountPercentage}%
               </span>
             </div>
@@ -122,22 +121,20 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
       </div>
 
       {/* Action Buttons */}
-      <div className="flex flex-col w-full">
-        <div className="flex w-full h-[52px]">
-          <button
-            className="w-full bg-brand-primary hover:bg-[#88705c] text-white transition-all text-[12px] font-black border-t border-brand-primary flex items-center justify-center gap-1.5 uppercase tracking-tighter"
-            disabled={product.stock === 0 && !product.affiliateLink}
-            onClick={handleAction}
-          >
-            {settings?.whatsappNumber && !product.affiliateLink ? (
-              <>
-                <MessageCircle className="h-4 w-4" /> WhatsApp-এ অর্ডার
-              </>
-            ) : (
-              'অর্ডার করুন'
-            )}
-          </button>
-        </div>
+      <div className="p-1 pt-0 pb-1">
+        <button
+          className="w-full bg-brand-primary hover:opacity-90 text-white transition-all h-[26px] text-[10px] font-bold flex items-center justify-center gap-1 uppercase"
+          disabled={product.stock === 0 && !product.affiliateLink}
+          onClick={handleAction}
+        >
+          {settings?.whatsappNumber && !product.affiliateLink ? (
+             <>
+               <MessageCircle className="h-2.5 w-2.5" /> অর্ডার
+             </>
+           ) : (
+             'অর্ডার করুন'
+           )}
+        </button>
       </div>
     </motion.div>
   );

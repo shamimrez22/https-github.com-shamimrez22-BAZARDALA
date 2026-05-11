@@ -48,6 +48,7 @@ const AdminCategories = () => {
   const [search, setSearch] = useState('');
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     image: '',
@@ -134,20 +135,14 @@ const AdminCategories = () => {
   };
 
   const handleDelete = async (id: string) => {
-    toast('PROTOCOL_WIPE: Delete Category?', {
-      action: {
-        label: 'Confirm',
-        onClick: async () => {
-          try {
-            await deleteDoc(doc(db, 'categories', id));
-            toast.success('Category deleted');
-            setCategories(prev => prev.filter(c => c.id !== id));
-          } catch (error) {
-            toast.error('Failed to delete category');
-          }
-        }
-      }
-    });
+    if (!window.confirm('Delete this category permanently?')) return;
+    try {
+      await deleteDoc(doc(db, 'categories', id));
+      toast.success('Category deleted');
+      setCategories(prev => prev.filter(c => c.id !== id));
+    } catch (error) {
+      toast.error('Failed to delete category');
+    }
   };
 
   const filteredCategories = categories.filter(c => 
@@ -208,8 +203,14 @@ const AdminCategories = () => {
                         <img src={formData.image} alt="Preview" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" />
                         <button 
                           type="button"
-                          onClick={() => setFormData(prev => ({ ...prev, image: '' }))}
-                          className="absolute inset-0 bg-rose-600/90 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all font-black text-[8px]"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (window.confirm('Remove this category image?')) {
+                              setFormData(prev => ({ ...prev, image: '' }));
+                            }
+                          }}
+                          className="absolute bottom-0 left-0 right-0 h-6 bg-rose-600/90 text-white flex items-center justify-center font-black text-[8px] z-10 hover:bg-rose-700"
                         >
                           Remove
                         </button>
@@ -305,10 +306,24 @@ const AdminCategories = () => {
                           Edit
                         </button>
                         <button 
-                          onClick={() => handleDelete(category.id)}
-                          className="h-8 px-4 bg-rose-50 border border-rose-100 text-rose-600 text-[8px] font-black uppercase hover:bg-rose-600 hover:text-white transition-all"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (deletingId === category.id) {
+                              handleDelete(category.id);
+                              setDeletingId(null);
+                            } else {
+                              setDeletingId(category.id);
+                              setTimeout(() => setDeletingId(null), 3000);
+                            }
+                          }}
+                          className={`h-8 flex items-center justify-center border transition-all ${
+                            deletingId === category.id 
+                              ? "bg-rose-600 text-white border-rose-600 px-4 min-w-[80px]" 
+                              : "px-4 bg-rose-50 border border-rose-100 text-rose-600 text-[8px] font-black uppercase hover:bg-rose-600 hover:text-white transition-all"
+                          }`}
                         >
-                          Delete
+                          {deletingId === category.id ? "SURE?" : "Delete"}
                         </button>
                       </div>
                     </td>

@@ -21,7 +21,7 @@ const Cart = () => {
         <p className="text-slate-400 mb-10 max-w-sm mx-auto text-[12px] font-black uppercase tracking-[0.2em] leading-relaxed">
           Looks like you haven't added anything to your cart yet. Explore our latest collections.
         </p>
-        <Button size="lg" className="bg-slate-900 hover:bg-brand-primary rounded-none h-14 px-12 text-[12px] font-black uppercase tracking-widest active:scale-95 transition-all" asChild>
+        <Button size="lg" className="bg-slate-900 hover:bg-brand-primary rounded-none h-12 px-12 text-[12px] font-black uppercase tracking-widest active:scale-95 transition-all" asChild>
           <Link to="/shop">EXPLORE_SHOP</Link>
         </Button>
       </div>
@@ -29,8 +29,8 @@ const Cart = () => {
   }
 
   return (
-    <div className="bg-slate-50/30 min-h-screen py-8 md:py-12">
-      <div className="w-full px-4 md:px-8 lg:px-12 max-w-screen-2xl mx-auto">
+    <div className="bg-white min-h-screen py-8 md:py-12">
+      <div className="w-full px-4 md:px-6 max-w-[1400px] mx-auto">
         <div className="mb-8 border-b-2 border-brand-primary pb-4">
           <h1 className="text-3xl md:text-4xl font-black text-slate-900 uppercase tracking-tighter">Shopping_Bag</h1>
           <div className="flex items-center gap-3 mt-3">
@@ -76,7 +76,13 @@ const Cart = () => {
                     </div>
                     <button
                       className="text-red-600 hover:text-red-800 transition-colors flex items-center gap-2 group/btn"
-                      onClick={() => removeFromCart(item.productId)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (window.confirm('Remove this item from cart?')) {
+                          removeFromCart(item.productId);
+                        }
+                      }}
                     >
                       <div className="w-10 h-10 rounded-none bg-red-50 border border-red-200 flex items-center justify-center group-hover/btn:bg-red-100 transition-all">
                         <Trash2 className="h-4 w-4" />

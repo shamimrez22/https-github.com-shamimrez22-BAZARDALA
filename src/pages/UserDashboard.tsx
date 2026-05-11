@@ -98,8 +98,8 @@ const UserDashboard = () => {
   };
 
   return (
-    <div className="bg-slate-50/30 min-h-screen pb-20 font-sans">
-      <div className="w-full px-4 md:px-8 lg:px-12 py-8 md:py-12 max-w-screen-2xl mx-auto">
+    <div className="bg-white min-h-screen pb-20 font-sans">
+      <div className="w-full px-4 md:px-6 py-8 md:py-12 max-w-[1400px] mx-auto">
         <div className="flex flex-col xl:flex-row gap-8">
           {/* Sidebar / Identity Hub */}
           <div className="w-full xl:w-[350px] space-y-6">

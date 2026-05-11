@@ -532,21 +532,39 @@ const AdminOrders = () => {
                                </button>
 
                                <button 
-                                 onClick={() => {
-                                   if (window.confirm('Delete this order?')) {
+                                 onClick={(e) => {
+                                   e.preventDefault();
+                                   e.stopPropagation();
+                                   if (deletingId === order.id) {
                                      handleDelete(order.id);
+                                     setDeletingId(null);
+                                   } else {
+                                     setDeletingId(order.id);
+                                     setTimeout(() => setDeletingId(null), 3000); // Reset after 3s
                                    }
                                  }}
-                                 className="h-8 w-8 flex items-center justify-center bg-rose-50 border border-rose-100 text-rose-600 hover:bg-rose-100 transition-all flex-shrink-0"
-                                 title="Delete"
+                                 className={`h-8 flex items-center justify-center border transition-all flex-shrink-0 ${
+                                   deletingId === order.id 
+                                     ? "bg-rose-600 text-white border-rose-600 px-3 min-w-[60px]" 
+                                     : "w-8 bg-rose-50 border-rose-100 text-rose-600 hover:bg-rose-100"
+                                 }`}
+                                 title={deletingId === order.id ? "Confirm Delete" : "Delete"}
                                 >
-                                  <Trash2 className="h-3.5 w-3.5" />
+                                  {deletingId === order.id ? (
+                                    <span className="text-[7px] font-black uppercase whitespace-nowrap">SURE?</span>
+                                  ) : (
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                  )}
                                 </button>
                              </div>
                              
                              {String(order.status || '').toLowerCase() === 'pending' && (
                                <button 
-                                 onClick={() => updateStatus(order.id, 'confirmed')}
+                                 onClick={(e) => {
+                                   e.preventDefault();
+                                   e.stopPropagation();
+                                   updateStatus(order.id, 'confirmed');
+                                 }}
                                  className="w-full h-8 px-4 bg-brand-primary text-white text-[8px] font-black uppercase hover:bg-slate-900 transition-all active:scale-95"
                                >
                                  CONFIRM ORDER

@@ -13,6 +13,7 @@ import { format } from 'date-fns';
 const AdminCoupons = () => {
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({ code: '', discount: '', expiry: '' });
 
   useEffect(() => {
@@ -61,26 +62,20 @@ const AdminCoupons = () => {
     }
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
+    if (!window.confirm('Delete this coupon permanently?')) return;
+    
     const originalCoupons = [...coupons];
-    toast('Delete this coupon permanently?', {
-      action: {
-        label: 'Delete',
-        onClick: async () => {
-          try {
-            // Optimistic Delete
-            setCoupons(prev => prev.filter(c => c.id !== id));
-            await deleteDoc(doc(db, 'coupons', id));
-            toast.success('Coupon deleted');
-          } catch (error) {
-            console.error('Delete error:', error);
-            setCoupons(originalCoupons);
-            toast.error('Failed to delete coupon');
-          }
-        }
-      },
-      cancel: { label: 'Cancel', onClick: () => {} }
-    });
+    try {
+      // Optimistic Delete
+      setCoupons(prev => prev.filter(c => c.id !== id));
+      await deleteDoc(doc(db, 'coupons', id));
+      toast.success('Coupon deleted');
+    } catch (error) {
+      console.error('Delete error:', error);
+      setCoupons(originalCoupons);
+      toast.error('Failed to delete coupon');
+    }
   };
 
   return (
@@ -150,10 +145,24 @@ const AdminCoupons = () => {
                   <Ticket className="h-4 w-4" />
                 </div>
                 <button 
-                  onClick={() => handleDelete(coupon.id)}
-                  className="bg-rose-50 text-rose-600 px-3 py-1 text-[8px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-all hover:bg-rose-600 hover:text-white"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (deletingId === coupon.id) {
+                      handleDelete(coupon.id);
+                      setDeletingId(null);
+                    } else {
+                      setDeletingId(coupon.id);
+                      setTimeout(() => setDeletingId(null), 3000);
+                    }
+                  }}
+                  className={`px-3 py-1 text-[8px] font-black uppercase tracking-widest transition-all ${
+                    deletingId === coupon.id 
+                      ? "bg-rose-600 text-white" 
+                      : "bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white"
+                  }`}
                 >
-                  Delete
+                  {deletingId === coupon.id ? "SURE?" : "Delete"}
                 </button>
               </div>
               <h3 className="text-2xl font-black tracking-tighter text-slate-900 mb-2 uppercase">{coupon.code}</h3>

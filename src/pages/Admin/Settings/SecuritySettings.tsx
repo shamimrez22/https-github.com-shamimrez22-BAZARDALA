@@ -13,6 +13,7 @@ const SecuritySettings = () => {
   const [settings, setSettings] = useState<Partial<SiteSettings>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [deletingIndex, setDeletingIndex] = useState<number | null>(null);
 
   useEffect(() => {
     const unsub = onSnapshot(doc(db, 'settings', 'site'), (snapshot) => {
@@ -115,12 +116,18 @@ const SecuritySettings = () => {
                     <Button 
                       variant="ghost" 
                       onClick={() => {
-                         const newList = (settings.adminEmails || []).filter((_, idx) => idx !== i);
-                         setSettings({...settings, adminEmails: newList});
+                         if (deletingIndex === i) {
+                           const newList = (settings.adminEmails || []).filter((_, idx) => idx !== i);
+                           setSettings({...settings, adminEmails: newList});
+                           setDeletingIndex(null);
+                         } else {
+                           setDeletingIndex(i);
+                           setTimeout(() => setDeletingIndex(null), 3000);
+                         }
                       }}
-                      className="h-10 w-10 text-red-500 hover:bg-red-50"
+                      className={`h-10 transition-all ${deletingIndex === i ? "bg-red-600 text-white px-2 min-w-[70px]" : "w-10 text-red-500 hover:bg-red-50"}`}
                     >
-                      <Trash2 className="h-4 w-4" />
+                      {deletingIndex === i ? <span className="text-[8px] font-black uppercase">SURE?</span> : <Trash2 className="h-4 w-4" />}
                     </Button>
                   </div>
                 ))}

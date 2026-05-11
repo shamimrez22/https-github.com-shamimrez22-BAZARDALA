@@ -20,6 +20,7 @@ import { toast } from 'sonner';
 const AdminCustomers = () => {
   const [customers, setCustomers] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deletingUid, setDeletingUid] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
   const [search, setSearch] = useState(searchParams.get('search') || '');
   const { isSuperAdmin } = useAuth();
@@ -59,26 +60,20 @@ const AdminCustomers = () => {
     }
   };
 
-  const handleDeleteClient = (uid: string) => {
+  const handleDeleteClient = async (uid: string) => {
+    if (!window.confirm('Wipe this client profile permanently?')) return;
+    
     const originalCustomers = [...customers];
-    toast('Wipe this client profile?', {
-      action: {
-        label: 'Delete',
-        onClick: async () => {
-          try {
-            // Optimistic Delete
-            setCustomers(prev => prev.filter(c => c.uid !== uid));
-            await deleteDoc(doc(db, 'users', uid));
-            toast.success('PROFILE_WIPED: Record removed');
-          } catch (error) {
-            console.error('Delete client error:', error);
-            setCustomers(originalCustomers);
-            toast.error('Wipe Failure');
-          }
-        }
-      },
-      cancel: { label: 'Cancel', onClick: () => {} }
-    });
+    try {
+      // Optimistic Delete
+      setCustomers(prev => prev.filter(c => c.uid !== uid));
+      await deleteDoc(doc(db, 'users', uid));
+      toast.success('PROFILE_WIPED: Record removed');
+    } catch (error) {
+      console.error('Delete client error:', error);
+      setCustomers(originalCustomers);
+      toast.error('Wipe Failure');
+    }
   };
 
   const filteredCustomers = customers.filter(c => 
@@ -169,10 +164,29 @@ const AdminCustomers = () => {
                         Details
                       </button>
                       <button 
-                        onClick={() => handleDeleteClient(customer.uid)}
-                        className="h-8 w-8 flex items-center justify-center bg-rose-50 border border-rose-100 text-rose-600 text-[8px] font-black uppercase hover:bg-rose-600 hover:text-white transition-all shadow-none"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          if (deletingUid === customer.uid) {
+                            handleDeleteClient(customer.uid);
+                            setDeletingUid(null);
+                          } else {
+                            setDeletingUid(customer.uid);
+                            setTimeout(() => setDeletingUid(null), 3000);
+                          }
+                        }}
+                        className={`h-8 flex items-center justify-center border transition-all ${
+                          deletingUid === customer.uid 
+                            ? "bg-rose-600 text-white border-rose-600 px-4 min-w-[80px]" 
+                            : "w-8 bg-rose-50 border-rose-100 text-rose-600 hover:bg-rose-600 hover:text-white"
+                        }`}
+                        title={deletingUid === customer.uid ? "Confirm Delete" : "Delete"}
                       >
-                        <Trash2 className="h-4 w-4" />
+                        {deletingUid === customer.uid ? (
+                          <span className="text-[7px] font-black uppercase">SURE?</span>
+                        ) : (
+                          <Trash2 className="h-4 w-4" />
+                        )}
                       </button>
                     </td>
                   </tr>

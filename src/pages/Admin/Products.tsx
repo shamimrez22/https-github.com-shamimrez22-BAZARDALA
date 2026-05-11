@@ -47,6 +47,7 @@ const AdminProducts = () => {
   const [search, setSearch] = useState('');
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
 
   const [categoriesList, setCategoriesList] = useState<any[]>([]);
@@ -210,25 +211,19 @@ const AdminProducts = () => {
   };
 
   const handleDelete = async (id: string) => {
-    const originalProducts = [...products];
+    if (!window.confirm('Are you sure you want to delete this product? This action cannot be undone.')) return;
     
-    toast('Delete this product?', {
-      action: {
-        label: 'CONFIRM DELETE',
-        onClick: async () => {
-          try {
-            // Optimistic Delete
-            setProducts(prev => prev.filter(p => p.id !== id));
-            await deleteDoc(doc(db, 'products', id));
-            toast.success('Product deleted successfully');
-          } catch (error) {
-            console.error('Delete error:', error);
-            setProducts(originalProducts); // Revert on error
-            toast.error('Failed to delete product. Reverting changes.');
-          }
-        }
-      }
-    });
+    const originalProducts = [...products];
+    try {
+      // Optimistic Delete
+      setProducts(prev => prev.filter(p => p.id !== id));
+      await deleteDoc(doc(db, 'products', id));
+      toast.success('Product deleted successfully');
+    } catch (error) {
+      console.error('Delete error:', error);
+      setProducts(originalProducts); // Revert on error
+      toast.error('Failed to delete product. Reverting changes.');
+    }
   };
 
   const handleAiGenerate = async () => {
@@ -411,9 +406,11 @@ const AdminProducts = () => {
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
-                              removeImage(i);
+                              if (window.confirm('Remove this image?')) {
+                                removeImage(i);
+                              }
                             }}
-                            className="absolute inset-0 bg-rose-600/90 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all font-black text-[8px] z-10"
+                            className="absolute bottom-0 left-0 right-0 h-6 bg-rose-600/90 text-white flex items-center justify-center font-black text-[8px] z-10 hover:bg-rose-700"
                           >
                             Remove
                           </button>
@@ -534,10 +531,24 @@ const AdminProducts = () => {
                           Edit
                         </button>
                         <button 
-                          onClick={() => handleDelete(product.id)}
-                          className="h-8 px-4 bg-rose-50 border border-rose-100 text-rose-600 text-[8px] font-black uppercase hover:bg-rose-600 hover:text-white transition-all"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (deletingId === product.id) {
+                              handleDelete(product.id);
+                              setDeletingId(null);
+                            } else {
+                              setDeletingId(product.id);
+                              setTimeout(() => setDeletingId(null), 3000);
+                            }
+                          }}
+                          className={`h-8 flex items-center justify-center border transition-all ${
+                            deletingId === product.id 
+                              ? "bg-rose-600 text-white border-rose-600 px-4 min-w-[80px]" 
+                              : "px-4 bg-rose-50 border-rose-100 text-rose-600 hover:bg-rose-600 hover:text-white"
+                          }`}
                         >
-                          Delete
+                          {deletingId === product.id ? "SURE?" : "Delete"}
                         </button>
                       </div>
                     </td>

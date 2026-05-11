@@ -262,8 +262,8 @@ const Home = () => {
     <div className="flex flex-col bg-white text-slate-900 pb-20 overflow-x-hidden relative">
       {/* Full Width Hero Section */}
       <section className="pt-0 md:pt-0 pb-1 md:pb-4 w-full">
-        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-6 overflow-hidden">
-<div className="flex flex-col lg:flex-row items-stretch w-full min-h-[140px] md:min-h-[260px] lg:h-[420px] rounded-none overflow-hidden border-b border-slate-100 bg-white">
+        <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4 overflow-hidden">
+<div className="flex flex-col lg:flex-row items-stretch w-full min-h-[140px] md:min-h-[260px] lg:h-[400px] rounded-none overflow-hidden border-b border-slate-100 bg-white">
             {/* Category Sidebar/Offer - HIDDEN ON MOBILE, VISIBLE ON DESKTOP */}
             <div className="hidden lg:flex lg:w-72 bg-white flex-col flex-shrink-0 lg:overflow-visible">
                 {settings?.sidebar?.showCategories ? (
@@ -366,7 +366,7 @@ const Home = () => {
 
       {settings?.ads?.adsterra?.bannerOneCode && (
         <section className="py-1 w-full">
-          <div className="w-full max-w-[1400px] mx-auto px-4 md:px-6">
+          <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
              <a 
               href={settings.ads.adsterra.bannerOneCode} 
               target="_blank" 
@@ -388,7 +388,7 @@ const Home = () => {
 
       {settings?.ads?.floatingNotice?.active && settings?.ads?.floatingNotice?.text && (
         <section className="py-2 w-full">
-          <div className="w-full max-w-[1400px] mx-auto px-4 md:px-6">
+          <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
             <SmartLink 
               to={settings.ads.floatingNotice.link}
               className="relative overflow-hidden whitespace-nowrap h-8 md:h-10 flex items-center border-y border-slate-900/5 bg-slate-50 hover:opacity-90 block"
@@ -412,7 +412,7 @@ const Home = () => {
 
       {settings?.ads?.adsterra?.bannerThreeCode && (
         <section className="py-3 w-full">
-          <div className="w-full max-w-[1400px] mx-auto px-4 md:px-6">
+          <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
              <a href={settings.ads.adsterra.bannerThreeCode} target="_blank" rel="noopener noreferrer" className="block relative h-full group">
                <div className="bg-brand-primary p-8 text-center hover:opacity-90 transition-all rounded-none relative overflow-hidden">
                   <span className="text-[10px] font-black uppercase text-white tracking-[0.4em] mb-3 block animate-pulse">Fast Delivery Active</span>
@@ -427,7 +427,7 @@ const Home = () => {
 
       {/* Curated Grid Selection */}
       <section className="py-2 md:py-6 w-full bg-[#fcfcfc]">
-        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-6">
+        <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
           <div className="flex flex-col md:flex-row items-center justify-between mb-2 md:mb-4 gap-2 md:gap-6 border-b border-brand-primary/20 pb-1.5 md:pb-2">
             <div className="text-center md:text-left">
               <h2 className="text-sm md:text-lg font-black uppercase tracking-tighter text-slate-900 leading-none">THE_COLLECTIONS</h2>
@@ -480,7 +480,7 @@ const Home = () => {
 
       {settings?.ads?.adsterra?.bannerFourCode && (
         <section className="py-2 w-full">
-          <div className="w-full max-w-[1400px] mx-auto px-4 md:px-6">
+          <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
              <a href={settings.ads.adsterra.bannerFourCode} target="_blank" rel="noopener noreferrer" className="block group">
                 <div className="bg-slate-900 rounded-none h-24 flex items-center justify-center p-4 relative overflow-hidden transition-all hover:bg-black">
                    <div className="absolute top-0 right-0 p-3 opacity-10">
@@ -499,7 +499,7 @@ const Home = () => {
 
       {settings?.ads?.adsterra?.bannerTwoCode && (
         <section className="py-2 w-full">
-          <div className="w-full max-w-[1400px] mx-auto px-4 md:px-6">
+          <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
             <a 
               href={settings.ads.adsterra.bannerTwoCode} 
               target="_blank" 
@@ -522,7 +522,7 @@ const Home = () => {
 
       {/* High-Alert Dispatch Section (Flash Sale - Spreadsheet / XL Edition) */}
       <section className="pb-12 pt-6 w-full">
-        <div className="w-full max-w-[1400px] mx-auto px-4 md:px-6">
+        <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
            {/* Spreadsheet Container */}
            <div className="bg-white border border-slate-300 rounded-none overflow-hidden shadow-sm">
             {/* XL Header Bar */}
@@ -588,7 +588,7 @@ const Home = () => {
 
       {settings?.ads?.adsterra?.bannerFiveCode && (
         <section className="py-1 w-full">
-          <div className="w-full max-w-[1400px] mx-auto px-4 md:px-6">
+          <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
              <a href={settings.ads.adsterra.bannerFiveCode} target="_blank" rel="noopener noreferrer" className="block relative h-32 group rounded-none overflow-hidden shadow-xl border-2 border-[#777]">
                 <img 
                   src="https://images.unsplash.com/photo-1622675363311-3e1904dc1885?auto=format&fit=crop&q=80&w=1500" 
@@ -606,7 +606,7 @@ const Home = () => {
       )}
       {settings?.ads?.adsterra?.bannerSixCode && (
         <section className="pt-0.5 pb-2 w-full">
-          <div className="w-full max-w-[1400px] mx-auto px-4 md:px-6">
+          <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
              <a href={settings.ads.adsterra.bannerSixCode} target="_blank" rel="noopener noreferrer" className="block group">
                 <div className="bg-white rounded-none p-5 flex flex-col md:flex-row items-center justify-between gap-5 hover:bg-[#f8f8f8] transition-all border border-slate-100 group overflow-hidden relative">
                    <div className="flex items-center gap-6 relative z-10">

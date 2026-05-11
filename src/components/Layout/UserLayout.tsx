@@ -192,16 +192,16 @@ export const UserLayout: React.FC = () => {
       className="min-h-screen flex flex-col bg-white text-slate-900 font-sans overflow-x-hidden transition-all duration-300"
       style={{ 
         paddingTop: settings?.ads?.topScrollingNotice?.active 
-          ? (window.innerWidth < 768 ? '96px' : '120px') 
-          : (window.innerWidth < 768 ? '64px' : '84px') 
+          ? (window.innerWidth < 768 ? '80px' : '100px') 
+          : (window.innerWidth < 768 ? '48px' : '64px') 
       }}
     >
       <div className="fixed top-0 left-0 right-0 z-[100] flex flex-col bg-white overflow-hidden">
         {/* Banner Notice (Topmost) */}
         {settings?.ads?.bannerNotice?.active && (
-          <div className="w-full bg-white flex justify-center overflow-hidden border-b border-slate-100">
-            <SmartLink to={settings.ads.bannerNotice.link} className="h-[24px] w-full max-w-[1400px] bg-white text-brand-primary flex items-center justify-center px-4 md:px-10 relative overflow-hidden shrink-0 transition-colors">
-               <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(var(--brand-primary) 1px, transparent 1px)', backgroundSize: '16px 16px' }} />
+          <div className="w-full bg-white flex justify-center border-b border-slate-100">
+            <SmartLink to={settings.ads.bannerNotice.link} className="h-[24px] w-full max-w-[1400px] bg-brand-primary text-white flex items-center justify-center px-2 md:px-4 relative overflow-hidden shrink-0 transition-colors">
+               <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
                <p className="text-[9px] md:text-[11px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] relative z-10 animate-pulse">
                  {settings.ads.bannerNotice.text}
                </p>
@@ -211,32 +211,32 @@ export const UserLayout: React.FC = () => {
 
         {/* Header Navigation */}
         <div className="w-full bg-white flex justify-center border-b border-slate-100">
-          <header className="w-full max-w-[1400px] bg-white h-14 md:h-20 flex items-center justify-between px-4 md:px-6">
+          <header className="w-full max-w-[1400px] bg-brand-primary h-12 md:h-14 flex items-center justify-between px-2 md:px-4">
             <div className="flex items-center gap-10">
               <div className="flex items-center gap-2 md:gap-3 group cursor-pointer">
                 <div 
                   onClick={() => setIsAdminLoginOpen(true)}
-                  className="bg-brand-primary text-white p-2 md:p-3 rounded-none group-hover:rotate-6 transition-transform duration-500"
+                  className="bg-white text-brand-primary p-2 md:p-3 rounded-none group-hover:rotate-6 transition-transform duration-500"
                 >
                   <ShoppingBasket className="h-5 w-5 md:h-7 md:w-7" />
                 </div>
-                <Link to="/" className="text-xs sm:text-base md:text-2xl font-black tracking-tighter text-slate-900 uppercase flex items-center gap-1.5 md:gap-3 shrink-0">
-                  <div className="whitespace-nowrap underline underline-offset-4 decoration-brand-primary decoration-2 font-black">
+                <Link to="/" className="text-xs sm:text-base md:text-2xl font-black tracking-tighter text-white uppercase flex items-center gap-1.5 md:gap-3 shrink-0">
+                  <div className="whitespace-nowrap underline underline-offset-4 decoration-white decoration-2 font-black">
                     <span>{(settings?.siteName || 'BAZAR DALA').split(' ')[0]}</span>
-                    <span className="text-brand-primary/80 group-hover:text-brand-primary transition-colors">
+                    <span className="text-white/80 group-hover:text-white transition-colors">
                       {' '}<span>{(settings?.siteName || 'BAZAR DALA').split(' ').slice(1).join(' ')}</span>
                     </span>
                   </div>
                 </Link>
               </div>
-              <nav className="hidden xl:flex items-center gap-8 text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
-                <Link to="/" onMouseEnter={() => import('../../pages/Home')} className="hover:text-brand-primary transition-colors relative group py-2">
+              <nav className="hidden xl:flex items-center gap-8 text-[11px] font-black uppercase tracking-[0.2em] text-white/60">
+                <Link to="/" onMouseEnter={() => import('../../pages/Home')} className="hover:text-white transition-colors relative group py-2">
                   HOME
                 </Link>
-                <Link to="/shop" onMouseEnter={() => import('../../pages/Shop')} className="hover:text-brand-primary transition-colors relative group py-2">
+                <Link to="/shop" onMouseEnter={() => import('../../pages/Shop')} className="hover:text-white transition-colors relative group py-2">
                   SHOP
                 </Link>
-                <Link to="/tracking" className="hover:text-brand-primary transition-colors relative group py-2">
+                <Link to="/tracking" className="hover:text-white transition-colors relative group py-2">
                   TRACKING
                 </Link>
               </nav>
@@ -251,22 +251,22 @@ export const UserLayout: React.FC = () => {
                 }}
                 className="relative group "
               >
-                <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-brand-primary transition-colors" />
+                <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-white/50 group-focus-within:text-white transition-colors" />
                 <Input
                   name="search"
                   placeholder="SEARCH_PRODUCTS..."
-                  className="pl-14 bg-slate-50 border border-slate-100 rounded-none h-12 text-[11px] font-black uppercase tracking-widest focus-visible:ring-0 text-slate-900 placeholder:text-slate-300 focus-visible:border-brand-primary/30"
+                  className="pl-14 bg-white/10 border-none rounded-none h-12 text-[11px] font-black uppercase tracking-widest focus-visible:ring-0 text-white placeholder:text-white/30"
                 />
               </form>
             </div>
 
             <div className="flex items-center gap-2 md:gap-5">
               <Link to="/cart" className="relative group">
-                <div className="p-2 md:p-3 bg-slate-50 text-slate-900 border border-slate-100 rounded-none group-hover:bg-brand-primary group-hover:text-white transition-all">
+                <div className="p-2 md:p-3 bg-white/10 text-white border border-white/5 rounded-none group-hover:bg-white group-hover:text-brand-primary transition-all">
                   <ShoppingCart className="h-5 w-5 md:h-6 md:w-6" />
                 </div>
                 {items.length > 0 && (
-                  <span className="absolute -top-1 -right-1 h-5 min-w-[20px] md:h-6 md:min-w-[24px] bg-brand-primary text-white text-[9px] md:text-[10px] font-black flex items-center justify-center px-1 md:px-1.5 rounded-none">
+                  <span className="absolute -top-1 -right-1 h-5 min-w-[20px] md:h-6 md:min-w-[24px] bg-white text-brand-primary text-[9px] md:text-[10px] font-black flex items-center justify-center px-1 md:px-1.5 rounded-none">
                     {items.length}
                   </span>
                 )}
@@ -275,8 +275,8 @@ export const UserLayout: React.FC = () => {
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="flex items-center gap-2 md:gap-3 p-1 rounded-none border-2 border-transparent hover:border-brand-primary transition-all">
-                      <div className="w-8 h-8 md:w-10 md:h-10 rounded-none overflow-hidden bg-slate-100">
+                    <button className="flex items-center gap-2 md:gap-3 p-1 rounded-none border-2 border-transparent hover:border-white transition-all">
+                      <div className="w-8 h-8 md:w-10 md:h-10 rounded-none overflow-hidden bg-white/10">
                         <img
                           src={user.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`}
                           alt="Avatar"
@@ -305,17 +305,12 @@ export const UserLayout: React.FC = () => {
                     </DropdownMenuGroup>
                   </DropdownMenuContent>
                 </DropdownMenu>
-              ) : (
-                <Button onClick={handleLogin} className="bg-brand-primary text-white hover:opacity-90 rounded-none h-10 md:h-12 px-3 md:px-8 text-[11px] font-black uppercase tracking-widest transition-all">
-                  <span className="hidden sm:inline">লগইন / রেজিস্ট্রেশন</span>
-                  <User className="sm:hidden h-5 w-5" />
-                </Button>
-              )}
+              ) : null}
 
               <Button
                 variant="ghost"
                 size="icon"
-                className="lg:hidden bg-slate-50 text-slate-900 border border-slate-100 rounded-none h-10 w-10 md:h-12 md:w-12 hover:bg-brand-primary hover:text-white transition-all font-black"
+                className="lg:hidden bg-white/10 text-white border border-white/5 rounded-none h-10 w-10 md:h-12 md:w-12 hover:bg-white hover:text-brand-primary transition-all font-black"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
               >
                 {isMenuOpen ? <X className="h-5 w-5 md:h-6 md:w-6" /> : <Menu className="h-5 w-5 md:h-6 md:w-6" />}

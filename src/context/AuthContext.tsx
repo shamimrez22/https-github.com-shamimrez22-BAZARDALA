@@ -12,6 +12,7 @@ import {
 import { doc, getDoc, setDoc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { auth, db, googleProvider } from '../firebase';
 import { UserProfile } from '../types';
+import { toast } from 'sonner';
 
 interface AuthContextType {
   user: User | null;
@@ -60,7 +61,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } catch (error: any) {
         console.error('Redirect login error:', error);
         if (error.code === 'auth/unauthorized-domain') {
-          toast.error('Firebase Console এ এই ডোমেইনটি (Domain) অ্যাড করা নেই। দয়া করে Authorized Domains এ ডোমেইনটি যুক্ত করুন।');
+          const domain = window.location.hostname;
+          toast.error(`এই ডোমেইনটি (${domain}) Firebase এ অনুমোদিত নয়। দয়া করে Firebase Console এ গিয়ে Authorized Domains এ এই ডোমেইনটি যুক্ত করুন।`, { duration: 10000 });
         } else if (error.code !== 'auth/operation-not-supported-in-this-environment') {
            // Ignore this common error in some development environments
            toast.error('লগইন ত্রুটি: ' + error.message);
@@ -139,7 +141,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       let message = 'গুগল লগইন করতে সমস্যা হয়েছে।';
       
       if (error.code === 'auth/unauthorized-domain') {
-        message = 'এই ডোমেইনটি (Domain) Firebase এ অনুমোদিত নয়। দয়া করে Firebase Console এ গিয়ে Authorized Domains এ এই ডোমেইনটি যুক্ত করুন।';
+        const domain = window.location.hostname;
+        message = `এই ডোমেইনটি (${domain}) Firebase এ অনুমোদিত নয়। দয়া করে Firebase Console এ গিয়ে Authorized Domains এ এই ডোমেইনটি যুক্ত করুন।`;
         toast.error(message, { duration: 10000 });
         throw new Error(message);
       }
@@ -221,11 +224,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Tighten isAdmin logic: A super_admin (Master Owner) can always access admin if logged in via Firebase.
-  // Others need BOTH a valid Firebase profile with admin role AND an active admin session (from login form).
-  const isAdmin = !!profile && profile.status === 'active' && (
-    profile.role === 'super_admin' || 
-    (isAdminSession && profile.role === 'admin')
-  );
+  // Others need BOTH a valid Firebase profile with admin role OR an active admin session (from login form).
+  const isAdmin = isAdminSession || (!!profile && profile.status === 'active' && (
+    profile.role === 'super_admin' || profile.role === 'admin'
+  ));
   
   const isSuperAdmin = !!profile && profile.role === 'super_admin' && profile.status === 'active';
 

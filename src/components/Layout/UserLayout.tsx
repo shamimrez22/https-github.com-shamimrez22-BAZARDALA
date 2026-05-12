@@ -28,7 +28,7 @@ import { SiteSettings } from '../../types';
 import { useSettings } from '../../context/SettingsContext';
 
 export const UserLayout: React.FC = () => {
-  const { user, profile, isAdmin, loginAdmin, loginWithGoogle, logout } = useAuth();
+  const { user, profile, isAdmin, loginAdmin, loginWithGoogle, logout, login, register } = useAuth();
   const { items } = useCart();
   const { settings } = useSettings();
   const navigate = useNavigate();
@@ -236,6 +236,9 @@ export const UserLayout: React.FC = () => {
                 <Link to="/shop" onMouseEnter={() => import('../../pages/Shop')} className="hover:text-white transition-colors relative group py-2">
                   SHOP
                 </Link>
+                <Link to="/tracking" className="hover:text-white transition-colors relative group py-2">
+                  TRACKING
+                </Link>
               </nav>
             </div>
 
@@ -251,23 +254,23 @@ export const UserLayout: React.FC = () => {
                 <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-white/50 group-focus-within:text-white transition-colors" />
                 <Input
                   name="search"
-                  placeholder="SEARCH_PRODUCTS..."
+                  placeholder="DATABASE_SEARCH..."
                   className="pl-14 bg-white/10 border-none rounded-none h-12 text-[11px] font-black uppercase tracking-widest focus-visible:ring-0 text-white placeholder:text-white/30"
                 />
               </form>
             </div>
 
             <div className="flex items-center gap-2 md:gap-5">
-              {/* Login Button for Admin Access */}
-              {!user && (
-                <Button 
-                  onClick={() => setIsAdminLoginOpen(true)}
-                  className="bg-white/10 text-white border border-white/5 rounded-none h-10 px-4 text-[11px] font-black uppercase tracking-widest hover:bg-white hover:text-brand-primary transition-all"
-                >
-                  <Lock className="h-4 w-4 mr-2" /> 
-                  <span className="hidden sm:inline">অ্যাডমিন লগইন</span>
-                </Button>
-              )}
+              <Link to="/cart" className="relative group">
+                <div className="p-2 md:p-3 bg-white/10 text-white border border-white/5 rounded-none group-hover:bg-white group-hover:text-brand-primary transition-all">
+                  <ShoppingCart className="h-5 w-5 md:h-6 md:w-6" />
+                </div>
+                {items.length > 0 && (
+                  <span className="absolute -top-1 -right-1 h-5 min-w-[20px] md:h-6 md:min-w-[24px] bg-white text-brand-primary text-[9px] md:text-[10px] font-black flex items-center justify-center px-1 md:px-1.5 rounded-none">
+                    {items.length}
+                  </span>
+                )}
+              </Link>
 
               {user ? (
                 <DropdownMenu>
@@ -428,6 +431,9 @@ export const UserLayout: React.FC = () => {
                 </Link>
                 <Link to="/shop" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-between group p-3 border-b border-slate-100 hover:text-brand-primary">
                   SHOP <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link to="/tracking" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-between group p-3 border-b border-slate-100 hover:text-brand-primary">
+                  TRACKING <ArrowRight className="h-4 w-4" />
                 </Link>
               </nav>
             </motion.div>
@@ -637,13 +643,24 @@ export const UserLayout: React.FC = () => {
 
             <div>
               <h4 className="text-brand-primary font-black mb-8 uppercase tracking-[0.2em] text-[12px]">
-                QUICK_ACCESS
+                SHOPPING_UNIT
               </h4>
               <ul className="space-y-4 text-[13px] font-black text-white uppercase tracking-widest">
+                {(settings?.footerSupportLinks || [
+                  { label: 'CLOTHING', url: '/shop' },
+                  { label: 'FOOTWEAR', url: '/shop' },
+                  { label: 'ACCESSORIES', url: '/shop' }
+                ]).map((link, i) => (
+                  <li key={i}>
+                    <Link to={link.url} className="hover:text-brand-primary transition-colors inline-block">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
                 <li>
-                  <button onClick={() => setIsAdminLoginOpen(true)} className="hover:text-brand-primary transition-colors inline-block">
-                    ADMIN LOGIN
-                  </button>
+                  <Link to="/tracking" className="hover:text-brand-primary transition-colors inline-block">
+                    ORDER TRACKING
+                  </Link>
                 </li>
               </ul>
             </div>

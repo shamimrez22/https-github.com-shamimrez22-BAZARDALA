@@ -2,10 +2,6 @@ import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
-import { seedProducts } from './seed';
-
-// Seed demo products if collection is empty
-seedProducts();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

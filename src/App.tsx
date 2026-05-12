@@ -92,18 +92,17 @@ const AppContent = () => {
         <SmoothScroll>
           <Suspense fallback={<LoadingFallback />}>
             <Routes>
-                  {/* User Routes */}
-                  <Route path="/" element={<UserLayout />}>
-                    <Route index element={<Home />} />
-                    <Route path="shop" element={<Shop />} />
-                    <Route path="cart" element={<Cart />} />
-                    <Route path="checkout" element={<Checkout />} />
-                    <Route path="tracking" element={<OrderTracking />} />
-                    <Route path="dashboard" element={
-                      <ProtectedRoute>
-                        <UserDashboard />
-                      </ProtectedRoute>
-                    } />
+                    <Route path="/" element={<UserLayout />}>
+                      <Route index element={<Home />} />
+                      <Route path="shop" element={<Shop />} />
+                      <Route path="cart" element={<Cart />} />
+                      <Route path="checkout" element={<Checkout />} />
+                      <Route path="tracking" element={<OrderTracking />} />
+                      <Route path="dashboard" element={
+                        <ProtectedRoute>
+                          <UserDashboard />
+                        </ProtectedRoute>
+                      } />
                     <Route path="help" element={<InfoPage />} />
                     <Route path="how-to-buy" element={<InfoPage />} />
                     <Route path="returns" element={<InfoPage />} />

@@ -617,7 +617,7 @@ const Home = () => {
                       }}
                       className="px-8 py-2 bg-slate-900 text-white font-black uppercase text-[11px] tracking-[0.25em] group-hover:bg-brand-primary transition-all rounded-none relative z-10 active:scale-95"
                    >
-                      VIEW SHOP
+                      ORDER NOW
                    </button>
                 </div>
              </a>

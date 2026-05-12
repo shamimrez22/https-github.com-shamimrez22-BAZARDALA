@@ -86,7 +86,7 @@ const Shop = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56 bg-white rounded-none p-2 border border-slate-100">
-                {['Newest', 'Price: Low to High', 'Price: High to Low'].map(s => (
+                {['Newest', 'Oldest'].map(s => (
                   <DropdownMenuItem key={s} onClick={() => setSort(s)} className="text-[10px] font-black uppercase p-2.5 rounded-none focus:bg-[#f8f8f8] transition-colors cursor-pointer">
                     {s}
                   </DropdownMenuItem>

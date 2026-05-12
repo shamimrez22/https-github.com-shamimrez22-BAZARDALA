@@ -70,12 +70,11 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
       </div>
 
         {/* Product Details */}
-      <div className="p-1 flex-1 flex flex-col pt-1 pb-1">
+      <div className="p-1 flex flex-col pt-1 pb-1">
         {/* Title */}
         <div className="h-[22px] mb-0.5 overflow-hidden">
           <h3 
-            className="font-bold text-slate-900 text-[9px] leading-tight line-clamp-2 hover:text-brand-primary transition-colors cursor-pointer uppercase"
-            onClick={handleAction}
+            className="font-bold text-slate-800 text-[9px] leading-tight line-clamp-2 uppercase"
           >
             {product.name}
           </h3>
@@ -113,7 +112,22 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
         </div>
       </div>
 
-      {/* Action Buttons Removed to stop sales as per request */}
+      {/* Action Buttons */}
+      <div className="p-1 pt-0 pb-1">
+        <button
+          className="w-full bg-brand-primary hover:opacity-90 text-white transition-all h-[26px] text-[10px] font-bold flex items-center justify-center gap-1 uppercase"
+          disabled={product.stock === 0 && !product.affiliateLink}
+          onClick={handleAction}
+        >
+          {settings?.whatsappNumber && !product.affiliateLink ? (
+             <>
+               <MessageCircle className="h-2.5 w-2.5" /> অর্ডার
+             </>
+           ) : (
+             'অর্ডার করুন'
+           )}
+        </button>
+      </div>
     </motion.div>
   );
 });

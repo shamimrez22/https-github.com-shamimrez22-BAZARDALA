@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
 import { SiteSettings } from '../types';
+import { safeStorage } from '../lib/storage';
 
 interface SettingsContextType {
   settings: SiteSettings | null;
@@ -11,8 +12,11 @@ interface SettingsContextType {
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 
 export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [settings, setSettings] = useState<SiteSettings | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [settings, setSettings] = useState<SiteSettings | null>(() => {
+    const cached = safeStorage.get('bzd_site_settings_cache');
+    return cached ? JSON.parse(cached) : null;
+  });
+  const [loading, setLoading] = useState(!settings);
 
   useEffect(() => {
     const unsub = onSnapshot(doc(db, 'settings', 'site'), (snapshot) => {
@@ -54,6 +58,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         };
 
         setSettings(sanitizedData as any);
+        safeStorage.set('bzd_site_settings_cache', JSON.stringify(sanitizedData));
       }
       setLoading(false);
     }, (error) => {

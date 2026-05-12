@@ -144,7 +144,18 @@ const SpecialOfferNode = ({ settings }: { settings: any }) => (
 const Home = () => {
   const [currentSlide, setCurrentSlide] = React.useState(0);
   const [variantIndex, setVariantIndex] = React.useState(0);
-  const [banners, setBanners] = React.useState<any[]>([]);
+  const [banners, setBanners] = React.useState<any[]>(() => {
+    // Immediate load from cache to prevent blank hero
+    const cached = safeStorage.get('cached_banners');
+    if (cached) {
+      try {
+        return JSON.parse(cached);
+      } catch (e) {
+        return [];
+      }
+    }
+    return [];
+  });
   const [settings, setSettings] = React.useState<SiteSettings | null>(null);
   const [limitedOffersConfig, setLimitedOffersConfig] = React.useState({ limit: 6, productIds: [] as string[] });
   const { products, loading: loadingProducts } = useProducts();
@@ -219,16 +230,6 @@ const Home = () => {
       }
     };
     
-    // Load from cache if available for "Immediate" appearance
-    const cached = safeStorage.get('cached_banners');
-    if (cached) {
-      try {
-        setBanners(JSON.parse(cached));
-      } catch (e) {
-        console.error('Cache parse error');
-      }
-    }
-
     fetchInitialConfig();
     return () => unsub();
   }, []);

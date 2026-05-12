@@ -42,6 +42,7 @@ export interface UserProfile {
   uid: string;
   name: string;
   email: string;
+  password?: string;
   role: 'super_admin' | 'admin' | 'customer';
   status: 'active' | 'suspended';
   photoURL?: string;

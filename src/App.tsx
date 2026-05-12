@@ -100,16 +100,8 @@ const AppContent = () => {
                     <Route path="/" element={<UserLayout />}>
                       <Route index element={<Home />} />
                       <Route path="shop" element={<Shop />} />
-                      <Route path="cart" element={
-                        <ProtectedRoute>
-                          <Cart />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="checkout" element={
-                        <ProtectedRoute>
-                          <Checkout />
-                        </ProtectedRoute>
-                      } />
+                      <Route path="cart" element={<Cart />} />
+                      <Route path="checkout" element={<Checkout />} />
                       <Route path="tracking" element={<OrderTracking />} />
                       <Route path="dashboard" element={
                         <ProtectedRoute>

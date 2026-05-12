@@ -118,8 +118,6 @@ export const AdminLayout: React.FC = () => {
 
     // Listen for actual notifications 
     const fetchNotifications = async () => {
-      if (!auth.currentUser && db.app.options.apiKey) return;
-
       try {
         const notificationsQuery = query(
           collection(db, 'notifications'),

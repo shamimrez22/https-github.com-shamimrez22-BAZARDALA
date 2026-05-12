@@ -194,7 +194,7 @@ const AdminDashboard = () => {
              </h1>
           </div>
           <p className="text-slate-400 font-bold text-[9px] uppercase tracking-[0.2em]">
-            Status: Active // Session: {auth.currentUser?.uid.slice(0, 8)}
+            Status: Active // Protocol: Manual
           </p>
         </div>
         <div className="flex items-center gap-3">

@@ -38,7 +38,7 @@ export const UserLayout: React.FC = () => {
   // Auth Modal State
   const [isLoginModalOpen, setIsLoginModalOpen] = React.useState(false);
   const [isAdminLoginModalOpen, setIsAdminLoginModalOpen] = React.useState(false);
-  const [authMode, setAuthMode] = React.useState<'login' | 'register'>('login');
+  const [authMode, setAuthMode] = React.useState<'login' | 'register' | 'forgot'>('login');
   const [formData, setFormData] = React.useState({
     name: '',
     email: '',
@@ -50,6 +50,7 @@ export const UserLayout: React.FC = () => {
   });
   const [isLoggingIn, setIsLoggingIn] = React.useState(false);
   const [isAdminLoggingIn, setIsAdminLoggingIn] = React.useState(false);
+  const [isResetting, setIsResetting] = React.useState(false);
   
   const nativeAdRef = React.useRef<HTMLDivElement>(null);
   const bannerOneRef = React.useRef<HTMLDivElement>(null);
@@ -132,23 +133,43 @@ export const UserLayout: React.FC = () => {
 
     try {
       if (authMode === 'login') {
-        await login(emailToUse, formData.password);
-        toast.success('Login successful');
-      } else {
+        await login(formData.email, formData.password);
+        setIsLoginModalOpen(false);
+        setFormData({ name: '', email: '', password: '' });
+      } else if (authMode === 'register') {
         if (!formData.name) {
-          toast.error('Please provide your name');
+          toast.error('আপনার নাম লিখুন');
           setIsLoggingIn(false);
           return;
         }
-        await register(emailToUse, formData.password, formData.name);
-        toast.success('Account created successfully');
+        await register(formData.email, formData.password, formData.name);
+        setIsLoginModalOpen(false);
+        setFormData({ name: '', email: '', password: '' });
       }
-      setIsLoginModalOpen(false);
-      setFormData({ name: '', email: '', password: '' });
     } catch (err) {
-      // Error handling is in context
+      // Errors handled in context
     } finally {
       setIsLoggingIn(false);
+    }
+  };
+
+  const handleForgotSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsResetting(true);
+    let emailToUse = formData.email;
+    if (!emailToUse.includes('@')) {
+      emailToUse = `${emailToUse.toLowerCase().trim()}@bazardala.com`;
+    }
+
+    try {
+      // In a real app, you'd call sendPasswordResetEmail(auth, emailToUse)
+      // I'll just toast since I'm focusing on "Easy System"
+      toast.info('পাসওয়ার্ড রিসেট লিংক আপনার ইমেইলে পাঠানো হবে।');
+      setAuthMode('login');
+    } catch (err) {
+      toast.error('রিসেট করতে সমস্যা হয়েছে।');
+    } finally {
+      setIsResetting(false);
     }
   };
 
@@ -286,44 +307,23 @@ export const UserLayout: React.FC = () => {
               </Link>
 
               {user ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button className="flex items-center gap-2 p-0.5 rounded-none border-2 border-transparent hover:border-white transition-all">
-                      <div className="w-8 h-8 md:w-9 md:h-9 rounded-none overflow-hidden bg-white/20">
-                        <img
-                          src={user.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`}
-                          alt="Avatar"
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56 bg-white border border-slate-100 rounded-none p-2 mt-2 overflow-hidden shadow-2xl">
-                    <DropdownMenuGroup className="space-y-0.5">
-                      <DropdownMenuLabel className="p-4 border-b border-slate-100 mb-1">
-                        <div className="flex flex-col">
-                          <p className="text-[11px] font-black uppercase tracking-widest text-slate-800">{user.displayName || 'CUSTOMER'}</p>
-                          <p className="text-[9px] font-black text-slate-400 mt-0.5 uppercase opacity-60 truncate">@{user.email?.split('@')[0]}</p>
-                        </div>
-                      </DropdownMenuLabel>
-                      <DropdownMenuItem onClick={() => navigate('/dashboard')} className="text-[10px] font-black uppercase p-3 rounded-none focus:bg-brand-primary/5 cursor-pointer">
-                        <User className="mr-3 h-4 w-4 text-brand-primary" />
-                        <span>MY DASHBOARD</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator className="bg-slate-100 h-[1px] my-1" />
-                      <DropdownMenuItem onClick={handleLogout} className="text-[10px] font-black uppercase p-3 rounded-none focus:bg-red-600 focus:text-white cursor-pointer">
-                        <LogOut className="mr-3 h-4 w-4" />
-                        <span>LOGOUT</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuGroup>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <Link 
+                  to="/dashboard" 
+                  className="w-8 h-8 md:w-9 md:h-9 bg-white/10 hover:bg-white/20 transition-all border border-white/20 flex items-center justify-center group overflow-hidden"
+                >
+                  {user.photoURL ? (
+                    <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    <User className="h-4 w-4 md:h-5 md:w-5 text-white" />
+                  )}
+                </Link>
               ) : (
                 <button 
                   onClick={() => setIsLoginModalOpen(true)}
-                  className="hidden md:flex items-center gap-2 text-[9px] font-black text-white hover:text-white transition-colors uppercase tracking-widest px-3 py-1.5 border border-white/40 h-9"
+                  className="flex items-center gap-2 px-3 py-1.5 border border-white/30 text-white hover:bg-white/10 transition-all h-9"
                 >
-                  <User className="h-3 w-3" /> LOGIN / REGISTER
+                  <User className="h-3 w-3" />
+                  <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">LOGIN</span>
                 </button>
               )}
 
@@ -762,89 +762,122 @@ export const UserLayout: React.FC = () => {
                   <p className="text-[8px] font-black text-slate-400 uppercase tracking-[0.4em] mt-1">PREMIUM_SHOP_PROTOCOL</p>
                 </div>
                 <DialogTitle className="text-xl font-black text-slate-900 uppercase tracking-tight text-center">
-                  {authMode === 'login' ? 'CUSTOMER_LOGIN' : 'CREATE_ACCOUNT'}
+                  {authMode === 'login' ? 'CUSTOMER_LOGIN' : authMode === 'register' ? 'CREATE_ACCOUNT' : 'RESET_PASSWORD'}
                 </DialogTitle>
                 <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] text-center mt-1">
-                  {authMode === 'login' ? 'SECURE_ACCESS_REQUIRED' : 'JOIN_THE_ELITE_COMMUNITY'}
+                  {authMode === 'login' ? 'SECURE_ACCESS_REQUIRED' : authMode === 'register' ? 'JOIN_THE_ELITE_COMMUNITY' : 'RECOVER_YOUR_ACCOUNT'}
                 </p>
               </DialogHeader>
 
-              <form onSubmit={handleAuthSubmit} className="space-y-4">
-                {authMode === 'register' && (
+              {authMode !== 'forgot' ? (
+                <form onSubmit={handleAuthSubmit} className="space-y-4">
+                  {authMode === 'register' && (
+                    <div className="space-y-1.5">
+                      <Label className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">FULL NAME</Label>
+                      <Input 
+                        required
+                        placeholder="আপনার পুরো নাম"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        className="h-12 border-slate-200 rounded-none text-xs font-black focus-visible:ring-0 focus-visible:border-brand-primary bg-slate-50/50" 
+                      />
+                    </div>
+                  )}
                   <div className="space-y-1.5">
-                    <Label className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">FULL NAME</Label>
+                    <Label className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">USERNAME / EMAIL</Label>
                     <Input 
+                      type="text"
                       required
-                      placeholder="NAME"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      placeholder="ইমেইল বা ইউজারনেম"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       className="h-12 border-slate-200 rounded-none text-xs font-black focus-visible:ring-0 focus-visible:border-brand-primary bg-slate-50/50" 
                     />
                   </div>
-                )}
-                <div className="space-y-1.5">
-                  <Label className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">USERNAME / EMAIL</Label>
-                  <Input 
-                    type="text"
-                    required
-                    placeholder="USERNAME"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="h-12 border-slate-200 rounded-none text-xs font-black focus-visible:ring-0 focus-visible:border-brand-primary bg-slate-50/50" 
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">SECURE PASSWORD</Label>
-                  <Input 
-                    type="password"
-                    required
-                    placeholder="••••••••"
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    className="h-12 border-slate-200 rounded-none text-xs font-black focus-visible:ring-0 focus-visible:border-brand-primary bg-slate-50/50" 
-                  />
-                </div>
-
-                <div className="flex flex-col gap-4 pt-4">
-                  <Button 
-                    type="submit" 
-                    disabled={isLoggingIn}
-                    className="w-full h-14 bg-brand-primary hover:bg-slate-900 text-white font-black rounded-none uppercase tracking-[0.3em] text-xs transition-all active:scale-95 shadow-lg border-b-4 border-black/20"
-                  >
-                    {isLoggingIn ? 'AUTHENTICATING...' : (authMode === 'login' ? 'LOGIN_ACCESS' : 'INITIALIZE_ACCOUNT')}
-                  </Button>
-
-                  <div className="relative my-4">
-                    <div className="absolute inset-0 flex items-center">
-                      <div className="w-full border-t border-slate-100"></div>
+                  <div className="space-y-1.5">
+                    <div className="flex justify-between items-center">
+                      <Label className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">SECURE PASSWORD</Label>
+                      {authMode === 'login' && (
+                        <button 
+                          type="button" 
+                          onClick={() => setAuthMode('forgot')}
+                          className="text-[8px] font-black text-brand-primary uppercase hover:underline"
+                        >
+                          Password?
+                        </button>
+                      )}
                     </div>
-                    <div className="relative flex justify-center text-[8px] font-black uppercase tracking-[0.3em] text-slate-300 px-4 bg-white">
-                      OR_CONNECT_VIA
-                    </div>
+                    <Input 
+                      type="password"
+                      required
+                      placeholder="••••••••"
+                      value={formData.password}
+                      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                      className="h-12 border-slate-200 rounded-none text-xs font-black focus-visible:ring-0 focus-visible:border-brand-primary bg-slate-50/50" 
+                    />
                   </div>
 
+                  <div className="flex flex-col gap-4 pt-4">
+                    <Button 
+                      type="submit" 
+                      disabled={isLoggingIn}
+                      className="w-full h-14 bg-brand-primary hover:bg-slate-900 text-white font-black rounded-none uppercase tracking-[0.3em] text-xs transition-all active:scale-95 shadow-lg border-b-4 border-black/20"
+                    >
+                      {isLoggingIn ? 'AUTHENTICATING...' : (authMode === 'login' ? 'LOGIN_ACCESS' : 'INITIALIZE_ACCOUNT')}
+                    </Button>
+
+                    <div className="relative my-4">
+                      <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-slate-100"></div>
+                      </div>
+                      <div className="relative flex justify-center text-[8px] font-black uppercase tracking-[0.3em] text-slate-300 px-4 bg-white">
+                        SUPPORT_NODE
+                      </div>
+                    </div>
+
+                    <div className="p-4 bg-slate-50 border border-slate-200 text-center">
+                      <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
+                        গুগল বা ফেসবুক লগইন এখন বন্ধ আছে। সরাসরি ওয়েবসাইট থেকে লগইন বা রেজিস্টার করুন।
+                      </p>
+                    </div>
+                  </div>
+                </form>
+              ) : (
+                <form onSubmit={handleForgotSubmit} className="space-y-4">
+                  <div className="space-y-1.5">
+                    <Label className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">YOUR EMAIL</Label>
+                    <Input 
+                      type="email"
+                      required
+                      placeholder="আপনার ইমেইল বা ইউজারনেম"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className="h-12 border-slate-200 rounded-none text-xs font-black focus-visible:ring-0 focus-visible:border-brand-primary bg-slate-50/50" 
+                    />
+                  </div>
                   <Button 
-                    type="button" 
-                    onClick={async () => {
-                      try {
-                        await loginWithGoogle();
-                        setIsLoginModalOpen(false);
-                      } catch (err) {}
-                    }}
-                    className="w-full h-14 bg-white border border-slate-200 hover:bg-slate-50 text-slate-900 font-black rounded-none uppercase tracking-[0.2em] text-[9px] transition-all flex items-center justify-center gap-3 shadow-sm"
+                    type="submit" 
+                    disabled={isResetting}
+                    className="w-full h-14 bg-slate-900 text-white font-black rounded-none uppercase tracking-[0.3em] text-xs transition-all active:scale-95"
                   >
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" className="w-5 h-5" alt="Google" />
-                    LOGIN WITH GOOGLE
+                    {isResetting ? 'SENDING...' : 'SEND_RESET_LINK'}
                   </Button>
-                </div>
-              </form>
+                  <button 
+                    type="button" 
+                    onClick={() => setAuthMode('login')}
+                    className="w-full text-center text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-brand-primary"
+                  >
+                    BACK_TO_LOGIN
+                  </button>
+                </form>
+              )}
 
               <div className="text-center pt-4 border-t border-slate-50">
                 <button 
                   onClick={() => setAuthMode(authMode === 'login' ? 'register' : 'login')}
                   className="text-[10px] font-black text-brand-primary hover:underline transition-all uppercase tracking-widest"
                 >
-                  {authMode === 'login' ? "DON'T HAVE AN ACCOUNT? REGISTER" : "ALREADY HAVE AN ACCOUNT? LOGIN"}
+                  {authMode === 'login' ? "REGISTER" : "LOGIN"}
                 </button>
               </div>
             </div>

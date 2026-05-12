@@ -85,11 +85,6 @@ const AdminOrders = () => {
   const fetchOrders = useCallback(async (isNextPage = false) => {
     if (authLoading || !isAdmin) return;
     
-    // Check if truly authenticated to prevent rules error
-    if (!auth.currentUser) {
-      console.warn("ADMIN_DATA_FETCH: No active Firebase session. Permissions may fail.");
-    }
-
     if (isNextPage) setLoadingMore(true);
     else setLoading(true);
 

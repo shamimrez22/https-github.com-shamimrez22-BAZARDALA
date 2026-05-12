@@ -143,7 +143,7 @@ const SpecialOfferNode = ({ settings }: { settings: any }) => (
 const Home = () => {
   const [currentSlide, setCurrentSlide] = React.useState(0);
   const [variantIndex, setVariantIndex] = React.useState(0);
-  const [banners, setBanners] = React.useState(defaultBanners);
+  const [banners, setBanners] = React.useState<any[]>([]);
   const [settings, setSettings] = React.useState<SiteSettings | null>(null);
   const [limitedOffersConfig, setLimitedOffersConfig] = React.useState({ limit: 6, productIds: [] as string[] });
   const { products, loading: loadingProducts } = useProducts();

@@ -192,25 +192,44 @@ const Home = () => {
   }, [products, limitedOffersConfig]);
 
   React.useEffect(() => {
-    const fetchInitialData = async () => {
-      try {
-        const bannersPromise = getDocs(query(collection(db, 'slider_banners'), orderBy('createdAt', 'desc')));
-        const configPromise = getDoc(doc(db, 'settings', 'limited_offers'));
-        
-        const [bannersSnap, configSnap] = await Promise.all([bannersPromise, configPromise]);
-        
-        if (!bannersSnap.empty) {
-          setBanners(bannersSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as any);
+    // Persistent Listener for Banners to ensure immediate updates
+    const unsub = onSnapshot(
+      query(collection(db, 'slider_banners'), orderBy('createdAt', 'desc')),
+      (snapshot) => {
+        if (!snapshot.empty) {
+          const fetchedBanners = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          setBanners(fetchedBanners);
+          
+          // Cache to localStorage for "Immediate" load next time
+          localStorage.setItem('cached_banners', JSON.stringify(fetchedBanners));
         }
+      },
+      (error) => console.error('Banners sync error:', error)
+    );
+
+    const fetchInitialConfig = async () => {
+      try {
+        const configSnap = await getDoc(doc(db, 'settings', 'limited_offers'));
         if (configSnap.exists()) {
           setLimitedOffersConfig(configSnap.data() as any);
         }
       } catch (error) {
-        console.error('Error fetching initial Home data:', error);
+        console.error('Error fetching Home config:', error);
       }
     };
     
-    fetchInitialData();
+    // Load from cache if available for "Immediate" appearance
+    const cached = localStorage.getItem('cached_banners');
+    if (cached) {
+      try {
+        setBanners(JSON.parse(cached));
+      } catch (e) {
+        console.error('Cache parse error');
+      }
+    }
+
+    fetchInitialConfig();
+    return () => unsub();
   }, []);
 
   React.useEffect(() => {
@@ -301,14 +320,22 @@ const Home = () => {
 
             {/* Main Image Slider */}
             <div className={`flex-1 relative bg-white overflow-hidden group h-full`}>
-              <AnimatePresence mode="wait">
+               {banners.length === 0 && (
+                 <div className="absolute inset-0 flex items-center justify-center bg-white">
+                    <div className="text-center">
+                       <div className="w-10 h-10 border-2 border-slate-100 border-t-brand-primary rounded-full animate-spin mx-auto mb-4" />
+                       <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em]">INITIALIZING_CATALOG</p>
+                    </div>
+                 </div>
+               )}
+              <AnimatePresence>
                   <motion.div
                     key={currentSlide}
                     initial={currentVariant.initial}
                     animate={currentVariant.animate}
                     exit={currentVariant.exit}
-                    transition={{ duration: 0.4, ease: "easeOut" }}
-                    className="absolute inset-0"
+                    transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+                    className="absolute inset-0 z-0"
                   >
                   <SmartLink to={banners[currentSlide]?.link || '/shop'} className="block h-full w-full">
                     {banners[currentSlide] && (
@@ -316,7 +343,7 @@ const Home = () => {
                           src={banners[currentSlide].image || 'https://picsum.photos/seed/slide/1920/1080'}
                           alt={banners[currentSlide].title || 'Slide Image'}
                           loading="eager"
-                          className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                          className="w-full h-full object-cover"
                           referrerPolicy="no-referrer"
                         />
                     )}

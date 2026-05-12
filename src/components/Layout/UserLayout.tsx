@@ -323,7 +323,7 @@ export const UserLayout: React.FC = () => {
                   className="flex items-center gap-2 px-3 py-1.5 border border-white/30 text-white hover:bg-white/10 transition-all h-9"
                 >
                   <User className="h-3 w-3" />
-                  <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">LOGIN</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest hidden sm:inline">REGISTER</span>
                 </button>
               )}
 

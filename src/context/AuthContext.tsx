@@ -6,6 +6,7 @@ import { doc, getDoc, setDoc, onSnapshot, updateDoc, collection, query, where, g
 import { auth, db } from '../firebase';
 import { UserProfile } from '../types';
 import { toast } from 'sonner';
+import { safeStorage } from '../lib/storage';
 
 // Simplified User interface consistent with the manual system
 interface SimpleUser {
@@ -56,16 +57,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // CUSTOM LOCAL AUTH INITIALIZATION
     const initializeAuth = async () => {
       // 1. Check Admin Session
-      const savedAdmin = localStorage.getItem('is_admin_session');
+      const savedAdmin = safeStorage.get('is_admin_session');
       if (savedAdmin === 'true') {
         setIsAdminSession(true);
       }
 
-      const savedUid = localStorage.getItem('site_user_id');
+      const savedUid = safeStorage.get('site_user_id');
       if (savedUid) {
         try {
-          const userDoc = await getDoc(doc(db, 'users', savedUid));
-          if (userDoc.exists()) {
+          // Increase timeout to 15s for slower connections/iframes
+          // and wrap it in a try-catch that doesn't re-throw but just logs
+          const fetchWithTimeout = async () => {
+            const timeout = new Promise((_, reject) => 
+              setTimeout(() => reject(new Error('TIMEOUT')), 15000)
+            );
+            return Promise.race([
+              getDoc(doc(db, 'users', savedUid)),
+              timeout
+            ]);
+          };
+
+          const userDoc = await fetchWithTimeout() as any;
+
+          if (userDoc && userDoc.exists()) {
             const currentProfile = userDoc.data() as UserProfile;
             setProfile(currentProfile);
             setUser({
@@ -75,10 +89,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               photoURL: currentProfile.photoURL
             });
           } else {
-            localStorage.removeItem('site_user_id');
+            // Only remove if we explicitly know it doesn't exist
+            if (userDoc) safeStorage.remove('site_user_id');
           }
         } catch (error) {
-          console.error('Local Auth Init Error:', error);
+          console.warn('Auth initialization took too long or failed:', error);
+          // If it timed out, we stay in 'guest' mode but we don't clear the UID 
+          // yet in case it's just a temporary network glitch
         }
       }
       setLoading(false);
@@ -94,7 +111,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const loginAdmin = (username: string, pass: string) => {
     if (username === adminCreds.username && pass === adminCreds.pass) {
       setIsAdminSession(true);
-      localStorage.setItem('is_admin_session', 'true');
+      safeStorage.set('is_admin_session', 'true');
       return true;
     }
     return false;
@@ -133,7 +150,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await setDoc(doc(db, 'users', uid), newProfile);
       
       // 3. Set Session
-      localStorage.setItem('site_user_id', uid);
+      safeStorage.set('site_user_id', uid);
       setUser({
         uid,
         email: newProfile.email,
@@ -170,7 +187,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       // Set Session
-      localStorage.setItem('site_user_id', userData.uid);
+      safeStorage.set('site_user_id', userData.uid);
       setUser({
         uid: userData.uid,
         email: userData.email,
@@ -188,8 +205,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = async () => {
-    localStorage.removeItem('site_user_id');
-    localStorage.removeItem('is_admin_session');
+    safeStorage.remove('site_user_id');
+    safeStorage.remove('is_admin_session');
     setIsAdminSession(false);
     setUser(null);
     setProfile(null);
@@ -197,7 +214,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const refreshProfile = async () => {
-    const currentUid = user?.uid || localStorage.getItem('site_user_id');
+    const currentUid = user?.uid || safeStorage.get('site_user_id');
     if (currentUid) {
       try {
         const userDoc = await getDoc(doc(db, 'users', currentUid));

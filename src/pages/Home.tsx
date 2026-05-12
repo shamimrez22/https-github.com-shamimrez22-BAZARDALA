@@ -31,6 +31,7 @@ import { db } from '../firebase';
 import { useProducts } from '../context/ProductContext';
 import { ProductCard } from '../components/ProductCard';
 import { SiteSettings } from '../types';
+import { safeStorage } from '../lib/storage';
 
 const SmartLink = ({ to, children, className, ...props }: { to?: string; children: React.ReactNode; className?: string; [key: string]: any }) => {
   if (!to) return <div className={className} {...props}>{children}</div>;
@@ -200,8 +201,8 @@ const Home = () => {
           const fetchedBanners = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
           setBanners(fetchedBanners);
           
-          // Cache to localStorage for "Immediate" load next time
-          localStorage.setItem('cached_banners', JSON.stringify(fetchedBanners));
+          // Cache to safeStorage for "Immediate" load next time
+          safeStorage.set('cached_banners', JSON.stringify(fetchedBanners));
         }
       },
       (error) => console.error('Banners sync error:', error)
@@ -219,7 +220,7 @@ const Home = () => {
     };
     
     // Load from cache if available for "Immediate" appearance
-    const cached = localStorage.getItem('cached_banners');
+    const cached = safeStorage.get('cached_banners');
     if (cached) {
       try {
         setBanners(JSON.parse(cached));

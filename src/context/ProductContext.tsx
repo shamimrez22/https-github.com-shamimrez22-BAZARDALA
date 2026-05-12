@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Product } from '../types';
+import { safeStorage } from '../lib/storage';
 
 interface ProductContextType {
   products: Product[];
@@ -13,7 +14,7 @@ const ProductContext = createContext<ProductContextType | undefined>(undefined);
 export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [products, setProducts] = useState<Product[]>(() => {
     // Try to load from cache first for instant load
-    const cached = localStorage.getItem('bzd_products_cache');
+    const cached = safeStorage.get('bzd_products_cache');
     if (cached) {
       try {
         return JSON.parse(cached);
@@ -32,7 +33,7 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
       setProducts(data);
-      localStorage.setItem('bzd_products_cache', JSON.stringify(data));
+      safeStorage.set('bzd_products_cache', JSON.stringify(data));
       setLoading(false);
     }, (error) => {
       console.error("Global product fetch error:", error);

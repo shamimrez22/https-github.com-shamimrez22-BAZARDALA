@@ -7,6 +7,7 @@ import { useCart } from '../../context/CartContext';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
+import { safeStorage } from '../../lib/storage';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -59,7 +60,7 @@ export const UserLayout: React.FC = () => {
   React.useEffect(() => {
     // Handle Popup show
     if (settings?.ads?.popupAd?.active) {
-      const alreadyShown = sessionStorage.getItem('popup_displayed');
+      const alreadyShown = safeStorage.get('popup_displayed', 'session');
       if (!alreadyShown) {
         setTimeout(() => setShowPopup(true), 500);
       }
@@ -654,7 +655,7 @@ export const UserLayout: React.FC = () => {
               exit={{ opacity: 0 }}
               onClick={() => {
                 setShowPopup(false);
-                sessionStorage.setItem('popup_displayed', 'true');
+                safeStorage.set('popup_displayed', 'true', 'session');
               }}
               className="absolute inset-0 bg-slate-950/60 backdrop-blur-xl cursor-pointer"
             />
@@ -668,7 +669,7 @@ export const UserLayout: React.FC = () => {
               <button 
                 onClick={() => {
                   setShowPopup(false);
-                  sessionStorage.setItem('popup_displayed', 'true');
+                  safeStorage.set('popup_displayed', 'true', 'session');
                 }}
                 className="absolute top-6 right-6 z-20 p-3 bg-white border border-slate-200 rounded-none text-slate-800 hover:bg-brand-primary hover:text-white transition-all"
               >
@@ -700,7 +701,7 @@ export const UserLayout: React.FC = () => {
                            to={settings.ads.popupAd.link}
                            onClick={() => {
                              setShowPopup(false);
-                             sessionStorage.setItem('popup_displayed', 'true');
+                             safeStorage.set('popup_displayed', 'true', 'session');
                            }}
                            className="bg-slate-900 text-white font-black uppercase tracking-widest py-5 rounded-none hover:bg-brand-primary transition-all text-sm active:scale-95"
                          >
@@ -711,7 +712,7 @@ export const UserLayout: React.FC = () => {
                        <button 
                          onClick={() => {
                            setShowPopup(false);
-                           sessionStorage.setItem('popup_displayed', 'true');
+                           safeStorage.set('popup_displayed', 'true', 'session');
                          }}
                          className="text-[11px] font-black uppercase text-slate-400 hover:text-brand-primary tracking-[0.3em] transition-colors"
                        >

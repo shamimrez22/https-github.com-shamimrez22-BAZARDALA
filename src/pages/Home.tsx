@@ -562,7 +562,7 @@ const Home = () => {
 
               
               {/* The "Sheet" Grid */}
-              <div className="p-2 md:p-4 bg-white grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-1.5 border-collapse">
+              <div className="p-2 md:p-4 bg-white grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-1.5 border-collapse items-stretch">
                 {loadingProducts ? (
                   [...Array(6)].map((_, i) => (
                     <div key={i} className="aspect-[3/4] bg-slate-50 animate-pulse border border-slate-100" />

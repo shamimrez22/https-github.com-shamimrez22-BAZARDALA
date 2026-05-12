@@ -16,12 +16,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '../ui/dialog';
 import { toast } from 'sonner';
 import { Badge } from '../ui/badge';
 import { SiteSettings } from '../../types';
@@ -35,20 +29,6 @@ export const UserLayout: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [showPopup, setShowPopup] = React.useState(false);
   
-  // Admin Login Dialog State
-  const [isLoginModalOpen, setIsLoginModalOpen] = React.useState(false);
-  const [authMode, setAuthMode] = React.useState<'login' | 'register'>('login');
-  const [formData, setFormData] = React.useState({
-    name: '',
-    email: '',
-    password: ''
-  });
-  const [isAdminLoginOpen, setIsAdminLoginOpen] = React.useState(false);
-  const [adminUser, setAdminUser] = React.useState('');
-  const [adminPass, setAdminPass] = React.useState('');
-  const [adminView, setAdminView] = React.useState<'login' | 'forgot'>('login');
-  const [isLoggingIn, setIsLoggingIn] = React.useState(false);
-
   const nativeAdRef = React.useRef<HTMLDivElement>(null);
   const bannerOneRef = React.useRef<HTMLDivElement>(null);
   const bannerTwoRef = React.useRef<HTMLDivElement>(null);
@@ -118,34 +98,6 @@ export const UserLayout: React.FC = () => {
     settings?.ads?.adsterra?.bannerTwoCode
   ]);
 
-  const handleAuthSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoggingIn(true);
-    try {
-      if (authMode === 'login') {
-        await login(formData.email, formData.password);
-      } else {
-        if (!formData.name) {
-          toast.error('দয়া করে নাম প্রদান করুন');
-          setIsLoggingIn(false);
-          return;
-        }
-        await register(formData.email, formData.password, formData.name);
-      }
-      setIsLoginModalOpen(false);
-      setFormData({ name: '', email: '', password: '' });
-    } catch (err) {
-      // Errors handled in context
-    } finally {
-      setIsLoggingIn(false);
-    }
-  };
-
-  const handleLogin = () => {
-    setAuthMode('login');
-    setIsLoginModalOpen(true);
-  };
-
   const handleLogout = async () => {
     try {
       await logout();
@@ -155,19 +107,6 @@ export const UserLayout: React.FC = () => {
       console.error('Logout failed', error);
       toast.error('লগআউট করতে সমস্যা হয়েছে');
     }
-  };
-
-  const handleAdminLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoggingIn(true);
-    if (loginAdmin(adminUser, adminPass)) {
-      toast.success('অ্যাডমিন হিসেবে সফলভাবে লগইন করেছেন');
-      setIsAdminLoginOpen(false);
-      navigate('/admin');
-    } else {
-      toast.error('ভুল ইউজারনেম বা পাসওয়ার্ড');
-    }
-    setIsLoggingIn(false);
   };
 
   const SmartLink = ({ to, children, className, ...props }: { to?: string; children: React.ReactNode; className?: string; [key: string]: any }) => {
@@ -213,14 +152,11 @@ export const UserLayout: React.FC = () => {
         <div className="w-full bg-white flex justify-center border-b border-slate-100">
           <header className="w-full max-w-[1400px] bg-brand-primary h-12 md:h-14 flex items-center justify-between px-2 md:px-4">
             <div className="flex items-center gap-10">
-              <div className="flex items-center gap-2 md:gap-3 group cursor-pointer">
-                <div 
-                  onClick={() => setIsAdminLoginOpen(true)}
-                  className="bg-white text-brand-primary p-2 md:p-3 rounded-none group-hover:rotate-6 transition-transform duration-500"
-                >
-                  <ShoppingBasket className="h-5 w-5 md:h-7 md:w-7" />
-                </div>
-                <Link to="/" className="text-xs sm:text-base md:text-2xl font-black tracking-tighter text-white uppercase flex items-center gap-1.5 md:gap-3 shrink-0">
+                  <div className="flex items-center gap-2 md:gap-3 group cursor-pointer">
+                    <Link to="/admin/login" className="bg-white text-brand-primary p-2 md:p-3 rounded-none group-hover:rotate-6 transition-transform duration-500">
+                      <ShoppingBasket className="h-5 w-5 md:h-7 md:w-7" />
+                    </Link>
+                    <Link to="/" className="text-xs sm:text-base md:text-2xl font-black tracking-tighter text-white uppercase flex items-center gap-1.5 md:gap-3 shrink-0">
                   <div className="whitespace-nowrap underline underline-offset-4 decoration-white decoration-2 font-black">
                     <span>{(settings?.siteName || 'BAZAR DALA').split(' ')[0]}</span>
                     <span className="text-white/80 group-hover:text-white transition-colors">
@@ -236,7 +172,7 @@ export const UserLayout: React.FC = () => {
                 <Link to="/shop" onMouseEnter={() => import('../../pages/Shop')} className="hover:text-white transition-colors relative group py-2">
                   SHOP
                 </Link>
-                <Link to="/tracking" className="hover:text-white transition-colors relative group py-2">
+                <Link to="/tracking" className="bg-white text-brand-primary px-4 py-2 hover:bg-slate-100 transition-colors relative group">
                   TRACKING
                 </Link>
               </nav>
@@ -305,7 +241,11 @@ export const UserLayout: React.FC = () => {
                     </DropdownMenuGroup>
                   </DropdownMenuContent>
                 </DropdownMenu>
-              ) : null}
+              ) : (
+                <Link to="/admin/login" className="hidden lg:flex items-center gap-2 text-[10px] font-black text-white hover:text-white/80 transition-colors uppercase tracking-widest px-4 py-2 border border-white/20">
+                  <User className="h-3 w-3" /> ADMIN_LOGIN
+                </Link>
+              )}
 
               <Button
                 variant="ghost"
@@ -432,8 +372,8 @@ export const UserLayout: React.FC = () => {
                 <Link to="/shop" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-between group p-3 border-b border-slate-100 hover:text-brand-primary">
                   SHOP <ArrowRight className="h-4 w-4" />
                 </Link>
-                <Link to="/tracking" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-between group p-3 border-b border-slate-100 hover:text-brand-primary">
-                  TRACKING <ArrowRight className="h-4 w-4" />
+                <Link to="/tracking" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-between group p-4 border-b border-slate-100 bg-brand-primary text-white font-black">
+                  TRACKING SYSTEM <ArrowRight className="h-4 w-4" />
                 </Link>
               </nav>
             </motion.div>
@@ -459,121 +399,7 @@ export const UserLayout: React.FC = () => {
         )}
       </div>
 
-      {/* Admin Login Dialog */}
-      <Dialog open={isAdminLoginOpen} onOpenChange={setIsAdminLoginOpen}>
-        <DialogContent className="p-0 border-none bg-transparent shadow-none w-full max-w-md [&>button]:text-white">
-          <div className="bg-[#ead9c4] border border-slate-100 rounded-none overflow-hidden font-sans">
-            <div className="bg-brand-primary p-4 text-white flex items-center justify-between">
-              <h2 className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
-                <ShoppingBasket className="h-4 w-4" /> সিকিউর লগইন
-              </h2>
-            </div>
 
-            <div className="p-8 bg-white/40">
-              {adminView === 'login' ? (
-                <>
-                  <div className="flex justify-center mb-8">
-                    <div className="w-16 h-16 rounded-none bg-[#ead9c4] border border-slate-100 flex items-center justify-center text-brand-primary">
-                      <Lock className="h-8 w-8" />
-                    </div>
-                  </div>
-                  
-                  <form onSubmit={handleAdminLogin} className="space-y-6">
-                    <div className="space-y-3">
-                      <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-700">ইউজারনেম</Label>
-                      <div className="relative">
-                        <User className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-primary" />
-                        <Input
-                          type="text"
-                          value={adminUser}
-                          onChange={(e) => setAdminUser(e.target.value)}
-                          className="pl-12 bg-white border border-slate-200 text-slate-900 rounded-none h-14 font-black text-xs focus-visible:ring-0 focus-visible:border-brand-primary"
-                          placeholder="ADMIN_ID"
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-700">পাসওয়ার্ড</Label>
-                      <div className="relative">
-                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-primary" />
-                        <Input
-                          type="password"
-                          value={adminPass}
-                          onChange={(e) => setAdminPass(e.target.value)}
-                          className="pl-12 bg-white border border-slate-200 text-slate-900 rounded-none h-14 font-black text-xs focus-visible:ring-0 focus-visible:border-brand-primary"
-                          placeholder="••••••••"
-                          required
-                        />
-                      </div>
-                    </div>
-
-                <div className="flex flex-col gap-4">
-                  <Button 
-                    type="submit" 
-                    disabled={isLoggingIn}
-                    className="w-full h-14 bg-brand-primary hover:opacity-90 text-white font-black rounded-none uppercase tracking-[0.3em] text-xs transition-all active:scale-95"
-                  >
-                    {isLoggingIn ? 'প্রসেসিং...' : 'লগইন করুন'}
-                  </Button>
-
-                  <div className="relative my-2">
-                    <div className="absolute inset-0 flex items-center">
-                      <div className="w-full border-t border-slate-100"></div>
-                    </div>
-                    <div className="relative flex justify-center text-[8px] font-black uppercase tracking-[0.2em] text-slate-400">
-                      <span className="bg-white px-4">OR</span>
-                    </div>
-                  </div>
-
-                  <Button 
-                    type="button" 
-                    onClick={async () => {
-                      try {
-                        await loginWithGoogle();
-                      } catch (err) {}
-                    }}
-                    className="w-full h-14 bg-white border border-slate-200 hover:bg-slate-50 text-slate-900 font-black rounded-none uppercase tracking-[0.2em] text-[10px] transition-all flex items-center justify-center gap-3"
-                  >
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" className="w-5 h-5" alt="Google" />
-                    গুগল দিয়ে প্রবেশ করুন
-                  </Button>
-                </div>
-                  </form>
-
-                  <div className="mt-8 text-center pt-4 border-t border-slate-900/10">
-                    <button 
-                      onClick={() => setAdminView('forgot')}
-                      className="text-[10px] font-black text-brand-primary uppercase tracking-widest hover:underline flex items-center justify-center gap-2 mx-auto"
-                    >
-                      <AlertCircle className="h-3 w-3" /> পাসওয়ার্ড ভুলে গেছেন?
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <div className="space-y-8 py-4 px-2 text-center">
-                  <div className="w-16 h-16 rounded-none bg-red-50 border-2 border-red-200 flex items-center justify-center text-red-500 mx-auto mb-4">
-                    <Lock className="h-8 w-8" />
-                  </div>
-                  <h3 className="text-sm font-black uppercase tracking-tighter text-slate-900">অ্যাডমিন রিকভারি প্রোটোকল</h3>
-                  <p className="text-[10px] font-bold text-slate-500 uppercase leading-relaxed">
-                    পাসওয়ার্ড রিকভার করার জন্য দয়া করে সরাসরি অ্যাডমিনের সাথে যোগাযোগ করুন।
-                  </p>
-
-
-                  <button 
-                    onClick={() => setAdminView('login')}
-                    className="w-full text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-brand-primary transition-colors flex items-center justify-center gap-2"
-                  >
-                    <ChevronLeft className="h-4 w-4" /> ব্যাক টু লগইন
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
 
       <footer className="bg-black pt-10 pb-8 relative overflow-hidden text-white mt-auto border-t border-slate-900 flex justify-center">
         <div className="w-full max-w-[1400px] px-4 md:px-6 relative z-10">
@@ -818,103 +644,6 @@ export const UserLayout: React.FC = () => {
            </span>
         </a>
       )}
-      {/* User Login/Register Modal */}
-      <Dialog open={isLoginModalOpen} onOpenChange={setIsLoginModalOpen}>
-        <DialogContent className="max-w-md bg-white border border-slate-200 rounded-none p-0 overflow-hidden outline-none">
-          <div className="flex flex-col">
-            <div className="bg-brand-primary h-2 w-full" />
-            <div className="p-8 space-y-6">
-              <DialogHeader>
-                <DialogTitle className="text-2xl font-black text-slate-900 uppercase tracking-tighter text-center">
-                  {authMode === 'login' ? 'লগইন করুন' : 'নতুন একাউন্ট তৈরি করুন'}
-                </DialogTitle>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-center">
-                  {authMode === 'login' ? 'আপনার একাউন্টে প্রবেশ করুন' : 'সহজেই একাউন্ট তৈরি করুন'}
-                </p>
-              </DialogHeader>
-
-              <form onSubmit={handleAuthSubmit} className="space-y-4">
-                {authMode === 'register' && (
-                  <div className="space-y-1.5">
-                    <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">আপনার নাম</Label>
-                    <Input 
-                      required
-                      placeholder="নাম লিখুন"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="h-12 border-slate-200 rounded-none text-xs font-black focus-visible:ring-0 focus-visible:border-brand-primary/50" 
-                    />
-                  </div>
-                )}
-                <div className="space-y-1.5">
-                  <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">ইমেইল এড্রেস</Label>
-                  <Input 
-                    type="email"
-                    required
-                    placeholder="example@gmail.com"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="h-12 border-slate-200 rounded-none text-xs font-black focus-visible:ring-0 focus-visible:border-brand-primary/50" 
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">পাসওয়ার্ড</Label>
-                  <Input 
-                    type="password"
-                    required
-                    placeholder="পাসওয়ার্ড দিন"
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    className="h-12 border-slate-200 rounded-none text-xs font-black focus-visible:ring-0 focus-visible:border-brand-primary/50" 
-                  />
-                </div>
-
-                <div className="flex flex-col gap-4 pt-2">
-                  <Button 
-                    type="submit" 
-                    disabled={isLoggingIn}
-                    className="w-full h-14 bg-brand-primary hover:opacity-90 text-white font-black rounded-none uppercase tracking-[0.3em] text-xs transition-all active:scale-95"
-                  >
-                    {isLoggingIn ? 'প্রসেসিং...' : (authMode === 'login' ? 'লগইন করুন' : 'একাউন্ট তৈরি করুন')}
-                  </Button>
-
-                  <div className="relative my-2">
-                    <div className="absolute inset-0 flex items-center">
-                      <div className="w-full border-t border-slate-100"></div>
-                    </div>
-                    <div className="relative flex justify-center text-[8px] font-black uppercase tracking-[0.2em] text-slate-400">
-                      <span className="bg-white px-4">অথবা জিমেইল ব্যবহার করুন</span>
-                    </div>
-                  </div>
-
-                  <Button 
-                    type="button" 
-                    onClick={async () => {
-                      try {
-                        await loginWithGoogle();
-                        setIsLoginModalOpen(false);
-                      } catch (err) {}
-                    }}
-                    className="w-full h-14 bg-white border border-slate-200 hover:bg-slate-50 text-slate-900 font-black rounded-none uppercase tracking-[0.2em] text-[10px] transition-all flex items-center justify-center gap-3"
-                  >
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" className="w-5 h-5" alt="Google" />
-                    গুগল দিয়ে প্রবেশ করুন
-                  </Button>
-                </div>
-              </form>
-
-              <div className="text-center pt-2">
-                <button 
-                  onClick={() => setAuthMode(authMode === 'login' ? 'register' : 'login')}
-                  className="text-[11px] font-bold text-brand-primary hover:underline transition-all"
-                >
-                  {authMode === 'login' ? 'একাউন্ট নেই? নতুন একাউন্ট তৈরি করুন' : 'আগে থেকেই একাউন্ট আছে? লগইন করুন'}
-                </button>
-              </div>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };

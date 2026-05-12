@@ -70,11 +70,11 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
       </div>
 
         {/* Product Details */}
-      <div className="p-1 flex flex-col pt-1 pb-1">
+      <div className="p-1 flex flex-col flex-1 pt-1 pb-1">
         {/* Title */}
-        <div className="h-[22px] mb-0.5 overflow-hidden">
+        <div className="h-[28px] mb-1 overflow-hidden">
           <h3 
-            className="font-bold text-slate-800 text-[9px] leading-tight line-clamp-2 uppercase"
+            className="font-bold text-slate-800 text-[10px] leading-[14px] line-clamp-2 uppercase"
           >
             {product.name}
           </h3>

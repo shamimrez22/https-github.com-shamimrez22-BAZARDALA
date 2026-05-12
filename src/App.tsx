@@ -89,8 +89,7 @@ const AppContent = () => {
     <ProductProvider>
       <CartProvider>
       <Router>
-        <SmoothScroll>
-          <Suspense fallback={<LoadingFallback />}>
+        <Suspense fallback={<LoadingFallback />}>
             <Routes>
                     <Route path="/" element={<UserLayout />}>
                       <Route index element={<Home />} />
@@ -144,8 +143,7 @@ const AppContent = () => {
                 </Routes>
                 <Toaster position="top-center" richColors />
               </Suspense>
-            </SmoothScroll>
-          </Router>
+      </Router>
         </CartProvider>
       </ProductProvider>
   );

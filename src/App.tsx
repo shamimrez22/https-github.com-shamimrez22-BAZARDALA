@@ -36,17 +36,56 @@ const AdminVerify = lazy(() => import('./pages/Admin/Verify'));
 
 import { SettingsProvider, useSettings } from './context/SettingsContext';
 
-const LoadingFallback = () => (
-  <div className="h-screen flex flex-col items-center justify-center bg-brand-bg">
-    <div className="relative mb-12">
-      <div className="w-24 h-24 border-4 border-brand-primary/20 border-t-brand-primary rounded-full animate-spin" />
-      <div className="absolute inset-0 flex items-center justify-center text-brand-primary">
-        <ShoppingBasket className="h-10 w-10 animate-bounce" />
+const LoadingFallback = () => {
+  const [showRetry, setShowRetry] = React.useState(false);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => setShowRetry(true), 8000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <div className="h-screen flex flex-col items-center justify-center bg-brand-bg relative overflow-hidden">
+      {/* Background Matrix/Abstract effect for 'Hard' feel */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none select-none overflow-hidden text-[10px] font-mono leading-none break-all p-4">
+        {Array.from({ length: 50 }).map((_, i) => (
+          <div key={i} className="mb-1">
+            {Math.random().toString(36).repeat(10)}
+          </div>
+        ))}
       </div>
+
+      <div className="relative mb-12 z-10">
+        <div className="w-24 h-24 border-4 border-brand-primary/20 border-t-brand-primary rounded-none animate-spin" />
+        <div className="absolute inset-0 flex items-center justify-center text-brand-primary">
+          <ShoppingBasket className="h-10 w-10 animate-bounce" />
+        </div>
+      </div>
+      <div className="text-brand-primary font-black uppercase tracking-[0.5em] text-[10px] animate-pulse z-10">
+        BAZAR_DALA_PROTOCOL_INITIALIZING
+      </div>
+
+      {showRetry && (
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-12 flex flex-col items-center gap-4 z-10"
+        >
+          <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest text-center max-w-xs leading-relaxed">
+            SYSTEM_RESPONSE_DELAYED_BY_NETWORK. <br/>
+            PLEASE_VERIFY_CONNECTIVITY.
+          </p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="px-8 py-3 bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest hover:bg-brand-primary transition-all rounded-none border border-white/10"
+          >
+            FORCE_RESYNC_PROTOCOL
+          </button>
+        </motion.div>
+      )}
     </div>
-    <div className="text-brand-primary font-black uppercase tracking-[0.5em] text-[10px] animate-pulse">BAZAR_DALA_PROTOCOL_LOADING</div>
-  </div>
-);
+  );
+};
 
 const Login = lazy(() => import('./pages/Login'));
 

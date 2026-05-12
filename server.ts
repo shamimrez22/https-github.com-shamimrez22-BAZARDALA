@@ -11,23 +11,28 @@ import { v4 as uuidv4 } from 'uuid';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Initialize Firebase Admin (Using default creds if available, otherwise just use what we can)
-// For AI Studio environment, we often have default credentials or can use ADC
-let adminApp;
-let db: any;
+// Initialize Firebase Admin (Using default creds if available)
+let db: any = null;
 
-try {
-  adminApp = initializeApp();
-  db = getFirestore(adminApp);
-  console.log('Firebase Admin initialized successfully');
-} catch (error) {
-  console.error('Firebase Admin initialization failed:', error);
-  // We'll handle db usage gracefully in routes
-}
+const initFirebaseAdmin = () => {
+  if (db) return db;
+  try {
+    const adminApp = initializeApp();
+    db = getFirestore(adminApp);
+    console.log('Firebase Admin initialized successfully');
+    return db;
+  } catch (error) {
+    console.warn('Firebase Admin initialization delayed or failed:', error);
+    return null;
+  }
+};
 
 async function startServer() {
   const app = express();
   const PORT = 3000;
+
+  // Lazily init DB on first request that needs it
+  const getDB = () => initFirebaseAdmin();
 
   app.use(express.json());
 
@@ -35,7 +40,8 @@ async function startServer() {
   app.post('/api/admin/send-recovery', async (req, res) => {
     const { email, appPassword, masterPin } = req.body;
 
-    if (!db) {
+    const dbInstance = getDB();
+    if (!dbInstance) {
       return res.status(500).json({ error: 'Firebase base not available on server.' });
     }
 
@@ -45,7 +51,7 @@ async function startServer() {
 
     try {
       // Get settings from Firestore to verify credentials
-      const settingsDoc = await db.collection('settings').doc('site').get();
+      const settingsDoc = await dbInstance.collection('settings').doc('site').get();
       if (!settingsDoc.exists) {
         return res.status(404).json({ error: 'সেটিংস পাওয়া যায়নি।' });
       }
@@ -79,7 +85,7 @@ async function startServer() {
       const expiration = Date.now() + 1000 * 60 * 30; // 30 minutes
 
       // Save token to Firestore
-      await db.collection('recoveryTokens').doc(token).set({
+      await dbInstance.collection('recoveryTokens').doc(token).set({
         email: email,
         expiresAt: expiration,
         used: false
@@ -123,10 +129,11 @@ async function startServer() {
     }
 
     try {
-      if (!db) {
+      const dbInstance = getDB();
+      if (!dbInstance) {
         return res.status(500).json({ error: 'Firebase base not available on server.' });
       }
-      const tokenDoc = await db.collection('recoveryTokens').doc(token).get();
+      const tokenDoc = await dbInstance.collection('recoveryTokens').doc(token).get();
       
       if (!tokenDoc.exists) {
         return res.status(404).json({ error: 'Invalid or expired token' });
@@ -138,7 +145,7 @@ async function startServer() {
       }
 
       // Mark token as used
-      await db.collection('recoveryTokens').doc(token).update({ used: true });
+      await dbInstance.collection('recoveryTokens').doc(token).update({ used: true });
 
       res.json({ success: true, message: 'Identity verified' });
     } catch (error: any) {

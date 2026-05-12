@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import { Order } from '../types';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
-import { ShoppingBag, Package, Heart, Settings, User, Camera, Save } from 'lucide-react';
+import { ShoppingBag, Package, Heart, Settings, User, Camera, Save, LogOut } from 'lucide-react';
 import { format } from 'date-fns';
 import { motion, AnimatePresence } from 'motion/react';
 import { toast } from 'sonner';
@@ -15,7 +15,7 @@ import { Label } from '../components/ui/label';
 import { optimizeProfileImage } from '../lib/image-utils';
 
 const UserDashboard = () => {
-  const { user, profile, updateUserProfile } = useAuth();
+  const { user, profile, updateUserProfile, logout } = useAuth();
   const navigate = useNavigate();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -162,8 +162,23 @@ const UserDashboard = () => {
                     </div>
                     <div className={`w-2 h-2 rounded-none border ${activeTab === item.id ? 'bg-brand-primary border-brand-primary scale-100' : 'bg-transparent border-slate-200 scale-50'}`} />
                   </button>
-
                 ))}
+
+                <button
+                  onClick={async () => {
+                    await logout();
+                    navigate('/');
+                  }}
+                  className="group w-full flex items-center justify-between px-6 py-4 rounded-none text-[12px] font-black uppercase tracking-widest transition-all border bg-white border-red-50 text-red-500 hover:bg-red-50 mt-4"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="p-2 rounded-none border bg-red-50 border-red-100 text-red-500">
+                      <LogOut className="h-4 w-4" />
+                    </div>
+                    <span>TERMINATE_SESSION</span>
+                  </div>
+                  <div className="w-2 h-2 rounded-none border bg-red-500 border-red-500" />
+                </button>
               </div>
           </div>
 

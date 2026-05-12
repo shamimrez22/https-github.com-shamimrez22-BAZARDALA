@@ -16,18 +16,40 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '../ui/dialog';
 import { toast } from 'sonner';
 import { Badge } from '../ui/badge';
 import { SiteSettings } from '../../types';
 import { useSettings } from '../../context/SettingsContext';
 
 export const UserLayout: React.FC = () => {
-  const { user, profile, isAdmin, loginAdmin, loginWithGoogle, logout, login, register } = useAuth();
+  const { user, profile, isAdmin, loginAdmin, logout, login, register, loginWithGoogle } = useAuth();
   const { items } = useCart();
   const { settings } = useSettings();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [showPopup, setShowPopup] = React.useState(false);
+
+  // Auth Modal State
+  const [isLoginModalOpen, setIsLoginModalOpen] = React.useState(false);
+  const [isAdminLoginModalOpen, setIsAdminLoginModalOpen] = React.useState(false);
+  const [authMode, setAuthMode] = React.useState<'login' | 'register'>('login');
+  const [formData, setFormData] = React.useState({
+    name: '',
+    email: '',
+    password: ''
+  });
+  const [adminFormData, setAdminFormData] = React.useState({
+    username: '',
+    password: ''
+  });
+  const [isLoggingIn, setIsLoggingIn] = React.useState(false);
+  const [isAdminLoggingIn, setIsAdminLoggingIn] = React.useState(false);
   
   const nativeAdRef = React.useRef<HTMLDivElement>(null);
   const bannerOneRef = React.useRef<HTMLDivElement>(null);
@@ -98,14 +120,66 @@ export const UserLayout: React.FC = () => {
     settings?.ads?.adsterra?.bannerTwoCode
   ]);
 
+  const handleAuthSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoggingIn(true);
+    
+    // Auto-convert username to email if needed
+    let emailToUse = formData.email;
+    if (!emailToUse.includes('@')) {
+      emailToUse = `${emailToUse.toLowerCase().trim()}@bazardala.com`;
+    }
+
+    try {
+      if (authMode === 'login') {
+        await login(emailToUse, formData.password);
+        toast.success('Login successful');
+      } else {
+        if (!formData.name) {
+          toast.error('Please provide your name');
+          setIsLoggingIn(false);
+          return;
+        }
+        await register(emailToUse, formData.password, formData.name);
+        toast.success('Account created successfully');
+      }
+      setIsLoginModalOpen(false);
+      setFormData({ name: '', email: '', password: '' });
+    } catch (err) {
+      // Error handling is in context
+    } finally {
+      setIsLoggingIn(false);
+    }
+  };
+
+  const handleAdminAuthSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsAdminLoggingIn(true);
+    
+    try {
+      const success = loginAdmin(adminFormData.username, adminFormData.password);
+      if (success) {
+        toast.success('Admin login successful');
+        setIsAdminLoginModalOpen(false);
+        navigate('/admin');
+      } else {
+        toast.error('Invalid admin credentials');
+      }
+    } catch (err) {
+      toast.error('Login failed');
+    } finally {
+      setIsAdminLoggingIn(false);
+    }
+  };
+
   const handleLogout = async () => {
     try {
       await logout();
       navigate('/');
-      toast.success('সফলভাবে লগআউট করেছেন');
+      toast.success('Logout successful');
     } catch (error: any) {
       console.error('Logout failed', error);
-      toast.error('লগআউট করতে সমস্যা হয়েছে');
+      toast.error('Logout failed');
     }
   };
 
@@ -150,35 +224,38 @@ export const UserLayout: React.FC = () => {
 
         {/* Header Navigation */}
         <div className="w-full bg-white flex justify-center border-b border-slate-100">
-          <header className="w-full max-w-[1400px] bg-brand-primary h-12 md:h-14 flex items-center justify-between px-2 md:px-4">
-            <div className="flex items-center gap-10">
+          <header className="w-full max-w-[1400px] bg-brand-primary h-11 md:h-12 flex items-center justify-between px-2 md:px-4">
+            <div className="flex items-center gap-4 md:gap-10">
                   <div className="flex items-center gap-2 md:gap-3 group cursor-pointer">
-                    <Link to="/admin/login" className="bg-white text-brand-primary p-2 md:p-3 rounded-none group-hover:rotate-6 transition-transform duration-500">
-                      <ShoppingBasket className="h-5 w-5 md:h-7 md:w-7" />
-                    </Link>
-                    <Link to="/" className="text-xs sm:text-base md:text-2xl font-black tracking-tighter text-white uppercase flex items-center gap-1.5 md:gap-3 shrink-0">
+                    <button 
+                      onClick={() => setIsAdminLoginModalOpen(true)}
+                      className="bg-white text-brand-primary p-1.5 md:p-2 rounded-none group-hover:rotate-6 transition-transform duration-500 cursor-pointer outline-none"
+                    >
+                      <ShoppingBasket className="h-4 w-4 md:h-6 md:w-6" />
+                    </button>
+                    <Link to="/" className="text-xs sm:text-base md:text-xl font-black tracking-tighter text-white uppercase flex items-center gap-1 md:gap-2 shrink-0">
                   <div className="whitespace-nowrap underline underline-offset-4 decoration-white decoration-2 font-black">
                     <span>{(settings?.siteName || 'BAZAR DALA').split(' ')[0]}</span>
-                    <span className="text-white/80 group-hover:text-white transition-colors">
+                    <span className="text-white group-hover:text-white transition-colors">
                       {' '}<span>{(settings?.siteName || 'BAZAR DALA').split(' ').slice(1).join(' ')}</span>
                     </span>
                   </div>
                 </Link>
               </div>
-              <nav className="hidden xl:flex items-center gap-8 text-[11px] font-black uppercase tracking-[0.2em] text-white/60">
-                <Link to="/" onMouseEnter={() => import('../../pages/Home')} className="hover:text-white transition-colors relative group py-2">
+              <nav className="hidden xl:flex items-center gap-6 text-[11px] font-black uppercase tracking-[0.2em] text-white">
+                <Link to="/" onMouseEnter={() => import('../../pages/Home')} className="hover:text-white transition-colors relative group py-1">
                   HOME
                 </Link>
-                <Link to="/shop" onMouseEnter={() => import('../../pages/Shop')} className="hover:text-white transition-colors relative group py-2">
+                <Link to="/shop" onMouseEnter={() => import('../../pages/Shop')} className="hover:text-white transition-colors relative group py-1">
                   SHOP
                 </Link>
-                <Link to="/tracking" className="bg-white text-brand-primary px-4 py-2 hover:bg-slate-100 transition-colors relative group">
+                <Link to="/tracking" className="bg-white text-brand-primary px-2 py-1 hover:bg-slate-100 transition-colors relative group">
                   TRACKING
                 </Link>
               </nav>
             </div>
 
-            <div className="flex-1 max-w-lg mx-12 hidden lg:block">
+            <div className="flex-1 max-w-[320px] mx-4 hidden lg:block">
               <form 
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -187,22 +264,22 @@ export const UserLayout: React.FC = () => {
                 }}
                 className="relative group "
               >
-                <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-white/50 group-focus-within:text-white transition-colors" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40 group-focus-within:text-white transition-colors" />
                 <Input
                   name="search"
-                  placeholder="DATABASE_SEARCH..."
-                  className="pl-14 bg-white/10 border-none rounded-none h-12 text-[11px] font-black uppercase tracking-widest focus-visible:ring-0 text-white placeholder:text-white/30"
+                  placeholder="SEARCH..."
+                  className="pl-11 bg-white/10 border-none rounded-none h-10 text-[10px] font-black uppercase tracking-widest focus-visible:ring-0 text-white placeholder:text-white/40"
                 />
               </form>
             </div>
 
             <div className="flex items-center gap-2 md:gap-5">
               <Link to="/cart" className="relative group">
-                <div className="p-2 md:p-3 bg-white/10 text-white border border-white/5 rounded-none group-hover:bg-white group-hover:text-brand-primary transition-all">
+                <div className="p-2 md:p-2.5 bg-white/10 text-white border border-white/5 rounded-none group-hover:bg-white group-hover:text-brand-primary transition-all">
                   <ShoppingCart className="h-5 w-5 md:h-6 md:w-6" />
                 </div>
                 {items.length > 0 && (
-                  <span className="absolute -top-1 -right-1 h-5 min-w-[20px] md:h-6 md:min-w-[24px] bg-white text-brand-primary text-[9px] md:text-[10px] font-black flex items-center justify-center px-1 md:px-1.5 rounded-none">
+                  <span className="absolute -top-1 -right-1 h-5 min-w-[20px] md:h-6 md:min-w-[24px] bg-white text-brand-primary text-[9px] md:text-[10px] font-black flex items-center justify-center px-1 rounded-none">
                     {items.length}
                   </span>
                 )}
@@ -211,8 +288,8 @@ export const UserLayout: React.FC = () => {
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="flex items-center gap-2 md:gap-3 p-1 rounded-none border-2 border-transparent hover:border-white transition-all">
-                      <div className="w-8 h-8 md:w-10 md:h-10 rounded-none overflow-hidden bg-white/10">
+                    <button className="flex items-center gap-2 p-0.5 rounded-none border-2 border-transparent hover:border-white transition-all">
+                      <div className="w-8 h-8 md:w-9 md:h-9 rounded-none overflow-hidden bg-white/20">
                         <img
                           src={user.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`}
                           alt="Avatar"
@@ -221,39 +298,42 @@ export const UserLayout: React.FC = () => {
                       </div>
                     </button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-64 bg-white border border-slate-100 rounded-none p-2 mt-4 overflow-hidden shadow-2xl">
-                    <DropdownMenuGroup className="space-y-1">
-                      <DropdownMenuLabel className="p-5 border-b border-slate-100 mb-2">
+                  <DropdownMenuContent align="end" className="w-56 bg-white border border-slate-100 rounded-none p-2 mt-2 overflow-hidden shadow-2xl">
+                    <DropdownMenuGroup className="space-y-0.5">
+                      <DropdownMenuLabel className="p-4 border-b border-slate-100 mb-1">
                         <div className="flex flex-col">
-                          <p className="text-[12px] font-black uppercase tracking-widest text-slate-800">{user.displayName}</p>
-                          <p className="text-[10px] font-black text-slate-400 mt-1 uppercase opacity-60">{user.email}</p>
+                          <p className="text-[11px] font-black uppercase tracking-widest text-slate-800">{user.displayName || 'CUSTOMER'}</p>
+                          <p className="text-[9px] font-black text-slate-400 mt-0.5 uppercase opacity-60 truncate">@{user.email?.split('@')[0]}</p>
                         </div>
                       </DropdownMenuLabel>
-                      <DropdownMenuItem onClick={() => navigate('/dashboard')} className="text-[11px] font-black uppercase p-4 rounded-none focus:bg-brand-primary/5 cursor-pointer">
-                        <User className="mr-4 h-5 w-5 text-brand-primary" />
-                        <span>MY_DASHBOARD</span>
+                      <DropdownMenuItem onClick={() => navigate('/dashboard')} className="text-[10px] font-black uppercase p-3 rounded-none focus:bg-brand-primary/5 cursor-pointer">
+                        <User className="mr-3 h-4 w-4 text-brand-primary" />
+                        <span>MY DASHBOARD</span>
                       </DropdownMenuItem>
-                      <DropdownMenuSeparator className="bg-slate-100 h-[1px] my-2" />
-                      <DropdownMenuItem onClick={handleLogout} className="text-[11px] font-black uppercase p-4 rounded-none focus:bg-red-600 focus:text-white cursor-pointer">
-                        <LogOut className="mr-4 h-5 w-5" />
-                        <span>END_SESSION</span>
+                      <DropdownMenuSeparator className="bg-slate-100 h-[1px] my-1" />
+                      <DropdownMenuItem onClick={handleLogout} className="text-[10px] font-black uppercase p-3 rounded-none focus:bg-red-600 focus:text-white cursor-pointer">
+                        <LogOut className="mr-3 h-4 w-4" />
+                        <span>LOGOUT</span>
                       </DropdownMenuItem>
                     </DropdownMenuGroup>
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <Link to="/admin/login" className="hidden lg:flex items-center gap-2 text-[10px] font-black text-white hover:text-white/80 transition-colors uppercase tracking-widest px-4 py-2 border border-white/20">
-                  <User className="h-3 w-3" /> ADMIN_LOGIN
-                </Link>
+                <button 
+                  onClick={() => setIsLoginModalOpen(true)}
+                  className="hidden md:flex items-center gap-2 text-[9px] font-black text-white hover:text-white transition-colors uppercase tracking-widest px-3 py-1.5 border border-white/40 h-9"
+                >
+                  <User className="h-3 w-3" /> LOGIN / REGISTER
+                </button>
               )}
 
               <Button
                 variant="ghost"
                 size="icon"
-                className="lg:hidden bg-white/10 text-white border border-white/5 rounded-none h-10 w-10 md:h-12 md:w-12 hover:bg-white hover:text-brand-primary transition-all font-black"
+                className="lg:hidden bg-white/10 text-white border border-white/5 rounded-none h-9 w-9 md:h-10 md:w-10 hover:bg-white hover:text-brand-primary transition-all font-black"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
               >
-                {isMenuOpen ? <X className="h-5 w-5 md:h-6 md:w-6" /> : <Menu className="h-5 w-5 md:h-6 md:w-6" />}
+                {isMenuOpen ? <X className="h-4 w-4 md:h-5 md:w-5" /> : <Menu className="h-4 w-4 md:h-5 md:w-5" />}
               </Button>
             </div>
           </header>
@@ -375,6 +455,28 @@ export const UserLayout: React.FC = () => {
                 <Link to="/tracking" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-between group p-4 border-b border-slate-100 bg-brand-primary text-white font-black">
                   TRACKING SYSTEM <ArrowRight className="h-4 w-4" />
                 </Link>
+                {!user && (
+                  <button 
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      setIsLoginModalOpen(true);
+                    }} 
+                    className="flex items-center justify-between group p-3 border-b border-slate-100 hover:text-brand-primary text-left w-full"
+                  >
+                    LOGIN / REGISTER <User className="h-4 w-4" />
+                  </button>
+                )}
+                {user && (
+                  <button 
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      handleLogout();
+                    }} 
+                    className="flex items-center justify-between group p-3 border-b border-slate-100 text-red-600 font-bold text-left w-full"
+                  >
+                    LOGOUT <LogOut className="h-4 w-4" />
+                  </button>
+                )}
               </nav>
             </motion.div>
           </>
@@ -623,7 +725,6 @@ export const UserLayout: React.FC = () => {
           </div>
         )}
       </AnimatePresence>
-
       {/* Floating WhatsApp Button */}
       {settings?.whatsappNumber && (
         <a 
@@ -642,8 +743,175 @@ export const UserLayout: React.FC = () => {
            <span className="absolute right-full mr-4 bg-slate-900 text-white text-[10px] font-black py-2 px-4 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity uppercase tracking-widest hidden md:block">
              Chat with us
            </span>
-        </a>
-      )}
+         </a>
+       )}
+
+      <Dialog open={isLoginModalOpen} onOpenChange={setIsLoginModalOpen}>
+        <DialogContent className="max-w-md bg-white border border-slate-200 rounded-none p-0 overflow-hidden outline-none">
+          <div className="flex flex-col">
+            <div className="bg-brand-primary h-2 w-full" />
+            <div className="p-8 space-y-6">
+              <DialogHeader className="relative pb-2">
+                <div className="flex flex-col items-center mb-6">
+                  <div className="w-14 h-14 bg-brand-primary flex items-center justify-center mb-3 rotate-3 group-hover:rotate-0 transition-transform shadow-lg border border-white/20">
+                    <ShoppingBasket className="h-7 w-7 text-white" />
+                  </div>
+                  <h1 className="text-2xl font-black text-slate-900 uppercase tracking-tighter leading-none">
+                    BAZAR<span className="text-brand-primary">DALA</span>
+                  </h1>
+                  <p className="text-[8px] font-black text-slate-400 uppercase tracking-[0.4em] mt-1">PREMIUM_SHOP_PROTOCOL</p>
+                </div>
+                <DialogTitle className="text-xl font-black text-slate-900 uppercase tracking-tight text-center">
+                  {authMode === 'login' ? 'CUSTOMER_LOGIN' : 'CREATE_ACCOUNT'}
+                </DialogTitle>
+                <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] text-center mt-1">
+                  {authMode === 'login' ? 'SECURE_ACCESS_REQUIRED' : 'JOIN_THE_ELITE_COMMUNITY'}
+                </p>
+              </DialogHeader>
+
+              <form onSubmit={handleAuthSubmit} className="space-y-4">
+                {authMode === 'register' && (
+                  <div className="space-y-1.5">
+                    <Label className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">FULL NAME</Label>
+                    <Input 
+                      required
+                      placeholder="NAME"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="h-12 border-slate-200 rounded-none text-xs font-black focus-visible:ring-0 focus-visible:border-brand-primary bg-slate-50/50" 
+                    />
+                  </div>
+                )}
+                <div className="space-y-1.5">
+                  <Label className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">USERNAME / EMAIL</Label>
+                  <Input 
+                    type="text"
+                    required
+                    placeholder="USERNAME"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="h-12 border-slate-200 rounded-none text-xs font-black focus-visible:ring-0 focus-visible:border-brand-primary bg-slate-50/50" 
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">SECURE PASSWORD</Label>
+                  <Input 
+                    type="password"
+                    required
+                    placeholder="••••••••"
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    className="h-12 border-slate-200 rounded-none text-xs font-black focus-visible:ring-0 focus-visible:border-brand-primary bg-slate-50/50" 
+                  />
+                </div>
+
+                <div className="flex flex-col gap-4 pt-4">
+                  <Button 
+                    type="submit" 
+                    disabled={isLoggingIn}
+                    className="w-full h-14 bg-brand-primary hover:bg-slate-900 text-white font-black rounded-none uppercase tracking-[0.3em] text-xs transition-all active:scale-95 shadow-lg border-b-4 border-black/20"
+                  >
+                    {isLoggingIn ? 'AUTHENTICATING...' : (authMode === 'login' ? 'LOGIN_ACCESS' : 'INITIALIZE_ACCOUNT')}
+                  </Button>
+
+                  <div className="relative my-4">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-slate-100"></div>
+                    </div>
+                    <div className="relative flex justify-center text-[8px] font-black uppercase tracking-[0.3em] text-slate-300 px-4 bg-white">
+                      OR_CONNECT_VIA
+                    </div>
+                  </div>
+
+                  <Button 
+                    type="button" 
+                    onClick={async () => {
+                      try {
+                        await loginWithGoogle();
+                        setIsLoginModalOpen(false);
+                      } catch (err) {}
+                    }}
+                    className="w-full h-14 bg-white border border-slate-200 hover:bg-slate-50 text-slate-900 font-black rounded-none uppercase tracking-[0.2em] text-[9px] transition-all flex items-center justify-center gap-3 shadow-sm"
+                  >
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" className="w-5 h-5" alt="Google" />
+                    LOGIN WITH GOOGLE
+                  </Button>
+                </div>
+              </form>
+
+              <div className="text-center pt-4 border-t border-slate-50">
+                <button 
+                  onClick={() => setAuthMode(authMode === 'login' ? 'register' : 'login')}
+                  className="text-[10px] font-black text-brand-primary hover:underline transition-all uppercase tracking-widest"
+                >
+                  {authMode === 'login' ? "DON'T HAVE AN ACCOUNT? REGISTER" : "ALREADY HAVE AN ACCOUNT? LOGIN"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isAdminLoginModalOpen} onOpenChange={setIsAdminLoginModalOpen}>
+        <DialogContent className="max-w-md bg-white border border-slate-200 rounded-none p-0 overflow-hidden outline-none">
+          <div className="flex flex-col">
+            <div className="bg-brand-primary h-2 w-full" />
+            <div className="p-8 space-y-6">
+              <DialogHeader>
+                <div className="flex flex-col items-center mb-6">
+                  <div className="w-14 h-14 bg-slate-900 flex items-center justify-center mb-3 rotate-3 group-hover:rotate-0 transition-transform shadow-lg border border-white/10">
+                    <Lock className="h-7 w-7 text-white" />
+                  </div>
+                  <h1 className="text-2xl font-black text-slate-900 uppercase tracking-tighter leading-none">
+                    ADMIN<span className="text-brand-primary">CONSOLE</span>
+                  </h1>
+                  <p className="text-[8px] font-black text-slate-400 uppercase tracking-[0.4em] mt-1">HIGH_LEVEL_SECURITY_GATE</p>
+                </div>
+                <DialogTitle className="text-xl font-black text-slate-900 uppercase tracking-tight text-center">
+                  ADMIN_ACCESS_REQUIRED
+                </DialogTitle>
+                <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] text-center mt-1">
+                  SECURE_PROTOCOL_INITIALIZATION
+                </p>
+              </DialogHeader>
+
+              <form onSubmit={handleAdminAuthSubmit} className="space-y-4">
+                <div className="space-y-1.5">
+                  <Label className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">ADMIN ID</Label>
+                  <Input 
+                    required
+                    placeholder="USERNAME"
+                    value={adminFormData.username}
+                    onChange={(e) => setAdminFormData({ ...adminFormData, username: e.target.value })}
+                    className="h-12 border-slate-200 rounded-none text-xs font-black focus-visible:ring-0 focus-visible:border-brand-primary bg-slate-50/50" 
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <Label className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">SECURE PIN / PASS</Label>
+                  <Input 
+                    type="password"
+                    required
+                    placeholder="••••••••"
+                    value={adminFormData.password}
+                    onChange={(e) => setAdminFormData({ ...adminFormData, password: e.target.value })}
+                    className="h-12 border-slate-200 rounded-none text-xs font-black focus-visible:ring-0 focus-visible:border-brand-primary bg-slate-50/50" 
+                  />
+                </div>
+
+                <Button 
+                  type="submit" 
+                  disabled={isAdminLoggingIn}
+                  className="w-full h-14 bg-slate-900 hover:bg-brand-primary text-white font-black rounded-none uppercase tracking-[0.3em] text-xs transition-all active:scale-95 shadow-xl border-b-4 border-black/50"
+                >
+                  {isAdminLoggingIn ? 'AUTHORIZING...' : 'ACCESS_SYSTEM_CORE'}
+                </Button>
+              </form>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+
     </div>
   );
 };

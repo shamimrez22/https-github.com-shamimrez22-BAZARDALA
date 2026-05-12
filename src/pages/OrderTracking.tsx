@@ -59,7 +59,7 @@ const OrderTracking = () => {
         <div className="max-w-[1400px] mx-auto">
           <div className="mb-8 flex flex-col md:flex-row items-end justify-between gap-4 px-4 md:px-0">
             <div>
-              <h1 className="text-2xl md:text-3xl font-black text-slate-800 uppercase tracking-tighter leading-none border-b-4 border-brand-primary pb-3 inline-block">TRACKING_LINK</h1>
+              <h1 className="text-2xl md:text-3xl font-black text-slate-800 uppercase tracking-tighter leading-none border-b-4 border-brand-primary pb-3 inline-block">ORDER TRACKING</h1>
               <div className="flex items-center gap-3 mt-4">
                  <div className="w-2 h-2 bg-brand-primary rounded-none animate-pulse" />
                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Direct access to real-time dispatch data protocol</p>
@@ -67,7 +67,7 @@ const OrderTracking = () => {
             </div>
             <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-none border border-slate-100">
                <div className="w-2 h-2 bg-green-600 rounded-none animate-ping" />
-               <span className="text-[9px] font-black text-slate-900 uppercase tracking-widest">CHANNEL_77_ACTIVE</span>
+               <span className="text-[9px] font-black text-slate-900 uppercase tracking-widest">LIVE TRACKING SESSION</span>
             </div>
           </div>
 
@@ -84,7 +84,7 @@ const OrderTracking = () => {
 
               </div>
               <Button type="submit" className="h-12 px-10 bg-slate-900 hover:bg-brand-primary text-white rounded-none font-black uppercase text-[11px] tracking-widest active:scale-95 transition-all disabled:bg-slate-200" disabled={loading}>
-                {loading ? 'INITIALIZING...' : 'TRACK_DISPATCH'}
+                {loading ? 'INITIALIZING...' : 'TRACK DISPATCH'}
               </Button>
             </form>
           </div>
@@ -167,7 +167,7 @@ const OrderTracking = () => {
                   </div>
 
                   <div className="relative z-10 flex-1 text-center md:text-left">
-                    <p className="text-[11px] font-black text-brand-primary uppercase tracking-[0.4em] mb-4 opacity-60">SHIPPING_DESTINATION_NODE</p>
+                    <p className="text-[11px] font-black text-brand-primary uppercase tracking-[0.4em] mb-4 opacity-60">SHIPPING DESTINATION NODE</p>
                     <p className="text-xl md:text-2xl font-black text-slate-900 tracking-tight leading-relaxed uppercase">
                        {order?.customerInfo?.address || 'N/A'}
                     </p>

@@ -1,12 +1,11 @@
 import React, { lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { ProductProvider } from './context/ProductContext';
 import { UserLayout } from './components/Layout/UserLayout';
 import { AdminLayout } from './components/Layout/AdminLayout';
 import { Toaster } from './components/ui/sonner';
-import { SmoothScroll } from './components/SmoothScroll';
 import { ShoppingBasket } from 'lucide-react';
 
 const Home = lazy(() => import('./pages/Home'));
@@ -49,8 +48,11 @@ const LoadingFallback = () => (
   </div>
 );
 
+const Login = lazy(() => import('./pages/Login'));
+
 const ProtectedRoute = ({ children, adminOnly = false }: { children: React.ReactNode, adminOnly?: boolean }) => {
   const { user, profile, loading, isAdmin } = useAuth();
+  const location = useLocation();
 
   if (loading) return <LoadingFallback />;
   
@@ -59,7 +61,9 @@ const ProtectedRoute = ({ children, adminOnly = false }: { children: React.React
     return <>{children}</>;
   }
 
-  if (!user) return <Navigate to="/" />;
+  if (!user) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
 
   return <>{children}</>;
 };
@@ -68,7 +72,9 @@ export default function App() {
   return (
     <SettingsProvider>
       <AuthProvider>
-        <AppContent />
+        <Router>
+          <AppContent />
+        </Router>
       </AuthProvider>
     </SettingsProvider>
   );
@@ -88,14 +94,22 @@ const AppContent = () => {
   return (
     <ProductProvider>
       <CartProvider>
-      <Router>
         <Suspense fallback={<LoadingFallback />}>
             <Routes>
+                    <Route path="/login" element={<Login />} />
                     <Route path="/" element={<UserLayout />}>
                       <Route index element={<Home />} />
                       <Route path="shop" element={<Shop />} />
-                      <Route path="cart" element={<Cart />} />
-                      <Route path="checkout" element={<Checkout />} />
+                      <Route path="cart" element={
+                        <ProtectedRoute>
+                          <Cart />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="checkout" element={
+                        <ProtectedRoute>
+                          <Checkout />
+                        </ProtectedRoute>
+                      } />
                       <Route path="tracking" element={<OrderTracking />} />
                       <Route path="dashboard" element={
                         <ProtectedRoute>
@@ -143,7 +157,6 @@ const AppContent = () => {
                 </Routes>
                 <Toaster position="top-center" richColors />
               </Suspense>
-      </Router>
         </CartProvider>
       </ProductProvider>
   );

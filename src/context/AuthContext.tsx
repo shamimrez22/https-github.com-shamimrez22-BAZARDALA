@@ -38,7 +38,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isAdminSession, setIsAdminSession] = useState(localStorage.getItem('isAdmin') === 'true');
+  const [isAdminSession, setIsAdminSession] = useState(false);
   const [adminCreds, setAdminCreds] = useState({ username: 'SHAMIM', pass: '321' });
 
   const MASTER_EMAIL = 'shamimrez22@gmail.com';
@@ -60,33 +60,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const result = await getRedirectResult(auth);
         if (result?.user) {
           console.log('Redirect login success:', result.user.email);
-          toast.success('লগইন সফল হয়েছে');
+          toast.success('Login successful');
         }
       } catch (error: any) {
         console.error('Redirect login error:', error);
         if (error.code === 'auth/unauthorized-domain') {
           const domain = window.location.hostname;
-          const message = `Firebase-এ ডোমেইন অনুমোদিত নয়! ডোমেইনটি যুক্ত করুন: ${domain}`;
+          const message = `Firebase domain not authorized: ${domain}`;
           
-          // Hard alert for critical setting
-          if (domain.includes('vercel.app')) {
-            alert(`গুরুত্বপূর্ণ: Firebase Console-এ এই ডোমেইনটি (${domain}) Authorized Domains-এ যুক্ত না করলে লগইন কাজ করবে না।`);
-          }
-
           toast.error(message, { 
             duration: 20000,
-            description: "Firebase Console -> Auth -> Settings -> Authorized Domains",
-            action: {
-              label: 'Copy Domain',
-              onClick: () => {
-                navigator.clipboard.writeText(domain);
-                toast.success('Domain copied!');
-              }
-            }
+            description: "Go to Firebase Console -> Auth -> Settings -> Authorized Domains",
           });
-        } else if (error.code !== 'auth/operation-not-supported-in-this-environment') {
-           // Ignore this common error in some development environments
-           toast.error('লগইন ত্রুটি: ' + error.message);
         }
       }
     };
@@ -94,18 +79,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const unsubAuth = onAuthStateChanged(auth, async (firebaseUser) => {
       try {
-        console.log('Current Auth State User:', firebaseUser?.email);
         setUser(firebaseUser);
         if (firebaseUser) {
           const userDoc = await getDoc(doc(db, 'users', firebaseUser.uid));
           
           if (userDoc.exists()) {
             const currentProfile = userDoc.data() as UserProfile;
-            console.log('User Profile found:', currentProfile.role);
             setProfile(currentProfile);
           } else {
-            console.log('Creating new profile for:', firebaseUser.email);
-            // First time login - Create profile
             const isMaster = firebaseUser.email?.toLowerCase() === MASTER_EMAIL;
             const newProfile: UserProfile = {
               uid: firebaseUser.uid,
@@ -122,12 +103,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
         } else {
           setProfile(null);
-          // If logged out from Firebase, also clear admin session
           setIsAdminSession(false);
-          localStorage.removeItem('isAdmin');
         }
       } catch (error) {
-        console.error('CRITICAL Auth Error:', error);
+        console.error('Auth Error:', error);
       } finally {
         setLoading(false);
       }
@@ -142,7 +121,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const loginAdmin = (username: string, pass: string) => {
     if (username === adminCreds.username && pass === adminCreds.pass) {
       setIsAdminSession(true);
-      localStorage.setItem('isAdmin', 'true');
       return true;
     }
     return false;
@@ -236,7 +214,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = async () => {
     setIsAdminSession(false);
-    localStorage.removeItem('isAdmin');
     await firebaseSignOut(auth);
   };
 
@@ -285,11 +262,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // Tighten isAdmin logic: A super_admin (Master Owner) can always access admin if logged in via Firebase.
-  // Others need BOTH a valid Firebase profile with admin role OR an active admin session (from login form).
-  const isAdmin = isAdminSession || (!!profile && profile.status === 'active' && (
-    profile.role === 'super_admin' || profile.role === 'admin'
-  ));
+  // HARD SECURITY: Admin access ONLY allowed if explicitly logged in via the admin form (isAdminSession).
+  // A super_admin (Master Email) still needs to provide the credentials to get an active Admin Session.
+  const isAdmin = isAdminSession;
   
   const isSuperAdmin = !!profile && profile.role === 'super_admin' && profile.status === 'active';
 

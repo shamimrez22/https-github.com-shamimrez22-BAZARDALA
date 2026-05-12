@@ -24,14 +24,7 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
       return;
     }
     
-    // Direct to WhatsApp if number exists, otherwise checkout
-    if (settings?.whatsappNumber) {
-      const text = `আসসালামু আলাইকুম, আমি এই প্রোডাক্টটি অর্ডার করতে চাই: \n\nনাম: ${product.name}\nদাম: ৳${product.price}\nলিঙ্ক: ${window.location.origin}/shop?q=${encodeURIComponent(product.name)}`;
-      const url = `https://wa.me/${settings.whatsappNumber.replace(/\D/g, '')}?text=${encodeURIComponent(text)}`;
-      window.open(url, '_blank');
-      return;
-    }
-
+    // Prioritize internal checkout for maximum speed, fallback to WhatsApp only if user explicitly stays on cart/home
     navigate('/checkout', { 
       state: { 
         directOrder: true, 

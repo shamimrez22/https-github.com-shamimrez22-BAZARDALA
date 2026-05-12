@@ -22,6 +22,7 @@ import {
   Ruler,
   X
 } from 'lucide-react';
+import { handleFirestoreError, OperationType } from '../lib/firebase-utils';
 
 const Checkout = () => {
   const location = useLocation();
@@ -88,19 +89,25 @@ const Checkout = () => {
         createdAt: serverTimestamp(),
       };
 
-      await Promise.all([
-        addDoc(collection(db, 'orders'), orderData),
-        addDoc(collection(db, 'notifications'), {
-          message: `New order received: ${orderId}`,
-          type: 'order',
-          read: false,
-          createdAt: serverTimestamp(),
-        })
-      ]);
+      // Perform order creation first
+      const orderPromise = addDoc(collection(db, 'orders'), orderData);
+      
+      // Fire and forget notification
+      addDoc(collection(db, 'notifications'), {
+        message: `New order received: ${orderId}`,
+        type: 'order',
+        read: false,
+        createdAt: serverTimestamp(),
+      }).catch(err => console.warn('Notification error (ignoring):', err));
 
-      setOrderSuccess(orderId);
-      if (!directOrder) clearCart();
-      toast.success('অর্ডারটি সফলভাবে সম্পন্ন হয়েছে!');
+      try {
+        await orderPromise;
+        setOrderSuccess(orderId);
+        if (!directOrder) clearCart();
+        toast.success('অর্ডারটি সফলভাবে সম্পন্ন হয়েছে!');
+      } catch (err) {
+        handleFirestoreError(err, OperationType.CREATE, 'orders');
+      }
     } catch (error) {
       console.error('Checkout error:', error);
       toast.error('অর্ডার করতে সমস্যা হয়েছে, আবার চেষ্টা করুন।');

@@ -85,9 +85,11 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
-    // Notifications - Admin only
+    // Notifications - Admin only, public create
     match /notifications/{notifId} {
-      allow read, write: if isAdmin();
+      allow read: if isAdmin();
+      allow update, delete: if isAdmin();
+      allow create: if true;
     }
 
     // User Profiles

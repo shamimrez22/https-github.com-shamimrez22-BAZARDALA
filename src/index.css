@@ -166,12 +166,15 @@
     margin: 0 !important;
     min-height: 100vh;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
     }
   html {
     @apply font-sans;
-    scroll-behavior: auto !important;
+    scroll-behavior: smooth !important;
     margin: 0 !important;
-    background-color: #ffffff; /* Match your brand-bg */
+    background-color: #ffffff;
     }
 
   /* Desktop fluidity and container refinement */

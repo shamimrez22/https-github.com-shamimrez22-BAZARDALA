@@ -192,20 +192,25 @@ const Home = () => {
   }, [products, limitedOffersConfig]);
 
   React.useEffect(() => {
-    const fetchBanners = async () => {
+    const fetchInitialData = async () => {
       try {
-        const q = query(collection(db, 'slider_banners'), orderBy('createdAt', 'desc'));
-        const snapshot = await getDocs(q);
-        if (!snapshot.empty) {
-          const fetchedBanners = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          setBanners(fetchedBanners as any);
+        const bannersPromise = getDocs(query(collection(db, 'slider_banners'), orderBy('createdAt', 'desc')));
+        const configPromise = getDoc(doc(db, 'settings', 'limited_offers'));
+        
+        const [bannersSnap, configSnap] = await Promise.all([bannersPromise, configPromise]);
+        
+        if (!bannersSnap.empty) {
+          setBanners(bannersSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })) as any);
+        }
+        if (configSnap.exists()) {
+          setLimitedOffersConfig(configSnap.data() as any);
         }
       } catch (error) {
-        console.error('Error fetching banners:', error);
+        console.error('Error fetching initial Home data:', error);
       }
     };
     
-    fetchBanners();
+    fetchInitialData();
   }, []);
 
   React.useEffect(() => {
@@ -217,20 +222,6 @@ const Home = () => {
       console.error('Home settings sync error:', error);
     });
     return () => unsub();
-  }, []);
-
-  React.useEffect(() => {
-    const fetchLimitedConfig = async () => {
-      try {
-        const configDoc = await getDoc(doc(db, 'settings', 'limited_offers'));
-        if (configDoc.exists()) {
-          setLimitedOffersConfig(configDoc.data() as any);
-        }
-      } catch (error) {
-        console.error('Error fetching limited config:', error);
-      }
-    };
-    fetchLimitedConfig();
   }, []);
 
   React.useEffect(() => {
@@ -321,12 +312,13 @@ const Home = () => {
                   >
                   <SmartLink to={banners[currentSlide]?.link || '/shop'} className="block h-full w-full">
                     {banners[currentSlide] && (
-                      <img
-                        src={banners[currentSlide].image || 'https://picsum.photos/seed/slide/1920/1080'}
-                        alt={banners[currentSlide].title || 'Slide Image'}
-                        className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                        referrerPolicy="no-referrer"
-                      />
+                        <img
+                          src={banners[currentSlide].image || 'https://picsum.photos/seed/slide/1920/1080'}
+                          alt={banners[currentSlide].title || 'Slide Image'}
+                          loading="eager"
+                          className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                          referrerPolicy="no-referrer"
+                        />
                     )}
                   </SmartLink>
                 </motion.div>
@@ -618,9 +610,15 @@ const Home = () => {
                         <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em]">Shipment update - On the way</p>
                       </div>
                    </div>
-                   <div className="px-8 py-2 bg-slate-900 text-white font-black uppercase text-[11px] tracking-[0.25em] group-hover:bg-brand-primary transition-all rounded-none relative z-10">
+                   <button 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        navigate('/shop');
+                      }}
+                      className="px-8 py-2 bg-slate-900 text-white font-black uppercase text-[11px] tracking-[0.25em] group-hover:bg-brand-primary transition-all rounded-none relative z-10 active:scale-95"
+                   >
                       ORDER NOW
-                   </div>
+                   </button>
                 </div>
              </a>
 

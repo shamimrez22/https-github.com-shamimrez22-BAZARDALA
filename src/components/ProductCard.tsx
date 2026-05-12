@@ -113,22 +113,7 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
         </div>
       </div>
 
-      {/* Action Buttons */}
-      <div className="p-1 pt-0 pb-1">
-        <button
-          className="w-full bg-brand-primary hover:opacity-90 text-white transition-all h-[26px] text-[10px] font-bold flex items-center justify-center gap-1 uppercase"
-          disabled={product.stock === 0 && !product.affiliateLink}
-          onClick={handleAction}
-        >
-          {settings?.whatsappNumber && !product.affiliateLink ? (
-             <>
-               <MessageCircle className="h-2.5 w-2.5" /> অর্ডার
-             </>
-           ) : (
-             'অর্ডার করুন'
-           )}
-        </button>
-      </div>
+      {/* Action Buttons Removed to stop sales as per request */}
     </motion.div>
   );
 });

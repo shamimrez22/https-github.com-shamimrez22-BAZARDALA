@@ -236,9 +236,6 @@ export const UserLayout: React.FC = () => {
                 <Link to="/shop" onMouseEnter={() => import('../../pages/Shop')} className="hover:text-white transition-colors relative group py-2">
                   SHOP
                 </Link>
-                <Link to="/tracking" className="hover:text-white transition-colors relative group py-2">
-                  TRACKING
-                </Link>
               </nav>
             </div>
 
@@ -261,16 +258,16 @@ export const UserLayout: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-2 md:gap-5">
-              <Link to="/cart" className="relative group">
-                <div className="p-2 md:p-3 bg-white/10 text-white border border-white/5 rounded-none group-hover:bg-white group-hover:text-brand-primary transition-all">
-                  <ShoppingCart className="h-5 w-5 md:h-6 md:w-6" />
-                </div>
-                {items.length > 0 && (
-                  <span className="absolute -top-1 -right-1 h-5 min-w-[20px] md:h-6 md:min-w-[24px] bg-white text-brand-primary text-[9px] md:text-[10px] font-black flex items-center justify-center px-1 md:px-1.5 rounded-none">
-                    {items.length}
-                  </span>
-                )}
-              </Link>
+              {/* Login Button for Admin Access */}
+              {!user && (
+                <Button 
+                  onClick={() => setIsAdminLoginOpen(true)}
+                  className="bg-white/10 text-white border border-white/5 rounded-none h-10 px-4 text-[11px] font-black uppercase tracking-widest hover:bg-white hover:text-brand-primary transition-all"
+                >
+                  <Lock className="h-4 w-4 mr-2" /> 
+                  <span className="hidden sm:inline">অ্যাডমিন লগইন</span>
+                </Button>
+              )}
 
               {user ? (
                 <DropdownMenu>
@@ -431,9 +428,6 @@ export const UserLayout: React.FC = () => {
                 </Link>
                 <Link to="/shop" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-between group p-3 border-b border-slate-100 hover:text-brand-primary">
                   SHOP <ArrowRight className="h-4 w-4" />
-                </Link>
-                <Link to="/tracking" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-between group p-3 border-b border-slate-100 hover:text-brand-primary">
-                  TRACKING <ArrowRight className="h-4 w-4" />
                 </Link>
               </nav>
             </motion.div>
@@ -643,20 +637,14 @@ export const UserLayout: React.FC = () => {
 
             <div>
               <h4 className="text-brand-primary font-black mb-8 uppercase tracking-[0.2em] text-[12px]">
-                SHOPPING_UNIT
+                QUICK_ACCESS
               </h4>
               <ul className="space-y-4 text-[13px] font-black text-white uppercase tracking-widest">
-                {(settings?.footerSupportLinks || [
-                  { label: 'CLOTHING', url: '/shop' },
-                  { label: 'FOOTWEAR', url: '/shop' },
-                  { label: 'ACCESSORIES', url: '/shop' }
-                ]).map((link, i) => (
-                  <li key={i}>
-                    <Link to={link.url} className="hover:text-brand-primary transition-colors inline-block">
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
+                <li>
+                  <button onClick={() => setIsAdminLoginOpen(true)} className="hover:text-brand-primary transition-colors inline-block">
+                    ADMIN LOGIN
+                  </button>
+                </li>
               </ul>
             </div>
 

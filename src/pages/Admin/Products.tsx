@@ -62,6 +62,8 @@ const AdminProducts = () => {
     description: '',
     images: [] as string[],
     affiliateLink: '',
+    deliveryChargeInsideDhaka: '60',
+    deliveryChargeOutsideDhaka: '120',
   });
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -175,6 +177,8 @@ const AdminProducts = () => {
         description: formData.description,
         images: formData.images,
         affiliateLink: formData.affiliateLink,
+        deliveryChargeInsideDhaka: parseFloat(formData.deliveryChargeInsideDhaka || '0'),
+        deliveryChargeOutsideDhaka: parseFloat(formData.deliveryChargeOutsideDhaka || '0'),
         ratings: 4.5,
         updatedAt: serverTimestamp(),
       };
@@ -365,6 +369,28 @@ const AdminProducts = () => {
                     />
                   </div>
                 </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Delivery Inside Dhaka (৳)</Label>
+                    <Input 
+                      type="number" 
+                      value={formData.deliveryChargeInsideDhaka} 
+                      onChange={e => setFormData({...formData, deliveryChargeInsideDhaka: e.target.value})}
+                      placeholder="60"
+                      className="h-10 bg-slate-50 border-slate-200 text-slate-900 rounded-none font-bold text-xs focus-visible:ring-0 focus:border-brand-primary"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Delivery Outside Dhaka (৳)</Label>
+                    <Input 
+                      type="number" 
+                      value={formData.deliveryChargeOutsideDhaka} 
+                      onChange={e => setFormData({...formData, deliveryChargeOutsideDhaka: e.target.value})}
+                      placeholder="120"
+                      className="h-10 bg-slate-50 border-slate-200 text-slate-900 rounded-none font-bold text-xs focus-visible:ring-0 focus:border-brand-primary"
+                    />
+                  </div>
+                </div>
                 <div className="space-y-2">
                   <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Affiliate / External Link (Optional)</Label>
                   <Input 
@@ -523,6 +549,8 @@ const AdminProducts = () => {
                               description: product.description,
                               images: product.images,
                               affiliateLink: product.affiliateLink || '',
+                              deliveryChargeInsideDhaka: product.deliveryChargeInsideDhaka?.toString() || '0',
+                              deliveryChargeOutsideDhaka: product.deliveryChargeOutsideDhaka?.toString() || '0',
                             });
                             setIsAddOpen(true);
                           }}

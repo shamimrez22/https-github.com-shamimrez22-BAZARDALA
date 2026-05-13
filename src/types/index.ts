@@ -11,6 +11,8 @@ export interface Product {
   ratings: number;
   createdAt: any;
   affiliateLink?: string;
+  deliveryChargeInsideDhaka?: number;
+  deliveryChargeOutsideDhaka?: number;
 }
 
 export interface OrderItem {
@@ -19,6 +21,8 @@ export interface OrderItem {
   price: number;
   quantity: number;
   image: string;
+  deliveryChargeInsideDhaka?: number;
+  deliveryChargeOutsideDhaka?: number;
 }
 
 export interface Order {

@@ -345,6 +345,7 @@ const Home = () => {
                           src={banners[currentSlide].image || 'https://picsum.photos/seed/slide/1920/1080'}
                           alt={banners[currentSlide].title || 'Slide Image'}
                           loading="eager"
+                          decoding="async"
                           className="w-full h-full object-cover"
                           referrerPolicy="no-referrer"
                         />
@@ -481,6 +482,8 @@ const Home = () => {
                   <img
                     src={cat.img}
                     alt={cat.name}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700 grayscale-[0.2] group-hover:grayscale-0"
                     referrerPolicy="no-referrer"
                   />

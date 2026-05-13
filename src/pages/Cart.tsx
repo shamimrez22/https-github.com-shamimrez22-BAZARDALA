@@ -7,9 +7,17 @@ import { motion } from 'motion/react';
 import { useSettings } from '../context/SettingsContext';
 
 const Cart = () => {
-  const { items, removeFromCart, updateQuantity, total } = useCart();
+  const { items, removeFromCart, updateQuantity, total: subtotal } = useCart();
   const { settings } = useSettings();
   const navigate = useNavigate();
+
+  // For Cart, we don't know the region yet, so let's show a range or assume inside Dhaka by default
+  // Actually, let's keep it simple and just show the subtotal and let checkout handle the logistics
+  const deliveryCharge = items.reduce((max, item) => {
+    return Math.max(max, item.deliveryChargeInsideDhaka || 0);
+  }, 0);
+
+  const total = subtotal + deliveryCharge;
 
   if (items.length === 0) {
     return (
@@ -107,25 +115,19 @@ const Cart = () => {
               <div className="space-y-4 mb-8">
                 <div className="flex justify-between items-center text-[12px] font-black uppercase tracking-widest text-slate-400">
                   <span>Subtotal</span>
-                  <span className="text-slate-800">৳{total.toLocaleString()}</span>
+                  <span className="text-slate-800">৳{subtotal.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between items-center text-[12px] font-black uppercase tracking-widest text-slate-400">
-                  <span>Logistics</span>
-                  <span className={`${total > 500 ? 'text-green-600' : 'text-slate-800'}`}>
-                    {total > 500 ? 'FREE_DISPATCH' : '৳60'}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center text-[12px] font-black uppercase tracking-widest text-slate-400">
-                  <span>Tax (5.0%)</span>
-                  <span className="text-slate-800">৳{(total * 0.05).toLocaleString()}</span>
+                  <span>Logistic_Fee (Est.)</span>
+                  <span className="text-slate-800">৳{deliveryCharge.toLocaleString()}</span>
                 </div>
                 
                 <div className="pt-6 md:pt-8 border-t border-slate-100">
                    <div className="bg-[#f8f8f8] rounded-none p-6 relative overflow-hidden group border border-slate-50">
-                      <span className="text-[9px] font-black text-brand-primary uppercase tracking-[0.4em] mb-2 block">GRAND_TOTAL</span>
+                      <span className="text-[9px] font-black text-brand-primary uppercase tracking-[0.4em] mb-2 block">ESTIMATED_TOTAL</span>
                       <div className="flex items-baseline gap-2">
                          <span className="text-3xl font-black text-slate-900 tracking-tighter">
-                            ৳{(total + (total > 500 ? 0 : 60) + total * 0.05).toLocaleString()}
+                            ৳{total.toLocaleString()}
                          </span>
                          <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">BDT</span>
                       </div>

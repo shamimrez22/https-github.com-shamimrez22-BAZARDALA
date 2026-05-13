@@ -38,7 +38,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         name: product.name,
         price: product.price,
         quantity,
-        image: product.images[0]
+        image: product.images[0],
+        deliveryChargeInsideDhaka: product.deliveryChargeInsideDhaka,
+        deliveryChargeOutsideDhaka: product.deliveryChargeOutsideDhaka,
       }];
     });
     toast.success(`${product.name} added to cart`);

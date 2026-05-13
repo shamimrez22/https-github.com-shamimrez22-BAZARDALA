@@ -33,7 +33,9 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
           name: product.name,
           price: product.price,
           image: product.images?.[0] || product.image,
-          quantity: 1
+          quantity: 1,
+          deliveryChargeInsideDhaka: product.deliveryChargeInsideDhaka,
+          deliveryChargeOutsideDhaka: product.deliveryChargeOutsideDhaka,
         } 
       } 
     });
@@ -56,6 +58,7 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
           src={product.images?.[0] || product.image}
           alt={product.name}
           loading="lazy"
+          decoding="async"
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           referrerPolicy="no-referrer"
         />

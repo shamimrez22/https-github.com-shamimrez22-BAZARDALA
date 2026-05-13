@@ -33,19 +33,32 @@ const Checkout = () => {
   const [loading, setLoading] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState('L');
+  const [deliveryRegion, setDeliveryRegion] = useState<'inside' | 'outside'>('inside');
 
   // Determine if this is a direct order from a product page or a cart checkout
   const directOrder = location.state?.directOrder;
   const directProduct = location.state?.product;
 
   const displayItems = directOrder ? [directProduct] : cartItems;
-  const displayTotal = directOrder ? directProduct.price * (directProduct.quantity || 1) : cartTotal;
+  
+  // Calculate delivery charge per item (or max? User said "when adding product", so per item seems safer)
+  // Actually, per item can be expensive. Usually it's either flat or per item. 
+  // Let's do per-order flat fee based on the products' settings (use the max charge among items for that region)
+  const deliveryCharge = displayItems.reduce((max, item) => {
+    const charge = deliveryRegion === 'inside' 
+      ? (item.deliveryChargeInsideDhaka || 0) 
+      : (item.deliveryChargeOutsideDhaka || 0);
+    return Math.max(max, charge);
+  }, 0);
+
+  const subtotal = directOrder ? directProduct.price * (location.state?.quantity || 1) : cartTotal;
+  const displayTotal = subtotal + deliveryCharge;
 
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
     address: '',
-    quantity: directProduct?.quantity || 1,
+    quantity: location.state?.quantity || 1,
   });
 
   useEffect(() => {
@@ -55,6 +68,16 @@ const Checkout = () => {
       navigate('/shop');
     }
   }, [cartItems, directOrder, navigate, orderSuccess]);
+
+  useEffect(() => {
+    if (orderSuccess) {
+      window.scrollTo(0, 0);
+      const timer = setTimeout(() => {
+        navigate('/');
+      }, 4000); // 4 seconds total, 3 seconds visible after entrance
+      return () => clearTimeout(timer);
+    }
+  }, [orderSuccess, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,50 +90,74 @@ const Checkout = () => {
     try {
       const orderId = `ORD-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
       
+      // Sanitize items to ensure no undefined values or non-serializable data
       const orderItems = displayItems.map(item => ({
-        ...item,
-        size: selectedSize,
-        quantity: formData.quantity
+        productId: item.productId || item.id || 'unknown',
+        name: item.name || '',
+        price: Number(item.price) || 0,
+        image: item.image || item.images?.[0] || '',
+        size: selectedSize || 'L',
+        quantity: directOrder ? (Number(formData.quantity) || 1) : (Number(item.quantity) || 1),
+        deliveryChargeInsideDhaka: Number(item.deliveryChargeInsideDhaka) || 0,
+        deliveryChargeOutsideDhaka: Number(item.deliveryChargeOutsideDhaka) || 0,
       }));
+
+      const finalSubtotal = Number(subtotal) || 0;
+      const finalDeliveryCharge = Number(deliveryCharge) || 0;
+      const finalTotal = Number(displayTotal) || 0;
 
       const orderData = {
         orderId,
         userId: user?.uid || 'guest',
         items: orderItems,
-        total: displayTotal * formData.quantity,
+        subtotal: finalSubtotal,
+        deliveryCharge: finalDeliveryCharge,
+        deliveryRegion: deliveryRegion,
+        total: finalTotal,
         status: 'pending',
         customerInfo: {
-          name: formData.name,
-          phone: formData.phone,
-          address: formData.address,
+          name: String(formData.name).trim(),
+          phone: String(formData.phone).trim(),
+          address: String(formData.address).trim(),
         },
         paymentMethod: 'cod',
         paymentStatus: 'pending',
         createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
       };
 
-      // Perform order creation first
-      const orderPromise = addDoc(collection(db, 'orders'), orderData);
-      
-      // Fire and forget notification
-      addDoc(collection(db, 'notifications'), {
-        message: `New order received: ${orderId}`,
-        type: 'order',
-        read: false,
-        createdAt: serverTimestamp(),
-      }).catch(err => console.warn('Notification error (ignoring):', err));
+      console.log('Attempting to create order:', orderId, orderData);
 
+      // Create the order
+      await addDoc(collection(db, 'orders'), orderData);
+      
       try {
-        await orderPromise;
-        setOrderSuccess(orderId);
-        if (!directOrder) clearCart();
-        toast.success('অর্ডারটি সফলভাবে সম্পন্ন হয়েছে!');
-      } catch (err) {
-        handleFirestoreError(err, OperationType.CREATE, 'orders');
+        await addDoc(collection(db, 'notifications'), {
+          message: `New order: ${orderId} by ${formData.name}`,
+          type: 'order',
+          read: false,
+          createdAt: serverTimestamp(),
+        });
+      } catch (notifErr) {
+        console.warn('Failed to create notification:', notifErr);
       }
+
+      setOrderSuccess(orderId);
+      if (!directOrder) clearCart();
+      toast.success('অর্ডারটি সফলভাবে সম্পন্ন হয়েছে!');
     } catch (error) {
-      console.error('Checkout error:', error);
-      toast.error('অর্ডার করতে সমস্যা হয়েছে, আবার চেষ্টা করুন।');
+      console.error('Final Checkout error:', error);
+      let errorMessage = 'অর্ডার করতে সমস্যা হয়েছে, আবার চেষ্টা করুন।';
+      
+      if (error instanceof Error) {
+         if (error.message.includes('permission-denied')) {
+            errorMessage = 'সার্ভার অ্যাক্সেস রিফিউজড। দয়া করে এডমিনকে জানান।';
+         } else if (error.message.includes('offline')) {
+            errorMessage = 'আপনার ইন্টারনেট কানেকশন চেক করুন।';
+         }
+      }
+      
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -138,7 +185,6 @@ const Checkout = () => {
             <div className="relative w-full h-full border-4 border-brand-primary rounded-full flex items-center justify-center bg-white">
                <div className="relative">
                  <CheckCircle2 className="h-14 w-14 text-brand-primary" />
-                 {/* Decorative Confetti Effect Dots */}
                  <div className="absolute -top-6 -right-6">
                     <div className="w-2 h-2 bg-brand-primary rounded-full absolute animate-bounce" style={{ animationDelay: '0.1s' }} />
                     <div className="w-1.5 h-1.5 bg-brand-primary/40 rounded-full absolute top-4 -right-2 animate-ping" />
@@ -152,16 +198,17 @@ const Checkout = () => {
           
           <div className="w-24 h-1 bg-brand-primary mx-auto mb-8" />
           
-          <p className="text-lg md:text-xl font-bold text-slate-900 leading-relaxed mb-12">
+          <p className="text-lg md:text-xl font-bold text-slate-900 leading-relaxed mb-8">
             আমাদের এক জন প্রতিনিধি যত দ্রুত সম্ভব আপনার সাথে যোগাযোগ করবে
           </p>
 
-          <div className="space-y-1">
-            <h4 className="text-[10px] font-black text-brand-primary uppercase tracking-[0.4em]">{settings?.siteName || 'SMART HAAT'}</h4>
-            <p className="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em] opacity-80">{settings?.siteDescription || 'PREMIUM MARKET PLACE'}</p>
-          </div>
+          <p className="text-[10px] font-black text-brand-primary uppercase tracking-[0.3em] mb-10 flex items-center justify-center gap-2">
+            <span className="w-4 h-[1px] bg-brand-primary/20"></span>
+            Redirecting in 3 Seconds
+            <span className="w-4 h-[1px] bg-brand-primary/20"></span>
+          </p>
           
-          <div className="mt-10 pt-8 border-t border-slate-100 flex flex-col gap-4">
+          <div className="pt-8 border-t border-slate-100 flex flex-col gap-4">
              <Button 
                 variant="outline"
                 className="w-full h-12 border border-slate-200 rounded-none text-[10px] font-black uppercase tracking-widest hover:bg-slate-50"
@@ -214,11 +261,21 @@ const Checkout = () => {
             <div className="bg-white border border-slate-200 p-6 space-y-4">
                <div className="flex items-center gap-3">
                   <Truck className="h-5 w-5 text-brand-primary" />
-                  <h3 className="text-[11px] font-black uppercase tracking-widest text-slate-800">DELIVERY INFO</h3>
+                  <h3 className="text-[11px] font-black uppercase tracking-widest text-slate-800">ORDER SUMMARY</h3>
                </div>
-               <div className="space-y-2">
-                 <p className="text-[12px] font-bold text-slate-500">ঢাকার ভিতরে: <span className="text-brand-primary font-black uppercase">FREE</span></p>
-                 <p className="text-[12px] font-bold text-slate-500">ঢাকার বাইরে: <span className="text-brand-primary font-black uppercase">FREE</span></p>
+               <div className="space-y-2 pt-2">
+                 <div className="flex justify-between text-[11px] font-bold text-slate-500 uppercase">
+                    <span>Subtotal</span>
+                    <span>৳{subtotal.toLocaleString()}</span>
+                 </div>
+                 <div className="flex justify-between text-[11px] font-bold text-slate-500 uppercase">
+                    <span>Delivery ({deliveryRegion === 'inside' ? 'Inside Dhaka' : 'Outside Dhaka'})</span>
+                    <span>৳{deliveryCharge.toLocaleString()}</span>
+                 </div>
+                 <div className="border-t border-slate-100 pt-2 flex justify-between text-base font-black text-slate-900 uppercase">
+                    <span>Total</span>
+                    <span className="text-brand-primary">৳{displayTotal.toLocaleString()}</span>
+                 </div>
                </div>
             </div>
           </div>
@@ -226,94 +283,149 @@ const Checkout = () => {
 
         {/* Right Column: Order Form */}
         <div className="w-full md:w-[58%] p-6 md:p-12 flex flex-col bg-white">
-          <div className="mb-10">
-            <h1 className="text-2xl md:text-4xl font-serif font-black text-slate-900 leading-none mb-1">ORDER NOW</h1>
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">PREMIUM SECURE CHECKOUT</p>
+          <div className="mb-10 text-center md:text-left">
+            <h1 className="text-2xl md:text-5xl font-serif font-black text-slate-900 leading-none mb-2">COMPLETE ORDER</h1>
+            <p className="text-[10px] font-black text-brand-primary uppercase tracking-[0.5em] opacity-80">AUTHENTIC_SECURE_PAYMENT</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-               <div className="space-y-3">
-                 <Label className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                    <Ruler className="h-3 w-3" /> SIZE
-                 </Label>
-                 <div className="flex flex-wrap gap-2">
-                    {['S', 'M', 'L', 'XL', 'XXL'].map(size => (
-                      <button
-                        key={size}
+            <div className="bg-slate-50 border border-slate-100 p-6 space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                   <div className="space-y-3">
+                     <Label className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                        <Ruler className="h-3 w-3" /> SELECT SIZE
+                     </Label>
+                     <div className="flex flex-wrap gap-2">
+                        {['S', 'M', 'L', 'XL', 'XXL'].map(size => (
+                          <button
+                            key={size}
+                            type="button"
+                            onClick={() => setSelectedSize(size)}
+                            className={`w-11 h-11 flex items-center justify-center text-[11px] font-black transition-all rounded-none border ${selectedSize === size ? 'bg-slate-900 text-white border-slate-900 scale-105 shadow-lg' : 'bg-white text-slate-400 border-slate-200 hover:border-slate-400'}`}
+                          >
+                            {size}
+                          </button>
+                        ))}
+                     </div>
+                   </div>
+
+                   <div className="space-y-3">
+                     <Label className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                        <Hash className="h-3 w-3" /> QUANTITY
+                     </Label>
+                     <div className="flex items-center">
+                       <button 
                         type="button"
-                        onClick={() => setSelectedSize(size)}
-                        className={`w-10 h-10 flex items-center justify-center text-[11px] font-black transition-all ${selectedSize === size ? 'bg-brand-primary text-white scale-110' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'}`}
-                      >
-                        {size}
-                      </button>
-                    ))}
-                 </div>
-               </div>
+                        onClick={() => setFormData(prev => ({ ...prev, quantity: Math.max(1, prev.quantity - 1) }))}
+                        className="w-11 h-11 bg-white border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition-colors"
+                       >-</button>
+                       <Input 
+                         type="number"
+                         min="1"
+                         value={formData.quantity}
+                         onChange={(e) => setFormData({ ...formData, quantity: parseInt(e.target.value) || 1 })}
+                         className="w-20 h-11 bg-white border-y border-x-0 border-slate-200 rounded-none text-center font-black text-slate-900 focus-visible:ring-0"
+                       />
+                       <button 
+                        type="button"
+                        onClick={() => setFormData(prev => ({ ...prev, quantity: prev.quantity + 1 }))}
+                        className="w-11 h-11 bg-white border border-slate-200 flex items-center justify-center hover:bg-slate-50 transition-colors"
+                       >+</button>
+                     </div>
+                   </div>
+                </div>
 
-               <div className="space-y-3">
-                 <Label className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                    <Hash className="h-3 w-3" /> QTY
-                 </Label>
-                 <div className="relative">
-                   <Input 
-                     type="number"
-                     min="1"
-                     value={formData.quantity}
-                     onChange={(e) => setFormData({ ...formData, quantity: parseInt(e.target.value) || 1 })}
-                     className="h-12 bg-slate-50 border-slate-200 rounded-none font-black text-slate-900 border-none shadow-inner"
-                   />
-                 </div>
-               </div>
+                <div className="space-y-3">
+                  <Label className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                     <MapPin className="h-3 w-3" /> DELIVERY AREA
+                  </Label>
+                  <div className="grid grid-cols-2 gap-4">
+                     <button
+                        type="button"
+                        onClick={() => setDeliveryRegion('inside')}
+                        className={`py-4 px-4 border text-[11px] font-black uppercase tracking-widest transition-all ${deliveryRegion === 'inside' ? 'bg-brand-primary text-white border-brand-primary' : 'bg-white border-slate-200 text-slate-500 hover:border-slate-400'}`}
+                     >
+                        IN_DHAKA
+                     </button>
+                     <button
+                        type="button"
+                        onClick={() => setDeliveryRegion('outside')}
+                        className={`py-4 px-4 border text-[11px] font-black uppercase tracking-widest transition-all ${deliveryRegion === 'outside' ? 'bg-brand-primary text-white border-brand-primary' : 'bg-white border-slate-200 text-slate-500 hover:border-slate-400'}`}
+                     >
+                        OUT_OF_DHAKA
+                     </button>
+                  </div>
+                </div>
             </div>
 
-            <div className="space-y-3">
-              <Label className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                 <User className="h-3 w-3" /> NAME
-              </Label>
-              <Input 
-                placeholder="ENTER YOUR NAME"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="h-14 bg-slate-50 border-slate-200 rounded-none font-black text-slate-900 placeholder:text-slate-300 tracking-widest border-none shadow-inner px-6"
-                required
-              />
+            <div className="space-y-6">
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center px-1">
+                    <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                       <User className="h-4 w-4 text-brand-primary" /> FULL_NAME
+                    </Label>
+                    <span className="text-[8px] font-mono text-slate-300">REQ_FIELD_01</span>
+                  </div>
+                  <div className="relative group">
+                    <div className="absolute -left-1 top-1 bottom-1 w-1 bg-brand-primary opacity-0 group-focus-within:opacity-100 transition-opacity" />
+                    <Input 
+                      placeholder="আপনার নাম লিখুন"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="h-16 bg-slate-50 border-slate-200 rounded-none font-black text-slate-900 placeholder:text-slate-200 tracking-widest focus-visible:ring-0 focus:border-brand-primary focus:bg-white transition-all px-8 text-sm"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center px-1">
+                    <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                       <Phone className="h-4 w-4 text-brand-primary" /> PHONE_MOBILE
+                    </Label>
+                    <span className="text-[8px] font-mono text-slate-300">REQ_FIELD_02</span>
+                  </div>
+                  <div className="relative group">
+                    <div className="absolute -left-1 top-1 bottom-1 w-1 bg-brand-primary opacity-0 group-focus-within:opacity-100 transition-opacity" />
+                    <Input 
+                      placeholder="০১৭XXXXXXXX"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      className="h-16 bg-slate-50 border-slate-200 rounded-none font-black text-slate-900 placeholder:text-slate-200 tracking-widest focus-visible:ring-0 focus:border-brand-primary focus:bg-white transition-all px-8 text-sm"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center px-1">
+                    <Label className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-2">
+                       <MapPin className="h-4 w-4 text-brand-primary" /> SHIPPING_ADDRESS
+                    </Label>
+                    <span className="text-[8px] font-mono text-slate-300">REQ_FIELD_03</span>
+                  </div>
+                  <div className="relative group">
+                    <div className="absolute -left-1 top-2 bottom-2 w-1 bg-brand-primary opacity-0 group-focus-within:opacity-100 transition-opacity" />
+                    <textarea 
+                      placeholder="আপনার বিস্তারিত ঠিকানা লিখুন (বাসা নং, রোড নং, এলাকা, জেলা)"
+                      value={formData.address}
+                      onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                      className="w-full h-32 bg-slate-50 border-slate-200 rounded-none font-black text-slate-900 placeholder:text-slate-200 tracking-widest focus-visible:ring-0 focus:border-brand-primary focus:bg-white transition-all p-8 text-sm focus:outline-none resize-none"
+                      required
+                    />
+                  </div>
+                </div>
             </div>
 
-            <div className="space-y-3">
-              <Label className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                 <Phone className="h-3 w-3" /> PHONE
-              </Label>
-              <Input 
-                placeholder="01XXXXXXXXX"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                className="h-14 bg-slate-50 border-slate-200 rounded-none font-black text-slate-900 placeholder:text-slate-300 tracking-widest border-none shadow-inner px-6"
-                required
-              />
-            </div>
-
-            <div className="space-y-3">
-              <Label className="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                 <MapPin className="h-3 w-3" /> ADDRESS
-              </Label>
-              <textarea 
-                placeholder="HOUSE, ROAD, AREA, CITY"
-                value={formData.address}
-                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                className="w-full h-32 bg-slate-50 border-slate-200 rounded-none font-black text-slate-900 placeholder:text-slate-300 tracking-widest border-none shadow-inner p-6 focus:outline-none resize-none"
-                required
-              />
-            </div>
-
-            <div className="pt-4 space-y-4">
-              <Button 
+            <div className="pt-6 space-y-6">
+              <button 
                 type="submit"
                 disabled={loading}
-                className="w-full h-14 bg-brand-primary hover:opacity-90 text-white text-lg font-bold uppercase rounded-none active:scale-95 transition-all"
+                className="w-full h-20 bg-slate-900 hover:bg-brand-primary text-white text-xl font-black uppercase tracking-[0.2em] rounded-none active:scale-[0.98] transition-all shadow-2xl relative overflow-hidden group"
               >
-                {loading ? 'প্রক্রিয়াধীন...' : 'অর্ডার নিশ্চিত করুন'}
-              </Button>
+                <div className="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 skew-x-[45deg]" />
+                <span className="relative z-10">{loading ? 'PROCESSING_REQUEST...' : 'ORDER_NOW_CONFIRM'}</span>
+              </button>
 
               <button
                 type="button"

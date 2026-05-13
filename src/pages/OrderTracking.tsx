@@ -22,17 +22,18 @@ const OrderTracking = () => {
     setLoading(true);
     setError('');
     try {
-      const q = query(collection(db, 'orders'), where('orderId', '==', orderId));
+      const trimmedOrderId = orderId.trim().toUpperCase();
+      const q = query(collection(db, 'orders'), where('orderId', '==', trimmedOrderId));
       const snapshot = await getDocs(q);
       if (snapshot.empty) {
-        setError('Order not found. Please check your Order ID.');
+        setError(`Order ${trimmedOrderId} not found. Please check your Order ID.`);
         setOrder(null);
       } else {
         setOrder({ id: snapshot.docs[0].id, ...snapshot.docs[0].data() } as Order);
       }
     } catch (err) {
       console.error('Tracking error:', err);
-      setError('An error occurred. Please try again.');
+      setError('An error occurred while fetching order details.');
     } finally {
       setLoading(false);
     }
@@ -132,21 +133,21 @@ const OrderTracking = () => {
                       <div key={step.status} className="relative">
                         <div className={`p-8 rounded-none transition-all duration-700 flex flex-col items-center text-center gap-5 border ${
                           isCompleted 
-                          ? 'bg-white border-slate-100' 
+                          ? 'bg-white border-slate-100 shadow-sm' 
                           : 'bg-[#f8f8f8] border-slate-50 opacity-30 grayscale'
                         }`}>
-                          <div className={`w-16 h-16 rounded-none flex items-center justify-center transition-all duration-500 ${isCompleted ? 'bg-brand-primary text-white' : 'bg-white text-slate-300 border border-slate-100'}`}>
+                          <div className={`w-16 h-16 rounded-none flex items-center justify-center transition-all duration-500 ${isCompleted ? 'bg-brand-primary text-white ring-4 ring-brand-primary/10' : 'bg-white text-slate-300 border border-slate-100'}`}>
                             <step.icon className={`h-7 w-7 ${isCurrent ? 'animate-pulse' : ''}`} />
                           </div>
                           <div>
                              <h3 className={`text-[12px] font-black uppercase tracking-widest leading-none mb-3 ${isCompleted ? 'text-slate-800' : 'text-slate-400'}`}>
                                 {step.label}
                              </h3>
-                             <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.1em] leading-tight">{step.desc}</p>
+                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.1em] leading-tight">{step.desc}</p>
                           </div>
                           {isCurrent && (
-                            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[8px] font-black px-4 py-1.5 rounded-none uppercase tracking-widest">
-                               ACTIVE_NODE
+                            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[8px] font-black px-4 py-1.5 rounded-none uppercase tracking-widest shadow-xl">
+                               CURRENT_LOCATION
                             </div>
                           )}
                         </div>
@@ -155,26 +156,69 @@ const OrderTracking = () => {
                               <div className={`w-1.5 h-1.5 rounded-none ${i < currentStep ? 'bg-brand-primary' : 'bg-slate-200'}`} />
                            </div>
                         )}
-
                       </div>
                     );
                   })}
                 </div>
 
-                <div className="bg-[#f8f8f8] border border-slate-100 rounded-none p-10 md:p-14 flex flex-col md:flex-row items-center gap-12 group overflow-hidden relative">
-                  <div className="w-20 h-20 bg-white border border-slate-100 rounded-none flex items-center justify-center text-slate-400 group-hover:rotate-12 transition-transform duration-500 relative z-10">
-                     <MapPin className="h-10 w-10 text-brand-primary" />
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                  {/* Order Items */}
+                  <div className="space-y-6">
+                    <h4 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] flex items-center gap-3">
+                      <Package className="h-4 w-4" /> ITEMS_REGISTRY
+                    </h4>
+                    <div className="border border-slate-100 divide-y divide-slate-100">
+                      {order.items?.map((item, idx) => (
+                        <div key={idx} className="flex items-center gap-6 p-6 group transition-colors hover:bg-slate-50">
+                          <div className="w-20 h-20 bg-slate-50 border border-slate-100 overflow-hidden shrink-0">
+                            <img 
+                              src={item.image} 
+                              alt={item.name} 
+                              className="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all"
+                              referrerPolicy="no-referrer"
+                            />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h5 className="text-[13px] font-black text-slate-800 uppercase tracking-tighter truncate leading-tight">{item.name}</h5>
+                            <div className="flex items-center gap-4 mt-2">
+                              <span className="text-[10px] font-black text-brand-primary uppercase tracking-widest">Qty: {item.quantity}</span>
+                              <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">|</span>
+                              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Size: {item.size}</span>
+                              <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">|</span>
+                              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">৳{item.price}</span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    
+                    <div className="bg-slate-900 p-8 rounded-none flex justify-between items-center text-white">
+                      <span className="text-[11px] font-black uppercase tracking-[0.3em] opacity-60">TOTAL_VALUATION</span>
+                      <span className="text-2xl font-black tracking-tighter">৳{order.total?.toLocaleString()}</span>
+                    </div>
                   </div>
 
-                  <div className="relative z-10 flex-1 text-center md:text-left">
-                    <p className="text-[11px] font-black text-brand-primary uppercase tracking-[0.4em] mb-4 opacity-60">SHIPPING DESTINATION NODE</p>
-                    <p className="text-xl md:text-2xl font-black text-slate-900 tracking-tight leading-relaxed uppercase">
-                       {order?.customerInfo?.address || 'N/A'}
-                    </p>
-                    <div className="flex items-center gap-3 mt-6 justify-center md:justify-start">
-                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{order?.customerInfo?.name}</p>
-                       <div className="w-2 h-[1px] bg-slate-300" />
-                       <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{order?.customerInfo?.phone}</p>
+                  {/* Destination Info */}
+                  <div className="bg-[#f8f8f8] border border-slate-100 rounded-none p-10 md:p-14 flex flex-col items-center gap-10 group overflow-hidden relative">
+                    <div className="w-20 h-20 bg-white border border-slate-100 rounded-none flex items-center justify-center text-slate-400 group-hover:rotate-12 transition-transform duration-500 relative z-10 shadow-sm">
+                       <MapPin className="h-10 w-10 text-brand-primary" />
+                    </div>
+
+                    <div className="relative z-10 flex-1 text-center">
+                      <p className="text-[11px] font-black text-brand-primary uppercase tracking-[0.4em] mb-4 opacity-60">SHIPPING DESTINATION NODE</p>
+                      <p className="text-xl md:text-2xl font-black text-slate-900 tracking-tight leading-relaxed uppercase">
+                         {order?.customerInfo?.address || 'N/A'}
+                      </p>
+                      <div className="flex flex-col items-center gap-3 mt-8 border-t border-slate-200 pt-8 w-full">
+                         <div className="flex items-center gap-4">
+                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">REC_NAME:</span>
+                            <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">{order?.customerInfo?.name}</span>
+                         </div>
+                         <div className="flex items-center gap-4">
+                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">REC_PHONE:</span>
+                            <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">{order?.customerInfo?.phone}</span>
+                         </div>
+                      </div>
                     </div>
                   </div>
                 </div>

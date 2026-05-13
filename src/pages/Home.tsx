@@ -102,6 +102,7 @@ const SpecialOfferNode = ({ settings }: { settings: any }) => (
           key={settings?.sidebar?.offerVideoUrl}
           poster={settings?.sidebar?.offerImageUrl || 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=800'}
           className="absolute inset-0 w-full h-full object-cover transition-all duration-[3000ms] ease-out group-hover:scale-125 scale-110 opacity-100"
+          preload="none"
         >
           {settings?.sidebar?.offerVideoUrl ? (
             <source src={settings.sidebar.offerVideoUrl} type="video/mp4" />
@@ -618,6 +619,8 @@ const Home = () => {
                   src="https://images.unsplash.com/photo-1622675363311-3e1904dc1885?auto=format&fit=crop&q=80&w=1500" 
                   className="absolute inset-0 w-full h-full object-cover grayscale opacity-20 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000 group-hover:scale-110"
                   alt="Ad"
+                  loading="lazy"
+                  decoding="async"
                   referrerPolicy="no-referrer"
                 />
                 <div className="absolute inset-0 bg-slate-900/60 flex flex-col items-center justify-center p-6 backdrop-blur-[2px] transition-all group-hover:backdrop-blur-none group-hover:bg-slate-900/40">

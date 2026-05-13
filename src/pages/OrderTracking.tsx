@@ -3,12 +3,14 @@ import { useSearchParams } from 'react-router-dom';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Order } from '../types';
+import { useSettings } from '../context/SettingsContext';
 import { Input } from '../components/ui/input';
 import { Button } from '../components/ui/button';
-import { Search, Package, CheckCircle2, Truck, Clock, MapPin, ArrowRight } from 'lucide-react';
+import { Search, Package, CheckCircle2, Truck, Clock, MapPin, ArrowRight, MessageCircle } from 'lucide-react';
 import { motion } from 'motion/react';
 
 const OrderTracking = () => {
+  const { settings } = useSettings();
   const [searchParams] = useSearchParams();
   const [orderId, setOrderId] = useState(searchParams.get('id') || '');
   const [order, setOrder] = useState<Order | null>(null);
@@ -196,6 +198,18 @@ const OrderTracking = () => {
                       <span className="text-[11px] font-black uppercase tracking-[0.3em] opacity-60">TOTAL_VALUATION</span>
                       <span className="text-2xl font-black tracking-tighter">৳{order.total?.toLocaleString()}</span>
                     </div>
+
+                    {settings?.whatsappNumber && (
+                      <a 
+                        href={`https://wa.me/${settings.whatsappNumber.replace(/\D/g, '')}?text=${encodeURIComponent(`Hi, I need update for my order: ${order.orderId}`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-3 bg-[#25D366] text-white p-6 font-black uppercase tracking-widest text-[11px] hover:opacity-90 transition-all active:scale-95"
+                      >
+                         <MessageCircle className="h-5 w-5 fill-white" />
+                         SUPPORT_CONTACT_WHATSAPP
+                      </a>
+                    )}
                   </div>
 
                   {/* Destination Info */}

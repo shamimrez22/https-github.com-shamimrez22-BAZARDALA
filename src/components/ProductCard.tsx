@@ -70,6 +70,21 @@ export const ProductCard: React.FC<ProductCardProps> = React.memo(({ product }) 
             </span>
           </div>
         )}
+
+        {/* Floating WhatsApp Action */}
+        {settings?.whatsappNumber && product.stock > 0 && !product.affiliateLink && (
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              const message = encodeURIComponent(`Hi, I want to order: ${product.name}\nPrice: ৳${product.price}\nLink: ${window.location.origin}/shop?productId=${product.id}`);
+              window.open(`https://wa.me/${settings.whatsappNumber?.replace(/\D/g, '')}?text=${message}`, '_blank');
+            }}
+            className="absolute top-2 right-2 z-30 w-8 h-8 bg-[#25D366] text-white flex items-center justify-center shadow-lg hover:scale-110 active:scale-95 transition-all"
+            title="Order on WhatsApp"
+          >
+             <MessageCircle className="h-4 w-4 fill-white" />
+          </button>
+        )}
       </div>
 
         {/* Product Details */}

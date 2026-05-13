@@ -390,10 +390,8 @@ const Home = () => {
       {settings?.ads?.adsterra?.bannerOneCode && (
         <section className="py-1 w-full">
           <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
-             <a 
-              href={settings.ads.adsterra.bannerOneCode} 
-              target="_blank" 
-              rel="noopener noreferrer"
+             <SmartLink 
+              to={settings.ads.adsterra.bannerOneCode} 
               className="block group relative overflow-hidden rounded-none"
             >
               <div className="bg-slate-900 h-20 md:h-28 flex items-center justify-center relative hover:bg-black transition-all">
@@ -404,7 +402,7 @@ const Home = () => {
                   <p className="text-white/30 text-[7px] md:text-[8px] font-black uppercase tracking-[0.3em] mt-0.5">Limited Time Offer - Fast Delivery</p>
                 </div>
               </div>
-            </a>
+            </SmartLink>
           </div>
         </section>
       )}
@@ -436,13 +434,13 @@ const Home = () => {
       {settings?.ads?.adsterra?.bannerThreeCode && (
         <section className="py-3 w-full">
           <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
-             <a href={settings.ads.adsterra.bannerThreeCode} target="_blank" rel="noopener noreferrer" className="block relative h-full group">
+             <SmartLink to={settings.ads.adsterra.bannerThreeCode} className="block relative h-full group">
                <div className="bg-brand-primary p-8 text-center hover:opacity-90 transition-all rounded-none relative overflow-hidden">
                   <span className="text-[10px] font-black uppercase text-white tracking-[0.4em] mb-3 block animate-pulse">Fast Delivery Active</span>
                   <h4 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tighter">SHOP OUR BESTSELLERS</h4>
                   <p className="text-[9px] font-black text-white/50 uppercase mt-4 tracking-[0.5em]">100% Secure Shopping - Satisfaction Guaranteed</p>
                </div>
-             </a>
+             </SmartLink>
 
           </div>
         </section>
@@ -506,7 +504,7 @@ const Home = () => {
       {settings?.ads?.adsterra?.bannerFourCode && (
         <section className="py-2 w-full">
           <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
-             <a href={settings.ads.adsterra.bannerFourCode} target="_blank" rel="noopener noreferrer" className="block group">
+             <SmartLink to={settings.ads.adsterra.bannerFourCode} className="block group">
                 <div className="bg-slate-900 rounded-none h-24 flex items-center justify-center p-4 relative overflow-hidden transition-all hover:bg-black">
                    <div className="absolute top-0 right-0 p-3 opacity-10">
                       <Zap className="h-16 w-16 text-white" />
@@ -516,7 +514,7 @@ const Home = () => {
                       <span className="text-brand-primary text-[9px] font-black uppercase tracking-[0.5em] mt-1 block animate-pulse">HOT DEALS</span>
                    </div>
                 </div>
-             </a>
+             </SmartLink>
 
           </div>
         </section>
@@ -525,10 +523,8 @@ const Home = () => {
       {settings?.ads?.adsterra?.bannerTwoCode && (
         <section className="py-2 w-full">
           <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
-            <a 
-              href={settings.ads.adsterra.bannerTwoCode} 
-              target="_blank" 
-              rel="noopener noreferrer"
+            <SmartLink 
+              to={settings.ads.adsterra.bannerTwoCode} 
               className="group block relative"
             >
                <div className="bg-white border-2 border-[#777] rounded-none p-6 text-center hover:bg-[#f8f8f8] transition-all relative overflow-hidden shadow-xl">
@@ -540,7 +536,7 @@ const Home = () => {
                     <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] mt-4">100% Secure Shopping</p>
                   </div>
                </div>
-            </a>
+            </SmartLink>
           </div>
         </section>
       )}
@@ -614,7 +610,7 @@ const Home = () => {
       {settings?.ads?.adsterra?.bannerFiveCode && (
         <section className="py-1 w-full">
           <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
-             <a href={settings.ads.adsterra.bannerFiveCode} target="_blank" rel="noopener noreferrer" className="block relative h-32 group rounded-none overflow-hidden shadow-xl border-2 border-[#777]">
+             <SmartLink to={settings.ads.adsterra.bannerFiveCode} className="block relative h-32 group rounded-none overflow-hidden shadow-xl border-2 border-[#777]">
                 <img 
                   src="https://images.unsplash.com/photo-1622675363311-3e1904dc1885?auto=format&fit=crop&q=80&w=1500" 
                   className="absolute inset-0 w-full h-full object-cover grayscale opacity-20 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000 group-hover:scale-110"
@@ -627,14 +623,14 @@ const Home = () => {
                    <h3 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter leading-none text-center">SHOP LIMITED OFFERS</h3>
                    <span className="bg-brand-primary text-white px-5 py-1.5 text-[9px] font-black uppercase mt-4 rounded-none tracking-[0.3em] shadow-md border border-white">EXCLUSIVE DEALS</span>
                 </div>
-             </a>
+             </SmartLink>
           </div>
         </section>
       )}
       {settings?.ads?.adsterra?.bannerSixCode && (
         <section className="pt-0.5 pb-2 w-full">
           <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
-             <a href={settings.ads.adsterra.bannerSixCode} target="_blank" rel="noopener noreferrer" className="block group">
+             <SmartLink to={settings.ads.adsterra.bannerSixCode} className="block group">
                 <div className="bg-white rounded-none p-5 flex flex-col md:flex-row items-center justify-between gap-5 hover:bg-[#f8f8f8] transition-all border border-slate-100 group overflow-hidden relative">
                    <div className="flex items-center gap-6 relative z-10">
                       <div className="w-16 h-16 bg-slate-900 rounded-none flex items-center justify-center group-hover:bg-brand-primary transition-all duration-500">
@@ -645,17 +641,13 @@ const Home = () => {
                         <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em]">Shipment update - On the way</p>
                       </div>
                    </div>
-                   <button 
-                      onClick={(e) => {
-                        e.preventDefault();
-                        navigate('/shop');
-                      }}
-                      className="px-8 py-2 bg-slate-900 text-white font-black uppercase text-[11px] tracking-[0.25em] group-hover:bg-brand-primary transition-all rounded-none relative z-10 active:scale-95"
+                   <div 
+                      className="px-8 py-2 bg-slate-900 text-white font-black uppercase text-[11px] tracking-[0.25em] group-hover:bg-brand-primary transition-all rounded-none relative z-10 active:scale-95 text-center"
                    >
                       ORDER NOW
-                   </button>
+                   </div>
                 </div>
-             </a>
+             </SmartLink>
 
           </div>
         </section>

@@ -601,17 +601,22 @@ export const UserLayout: React.FC = () => {
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
                   <Mail className="h-5 w-5 text-brand-primary shrink-0" />
-                  <div>
-                    <span className="block text-[9px] font-black text-brand-primary tracking-widest mb-1 uppercase opacity-60">ELECTRONIC_MAIL</span>
-                    <span className="text-[13px] font-black break-all">{settings?.contactEmail || 'INFO.SMARTHAAT38@GMAIL.COM'}</span>
-                  </div>
+                  <a href={`mailto:${settings?.contactEmail || 'INFO.SMARTHAAT38@GMAIL.COM'}`} className="block group">
+                    <span className="block text-[9px] font-black text-brand-primary tracking-widest mb-1 uppercase opacity-60 group-hover:opacity-100 transition-opacity">ELECTRONIC_MAIL</span>
+                    <span className="text-[13px] font-black break-all hover:text-brand-primary transition-colors">{settings?.contactEmail || 'INFO.SMARTHAAT38@GMAIL.COM'}</span>
+                  </a>
                 </div>
                 <div className="flex items-start gap-4">
                   <MapPin className="h-5 w-5 text-brand-primary shrink-0" />
-                  <div>
-                    <span className="block text-[9px] font-black text-brand-primary tracking-widest mb-1 uppercase opacity-60">LOCATION_BASE</span>
-                    <span className="text-[13px] font-black uppercase">{settings?.contactAddress || 'DHAKA, BANGLADESH'}</span>
-                  </div>
+                  <a 
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(settings?.contactAddress || 'DHAKA, BANGLADESH')}`} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="block group"
+                  >
+                    <span className="block text-[9px] font-black text-brand-primary tracking-widest mb-1 uppercase opacity-60 group-hover:opacity-100 transition-opacity">LOCATION_BASE</span>
+                    <span className="text-[13px] font-black uppercase hover:text-brand-primary transition-colors">{settings?.contactAddress || 'DHAKA, BANGLADESH'}</span>
+                  </a>
                 </div>
               </div>
             </div>
@@ -622,12 +627,12 @@ export const UserLayout: React.FC = () => {
               </h4>
               <div className="flex items-center gap-4">
                 <Phone className="h-5 w-5 text-brand-primary" />
-                <div>
-                  <span className="block text-[9px] font-black text-brand-primary tracking-widest mb-1 uppercase opacity-60">VOICE_SUPPORT</span>
-                  <span className="text-[16px] font-black tracking-tighter text-white">
+                <a href={`tel:${settings?.contactPhone || '+8801XXX-XXXXXX'}`} className="group">
+                  <span className="block text-[9px] font-black text-brand-primary tracking-widest mb-1 uppercase opacity-60 group-hover:opacity-100 transition-opacity">VOICE_SUPPORT</span>
+                  <span className="text-[16px] font-black tracking-tighter text-white group-hover:text-brand-primary transition-colors">
                     {settings?.contactPhone || '+880 1XXX XXXXXX'}
                   </span>
-                </div>
+                </a>
               </div>
             </div>
           </div>

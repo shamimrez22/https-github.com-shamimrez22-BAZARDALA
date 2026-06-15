@@ -33,12 +33,22 @@
   <body>
     <div id="root"></div>
     <script>
+      // Force unregister Service Workers and clear cache databases from old updates to prevent blank screens
       if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js')
-            .then(reg => console.log('Bazar Dala ServiceWorker registered!'))
-            .catch(err => console.error('ServiceWorker registration took a detour:', err));
+        navigator.serviceWorker.getRegistrations().then(registrations => {
+          for (let registration of registrations) {
+            registration.unregister().then(() => {
+              console.log('Cleaned old service worker successfully');
+            });
+          }
         });
+      }
+      if ('caches' in window) {
+        caches.keys().then(names => {
+          for (let name of names) {
+            caches.delete(name);
+          }
+        }).catch(err => console.warn('Cache purge skipped:', err));
       }
     </script>
     <script type="module" src="/src/main.tsx"></script>

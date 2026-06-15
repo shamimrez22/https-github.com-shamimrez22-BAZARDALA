@@ -64,6 +64,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       const savedUid = safeStorage.get('site_user_id');
       if (savedUid) {
+        // Fast-load user data from local storage index to prevent loading lock on poor connection
+        const cachedProfile = safeStorage.get('bzd_user_profile_cache');
+        if (cachedProfile) {
+          try {
+            const currentProfile = JSON.parse(cachedProfile);
+            setProfile(currentProfile);
+            setUser({
+              uid: currentProfile.uid,
+              email: currentProfile.email,
+              displayName: currentProfile.name,
+              photoURL: currentProfile.photoURL
+            });
+            setLoading(false); // Enable instant UI rendering!
+          } catch (e) {
+            console.error('Error parsing cached profile:', e);
+          }
+        }
+
         try {
           // Increase timeout to 15s for slower connections/iframes
           // and wrap it in a try-catch that doesn't re-throw but just logs
@@ -88,9 +106,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               displayName: currentProfile.name,
               photoURL: currentProfile.photoURL
             });
+            safeStorage.set('bzd_user_profile_cache', JSON.stringify(currentProfile));
           } else {
             // Only remove if we explicitly know it doesn't exist
-            if (userDoc) safeStorage.remove('site_user_id');
+            if (userDoc) {
+              safeStorage.remove('site_user_id');
+              safeStorage.remove('bzd_user_profile_cache');
+            }
           }
         } catch (error) {
           console.warn('Auth initialization took too long or failed:', error);
@@ -207,6 +229,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = async () => {
     safeStorage.remove('site_user_id');
     safeStorage.remove('is_admin_session');
+    safeStorage.remove('bzd_user_profile_cache');
     setIsAdminSession(false);
     setUser(null);
     setProfile(null);
@@ -227,6 +250,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             displayName: data.name,
             photoURL: data.photoURL
           });
+          safeStorage.set('bzd_user_profile_cache', JSON.stringify(data));
         }
       } catch (error) {
         console.error('Refresh profile error:', error);

@@ -1,4 +1,5 @@
 import express from 'express';
+import compression from 'compression';
 import { createServer as createViteServer } from 'vite';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -30,6 +31,12 @@ const initFirebaseAdmin = () => {
 async function startServer() {
   const app = express();
   const PORT = 3000;
+
+  // Compress all responses containing assets or data above 1KB
+  app.use(compression({
+    level: 6, // balanced compression level
+    threshold: 1024 // compress anything larger than 1KB
+  }));
 
   // Lazily init DB on first request that needs it
   const getDB = () => initFirebaseAdmin();
@@ -203,14 +210,31 @@ async function startServer() {
     // Production mode
     const distPath = path.resolve(__dirname, 'dist');
     
-    // Serve static files
+    // Serve static files with aggressive long-term immutable caching for hashed client assets
     app.use(express.static(distPath, {
-      maxAge: '1d',
-      etag: true
+      maxAge: '1y',
+      immutable: true,
+      etag: true,
+      setHeaders: (res, filePath) => {
+        // Prevent caching of HTML files so browser always retrieves the latest compiled hashes
+        if (filePath.endsWith('.html')) {
+          res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+          res.setHeader('Pragma', 'no-cache');
+          res.setHeader('Expires', '0');
+        } else {
+          // Tell the browser to cache hashed assets, resources, images, and fonts aggressively
+          res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+        }
+      }
     }));
 
     // SPA fallback: serve index.html for all non-matched routes
     app.get('*', (req, res) => {
+      res.set({
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      });
       res.sendFile(path.join(distPath, 'index.html'), (err) => {
         if (err) {
           res.status(500).send('Server Error: Failed to load index.html');

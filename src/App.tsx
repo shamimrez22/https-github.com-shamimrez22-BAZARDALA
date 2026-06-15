@@ -7,6 +7,7 @@ import { UserLayout } from './components/Layout/UserLayout';
 import { AdminLayout } from './components/Layout/AdminLayout';
 import { Toaster } from './components/ui/sonner';
 import { ShoppingBasket } from 'lucide-react';
+import { motion } from 'motion/react';
 
 const Home = lazy(() => import('./pages/Home'));
 const Shop = lazy(() => import('./pages/Shop'));

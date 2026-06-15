@@ -9,8 +9,8 @@ import { Toaster } from './components/ui/sonner';
 import { ShoppingBasket } from 'lucide-react';
 import { motion } from 'motion/react';
 
-const Home = lazy(() => import('./pages/Home'));
-const Shop = lazy(() => import('./pages/Shop'));
+import Home from './pages/Home';
+import Shop from './pages/Shop';
 const Cart = lazy(() => import('./pages/Cart'));
 const Checkout = lazy(() => import('./pages/Checkout'));
 const OrderTracking = lazy(() => import('./pages/OrderTracking'));
@@ -88,7 +88,7 @@ const LoadingFallback = () => {
   );
 };
 
-const Login = lazy(() => import('./pages/Login'));
+import Login from './pages/Login';
 
 const ProtectedRoute = ({ children, adminOnly = false }: { children: React.ReactNode, adminOnly?: boolean }) => {
   const { user, profile, loading, isAdmin } = useAuth();

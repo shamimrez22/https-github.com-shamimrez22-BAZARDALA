@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { ShieldCheck, Loader2, XCircle, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import { safeStorage } from '../../lib/storage';
 
 const AdminVerify = () => {
   const [searchParams] = useSearchParams();
@@ -29,7 +30,8 @@ const AdminVerify = () => {
           setMessage('পরিচয় সফলভাবে যাচাই করা হয়েছে! আপনাকে অ্যাডমিন প্যানেলে পাঠানো হচ্ছে...');
           
           // Grant admin access
-          localStorage.setItem('isAdmin', 'true');
+          safeStorage.set('is_admin_session', 'true');
+          safeStorage.set('isAdmin', 'true');
           
           setTimeout(() => {
             window.location.href = '/admin';

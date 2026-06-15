@@ -50,6 +50,18 @@
           }
         }).catch(err => console.warn('Cache purge skipped:', err));
       }
+
+      // Automatically retry loading chunks if they fail due to poor mobile carrier network connection
+      window.addEventListener('error', (e) => {
+        const errorText = e.message || '';
+        const isChunkError = errorText.includes('Loading chunk') || 
+                             errorText.includes('Failed to fetch dynamically imported module') ||
+                             e.target?.tagName === 'SCRIPT' && e.target?.src && e.target.src.includes('/assets/');
+        if (isChunkError) {
+          console.warn('Network timeout or asset load failure detected on cellular connection. Force reloading fallback page...');
+          window.location.reload();
+        }
+      }, true);
     </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>

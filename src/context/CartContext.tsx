@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { OrderItem, Product } from '../types';
+import { safeStorage } from '../lib/storage';
 import { toast } from 'sonner';
 
 interface CartContextType {
@@ -15,12 +16,19 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<OrderItem[]>(() => {
-    const saved = localStorage.getItem('cart');
-    return saved ? JSON.parse(saved) : [];
+    const saved = safeStorage.get('cart');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        return [];
+      }
+    }
+    return [];
   });
 
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(items));
+    safeStorage.set('cart', JSON.stringify(items));
   }, [items]);
 
   const addToCart = (product: Product, quantity: number = 1) => {

@@ -1,4 +1,5 @@
 import { auth } from '../firebase';
+import { safeStorage } from './storage';
 
 export enum OperationType {
   CREATE = 'create',
@@ -29,7 +30,7 @@ interface FirestoreErrorInfo {
 }
 
 export function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
-  const manualUid = typeof window !== 'undefined' ? localStorage.getItem('site_user_id') : null;
+  const manualUid = typeof window !== 'undefined' ? safeStorage.get('site_user_id') : null;
   const errInfo: FirestoreErrorInfo = {
     error: error instanceof Error ? error.message : String(error),
     authInfo: {

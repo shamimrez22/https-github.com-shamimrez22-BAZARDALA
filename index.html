@@ -51,15 +51,33 @@
         }).catch(err => console.warn('Cache purge skipped:', err));
       }
 
-      // Automatically retry loading chunks if they fail due to poor mobile carrier network connection
+      // Automatically retry loading chunks if they fail due to poor mobile carrier network connection (Rate-limited to 3 retries max)
       window.addEventListener('error', (e) => {
         const errorText = e.message || '';
         const isChunkError = errorText.includes('Loading chunk') || 
                              errorText.includes('Failed to fetch dynamically imported module') ||
-                             e.target?.tagName === 'SCRIPT' && e.target?.src && e.target.src.includes('/assets/');
+                             (e.target && e.target.tagName === 'SCRIPT' && e.target.src && e.target.src.includes('/assets/'));
         if (isChunkError) {
-          console.warn('Network timeout or asset load failure detected on cellular connection. Force reloading fallback page...');
-          window.location.reload();
+          console.warn('Network timeout or asset load failure detected on cellular connection. Force reloading fallback...');
+          try {
+            const retryCountKey = 'bzd_chunk_retry_count';
+            const lastRetryKey = 'bzd_last_retry_time';
+            const count = parseInt(sessionStorage.getItem(retryCountKey) || '0', 10);
+            const now = Date.now();
+            const lastRetry = parseInt(sessionStorage.getItem(lastRetryKey) || '0', 10);
+            
+            if (count < 3 && (now - lastRetry > 5000)) {
+              sessionStorage.setItem(retryCountKey, (count + 1).toString());
+              sessionStorage.setItem(lastRetryKey, now.toString());
+              setTimeout(() => {
+                window.location.reload();
+              }, 500);
+            } else {
+              console.error('Max retry attempts reached for cellular asset loading.');
+            }
+          } catch (err) {
+            window.location.reload();
+          }
         }
       }, true);
     </script>

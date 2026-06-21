@@ -173,5 +173,9 @@ export interface SiteSettings {
     offerLink: string;
     offerTitle: string;
     offerDescription?: string;
+    offerEndDateTime?: string;
+    offerHours?: number;
+    offerMinutes?: number;
+    offerSeconds?: number;
   };
 }

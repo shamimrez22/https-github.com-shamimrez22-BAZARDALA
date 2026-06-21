@@ -83,13 +83,11 @@ const Cart = () => {
                       </button>
                     </div>
                     <button
-                      className="text-red-600 hover:text-red-800 transition-colors flex items-center gap-2 group/btn"
+                      className="text-red-600 hover:text-red-800 transition-colors flex items-center gap-2 group/btn cursor-pointer select-none"
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        if (window.confirm('Remove this item from cart?')) {
-                          removeFromCart(item.productId);
-                        }
+                        removeFromCart(item.productId);
                       }}
                     >
                       <div className="w-10 h-10 rounded-none bg-red-50 border border-red-200 flex items-center justify-center group-hover/btn:bg-red-100 transition-all">

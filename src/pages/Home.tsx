@@ -1,36 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Button } from '../components/ui/button';
 import { 
   ArrowRight, 
-  Star, 
-  ShieldCheck, 
-  Zap, 
-  Truck, 
   ChevronLeft, 
   ChevronRight,
-  Smartphone,
-  Watch,
-  Laptop,
-  Shirt,
-  Home as HomeIcon,
-  Gamepad2,
-  Baby,
-  HeartPulse,
-  Car,
-  MoreHorizontal,
   List,
-  PlusCircle,
-  Bell as NotificationIcon,
-  X as XIcon
+  Leaf,
+  Fish,
+  Beef,
+  ShoppingBag,
+  Milk,
+  Croissant,
+  CupSoda,
+  Home as HomeIcon,
+  Zap,
+  Truck
 } from 'lucide-react';
 
-import { collection, getDocs, getDoc, query, orderBy, limit, doc, onSnapshot } from 'firebase/firestore';
+import { collection, onSnapshot, query, orderBy, getDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useProducts } from '../context/ProductContext';
 import { ProductCard } from '../components/ProductCard';
-import { SiteSettings } from '../types';
+import { SiteSettings, Product } from '../types';
 import { safeStorage } from '../lib/storage';
 
 const SmartLink = ({ to, children, className, ...props }: { to?: string; children: React.ReactNode; className?: string; [key: string]: any }) => {
@@ -53,605 +45,729 @@ const SmartLink = ({ to, children, className, ...props }: { to?: string; childre
 const defaultBanners = [
   {
     id: 1,
-    image: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80&w=2000',
-    title: 'Mega Sale 2026',
-    subtitle: 'Up to 70% Off on Electronics',
-    color: 'from-orange-500 to-red-600'
-  },
-  {
-    id: 2,
-    image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=2000',
-    title: 'Fashion Week',
-    subtitle: 'New Summer Collection is Here',
-    color: 'from-blue-500 to-indigo-600'
-  },
-  {
-    id: 3,
-    image: 'https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?auto=format&fit=crop&q=80&w=2000',
-    title: 'Smart Home',
-    subtitle: 'Modern Living Essentials',
-    color: 'from-emerald-500 to-teal-600'
+    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=1200',
+    title: 'Daily Fresh Bazar',
+    subtitle: 'Fresh Vegetables & Groceries',
+    link: '/shop'
   }
 ];
 
 const categories = [
-  { name: 'Electronic Devices', icon: Smartphone },
-  { name: 'Electronic Accessories', icon: Watch },
-  { name: 'TV & Home Appliances', icon: Laptop },
-  { name: 'Health & Beauty', icon: HeartPulse },
-  { name: 'Babies & Toys', icon: Baby },
-  { name: 'Groceries & Pets', icon: HomeIcon },
-  { name: 'Home & Lifestyle', icon: Shirt },
-  { name: 'Women\'s Fashion', icon: Shirt },
-  { name: 'Men\'s Fashion', icon: Shirt },
-  { name: 'Watches & Accessories', icon: Watch },
-  { name: 'Automotive & Motorbike', icon: Car },
-  { name: 'More Categories', icon: MoreHorizontal },
+  { name: 'Vegetables', icon: Leaf, img: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&q=80&w=300' },
+  { name: 'Fruits (ফলমূল)', icon: Leaf, img: 'https://images.unsplash.com/photo-1619566636858-adf3ef46400b?auto=format&fit=crop&q=80&w=300' },
+  { name: 'Fish (মাছ)', icon: Fish, img: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80&w=300' },
+  { name: 'Meat (মাংস)', icon: Beef, img: 'https://images.unsplash.com/photo-1603048588665-791ca8aea617?auto=format&fit=crop&q=80&w=300' },
+  { name: 'Grocery', icon: ShoppingBag, img: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&q=80&w=300' },
+  { name: 'Organic Honey (মধু)', icon: ShoppingBag, img: 'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=300' },
+  { name: 'Dairy Products', icon: Milk, img: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?auto=format&fit=crop&q=80&w=300' },
+  { name: 'Bakery & Breads', icon: Croissant, img: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=300' },
+  { name: 'Spices (মসলা)', icon: ShoppingBag, img: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&q=80&w=300' },
+  { name: 'Beverages', icon: CupSoda, img: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&q=80&w=300' },
+  { name: 'Cooking Essentials', icon: ShoppingBag, img: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&q=80&w=300' },
+  { name: 'Dry Fish (শুটকি)', icon: Fish, img: 'https://images.unsplash.com/photo-1534482421-64566f976cfa?auto=format&fit=crop&q=80&w=300' },
+  { name: 'Snacks & Sweets', icon: Croissant, img: 'https://images.unsplash.com/photo-1558961363-fa8fdf82db35?auto=format&fit=crop&q=80&w=300' },
+  { name: 'Baby Care (শিশুর)', icon: ShoppingBag, img: 'https://images.unsplash.com/photo-1515488042361-404e9250afef?auto=format&fit=crop&q=80&w=300' },
+  { name: 'Household', icon: HomeIcon, img: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&q=80&w=300' },
+  { name: 'Personal Care', icon: HomeIcon, img: 'https://images.unsplash.com/photo-1526947425960-945c6e72858f?auto=format&fit=crop&q=80&w=300' }
 ];
 
-const SpecialOfferNode = ({ settings }: { settings: any }) => (
-  <div className="flex-1 flex flex-col overflow-hidden group min-h-[300px] lg:min-h-0 bg-slate-900 border-0">
-    <SmartLink to={settings?.sidebar?.offerLink || '/shop'} className="flex-1 relative overflow-hidden group">
-      {/* Background Media */}
-      <div className="absolute inset-0 w-full h-full overflow-hidden">
-        <video 
-          autoPlay 
-          muted 
-          loop 
-          playsInline
-          key={settings?.sidebar?.offerVideoUrl}
-          poster={settings?.sidebar?.offerImageUrl || 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=800'}
-          className="absolute inset-0 w-full h-full object-cover transition-all duration-[3000ms] ease-out group-hover:scale-125 scale-110 opacity-100"
-          preload="none"
-        >
-          {settings?.sidebar?.offerVideoUrl ? (
-            <source src={settings.sidebar.offerVideoUrl} type="video/mp4" />
-          ) : (
-            <>
-              <source src="https://v1.nitrocdn.com/fMvOidVjXoEVErQZzGNoSvhzYxRzUuXz/assets/static/optimized/rev-8656606/wp-content/uploads/2021/10/product-video-loop.mp4" type="video/mp4" />
-              <source src="https://assets.mixkit.co/videos/preview/mixkit-shoes-on-a-red-background-1234-large.mp4" type="video/mp4" />
-            </>
-          )}
-        </video>
-        {/* Dynamic Overlays */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-hover:opacity-0 transition-opacity duration-700" />
-      </div>
+// Beautiful high-fidelity default products matching the screenshot exactly
+const defaultProducts: Product[] = [
+  {
+    id: 'default-mango',
+    name: 'BANGLA TAZA MANGO (মিষ্টি আম)',
+    price: 80,
+    oldPrice: 120,
+    category: 'vegetables',
+    stock: 100,
+    images: ['https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&fit=crop&q=80&w=600'],
+    description: 'Fresh and sweet mangoes directly from local organic orchards.',
+    ratings: 5,
+    discountPercentage: 33,
+    createdAt: new Date()
+  },
+  {
+    id: 'default-banana',
+    name: 'FRESH PREMIUM BANANA (সবরি কলা)',
+    price: 60,
+    oldPrice: 80,
+    category: 'vegetables',
+    stock: 100,
+    images: ['https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&q=80&w=600'],
+    description: 'Fresh organic yellow premium high grade table bananas.',
+    ratings: 5,
+    discountPercentage: 25,
+    createdAt: new Date()
+  },
+  {
+    id: 'default-apple',
+    name: 'SELECT FRESH RED APPLE (মিষ্টি লাল আপেল)',
+    price: 180,
+    oldPrice: 220,
+    category: 'vegetables',
+    stock: 100,
+    images: ['https://images.unsplash.com/photo-1619546813926-a78fa6372cd2?auto=format&fit=crop&q=80&w=600'],
+    description: 'Crisp, sweet, and selection-grade fresh red delicious apples.',
+    ratings: 5,
+    discountPercentage: 18,
+    createdAt: new Date()
+  },
+  {
+    id: 'default-cucumber',
+    name: 'FRESH GREEN CUCUMBER (শশা)',
+    price: 40,
+    oldPrice: 60,
+    category: 'vegetables',
+    stock: 100,
+    images: ['https://images.unsplash.com/photo-1449300079324-96422037e465?auto=format&fit=crop&q=80&w=600'],
+    description: 'Fresh and cool crunchy green cucumbers.',
+    ratings: 5,
+    discountPercentage: 33,
+    createdAt: new Date()
+  },
+  {
+    id: 'default-potato',
+    name: 'DESH POTATO (গোল আলু)',
+    price: 35,
+    oldPrice: 50,
+    category: 'vegetables',
+    stock: 100,
+    images: ['https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&q=80&w=600'],
+    description: 'Premium organic homegrown potatoes.',
+    ratings: 5,
+    discountPercentage: 30,
+    createdAt: new Date()
+  },
+  {
+    id: 'default-currymeat',
+    name: 'FRESH COCO CURRY MEAT (কারি খাসি মাংস)',
+    price: 850,
+    oldPrice: 950,
+    category: 'meat',
+    stock: 50,
+    images: ['https://images.unsplash.com/photo-1603048588665-791ca8aea617?auto=format&fit=crop&q=80&w=600'],
+    description: 'Fresh healthy mutton curry cut meat.',
+    ratings: 5,
+    discountPercentage: 11,
+    createdAt: new Date()
+  },
+  {
+    id: 'default-spinach',
+    name: 'FRESH RED SPINACH (লাল শাক)',
+    price: 20,
+    oldPrice: 30,
+    category: 'vegetables',
+    stock: 100,
+    images: ['https://images.unsplash.com/photo-1576045057995-568f588f82fb?auto=format&fit=crop&q=80&w=600'],
+    description: 'Fresh red organic spinach bunch.',
+    ratings: 5,
+    discountPercentage: 33,
+    createdAt: new Date()
+  }
+];
 
-      {/* Content Overlay */}
-      <div className="relative h-full flex flex-col justify-between p-4 md:p-6 z-10">
-        <div className="flex items-center gap-2">
-          <div className="bg-brand-primary p-1.5 rounded-none shadow-lg">
-            <Zap className="h-4 w-4 text-white" />
-          </div>
-          <h2 className="text-[10px] md:text-[11px] font-black text-white uppercase tracking-[0.3em] drop-shadow-md">
-            {settings?.sidebar?.offerTitle || 'EXCLUSIVE OFFER'}
-          </h2>
-        </div>
-
-        <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-          <div className="inline-block bg-white text-brand-primary text-[7px] md:text-[8px] font-black py-1 px-4 uppercase tracking-[0.4em] mb-2 shadow-xl transform -skew-x-12">
-            SPECIAL ACCESS
-          </div>
-          <h4 className="text-[14px] md:text-[18px] font-black text-white uppercase leading-tight tracking-tighter drop-shadow-2xl">
-            {settings?.sidebar?.offerSubtitle || 'Claim Your Premium Offer Now'}
-          </h4>
-          <div className="h-1 w-0 bg-brand-primary mt-3 group-hover:w-full transition-all duration-700" />
-        </div>
-      </div>
-    </SmartLink>
-  </div>
-);
-
-const Home = () => {
-  const [currentSlide, setCurrentSlide] = React.useState(0);
-  const [variantIndex, setVariantIndex] = React.useState(0);
-  const [banners, setBanners] = React.useState<any[]>(() => {
-    // Immediate load from cache to prevent blank hero
-    const cached = safeStorage.get('cached_banners');
-    if (cached) {
-      try {
-        return JSON.parse(cached);
-      } catch (e) {
-        return [];
-      }
-    }
-    return [];
-  });
-  const [settings, setSettings] = React.useState<SiteSettings | null>(null);
-  const [limitedOffersConfig, setLimitedOffersConfig] = React.useState({ limit: 6, productIds: [] as string[] });
-  const { products, loading: loadingProducts } = useProducts();
-  const navigate = useNavigate();
-
-  const [timeLeft, setTimeLeft] = useState({ hrs: '00', mins: '00', secs: '00' });
+const SpecialOfferNode = ({ settings }: { settings: SiteSettings | null }) => {
+  const [timeLeft, setTimeLeft] = useState({ hours: 4, minutes: 37, seconds: 25 });
 
   useEffect(() => {
-    if (!settings?.countdown?.enabled || !settings?.countdown?.targetDate) {
-      return;
+    if (!settings?.sidebar?.offerEndDateTime) {
+      // relative countdown mode
+      const defaultH = settings?.sidebar?.offerHours ?? 4;
+      const defaultM = settings?.sidebar?.offerMinutes ?? 37;
+      const defaultS = settings?.sidebar?.offerSeconds ?? 25;
+      
+      setTimeLeft({ hours: defaultH, minutes: defaultM, seconds: defaultS });
+
+      const timer = setInterval(() => {
+        setTimeLeft((prev) => {
+          let s = prev.seconds - 1;
+          let m = prev.minutes;
+          let h = prev.hours;
+          if (s < 0) {
+            s = 59;
+            m -= 1;
+          }
+          if (m < 0) {
+            m = 59;
+            h -= 1;
+          }
+          if (h < 0) {
+            // Loop pattern
+            h = defaultH;
+            m = defaultM;
+            s = defaultS;
+          }
+          return { hours: h, minutes: m, seconds: s };
+        });
+      }, 1000);
+      return () => clearInterval(timer);
     }
 
-    const timer = setInterval(() => {
-      const target = new Date(settings.countdown!.targetDate).getTime();
-      const now = new Date().getTime();
-      const difference = target - now;
-
+    // absolute date-time mode
+    const calculateTimeLeft = () => {
+      const difference = +new Date(settings.sidebar.offerEndDateTime!) - +new Date();
       if (difference <= 0) {
-        setTimeLeft({ hrs: '00', mins: '00', secs: '00' });
-        clearInterval(timer);
-        return;
+        return { hours: 0, minutes: 0, seconds: 0 };
       }
+      
+      const totalSeconds = Math.floor(difference / 1000);
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      
+      return { hours, minutes, seconds };
+    };
 
-      const hrs = Math.floor((difference / (1000 * 60 * 60))).toString().padStart(2, '0');
-      const mins = Math.floor((difference / (1000 * 60)) % 60).toString().padStart(2, '0');
-      const secs = Math.floor((difference / 1000) % 60).toString().padStart(2, '0');
+    // Initial update
+    setTimeLeft(calculateTimeLeft());
 
-      setTimeLeft({ hrs, mins, secs });
+    const timer = setInterval(() => {
+      setTimeLeft(calculateTimeLeft());
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [settings?.countdown?.enabled, settings?.countdown?.targetDate]);
+  }, [
+    settings?.sidebar?.offerEndDateTime,
+    settings?.sidebar?.offerHours,
+    settings?.sidebar?.offerMinutes,
+    settings?.sidebar?.offerSeconds
+  ]);
 
-  // Slice first 6 products for the flash sale if no manual selection exists
-  const featuredProducts = React.useMemo(() => {
-    if (!limitedOffersConfig.productIds || limitedOffersConfig.productIds.length === 0) {
-      return products.slice(0, limitedOffersConfig.limit || 6);
+  const promoImage = settings?.sidebar?.offerImageUrl || 'https://images.unsplash.com/photo-1619566636858-adf3ef46400b?auto=format&fit=crop&q=80&w=400';
+  const promoLink = settings?.sidebar?.offerLink || '/shop';
+
+  return (
+    <div className="relative w-full h-[350px] overflow-hidden select-none group border border-slate-200 bg-white flex flex-col">
+      <SmartLink to={promoLink} className="block w-full h-full relative">
+        {/* Background Image full span */}
+        <img
+          src={promoImage}
+          alt={settings?.sidebar?.offerTitle || 'Special Offer'}
+          className="absolute inset-0 w-full h-full object-cover z-0 transition-transform duration-700 group-hover:scale-105"
+          referrerPolicy="no-referrer"
+        />
+        {/* Safe Dark Overlay for readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/15 z-10" />
+
+        {/* Top-Left Badge */}
+        <div className="absolute top-4 left-4 z-20 flex items-center gap-1.5 bg-[#092d1d] border border-emerald-500/30 px-3 py-1.5 shadow-lg">
+          <Zap className="h-3 w-3 text-emerald-400 fill-emerald-400 animate-pulse" />
+          <span className="text-white text-[9px] font-black uppercase tracking-wider">
+            SPECIAL OFFER
+          </span>
+        </div>
+
+        {/* Top-Right Badge */}
+        <div className="absolute top-4 right-4 z-20 bg-[#00a878] text-white text-[9px] font-black px-3 py-1.5 tracking-wider uppercase shadow-lg">
+          -15% OFF
+        </div>
+
+        {/* Bottom Elements */}
+        <div className="absolute bottom-4 inset-x-4 z-20 flex flex-col items-start">
+          {/* Slashed/Skewed Tag */}
+          <div className="inline-block transform -skew-x-12 bg-[#00aa81] px-3 py-1 shadow-md select-none">
+            <span className="block transform skew-x-12 text-white font-black text-[9px] uppercase tracking-widest italic">
+              SPECIAL OFFER
+            </span>
+          </div>
+
+          {/* Banner Title */}
+          <h3 className="mt-2 text-white font-black text-xs md:text-sm tracking-wide uppercase select-none leading-tight drop-shadow-md">
+            {settings?.sidebar?.offerTitle || 'TAP TO APPLY COUPON DISCOUNT!'}
+          </h3>
+
+          {/* Real-time ticking Countdown */}
+          <div className="w-full mt-3 border border-white/15 bg-black/40 backdrop-blur-xs flex items-center px-3 py-2">
+            <span className="text-[8px] font-black tracking-widest text-[#00a878] uppercase mr-2.5">
+              ENDS IN:
+            </span>
+            <div className="flex items-center gap-1 text-[10.5px] font-black tracking-wider leading-none">
+              <span className="text-[#00ffcc] font-mono">
+                {String(timeLeft.hours).padStart(2, '0')}
+              </span>
+              <span className="text-white text-[8px] font-black px-0.5">H</span>
+              <span className="text-white/40">:</span>
+              <span className="text-[#00ffcc] font-mono">
+                {String(timeLeft.minutes).padStart(2, '0')}
+              </span>
+              <span className="text-white text-[8px] font-black px-0.5">M</span>
+              <span className="text-white/40">:</span>
+              <span className="text-[#00ffcc] font-mono">
+                {String(timeLeft.seconds).padStart(2, '0')}
+              </span>
+              <span className="text-white text-[8px] font-black px-0.5">S</span>
+            </div>
+          </div>
+        </div>
+      </SmartLink>
+    </div>
+  );
+};
+
+const slideVariants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? '100%' : '-100%',
+    opacity: 0,
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+  },
+  exit: (direction: number) => ({
+    x: direction < 0 ? '100%' : '-100%',
+    opacity: 0,
+  }),
+};
+
+const Home = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [direction, setDirection] = useState(1);
+  const [banners, setBanners] = useState<any[]>(() => {
+    const cached = safeStorage.get('cached_banners');
+    if (cached) {
+      try {
+        const parsed = JSON.parse(cached);
+        return parsed.length > 0 ? parsed : defaultBanners;
+      } catch (e) {
+        return defaultBanners;
+      }
     }
-    
-    // Get manually selected products in order, then limit
-    const selected = limitedOffersConfig.productIds
-      .map(id => products.find(p => p.id === id))
-      .filter(p => p !== undefined) as any[];
-      
-    return selected.slice(0, limitedOffersConfig.limit || 6);
-  }, [products, limitedOffersConfig]);
+    return defaultBanners;
+  });
+  const [settings, setSettings] = useState<SiteSettings | null>(null);
+  const [dbCategories, setDbCategories] = useState<any[]>([]);
+  const { products, loading: loadingProducts } = useProducts();
 
-  React.useEffect(() => {
-    // Persistent Listener for Banners to ensure immediate updates
+  const categoriesScrollRef = React.useRef<HTMLDivElement>(null);
+
+  const scrollCats = (dir: 'left' | 'right') => {
+    if (categoriesScrollRef.current) {
+      const amt = dir === 'left' ? -240 : 240;
+      categoriesScrollRef.current.scrollBy({ left: amt, behavior: 'smooth' });
+    }
+  };
+
+  // Keep a reliable display array of items, falling back to gorgeous defaults
+  const displayProducts = React.useMemo(() => {
+    if (!products || products.length === 0) {
+      return defaultProducts;
+    }
+    // Blend defaults at the end if we have fewer items, to keep layout extra full
+    if (products.length < 6) {
+      return [...products, ...defaultProducts.slice(0, 6 - products.length)];
+    }
+    return products;
+  }, [products]);
+
+  const topSelling = React.useMemo(() => displayProducts.slice(0, 6), [displayProducts]);
+  const flashSell = React.useMemo(() => {
+    if (displayProducts.length > 6) {
+      return displayProducts.slice(1, 7);
+    }
+    return displayProducts.slice(0, 6);
+  }, [displayProducts]);
+  const specialOffers = React.useMemo(() => {
+    if (displayProducts.length > 7) {
+      return displayProducts.slice(2, 8);
+    }
+    // Use red spinach for special offers if available in default list
+    const defaults = [...displayProducts];
+    const redSpinach = defaultProducts.find(p => p.id === 'default-spinach');
+    if (redSpinach && !defaults.some(d => d.id === 'default-spinach')) {
+      defaults.push(redSpinach);
+    }
+    return defaults.slice(0, 6);
+  }, [displayProducts]);
+
+  useEffect(() => {
+    // Realtime banner listener
     const unsub = onSnapshot(
       query(collection(db, 'slider_banners'), orderBy('createdAt', 'desc')),
       (snapshot) => {
         if (!snapshot.empty) {
           const fetchedBanners = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
           setBanners(fetchedBanners);
-          
-          // Cache to safeStorage for "Immediate" load next time
           safeStorage.set('cached_banners', JSON.stringify(fetchedBanners));
+        } else {
+          setBanners(defaultBanners);
         }
       },
-      (error) => console.error('Banners sync error:', error)
+      (error) => {
+        console.error('Banners sync error:', error);
+        setBanners(defaultBanners);
+      }
     );
 
-    const fetchInitialConfig = async () => {
-      try {
-        const configSnap = await getDoc(doc(db, 'settings', 'limited_offers'));
-        if (configSnap.exists()) {
-          setLimitedOffersConfig(configSnap.data() as any);
-        }
-      } catch (error) {
-        console.error('Error fetching Home config:', error);
-      }
-    };
-    
-    fetchInitialConfig();
-    return () => unsub();
-  }, []);
-
-  React.useEffect(() => {
-    const unsub = onSnapshot(doc(db, 'settings', 'site'), (snapshot) => {
+    // Realtime settings listener
+    const unsubSettings = onSnapshot(doc(db, 'settings', 'site'), (snapshot) => {
       if (snapshot.exists()) {
         setSettings(snapshot.data() as SiteSettings);
       }
     }, (error) => {
       console.error('Home settings sync error:', error);
     });
-    return () => unsub();
+
+    // Realtime categories listener
+    const unsubCategories = onSnapshot(collection(db, 'categories'), (snapshot) => {
+      if (!snapshot.empty) {
+        const list = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        list.sort((a: any, b: any) => (a.name || '').localeCompare(b.name || ''));
+        setDbCategories(list);
+      } else {
+        setDbCategories([]);
+      }
+    }, (error) => {
+      console.error('Home categories listen error:', error);
+    });
+
+    return () => {
+      unsub();
+      unsubSettings();
+      unsubCategories();
+    };
   }, []);
 
-  React.useEffect(() => {
-    if (banners.length === 0) return;
+  useEffect(() => {
+    if (banners.length <= 1) return;
     const timer = setInterval(() => {
+      setDirection(1);
       setCurrentSlide((prev) => (prev + 1) % banners.length);
-      setVariantIndex(Math.floor(Math.random() * 10));
-    }, 4000); // Faster cycle
+    }, 5000);
     return () => clearInterval(timer);
   }, [banners.length]);
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % banners.length);
-    setVariantIndex(Math.floor(Math.random() * 10));
-  };
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + banners.length) % banners.length);
-    setVariantIndex(Math.floor(Math.random() * 10));
-  };
+  useEffect(() => {
+    const el = categoriesScrollRef.current;
+    if (!el) return;
 
-  // Clean horizontal slide for consistency
-  const variants = [
-    { initial: { x: '100%', opacity: 0 }, animate: { x: 0, opacity: 1 }, exit: { x: '-100%', opacity: 0 } }
-  ];
+    const autoScroll = () => {
+      const { scrollLeft, scrollWidth, clientWidth } = el;
+      if (scrollLeft + clientWidth >= scrollWidth - 10) {
+        el.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        el.scrollBy({ left: 160, behavior: 'smooth' });
+      }
+    };
 
-  const currentVariant = variants[0];
+    const count = dbCategories.length > 0 ? dbCategories.length : categories.length;
+    if (count <= 1) return;
+
+    const timer = setInterval(autoScroll, 2500);
+    return () => {
+      clearInterval(timer);
+    };
+  }, [dbCategories.length]);
 
   return (
-    <div className="flex flex-col bg-white text-slate-900 pb-20 overflow-x-hidden relative">
-      {/* Full Width Hero Section */}
-      <section className="pt-0 md:pt-0 pb-1 md:pb-4 w-full">
-        <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4 overflow-hidden">
-<div className="flex flex-col lg:flex-row items-stretch w-full min-h-[140px] md:min-h-[260px] lg:h-[400px] rounded-none overflow-hidden border-b border-slate-100 bg-white">
-            {/* Category Sidebar/Offer - HIDDEN ON MOBILE, VISIBLE ON DESKTOP */}
-            <div className="hidden lg:flex lg:w-72 bg-white flex-col flex-shrink-0 lg:overflow-visible">
-                {settings?.sidebar?.showCategories ? (
-                  <>
-                    <div className="bg-[#f8f8f8] p-4 flex-shrink-0 border-b border-slate-100 relative overflow-hidden">
-                      <div className="absolute top-0 right-0 p-2 opacity-5">
-                         <List className="h-10 w-10 text-brand-primary" />
-                      </div>
-                      <h2 className="text-[12px] md:text-[14px] font-black text-slate-900 uppercase tracking-[0.2em] flex items-center gap-3 relative z-10">
-                        <List className="h-5 w-5 text-brand-primary" /> CATEGORIES
-                      </h2>
-                    </div>
-                    <div className="flex-shrink-0 lg:flex-1 overflow-y-auto py-1 bg-white scrollbar-thin scrollbar-thumb-brand-primary/20" data-lenis-prevent>
-                      <div className="flex flex-col">
-                        {categories.slice(0, 10).map((cat, i) => (
-                          <Link 
-                            key={i} 
-                            to={`/shop?cat=${cat.name.toLowerCase()}`}
-                            className="flex items-center justify-between px-6 py-3.5 hover:bg-[#f8f8f8] transition-all group border-b border-slate-50 last:border-0"
-                          >
-                            <div className="flex items-center gap-4">
-                              <cat.icon className="h-4 w-4 text-brand-primary" />
-                              <span className="text-[11px] font-black uppercase tracking-widest text-slate-700">{cat.name}</span>
-                            </div>
-                            <ChevronRight className="h-3 w-3 text-slate-300 group-hover:text-brand-primary transition-all" />
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                    {/* Offer visible below categories on desktop */}
-                    <div className="border-t border-slate-100 h-[140px] flex-shrink-0">
-                       <SpecialOfferNode settings={settings} />
-                    </div>
-                    <div className="p-4 bg-white border-t border-slate-100 flex-shrink-0">
-                       <Link to="/shop" className="block w-full py-2 bg-brand-primary text-white text-[11px] font-black uppercase tracking-widest hover:opacity-90 transition-all text-center rounded-none">
-                         VIEW ALL
-                       </Link>
-                    </div>
-                  </>
-                ) : (
-                  <SpecialOfferNode settings={settings} />
-                )}
+    <div className="flex flex-col bg-[#fdfdfd] text-slate-800 pb-20 overflow-x-hidden">
+      
+      {/* 1. Hero Block with Dual-Menu Banners */}
+      <section className="pt-2 md:pt-4 pb-2 w-full">
+        <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
+          <div className="flex flex-col lg:flex-row items-stretch w-full h-[110px] xs:h-[130px] sm:h-[240px] md:h-[300px] lg:h-[350px] gap-2 overflow-hidden bg-white">
+            
+            {/* Column 1: Special Offer Banner - hidden on mobile, visible on desktop */}
+            <div className="hidden lg:flex lg:w-[325px] flex-shrink-0 flex-col">
+              <SpecialOfferNode settings={settings} />
             </div>
 
-            {/* Main Image Slider */}
-            <div className={`flex-1 relative bg-white overflow-hidden group h-full`}>
-               {banners.length === 0 && (
+            {/* Column 3: Slider Carousel Banner - visible always, now spans the full remaining width */}
+            <div className="flex-1 relative bg-white border border-slate-200 overflow-hidden group h-full select-none">
+              {banners.length === 0 ? (
                  <div className="absolute inset-0 flex items-center justify-center bg-white">
-                    <div className="text-center">
-                       <div className="w-10 h-10 border-2 border-slate-100 border-t-brand-primary rounded-full animate-spin mx-auto mb-4" />
-                       <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em]">INITIALIZING_CATALOG</p>
-                    </div>
+                     <div className="text-center">
+                        <div className="w-8 h-8 border-2 border-slate-100 border-t-orange-500 rounded-full animate-spin mx-auto mb-2" />
+                        <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">LOADING BANNER</p>
+                     </div>
                  </div>
-               )}
-              <AnimatePresence>
-                  <motion.div
-                    key={currentSlide}
-                    initial={currentVariant.initial}
-                    animate={currentVariant.animate}
-                    exit={currentVariant.exit}
-                    transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
-                    className="absolute inset-0 z-0"
-                  >
-                  <SmartLink to={banners[currentSlide]?.link || '/shop'} className="block h-full w-full">
-                    {banners[currentSlide] && (
+              ) : (
+                <div className="relative w-full h-full overflow-hidden">
+                  <AnimatePresence initial={false} custom={direction} mode="popLayout">
+                    <motion.div
+                      key={currentSlide}
+                      custom={direction}
+                      variants={slideVariants}
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      transition={{
+                        x: { type: "tween", duration: 0.5, ease: "easeInOut" },
+                        opacity: { duration: 0.3 }
+                      }}
+                      className="absolute inset-0 z-0 h-full w-full"
+                    >
+                      <SmartLink to={banners[currentSlide]?.link || '/shop'} className="block h-full w-full relative">
                         <img
-                          src={banners[currentSlide].image || 'https://picsum.photos/seed/slide/1920/1080'}
-                          alt={banners[currentSlide].title || 'Slide Image'}
+                          src={banners[currentSlide].image || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=1200'}
+                          alt={banners[currentSlide].title || 'Slider Banner'}
                           loading="eager"
                           decoding="async"
                           className="w-full h-full object-cover"
                           referrerPolicy="no-referrer"
                         />
-                    )}
-                  </SmartLink>
-                </motion.div>
-              </AnimatePresence>
-
-              {/* Slider Meta Controls */}
-              <div className="absolute top-6 right-6 flex items-center gap-4">
-                 <div className="flex gap-2">
-                    {banners.map((_, i) => (
-                      <button
-                        key={i}
-                        onClick={() => setCurrentSlide(i)}
-                        className={`w-12 h-1 dark:bg-white/20 transition-all ${
-                          currentSlide === i ? 'bg-white h-1.5' : 'bg-white/30 hover:bg-white/60'
-                        }`}
-                      />
-                    ))}
-                 </div>
-              </div>
-              
-              <button 
-                onClick={prevSlide}
-                className="absolute left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/10 hover:bg-white text-white hover:text-brand-primary border border-white/30 transition-all flex items-center justify-center backdrop-blur-md opacity-0 group-hover:opacity-100"
-              >
-                <ChevronLeft className="h-6 w-6" />
-              </button>
-              <button 
-                onClick={nextSlide}
-                className="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/10 hover:bg-white text-white hover:text-brand-primary border border-white/30 transition-all flex items-center justify-center backdrop-blur-md opacity-0 group-hover:opacity-100"
-              >
-                <ChevronRight className="h-6 w-6" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {settings?.ads?.adsterra?.bannerOneCode && (
-        <section className="py-1 w-full">
-          <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
-             <SmartLink 
-              to={settings.ads.adsterra.bannerOneCode} 
-              className="block group relative overflow-hidden rounded-none"
-            >
-              <div className="bg-slate-900 h-20 md:h-28 flex items-center justify-center relative hover:bg-black transition-all">
-                <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '15px 15px' }} />
-                <div className="relative z-10 text-center">
-                  <span className="inline-block px-4 py-1 bg-brand-primary text-white text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] mb-1 rounded-none">SPECIAL OFFER</span>
-                  <h3 className="text-lg md:text-2xl font-black text-white uppercase tracking-tighter">GET EXCLUSIVE DISCOUNTS</h3>
-                  <p className="text-white/30 text-[7px] md:text-[8px] font-black uppercase tracking-[0.3em] mt-0.5">Limited Time Offer - Fast Delivery</p>
-                </div>
-              </div>
-            </SmartLink>
-          </div>
-        </section>
-      )}
-
-      {settings?.ads?.floatingNotice?.active && settings?.ads?.floatingNotice?.text && (
-        <section className="py-2 w-full">
-          <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
-            <SmartLink 
-              to={settings.ads.floatingNotice.link}
-              className="relative overflow-hidden whitespace-nowrap h-8 md:h-10 flex items-center border-y border-slate-900/5 bg-slate-50 hover:opacity-90 block"
-              style={{ backgroundColor: settings.ads.floatingNotice.bgColor }}
-            >
-              <div 
-                className="animate-marquee inline-block font-bold uppercase text-[9px] md:text-[11px] tracking-[0.3em] whitespace-nowrap"
-                style={{ color: settings.ads.floatingNotice.textColor }}
-              >
-                <span className="inline-block px-8">{settings.ads.floatingNotice.text}</span>
-                <span className="inline-block px-8">{settings.ads.floatingNotice.text}</span>
-                <span className="inline-block px-8">{settings.ads.floatingNotice.text}</span>
-              </div>
-            </SmartLink>
-          </div>
-        </section>
-      )}
-
-      {/* Feature section removed at user request */}
-      {/* Services Grid section removed at user request */}
-
-      {settings?.ads?.adsterra?.bannerThreeCode && (
-        <section className="py-3 w-full">
-          <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
-             <SmartLink to={settings.ads.adsterra.bannerThreeCode} className="block relative h-full group">
-               <div className="bg-brand-primary p-8 text-center hover:opacity-90 transition-all rounded-none relative overflow-hidden">
-                  <span className="text-[10px] font-black uppercase text-white tracking-[0.4em] mb-3 block animate-pulse">Fast Delivery Active</span>
-                  <h4 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tighter">SHOP OUR BESTSELLERS</h4>
-                  <p className="text-[9px] font-black text-white/50 uppercase mt-4 tracking-[0.5em]">100% Secure Shopping - Satisfaction Guaranteed</p>
-               </div>
-             </SmartLink>
-
-          </div>
-        </section>
-      )}
-
-      {/* Curated Grid Selection */}
-      <section className="py-2 md:py-6 w-full bg-[#fcfcfc]">
-        <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between mb-2 md:mb-4 gap-2 md:gap-6 border-b border-brand-primary/20 pb-1.5 md:pb-2">
-            <div className="text-center md:text-left">
-              <h2 className="text-sm md:text-lg font-black uppercase tracking-tighter text-slate-900 leading-none">THE_COLLECTIONS</h2>
-              <div className="flex items-center justify-center md:justify-start gap-2 mt-0.5">
-                 <div className="w-1 h-1 bg-brand-primary rounded-none animate-pulse" />
-                 <p className="text-[6px] md:text-[8px] font-black text-slate-400 uppercase tracking-[0.2em]">Verified Inventory Catalog</p>
-              </div>
-            </div>
-            <Link to="/shop" className="hidden md:flex group items-center gap-3 bg-slate-900 text-white px-5 py-1.5 text-[8px] font-black uppercase tracking-[0.2em] hover:bg-brand-primary transition-all rounded-none active:scale-[0.98]">
-              CATALOG_DIR <ArrowRight className="h-3 w-3 group-hover:translate-x-1.5 transition-transform" />
-            </Link>
-          </div>
-
-          
-          <div className="grid grid-cols-3 md:grid-cols-6 gap-3 md:gap-8">
-            {[
-              { name: 'Devices', img: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&q=80&w=400' },
-              { name: 'Laptops', img: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&q=80&w=400' },
-              { name: 'Watches', img: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=400' },
-              { name: 'Fashion', img: 'https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&q=80&w=400' },
-              { name: 'Home', img: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&q=80&w=400' },
-              { name: 'Gaming', img: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=400' },
-            ].map((cat, i) => (
-              <Link 
-                key={i} 
-                to={`/shop?cat=${cat.name.toLowerCase()}`}
-                className="flex flex-col items-center group gap-2"
-              >
-                <div className="w-full aspect-square overflow-hidden bg-white border border-[#777]/10 transition-all group-hover:border-brand-primary/40 relative shadow-sm">
-                  <img
-                    src={cat.img}
-                    alt={cat.name}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700 grayscale-[0.2] group-hover:grayscale-0"
-                    referrerPolicy="no-referrer"
-                  />
-                  <div className="absolute inset-x-0 bottom-0 py-2 bg-slate-900/10 group-hover:bg-brand-primary/10 transition-colors" />
-                </div>
-                <h3 className="text-[8px] md:text-[9px] font-black uppercase tracking-widest text-slate-400 group-hover:text-brand-primary transition-colors text-center">{cat.name}</h3>
-              </Link>
-            ))}
-          </div>
-
-          <div className="mt-4 md:hidden">
-            <Link to="/shop" className="w-full flex items-center justify-center gap-4 bg-slate-900 text-white py-2 text-[8px] font-black uppercase tracking-[0.2em] rounded-none shadow-xl active:scale-95 transition-all">
-               VIEW_ALL_COLLECTIONS <ArrowRight className="h-3 w-3" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {settings?.ads?.adsterra?.bannerFourCode && (
-        <section className="py-2 w-full">
-          <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
-             <SmartLink to={settings.ads.adsterra.bannerFourCode} className="block group">
-                <div className="bg-slate-900 rounded-none h-24 flex items-center justify-center p-4 relative overflow-hidden transition-all hover:bg-black">
-                   <div className="absolute top-0 right-0 p-3 opacity-10">
-                      <Zap className="h-16 w-16 text-white" />
-                   </div>
-                   <div className="text-center relative z-10">
-                      <h5 className="text-white text-lg md:text-xl font-black uppercase tracking-tighter">SHOP NEW ARRIVALS</h5>
-                      <span className="text-brand-primary text-[9px] font-black uppercase tracking-[0.5em] mt-1 block animate-pulse">HOT DEALS</span>
-                   </div>
-                </div>
-             </SmartLink>
-
-          </div>
-        </section>
-      )}
-
-      {settings?.ads?.adsterra?.bannerTwoCode && (
-        <section className="py-2 w-full">
-          <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
-            <SmartLink 
-              to={settings.ads.adsterra.bannerTwoCode} 
-              className="group block relative"
-            >
-               <div className="bg-white border-2 border-[#777] rounded-none p-6 text-center hover:bg-[#f8f8f8] transition-all relative overflow-hidden shadow-xl">
-                  <div className="relative z-10">
-                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-3">Recommended For You</h4>
-                    <div className="inline-flex items-center gap-3 bg-brand-primary text-white px-7 py-2.5 font-black uppercase text-xl md:text-2xl tracking-tighter shadow-xl border-2 border-slate-900">
-                       VIEW BEST DEALS <ArrowRight className="h-6 w-6" />
-                    </div>
-                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em] mt-4">100% Secure Shopping</p>
-                  </div>
-               </div>
-            </SmartLink>
-          </div>
-        </section>
-      )}
-
-      {/* High-Alert Dispatch Section (Flash Sale - Spreadsheet / XL Edition) */}
-      <section className="pb-12 pt-6 w-full">
-        <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
-           {/* Spreadsheet Container */}
-           <div className="bg-white border border-slate-300 rounded-none overflow-hidden shadow-sm">
-            {/* XL Header Bar */}
-            <div className="bg-brand-primary px-4 py-1.5 flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1">
-                  <div className="w-2.5 h-2.5 bg-white rounded-full animate-pulse" />
-                  <span className="text-[10px] font-bold text-white uppercase tracking-tight">Sheet1: Live_Inventory</span>
-                </div>
-                <div className="h-4 w-[1px] bg-white/20" />
-                <span className="text-[10px] font-black text-white uppercase tracking-widest">{settings?.countdown?.text || 'SALE_DISPATCH'}</span>
-              </div>
-              <div className="flex gap-2">
-                <div className="w-2 h-2 rounded-full bg-white/20" />
-                <div className="w-2 h-2 rounded-full bg-white/20" />
-              </div>
-            </div>
-
-            <div className="p-0">
-              {/* Data Controls / Timer Section */}
-              <div className="flex flex-col lg:flex-row border-b border-slate-100">
-                <div className="flex-1 p-6 md:p-10 bg-slate-50/50">
-                  <div className="space-y-1">
-                    <h2 className="text-xl md:text-3xl font-black text-slate-900 uppercase tracking-tighter leading-none">FLASH SALE</h2>
-                    <p className="text-slate-400 text-[8px] md:text-[10px] font-bold uppercase tracking-[0.2em]">{settings?.countdown?.text || 'Limited time inventory clearance'}</p>
-                  </div>
-                </div>
-                
-                <div className="lg:w-auto p-6 md:px-12 flex flex-col justify-center items-center bg-white border-l border-slate-100">
-                    <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4">EXPIRATION_TIMER</p>
-                    <div className="flex gap-3">
-                      {[
-                        { val: timeLeft.hrs, label: 'H' },
-                        { val: timeLeft.mins, label: 'M' },
-                        { val: timeLeft.secs, label: 'S' },
-                      ].map((t, i) => (
-                        <div key={i} className="flex items-center gap-2">
-                          <div className="bg-slate-900 text-white w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-lg md:text-xl font-mono font-black">{t.val}</div>
-                          {i < 2 && <span className="text-slate-300 font-black">:</span>}
+                        {/* Overlay "SHOP NOW" Button Bottom-Left */}
+                        <div className="absolute bottom-3 left-3 md:bottom-6 md:left-6 z-10 transition-transform duration-300 group-hover:translate-x-1">
+                          <span className="inline-flex items-center gap-1.5 bg-[#f95e26] hover:bg-orange-600 active:scale-95 text-white font-black text-[9px] md:text-[12px] px-3.5 py-1.5 md:px-6 md:py-2.5 shadow-lg tracking-wide capitalize select-none rounded-none">
+                            SHOP NOW <ArrowRight className="h-3 w-3 md:h-4 md:w-4" />
+                          </span>
                         </div>
-                      ))}
-                    </div>
-                </div>
-              </div>
+                      </SmartLink>
+                    </motion.div>
+                  </AnimatePresence>
 
-              
-              {/* The "Sheet" Grid */}
-              <div className="p-2 md:p-4 bg-white grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-1.5 border-collapse items-stretch">
-                {loadingProducts ? (
-                  [...Array(6)].map((_, i) => (
-                    <div key={i} className="aspect-[3/4] bg-slate-50 animate-pulse border border-slate-100" />
-                  ))
-                ) : featuredProducts.map((product) => (
-                  <div key={product.id} className="border border-slate-100 p-1 hover:bg-slate-50 transition-colors group">
-                    <ProductCard product={product} />
-                  </div>
-                ))}
-              </div>
+                  {/* Slider Control Arrows */}
+                  {banners.length > 1 && (
+                    <>
+                      <button 
+                        onClick={() => {
+                          setDirection(-1);
+                          setCurrentSlide((prev) => (prev - 1 + banners.length) % banners.length);
+                        }}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/15 hover:bg-white text-white hover:text-orange-500 rounded-none transition-all flex items-center justify-center opacity-0 group-hover:opacity-100 z-10 animate-fade-in"
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                      </button>
+                      <button 
+                        onClick={() => {
+                          setDirection(1);
+                          setCurrentSlide((prev) => (prev + 1) % banners.length);
+                        }}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 bg-black/15 hover:bg-white text-white hover:text-orange-500 rounded-none transition-all flex items-center justify-center opacity-0 group-hover:opacity-100 z-10 animate-fade-in"
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                      </button>
+                      
+                      {/* Dots */}
+                      <div className="absolute bottom-3 right-3 md:bottom-6 md:right-6 z-10 flex gap-1 bg-black/10 backdrop-blur-xs px-2 py-1 md:px-2.5 md:py-1.5 rounded-full">
+                        {banners.map((_, i) => (
+                          <button
+                            key={i}
+                            onClick={() => {
+                              setDirection(i > currentSlide ? 1 : -1);
+                              setCurrentSlide(i);
+                            }}
+                            className={`w-1.5 h-1.5 md:w-2 md:h-2 rounded-full transition-all ${
+                              currentSlide === i ? 'bg-white scale-125' : 'bg-white/45'
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
             </div>
-           </div>
+
+          </div>
         </div>
       </section>
 
-      {settings?.ads?.adsterra?.bannerFiveCode && (
-        <section className="py-1 w-full">
-          <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
-             <SmartLink to={settings.ads.adsterra.bannerFiveCode} className="block relative h-32 group rounded-none overflow-hidden shadow-xl border-2 border-[#777]">
-                <img 
-                  src="https://images.unsplash.com/photo-1622675363311-3e1904dc1885?auto=format&fit=crop&q=80&w=1500" 
-                  className="absolute inset-0 w-full h-full object-cover grayscale opacity-20 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-1000 group-hover:scale-110"
-                  alt="Ad"
-                  loading="lazy"
-                  decoding="async"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-0 bg-slate-900/60 flex flex-col items-center justify-center p-6 backdrop-blur-[2px] transition-all group-hover:backdrop-blur-none group-hover:bg-slate-900/40">
-                   <h3 className="text-2xl md:text-4xl font-black text-white uppercase tracking-tighter leading-none text-center">SHOP LIMITED OFFERS</h3>
-                   <span className="bg-brand-primary text-white px-5 py-1.5 text-[9px] font-black uppercase mt-4 rounded-none tracking-[0.3em] shadow-md border border-white">EXCLUSIVE DEALS</span>
-                </div>
-             </SmartLink>
+      {/* 2. Featured Categories Section */}
+      <section className="py-3 w-full bg-white border-y border-slate-100">
+        <style dangerouslySetInnerHTML={{__html: `
+          .scrollbar-none::-webkit-scrollbar {
+            display: none;
+          }
+          .scrollbar-none {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+          }
+        `}} />
+        <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
+          
+          {/* Header row with arrows and green VIEW ALL button */}
+          <div className="flex items-center justify-between mb-2.5 border-b border-slate-100 pb-2">
+            <div>
+              <h2 className="text-[13px] md:text-[16px] font-black uppercase text-slate-800 tracking-tight leading-none">
+                Featured Categories
+              </h2>
+              <p className="text-slate-400 text-[8px] md:text-[9.5px] font-bold uppercase tracking-wider mt-1">
+                Choose your favorite categories from our variety for easy shopping
+              </p>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <button 
+                onClick={() => scrollCats('left')}
+                className="w-7 h-7 border border-slate-200 bg-white flex items-center justify-center hover:bg-slate-50 text-slate-400 hover:text-slate-700 active:scale-95 transition-all cursor-pointer"
+              >
+                <ChevronLeft className="h-3.5 w-3.5" />
+              </button>
+              <button 
+                onClick={() => scrollCats('right')}
+                className="w-7 h-7 border border-slate-200 bg-white flex items-center justify-center hover:bg-slate-50 text-slate-400 hover:text-slate-700 active:scale-95 transition-all mr-1.5 cursor-pointer"
+              >
+                <ChevronRight className="h-3.5 w-3.5" />
+              </button>
+              <Link 
+                to="/shop" 
+                className="bg-[#2e7d32] hover:bg-[#1b5e20] text-white text-[9px] font-black uppercase px-4 py-1.5 flex items-center gap-1 transition-colors rounded-none shadow-sm"
+              >
+                View All <ArrowRight className="h-3 w-3" />
+              </Link>
+            </div>
           </div>
-        </section>
-      )}
-      {settings?.ads?.adsterra?.bannerSixCode && (
-        <section className="pt-0.5 pb-2 w-full">
-          <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
-             <SmartLink to={settings.ads.adsterra.bannerSixCode} className="block group">
-                <div className="bg-white rounded-none p-5 flex flex-col md:flex-row items-center justify-between gap-5 hover:bg-[#f8f8f8] transition-all border border-slate-100 group overflow-hidden relative">
-                   <div className="flex items-center gap-6 relative z-10">
-                      <div className="w-16 h-16 bg-slate-900 rounded-none flex items-center justify-center group-hover:bg-brand-primary transition-all duration-500">
-                        <Truck className="h-8 w-8 text-white" />
-                      </div>
-                      <div className="text-center md:text-left">
-                        <h4 className="text-xl font-black uppercase text-slate-800 tracking-tighter leading-none mb-1.5 underline underline-offset-4 decoration-brand-primary">FAST DELIVERY</h4>
-                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.4em]">Shipment update - On the way</p>
-                      </div>
-                   </div>
-                   <div 
-                      className="px-8 py-2 bg-slate-900 text-white font-black uppercase text-[11px] tracking-[0.25em] group-hover:bg-brand-primary transition-all rounded-none relative z-10 active:scale-95 text-center"
-                   >
-                      ORDER NOW
-                   </div>
-                </div>
-             </SmartLink>
 
+          {/* Symmetrical Categories Row - Single-line horizontal scroll on all devices */}
+          <div 
+            ref={categoriesScrollRef}
+            className="flex overflow-x-auto gap-1.5 pb-2 scrollbar-none scroll-smooth snap-x snap-mandatory"
+          >
+            {(dbCategories.length > 0 ? dbCategories : categories).map((cat: any, i: number) => {
+              const imgUrl = cat.image || cat.img;
+              const catSlug = cat.slug || cat.name.split(' (')[0].toLowerCase();
+              return (
+                <Link 
+                  key={cat.id || i} 
+                  to={`/shop?cat=${catSlug}`}
+                  className="flex-shrink-0 w-[68px] xs:w-[80px] sm:w-[94px] md:w-[105px] flex flex-col items-center group bg-white border border-slate-200 hover:border-orange-400 p-1 transition-all duration-300 relative rounded-none hover:shadow-sm snap-start"
+                >
+                  <div className="w-full aspect-square overflow-hidden bg-[#fbfbfb] border border-slate-100 transition-all relative">
+                    <img
+                      src={imgUrl}
+                      alt={cat.name}
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      referrerPolicy="no-referrer"
+                    />
+                  </div>
+                  <h3 className="hidden sm:block text-[9px] md:text-[9.5px] font-black uppercase tracking-wider text-slate-700 group-hover:text-orange-500 transition-colors mt-2 text-center truncate w-full">
+                    {cat.name}
+                  </h3>
+                  {/* Micro blue underline style matching image theme */}
+                  <div className="hidden sm:block h-0.5 w-0 bg-sky-400 group-hover:w-1/2 mt-1 transition-all duration-300" />
+                </Link>
+              );
+            })}
           </div>
-        </section>
-      )}
+
+        </div>
+      </section>
+
+      {/* 3. Top Selling Products */}
+      <section className="py-6 w-full">
+        <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
+          
+          <div className="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="text-[13px] md:text-[16px] font-black uppercase text-slate-800 tracking-tight leading-none">
+                🔥 Top Selling Products
+              </span>
+              <span className="bg-[#fff3e0] text-[#ff9800] text-[7.5px] md:text-[8px] font-bold px-2 py-0.5 uppercase tracking-wider inline-block">
+                Popular
+              </span>
+              <div className="w-full lg:w-auto">
+                <p className="text-slate-400 text-[8px] md:text-[9.5px] font-bold uppercase tracking-wider mt-1.5">
+                  Select recommendation dispatch at special auto export prices
+                </p>
+              </div>
+            </div>
+            <Link 
+              to="/shop" 
+              className="text-[#f95e26] hover:text-orange-600 text-[9.5px] md:text-[10px] font-black uppercase flex items-center gap-1 transition-colors select-none"
+            >
+              MORE HOT FOODS <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-1 xs:gap-1.5 md:gap-3.5">
+            {loadingProducts && topSelling.length === 0 ? (
+              [...Array(5)].map((_, i) => (
+                <div key={i} className="aspect-[4/5] bg-slate-50 animate-pulse border border-slate-200/40" />
+              ))
+            ) : (
+              topSelling.map((product) => (
+                <div key={product.id}>
+                  <ProductCard product={product} />
+                </div>
+              ))
+            )}
+          </div>
+
+        </div>
+      </section>
+
+      {/* 4. Flash Sell Section */}
+      <section className="py-6 w-full">
+        <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
+
+          <div className="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+            <div>
+              <span className="text-[13px] md:text-[16px] font-black uppercase text-slate-800 tracking-tight leading-none">
+                ⚡ Flash Sell
+              </span>
+              <p className="text-slate-400 text-[8px] md:text-[9.5px] font-bold uppercase tracking-wider mt-1.5">
+                Your absolute favorite bestsellers at a massive clearance discount now
+              </p>
+            </div>
+            <Link 
+              to="/shop" 
+              className="text-[#2e7d32] hover:text-green-800 text-[9.5px] md:text-[10px] font-black uppercase flex items-center gap-1 transition-colors select-none"
+            >
+              SEE MORE SALES <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-1 xs:gap-1.5 md:gap-3.5">
+            {loadingProducts && flashSell.length === 0 ? (
+              [...Array(5)].map((_, i) => (
+                <div key={i} className="aspect-[4/5] bg-slate-50 animate-pulse border border-slate-200/40" />
+              ))
+            ) : (
+              flashSell.map((product) => (
+                <div key={product.id}>
+                  <ProductCard product={product} />
+                </div>
+              ))
+            )}
+          </div>
+
+        </div>
+      </section>
+
+      {/* 5. Special Offer Section */}
+      <section className="py-6 w-full">
+        <div className="w-full max-w-[1400px] mx-auto px-2 md:px-4">
+
+          <div className="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="text-[13px] md:text-[16px] font-black uppercase text-slate-800 tracking-tight leading-none">
+                🎁 Special Offer
+              </span>
+              <span className="bg-[#fce4ec] text-[#e91e63] text-[7.5px] md:text-[8px] font-bold px-2 py-0.5 uppercase tracking-wider inline-block">
+                Hot Details
+              </span>
+              <div className="w-full lg:w-auto">
+                <p className="text-slate-400 text-[8px] md:text-[9.5px] font-bold uppercase tracking-wider mt-1.5">
+                  Promotional dispatch discount and special gift coupons directly from Bazar slots
+                </p>
+              </div>
+            </div>
+            <Link 
+              to="/shop" 
+              className="text-[#f95e26] hover:text-orange-600 text-[9.5px] md:text-[10px] font-black uppercase flex items-center gap-1 transition-colors select-none"
+            >
+              MORE OFFERS <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-1 xs:gap-1.5 md:gap-3.5">
+            {loadingProducts && specialOffers.length === 0 ? (
+              [...Array(5)].map((_, i) => (
+                <div key={i} className="aspect-[4/5] bg-slate-50 animate-pulse border border-slate-200/40" />
+              ))
+            ) : (
+              specialOffers.map((product) => (
+                <div key={product.id}>
+                  <ProductCard product={product} />
+                </div>
+              ))
+            )}
+          </div>
+
+        </div>
+      </section>
+
     </div>
   );
 };

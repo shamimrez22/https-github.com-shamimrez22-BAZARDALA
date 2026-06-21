@@ -121,7 +121,7 @@ const Shop = () => {
         )}
 
         {globalLoading && allProducts.length === 0 ? (
-          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 md:gap-6">
+          <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-1 xs:gap-1.5 md:gap-3.5">
             {[...Array(12)].map((_, i) => (
               <div key={i} className="aspect-square bg-white rounded-none animate-pulse p-4 border border-slate-100">
                  <div className="w-full h-full bg-[#f8f8f8] rounded-none flex items-center justify-center">
@@ -132,7 +132,7 @@ const Shop = () => {
           </div>
 
         ) : filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-1.5 md:gap-4 items-stretch">
+          <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-1 xs:gap-1.5 md:gap-3.5 items-stretch">
             {filteredProducts.map(product => (
               <ProductCard key={product.id} product={product} />
             ))}

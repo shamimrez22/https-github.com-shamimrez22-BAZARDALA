@@ -64,26 +64,23 @@ const AdminStaff = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      <div className="bg-[#1e293b] text-white p-8">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 max-w-7xl mx-auto w-full">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <ShieldCheck className="h-8 w-8 text-brand-primary" />
-              <h1 className="text-3xl font-black uppercase tracking-tighter">Staff Control Center</h1>
-            </div>
-            <p className="text-slate-400 font-bold text-[10px] uppercase tracking-[0.3em]">
-              Authorized Admin Nodes // Sovereign Control Override
-            </p>
-          </div>
-          <div className="relative w-full md:max-w-xs">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
-            <input
-              placeholder="Query Admin ID..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 h-11 bg-slate-800 border border-slate-700 text-[11px] font-black uppercase tracking-widest text-white outline-none focus:border-brand-primary transition-all"
-            />
-          </div>
+      <div className="bg-[#ead9c4] border-b border-[#777] p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div>
+          <h1 className="text-2xl font-black text-[#9B2B2C] uppercase tracking-tight flex items-center gap-3">
+            Staff <span className="text-slate-900">Control Center</span>
+          </h1>
+          <p className="text-slate-600 font-bold text-[10px] uppercase mt-1">
+            Authorized Admin Nodes // Operation Protocol 101 // Sovereign Control Override
+          </p>
+        </div>
+        <div className="relative w-full md:max-w-xs">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+          <input
+            placeholder="Query Admin ID..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="w-full pl-10 pr-4 h-11 bg-slate-800 border border-slate-700 text-[11px] font-black uppercase tracking-widest text-white outline-none focus:border-brand-primary transition-all"
+          />
         </div>
       </div>
 

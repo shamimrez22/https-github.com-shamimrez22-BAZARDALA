@@ -28,6 +28,65 @@ import { Badge } from '../ui/badge';
 import { SiteSettings } from '../../types';
 import { useSettings } from '../../context/SettingsContext';
 
+const Logo: React.FC<{ variant?: 'header' | 'footer' | 'modal'; settings?: any }> = ({ variant = 'header', settings }) => {
+  const siteName = settings?.siteName || 'BAZAR THOLE';
+  const firstWord = siteName.split(' ')[0] || 'BAZAR';
+  const restOfName = siteName.split(' ').slice(1).join(' ') || 'THOLE';
+
+  return (
+    <div className="flex items-center gap-1.5 md:gap-2.5 group cursor-pointer">
+      <div className={`relative flex items-center justify-center transition-all duration-500 rounded-lg ${
+        variant === 'footer' 
+          ? 'w-10 h-10 md:w-11 md:h-11 bg-slate-900 border border-orange-500/30 shadow-[0_0_15px_rgba(249,115,22,0.15)]' 
+          : variant === 'modal'
+            ? 'w-12 h-12 md:w-14 md:h-14 bg-orange-500/10 border border-orange-500/20'
+            : 'w-7 h-7 md:w-9 md:h-9 bg-white/10 hover:bg-white/15 border border-white/5'
+      }`}>
+        <div className="absolute inset-0 bg-orange-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity blur" />
+        <svg 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          strokeWidth="2.2" 
+          strokeLinecap="round" 
+          strokeLinejoin="round" 
+          className={`w-4 h-4 md:w-5 md:h-5 group-hover:scale-110 transition-transform ${
+            variant === 'footer' || variant === 'modal' ? 'text-orange-500' : 'text-orange-400'
+          }`}
+        >
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <path d="M16 10a4 4 0 0 1-8 0" />
+        </svg>
+      </div>
+
+      <div className="flex flex-col text-left">
+        <h1 className={`font-black tracking-tight leading-none uppercase ${
+          variant === 'footer' 
+            ? 'text-lg md:text-xl text-white' 
+            : variant === 'modal'
+              ? 'text-xl text-slate-950'
+              : 'text-[11px] sm:text-sm md:text-lg text-white'
+        }`}>
+          <span className="text-orange-500">{firstWord}</span>
+          <span className={variant === 'footer' ? 'text-white' : variant === 'modal' ? 'text-slate-800' : 'text-white'}>
+            {' '}{restOfName}
+          </span>
+        </h1>
+        <p className={`font-bold tracking-[0.2em] text-[6.5px] md:text-[7.5px] uppercase mt-0.5 leading-none ${
+          variant === 'footer' 
+            ? 'text-orange-500/80' 
+            : variant === 'modal'
+              ? 'text-slate-400'
+              : 'text-orange-300'
+        }`}>
+          PREMIUM MARKET PLACE
+        </p>
+      </div>
+    </div>
+  );
+};
+
 export const UserLayout: React.FC = () => {
   const { user, profile, isAdmin, loginAdmin, logout, login, register, loginWithGoogle } = useAuth();
   const { items } = useCart();
@@ -248,22 +307,17 @@ export const UserLayout: React.FC = () => {
         <div className="w-full bg-white flex justify-center border-b border-slate-100">
           <header className="w-full max-w-[1400px] bg-brand-primary h-11 md:h-12 flex items-center justify-between px-2 md:px-4">
             <div className="flex items-center gap-4 md:gap-10">
-                  <div className="flex items-center gap-2 md:gap-3 group cursor-pointer">
+                  <div className="flex items-center gap-2 md:gap-3">
                     <button 
                       onClick={() => setIsAdminLoginModalOpen(true)}
-                      className="bg-white text-brand-primary p-1.5 md:p-2 rounded-none group-hover:rotate-6 transition-transform duration-500 cursor-pointer outline-none"
+                      className="bg-white text-brand-primary p-1.5 md:p-2 rounded-none hover:rotate-6 transition-transform duration-500 cursor-pointer outline-none shrink-0"
                     >
                       <ShoppingBasket className="h-4 w-4 md:h-6 md:w-6" />
                     </button>
-                    <Link to="/" className="text-xs sm:text-base md:text-xl font-black tracking-tighter text-white uppercase flex items-center gap-1 md:gap-2 shrink-0">
-                  <div className="whitespace-nowrap underline underline-offset-4 decoration-white decoration-2 font-black">
-                    <span>{(settings?.siteName || 'BAZAR DALA').split(' ')[0]}</span>
-                    <span className="text-white group-hover:text-white transition-colors">
-                      {' '}<span>{(settings?.siteName || 'BAZAR DALA').split(' ').slice(1).join(' ')}</span>
-                    </span>
+                    <Link to="/" className="shrink-0">
+                      <Logo variant="header" settings={settings} />
+                    </Link>
                   </div>
-                </Link>
-              </div>
               <nav className="hidden xl:flex items-center gap-6 text-[11px] font-black uppercase tracking-[0.2em] text-white">
                 <Link to="/" onMouseEnter={() => import('../../pages/Home')} className="hover:text-white transition-colors relative group py-1">
                   HOME
@@ -504,142 +558,228 @@ export const UserLayout: React.FC = () => {
 
 
 
-      <footer className="bg-black pt-10 pb-8 relative overflow-hidden text-white mt-auto border-t border-slate-900 flex justify-center">
+      <footer className="bg-black pt-12 pb-10 relative overflow-hidden text-white mt-auto border-t border-slate-900 flex justify-center">
         <div className="w-full max-w-[1400px] px-4 md:px-6 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+            
+            {/* Column 1: Brand Info */}
             <div className="space-y-6">
-              <Link to="/" className="flex items-center gap-4 group">
-                <div className="w-12 h-12 bg-brand-primary flex items-center justify-center text-black font-black text-xl">
-                  {(settings?.siteName || 'SS').substring(0, 2).toUpperCase()}
-                </div>
-                <div>
-                  <h3 className="text-xl font-black tracking-tight leading-none uppercase">{settings?.siteName || 'SS SMART HAAT'}</h3>
-                  <p className="text-[9px] font-black tracking-[0.2em] text-brand-primary mt-1 uppercase">PREMIUM MARKET PLACE</p>
-                </div>
+              <Link to="/">
+                <Logo variant="footer" settings={settings} />
               </Link>
               
-              <div className="space-y-5">
-                <p className="text-slate-400 text-[11px] font-medium leading-relaxed uppercase tracking-wide">
-                  {settings?.siteDescription || 'YOUR CURATED DESTINATION FOR SMART FASHION AND MODERN MARKETPLACE ESSENTIALS.'}
-                </p>
-                {settings?.siteDescriptionBangla && (
-                  <div className="border-l-2 border-brand-primary pl-4">
-                    <p className="text-slate-200 text-[13px] leading-relaxed font-medium">
-                      {settings.siteDescriptionBangla}
-                    </p>
-                  </div>
-                )}
+              <p className="text-slate-400 text-[11px] font-medium leading-relaxed uppercase tracking-wide">
+                {settings?.siteDescription || "BAZAR THOLE IS BANGLADESH'S TRUSTED OMNI-CHANNEL E-COMMERCE HUB. WE BRING YOU PREMIUM QUALITY PRODUCTS ACROSS FASHION, ELECTRONICS, HEALTH & BEAUTY, DAILY GROCERIES, AND LIFESTYLE ESSENTIALS DIRECTLY TO YOUR DOORSTEP WITH GUARANTEED AUTHENTICITY."}
+              </p>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-2.5 text-[11px] font-black tracking-widest text-slate-400 uppercase">
+                  <MapPin className="h-4 w-4 text-orange-500 shrink-0" />
+                  <span>{settings?.contactAddress || 'DHAKA, BANGLADESH'}</span>
+                </div>
+                <div className="flex items-center gap-2.5 text-[11px] font-black tracking-widest text-slate-400 uppercase">
+                  <Mail className="h-4 w-4 text-orange-500 shrink-0" />
+                  <a href={`mailto:${settings?.contactEmail || 'INFO@BAZARTHOLE.COM'}`} className="hover:text-orange-500 transition-colors">
+                    {settings?.contactEmail || 'INFO@BAZARTHOLE.COM'}
+                  </a>
+                </div>
+                <div className="flex items-center gap-2.5 text-[11px] font-black tracking-widest text-slate-400 uppercase">
+                  <Phone className="h-4 w-4 text-orange-500 shrink-0" />
+                  <a href={`tel:${settings?.contactPhone || '+880 1300000000'}`} className="hover:text-orange-500 transition-colors">
+                    {settings?.contactPhone || '+880 1300000000'}
+                  </a>
+                </div>
               </div>
 
-              <div className="flex gap-3">
-                {settings?.whatsappNumber && (
-                   <a 
-                     href={`https://wa.me/${settings.whatsappNumber.replace(/\D/g, '')}`}
-                     target="_blank"
-                     rel="noopener noreferrer"
-                     className="w-10 h-10 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-[#25D366] hover:border-[#25D366] transition-all bg-slate-900/50 rounded-none"
-                   >
-                     <svg 
-                       viewBox="0 0 24 24" 
-                       className="h-5 w-5 fill-current"
-                       xmlns="http://www.w3.org/2000/svg"
-                     >
-                       <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-                     </svg>
-                   </a>
-                )}
-                {(settings?.socialLinks || []).map((social, i) => {
-                   const platform = social.platform.toUpperCase();
-                   let Icon = Mail;
-                   if (platform.includes('FB')) Icon = Facebook;
-                   else if (platform.includes('IG')) Icon = Instagram;
-                   else if (platform.includes('YT')) Icon = Youtube;
-
-                   return (
+              {/* Social Links inside Column 1 */}
+              <div>
+                <h5 className="text-[9px] font-black tracking-widest text-slate-500 uppercase mb-3">FOLLOW OUR CODES</h5>
+                <div className="flex gap-2">
+                  {settings?.whatsappNumber && (
                     <a 
-                      key={i} 
-                      href={social.url}
+                      href={`https://wa.me/${settings.whatsappNumber.replace(/\D/g, '')}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-10 h-10 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-brand-primary hover:border-brand-primary transition-all bg-slate-900/50 rounded-none"
+                      className="w-8 h-8 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-[#25D366] hover:border-[#25D366] transition-all bg-slate-900/50 rounded-none"
                     >
-                      <Icon className="h-5 w-5" />
+                      <svg 
+                        viewBox="0 0 24 24" 
+                        className="h-4 w-4 fill-current"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                      </svg>
                     </a>
-                   );
-                })}
+                  )}
+                  {(settings?.socialLinks || []).map((social, i) => {
+                    const platform = social.platform.toUpperCase();
+                    let Icon = Mail;
+                    if (platform.includes('FB')) Icon = Facebook;
+                    else if (platform.includes('IG')) Icon = Instagram;
+                    else if (platform.includes('YT')) Icon = Youtube;
+
+                    return (
+                      <a 
+                        key={i} 
+                        href={social.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-8 h-8 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-orange-500 hover:border-orange-500 transition-all bg-slate-900/50 rounded-none"
+                      >
+                        <Icon className="h-4 w-4" />
+                      </a>
+                    );
+                  })}
+                </div>
               </div>
             </div>
 
-            <div>
-              <h4 className="text-brand-primary font-black mb-8 uppercase tracking-[0.2em] text-[12px]">
-                SHOPPING_UNIT
+            {/* Column 2: Shop with Confidence */}
+            <div className="space-y-6">
+              <h4 className="text-white font-black text-xs uppercase tracking-[0.2em] pb-3 border-b border-slate-900">
+                SHOP WITH CONFIDENCE
               </h4>
-              <ul className="space-y-4 text-[13px] font-black text-white uppercase tracking-widest">
-                {(settings?.footerSupportLinks || [
-                  { label: 'CLOTHING', url: '/shop' },
-                  { label: 'FOOTWEAR', url: '/shop' },
-                  { label: 'ACCESSORIES', url: '/shop' }
-                ]).map((link, i) => (
-                  <li key={i}>
-                    <Link to={link.url} className="hover:text-brand-primary transition-colors inline-block">
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 border border-emerald-500/30 flex items-center justify-center shrink-0 bg-emerald-950/20 text-emerald-400">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                      <rect x="1" y="3" width="15" height="13" />
+                      <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
+                      <circle cx="5.5" cy="18.5" r="2.5" />
+                      <circle cx="18.5" cy="18.5" r="2.5" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h5 className="text-[11px] font-black text-white uppercase tracking-wider">EXPRESS HOME DELIVERY</h5>
+                    <p className="text-slate-400 text-[9px] font-bold uppercase tracking-wide leading-relaxed mt-0.5">
+                      SUPER FAST DOOR-TO-DOOR SHIPPING OPTION ACROSS ALL 64 DISTRICTS OF BANGLADESH.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 border border-emerald-500/30 flex items-center justify-center shrink-0 bg-emerald-950/20 text-emerald-400">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                      <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h5 className="text-[11px] font-black text-white uppercase tracking-wider">EASY RETURN SECURITY</h5>
+                    <p className="text-slate-400 text-[9px] font-bold uppercase tracking-wide leading-relaxed mt-0.5">
+                      STRESS-FREE REFUND OPTIONS IF PACKAGING IS UNTAMPERED OR ITEM VARIES FROM SPECIFICATIONS.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 border border-emerald-500/30 flex items-center justify-center shrink-0 bg-emerald-950/20 text-emerald-400">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                      <path d="m9 11 2 2 4-4" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h5 className="text-[11px] font-black text-white uppercase tracking-wider">100% VERIFIED QUALITY</h5>
+                    <p className="text-slate-400 text-[9px] font-bold uppercase tracking-wide leading-relaxed mt-0.5">
+                      EVERY DISPATCH HAS PASSED STRICT GRADING BENCHMARKS TO MATCH PREMIUM STANDARDS.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 border border-emerald-500/30 flex items-center justify-center shrink-0 bg-emerald-950/20 text-emerald-400">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                      <circle cx="12" cy="8" r="7" />
+                      <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h5 className="text-[11px] font-black text-white uppercase tracking-wider">GENUINE PRODUCTS ONLY</h5>
+                    <p className="text-slate-400 text-[9px] font-bold uppercase tracking-wide leading-relaxed mt-0.5">
+                      ZERO COUNTERFEITS. WE SOURCE DIRECTLY FROM BRANDS, MAJOR SUPPLIERS, OR FARMERS.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Column 3: Useful Hyperlinks */}
+            <div className="space-y-6">
+              <h4 className="text-white font-black text-xs uppercase tracking-[0.2em] pb-3 border-b border-slate-900">
+                USEFUL HYPERLINKS
+              </h4>
+              <ul className="space-y-4 text-[11px] font-black text-slate-400 uppercase tracking-widest transition-colors">
                 <li>
-                  <Link to="/tracking" className="hover:text-brand-primary transition-colors inline-block">
-                    ORDER TRACKING
+                  <Link to="/tracking" className="hover:text-orange-500 transition-colors inline-block">
+                    ORDER TRACKING SYSTEM
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/dashboard" className="hover:text-orange-500 transition-colors inline-block">
+                    MY PROFILE PORTAL
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/shop" className="hover:text-orange-500 transition-colors inline-block">
+                    COMPANY STORY & PRINCIPLES
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/shop" className="hover:text-orange-500 transition-colors inline-block">
+                    GET IN TOUCH / SUPPORT DESK
                   </Link>
                 </li>
               </ul>
             </div>
 
-            <div>
-              <h4 className="text-brand-primary font-black mb-8 uppercase tracking-[0.2em] text-[12px]">
-                GET_IN_TOUCH
-              </h4>
-              <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <Mail className="h-5 w-5 text-brand-primary shrink-0" />
-                  <a href={`mailto:${settings?.contactEmail || 'INFO.SMARTHAAT38@GMAIL.COM'}`} className="block group">
-                    <span className="block text-[9px] font-black text-brand-primary tracking-widest mb-1 uppercase opacity-60 group-hover:opacity-100 transition-opacity">ELECTRONIC_MAIL</span>
-                    <span className="text-[13px] font-black break-all hover:text-brand-primary transition-colors">{settings?.contactEmail || 'INFO.SMARTHAAT38@GMAIL.COM'}</span>
-                  </a>
+            {/* Column 4: Delivery & Gateways */}
+            <div className="space-y-6">
+              <div>
+                <h4 className="text-white font-black text-xs uppercase tracking-[0.2em] pb-3 border-b border-slate-900 mb-4">
+                  DELIVERY OPERATIONAL TIMING
+                </h4>
+                <div className="bg-[#0b0f19] border border-slate-800 p-4 rounded-none flex items-start gap-3">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 text-slate-400 shrink-0 mt-0.5">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
+                  <div>
+                    <h5 className="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-normal">
+                      WE DELIVER EVERYDAY DISPATCH ORDERS FROM
+                    </h5>
+                    <p className="text-[10px] md:text-[11px] font-black tracking-wider text-emerald-400 mt-1 uppercase">
+                      08:00 AM - 10:00 PM (EVERYDAY)
+                    </p>
+                  </div>
                 </div>
-                <div className="flex items-start gap-4">
-                  <MapPin className="h-5 w-5 text-brand-primary shrink-0" />
-                  <a 
-                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(settings?.contactAddress || 'DHAKA, BANGLADESH')}`} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="block group"
-                  >
-                    <span className="block text-[9px] font-black text-brand-primary tracking-widest mb-1 uppercase opacity-60 group-hover:opacity-100 transition-opacity">LOCATION_BASE</span>
-                    <span className="text-[13px] font-black uppercase hover:text-brand-primary transition-colors">{settings?.contactAddress || 'DHAKA, BANGLADESH'}</span>
-                  </a>
+              </div>
+
+              <div>
+                <h4 className="text-slate-400 font-black text-[9px] uppercase tracking-[0.2em] mb-3">
+                  AUTHORIZED SYSTEMS & GATEWAYS
+                </h4>
+                <div className="flex flex-wrap gap-1.5">
+                  <span className="bg-[#D12053] text-white text-[9px] font-black px-3 py-1.5 uppercase tracking-wider rounded-none">
+                    BKASH
+                  </span>
+                  <span className="bg-[#F04923] text-white text-[9px] font-black px-3 py-1.5 uppercase tracking-wider rounded-none">
+                    NAGAD
+                  </span>
+                  <span className="border border-[#00A19D] text-[#00A19D] bg-[#00A19D]/5 text-[9px] font-black px-3 py-1.5 uppercase tracking-wider rounded-none">
+                    SSLCOMMERZ
+                  </span>
+                  <span className="border border-slate-700 text-slate-400 text-[9px] font-black px-3 py-1.5 uppercase tracking-wider rounded-none">
+                    COD
+                  </span>
                 </div>
               </div>
             </div>
 
-            <div>
-              <h4 className="text-brand-primary font-black mb-8 uppercase tracking-[0.2em] text-[12px]">
-                EMERGENCY_LINK
-              </h4>
-              <div className="flex items-center gap-4">
-                <Phone className="h-5 w-5 text-brand-primary" />
-                <a href={`tel:${settings?.contactPhone || '+8801XXX-XXXXXX'}`} className="group">
-                  <span className="block text-[9px] font-black text-brand-primary tracking-widest mb-1 uppercase opacity-60 group-hover:opacity-100 transition-opacity">VOICE_SUPPORT</span>
-                  <span className="text-[16px] font-black tracking-tighter text-white group-hover:text-brand-primary transition-colors">
-                    {settings?.contactPhone || '+880 1XXX XXXXXX'}
-                  </span>
-                </a>
-              </div>
-            </div>
           </div>
 
           <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
             <p className="text-slate-500 text-[9px] font-black uppercase tracking-[0.3em] opacity-60">
-              © 2026 {(settings?.siteName || 'SS_SMART_HAAT').replace(/ /g, '_').toUpperCase()} // TERMINAL_FOOTER_01
+              © 2026 {(settings?.siteName || 'BAZAR THOLE').replace(/ /g, '_').toUpperCase()} // TERMINAL_FOOTER_01
             </p>
             <div className="hidden lg:flex items-center gap-4 opacity-20">
                <div className="h-[2px] w-12 bg-white" />

@@ -63,7 +63,7 @@ const LoadingFallback = () => {
         </div>
       </div>
       <div className="text-brand-primary font-black uppercase tracking-[0.5em] text-[10px] animate-pulse z-10">
-        BAZAR_DALA_PROTOCOL_INITIALIZING
+        BAZAR_THOLE_PROTOCOL_INITIALIZING
       </div>
 
       {showRetry && (
@@ -127,7 +127,7 @@ const AppContent = () => {
     if (settings?.siteName) {
       document.title = `${settings.siteName} | Premium Online Shop`;
     } else {
-      document.title = 'BAZAR DALA | Premium Online Shop';
+      document.title = 'BAZAR THOLE | Premium Online Shop';
     }
   }, [settings]);
 

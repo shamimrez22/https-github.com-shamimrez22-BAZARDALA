@@ -38,16 +38,13 @@ const AdminAnalytics = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      <div className="bg-slate-50 border-b border-slate-200 p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+      <div className="bg-[#ead9c4] border-b border-[#777] p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-2 h-6 bg-brand-primary" />
-            <h1 className="text-2xl font-black text-slate-900 uppercase tracking-tighter">
-              Sales Analytics
-            </h1>
-          </div>
-          <p className="text-slate-400 font-bold text-[9px] uppercase tracking-[0.2em]">
-            Sales Intelligence // Dashboard // Data Sync: Active
+          <h1 className="text-2xl font-black text-[#9B2B2C] uppercase tracking-tight flex items-center gap-3">
+            Sales <span className="text-slate-900">Analytics</span>
+          </h1>
+          <p className="text-slate-600 font-bold text-[10px] uppercase mt-1">
+            Sales Intelligence Ledger // Operation Protocol 33 // Data Sync Active
           </p>
         </div>
         <div className="flex gap-3">

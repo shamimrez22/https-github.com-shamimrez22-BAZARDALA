@@ -64,18 +64,18 @@ const AdminDashboard = () => {
         
         if (siteDoc.exists()) {
           const currentSettings = siteDoc.data();
-          const oldNames = ['LuxeCart', 'Luxe Cart', 'LUXECART', 'LUXE CART', 'My App'];
+          const oldNames = ['LuxeCart', 'Luxe Cart', 'LUXECART', 'LUXE CART', 'My App', 'BAZAR DALA', 'SS SMART HAAT'];
           
           if (oldNames.includes(currentSettings.siteName)) {
-            console.log('MIGRATION: Updating site name to BAZAR DALA');
+            console.log('MIGRATION: Updating site name to BAZAR THOLE');
             await setDoc(siteDocRef, {
               ...currentSettings,
-              siteName: 'BAZAR DALA',
-              siteDescription: currentSettings.siteDescription?.toLowerCase().includes('luxe') 
-                ? 'BAZAR DALA - Your premium destination for multi-category products and deals.'
-                : currentSettings.siteDescription || 'BAZAR DALA - Your premium destination for multi-category products and deals.'
+              siteName: 'BAZAR THOLE',
+              siteDescription: currentSettings.siteDescription?.toLowerCase().includes('luxe') || currentSettings.siteDescription?.toLowerCase().includes('dala')
+                ? 'BAZAR THOLE - Your premium destination for multi-category products and deals.'
+                : currentSettings.siteDescription || 'BAZAR THOLE - Your premium destination for multi-category products and deals.'
             }, { merge: true });
-            toast.success('System rebranded to BAZAR DALA successfully.');
+            toast.success('System rebranded to BAZAR THOLE successfully.');
           }
         }
       } catch (error) {
@@ -185,24 +185,21 @@ const AdminDashboard = () => {
 
   return (
     <div className="flex flex-col min-h-full">
-      <div className="bg-slate-50 border-b border-slate-200 p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+      <div className="bg-[#ead9c4] border-b border-[#777] p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <div className="flex items-center gap-2 mb-2">
-             <div className="w-2 h-6 bg-brand-primary" />
-             <h1 className="text-2xl font-black text-slate-900 uppercase tracking-tighter">
-                Admin Dashboard
-             </h1>
-          </div>
-          <p className="text-slate-400 font-bold text-[9px] uppercase tracking-[0.2em]">
-            Status: Active // Protocol: Manual
+          <h1 className="text-2xl font-black text-[#9B2B2C] uppercase tracking-tight flex items-center gap-3">
+            Admin <span className="text-slate-900">Dashboard</span>
+          </h1>
+          <p className="text-slate-600 font-bold text-[10px] uppercase mt-1">
+            Core Performance Metrics // Operation Protocol 10
           </p>
         </div>
         <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200">
-               <div className="w-2 h-2 bg-green-500 animate-pulse" />
+            <div className="flex items-center gap-2 px-4 py-2 bg-white border border-[#777]/30 shadow-sm">
+               <div className="w-2 h-2 bg-emerald-500 animate-pulse" />
                <span className="text-[10px] font-black text-slate-800 uppercase tracking-widest">System Online</span>
             </div>
-            <button className="h-10 px-6 bg-brand-primary text-white font-black uppercase text-[10px] tracking-widest hover:opacity-90 active:scale-95 transition-all">
+            <button className="h-10 px-6 bg-brand-primary text-white font-black uppercase text-[10px] tracking-widest hover:bg-slate-900 transition-all shadow-sm">
                Generate Report
             </button>
         </div>

@@ -6,13 +6,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui
 import { Input } from '../../../components/ui/input';
 import { Label } from '../../../components/ui/label';
 import { Button } from '../../../components/ui/button';
-import { Save, Globe, Info, Share2, Plus, Trash2, Mail, Lock, ShieldCheck } from 'lucide-react';
+import { Save, Globe, Info, Share2, Plus, Trash2, Mail, Lock, ShieldCheck, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 
 const GeneralSettings = () => {
   const [settings, setSettings] = useState<any>({}); // Changed to any to allow manual indexing for now
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [showAdminPass, setShowAdminPass] = useState(true);
+  const [showGmailPass, setShowGmailPass] = useState(true);
 
   useEffect(() => {
     const unsub = onSnapshot(doc(db, 'settings', 'site'), (snapshot) => {
@@ -283,16 +285,25 @@ const GeneralSettings = () => {
             </div>
             <div className="space-y-2">
               <Label className="text-[10px] font-black uppercase text-slate-600">Admin Password</Label>
-              <Input 
-                type="password"
-                value={settings.adminCredentials?.pass || ''} 
-                onChange={e => setSettings({
-                  ...settings, 
-                  adminCredentials: { ...(settings.adminCredentials || {}), pass: e.target.value }
-                })}
-                className="h-12 border-[#777] rounded-none font-black text-sm"
-                placeholder="Admin password"
-              />
+              <div className="relative">
+                <Input 
+                  type={showAdminPass ? "text" : "password"}
+                  value={settings.adminCredentials?.pass || ''} 
+                  onChange={e => setSettings({
+                    ...settings, 
+                    adminCredentials: { ...(settings.adminCredentials || {}), pass: e.target.value }
+                  })}
+                  className="h-12 border-[#777] rounded-none font-black text-sm pr-12"
+                  placeholder="Admin password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowAdminPass(!showAdminPass)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                >
+                  {showAdminPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
             </div>
             <div className="space-y-2">
               <Label className="text-[10px] font-black uppercase text-slate-600">Recovery Gmail (OTP এর জন্য)</Label>
@@ -308,16 +319,25 @@ const GeneralSettings = () => {
             </div>
             <div className="space-y-2">
               <Label className="text-[10px] font-black uppercase text-slate-600">Gmail App Password</Label>
-              <Input 
-                type="password"
-                value={settings.adminCredentials?.adminGmailPassword || ''} 
-                onChange={e => setSettings({
-                  ...settings, 
-                  adminCredentials: { ...(settings.adminCredentials || {}), adminGmailPassword: e.target.value }
-                })}
-                className="h-12 border-[#777] rounded-none font-black text-sm"
-                placeholder="16 Character App Password"
-              />
+              <div className="relative">
+                <Input 
+                  type={showGmailPass ? "text" : "password"}
+                  value={settings.adminCredentials?.adminGmailPassword || ''} 
+                  onChange={e => setSettings({
+                    ...settings, 
+                    adminCredentials: { ...(settings.adminCredentials || {}), adminGmailPassword: e.target.value }
+                  })}
+                  className="h-12 border-[#777] rounded-none font-black text-sm pr-12"
+                  placeholder="16 Character App Password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowGmailPass(!showGmailPass)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                >
+                  {showGmailPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
             </div>
             <div className="space-y-2">
               <Label className="text-[10px] font-black uppercase text-slate-600">Master Security PIN (রিকভারির জন্য)</Label>

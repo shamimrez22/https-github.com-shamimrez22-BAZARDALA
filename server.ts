@@ -4,6 +4,7 @@ import { createServer as createViteServer } from 'vite';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs/promises';
+import fsSync from 'fs';
 import nodemailer from 'nodemailer';
 import { initializeApp, cert } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
@@ -12,15 +13,37 @@ import { v4 as uuidv4 } from 'uuid';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Initialize Firebase Admin (Using default creds if available)
+// Initialize Firebase Admin (Using service account if available, else default creds)
 let db: any = null;
 
 const initFirebaseAdmin = () => {
   if (db) return db;
   try {
-    const adminApp = initializeApp();
+    let adminApp;
+    
+    // Check local service account file first
+    const localSAKeyPath = path.join(process.cwd(), 'firebase-service-account.json');
+    const hasLocalSAKey = fsSync.existsSync(localSAKeyPath);
+
+    if (hasLocalSAKey) {
+      const saData = fsSync.readFileSync(localSAKeyPath, 'utf-8');
+      adminApp = initializeApp({
+        credential: cert(JSON.parse(saData))
+      });
+      console.log('Firebase Admin initialized with local firebase-service-account.json');
+    } else if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+      // Check service account JSON string from environment variable
+      const saData = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+      adminApp = initializeApp({
+        credential: cert(saData)
+      });
+      console.log('Firebase Admin initialized with FIREBASE_SERVICE_ACCOUNT env variable');
+    } else {
+      adminApp = initializeApp();
+      console.log('Firebase Admin initialized with default application credentials');
+    }
+
     db = getFirestore(adminApp);
-    console.log('Firebase Admin initialized successfully');
     return db;
   } catch (error) {
     console.warn('Firebase Admin initialization delayed or failed:', error);
@@ -30,7 +53,7 @@ const initFirebaseAdmin = () => {
 
 async function startServer() {
   const app = express();
-  const PORT = 3000;
+  const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 
   // Compress all responses containing assets or data above 1KB
   app.use(compression({

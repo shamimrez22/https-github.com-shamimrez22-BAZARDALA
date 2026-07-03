@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
-import { Lock, User, ShieldCheck, Mail, AlertCircle, ShoppingBasket, Loader2 } from 'lucide-react';
+import { Lock, User, ShieldCheck, Mail, AlertCircle, ShoppingBasket, Loader2, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion } from 'motion/react';
 
@@ -15,6 +15,8 @@ const AdminLogin = () => {
   const [recoveryAppPass, setRecoveryAppPass] = useState('');
   const [masterPin, setMasterPin] = useState('');
   const [showRecovery, setShowRecovery] = useState(false);
+  const [showPassword, setShowPassword] = useState(true);
+  const [showRecoveryAppPass, setShowRecoveryAppPass] = useState(true);
   const { loginAdmin, loginWithGoogle, isAdmin, loading, adminCreds } = useAuth();
   const navigate = useNavigate();
 
@@ -126,13 +128,20 @@ const AdminLogin = () => {
                   <div className="relative">
                     <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-primary" />
                     <Input
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="pl-12 bg-white border-[#777] text-slate-900 rounded-none h-14 font-black text-xs focus-visible:ring-0 focus-visible:border-brand-primary"
-                      placeholder="••••••••"
+                      className="pl-12 pr-12 bg-white border-[#777] text-slate-900 rounded-none h-14 font-black text-xs focus-visible:ring-0 focus-visible:border-brand-primary"
+                      placeholder="Enter Password"
                       required
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none cursor-pointer"
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
                   </div>
                 </div>
 
@@ -208,13 +217,20 @@ const AdminLogin = () => {
                     <div className="relative">
                       <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-primary" />
                       <Input
-                        type="password"
+                        type={showRecoveryAppPass ? "text" : "password"}
                         value={recoveryAppPass}
                         onChange={(e) => setRecoveryAppPass(e.target.value)}
-                        className="pl-12 bg-white border-[#777] text-slate-900 rounded-none h-12 font-black text-xs"
-                        placeholder="••••••••••••••••"
+                        className="pl-12 pr-12 bg-white border-[#777] text-slate-900 rounded-none h-12 font-black text-xs"
+                        placeholder="Gmail App Password"
                         required
                       />
+                      <button
+                        type="button"
+                        onClick={() => setShowRecoveryAppPass(!showRecoveryAppPass)}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none cursor-pointer"
+                      >
+                        {showRecoveryAppPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
                     </div>
                   </div>
 

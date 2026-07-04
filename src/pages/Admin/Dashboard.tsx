@@ -64,18 +64,18 @@ const AdminDashboard = () => {
         
         if (siteDoc.exists()) {
           const currentSettings = siteDoc.data();
-          const oldNames = ['LuxeCart', 'Luxe Cart', 'LUXECART', 'LUXE CART', 'My App', 'BAZAR DALA', 'SS SMART HAAT'];
+          const oldNames = ['LuxeCart', 'Luxe Cart', 'LUXECART', 'LUXE CART', 'My App', 'BAZAR THOLE', 'BAZAR_THOLE', 'SS SMART HAAT'];
           
           if (oldNames.includes(currentSettings.siteName)) {
-            console.log('MIGRATION: Updating site name to BAZAR THOLE');
+            console.log('MIGRATION: Updating site name to BAZAR DALA');
             await setDoc(siteDocRef, {
               ...currentSettings,
-              siteName: 'BAZAR THOLE',
-              siteDescription: currentSettings.siteDescription?.toLowerCase().includes('luxe') || currentSettings.siteDescription?.toLowerCase().includes('dala')
-                ? 'BAZAR THOLE - Your premium destination for multi-category products and deals.'
-                : currentSettings.siteDescription || 'BAZAR THOLE - Your premium destination for multi-category products and deals.'
+              siteName: 'BAZAR DALA',
+              siteDescription: currentSettings.siteDescription?.toLowerCase().includes('luxe') || currentSettings.siteDescription?.toLowerCase().includes('thole')
+                ? 'BAZAR DALA - Your premium destination for multi-category products and deals.'
+                : currentSettings.siteDescription || 'BAZAR DALA - Your premium destination for multi-category products and deals.'
             }, { merge: true });
-            toast.success('System rebranded to BAZAR THOLE successfully.');
+            toast.success('System rebranded to BAZAR DALA successfully.');
           }
         }
       } catch (error) {

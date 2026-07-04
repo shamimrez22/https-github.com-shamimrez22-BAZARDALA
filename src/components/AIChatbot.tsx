@@ -14,7 +14,7 @@ interface Message {
 export const AIChatbot: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: "Hello! I'm your BAZAR THOLE AI assistant. How can I help you today?" }
+    { role: 'assistant', content: "Hello! I'm your BAZAR DALA AI assistant. How can I help you today?" }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -39,10 +39,10 @@ export const AIChatbot: React.FC = () => {
       const response = await ai.models.generateContent({
         model: 'gemini-3-flash-preview',
         contents: [
-          { role: 'user', parts: [{ text: `You are a helpful eCommerce assistant for BAZAR THOLE. Answer the user's question: ${userMsg}` }] }
+          { role: 'user', parts: [{ text: `You are a helpful eCommerce assistant for BAZAR DALA. Answer the user's question: ${userMsg}` }] }
         ],
         config: {
-          systemInstruction: "You are a friendly, professional assistant for BAZAR THOLE, a premium eCommerce store. You help users find products, track orders, and answer general questions about the store. Be concise and helpful."
+          systemInstruction: "You are a friendly, professional assistant for BAZAR DALA, a premium eCommerce store. You help users find products, track orders, and answer general questions about the store. Be concise and helpful."
         }
       });
 

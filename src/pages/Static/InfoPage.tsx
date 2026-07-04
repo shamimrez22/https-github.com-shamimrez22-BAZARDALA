@@ -9,7 +9,7 @@ const InfoPage = () => {
   const location = useLocation();
   const path = location.pathname;
 
-  const siteName = settings?.siteName || 'BAZAR THOLE';
+  const siteName = settings?.siteName || 'BAZAR DALA';
 
   const getPageContent = () => {
     switch (path) {
@@ -38,7 +38,7 @@ const InfoPage = () => {
         return {
           title: 'Contact Us',
           icon: Phone,
-          content: `Need to get in touch? You can reach us via email at ${settings?.contactEmail || 'info@bazarthole.com'} or call our hotline at ${settings?.contactPhone || '+880 1XXX XXXXXX'}.`,
+          content: `Need to get in touch? You can reach us via email at ${settings?.contactEmail || 'info@bazardala.com'} or call our hotline at ${settings?.contactPhone || '+880 1XXX XXXXXX'}.`,
           details: ['Customer Hotline', 'Email Support', 'Office Address', 'Social Media'],
           customAction: settings?.whatsappNumber ? (
             <a 

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { doc, onSnapshot } from 'firebase/firestore';
+import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { SiteSettings } from '../types';
 import { safeStorage } from '../lib/storage';
@@ -23,6 +23,20 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       if (snapshot.exists()) {
         const data = snapshot.data() as SiteSettings;
         
+        // Auto-migrate siteName to BAZAR DALA if it is BAZAR THOLE or other obsolete names
+        const oldNames = ['LuxeCart', 'Luxe Cart', 'LUXECART', 'LUXE CART', 'My App', 'BAZAR THOLE', 'BAZAR_THOLE', 'SS SMART HAAT'];
+        if (data.siteName && oldNames.includes(data.siteName)) {
+          console.log(`Auto-migrating siteName from ${data.siteName} to BAZAR DALA`);
+          updateDoc(doc(db, 'settings', 'site'), {
+            siteName: 'BAZAR DALA',
+            siteDescription: data.siteDescription?.toLowerCase().includes('thole')
+              ? 'BAZAR DALA - Your premium destination for multi-category products and deals.'
+              : data.siteDescription || 'BAZAR DALA - Your premium destination for multi-category products and deals.'
+          }).catch(err => {
+            console.error('Failed to auto-migrate siteName in Firestore:', err);
+          });
+        }
+
         // Ensure nesting doesn't break
         const sanitizedData = {
           ...data,

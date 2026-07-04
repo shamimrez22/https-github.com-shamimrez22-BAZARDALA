@@ -29,9 +29,9 @@ import { SiteSettings } from '../../types';
 import { useSettings } from '../../context/SettingsContext';
 
 const Logo: React.FC<{ variant?: 'header' | 'footer' | 'modal'; settings?: any }> = ({ variant = 'header', settings }) => {
-  const siteName = settings?.siteName || 'BAZAR THOLE';
+  const siteName = settings?.siteName || 'BAZAR DALA';
   const firstWord = siteName.split(' ')[0] || 'BAZAR';
-  const restOfName = siteName.split(' ').slice(1).join(' ') || 'THOLE';
+  const restOfName = siteName.split(' ').slice(1).join(' ') || 'DALA';
 
   return (
     <div className="flex items-center gap-1.5 md:gap-2.5 group cursor-pointer">
@@ -569,7 +569,7 @@ export const UserLayout: React.FC = () => {
               </Link>
               
               <p className="text-slate-400 text-[11px] font-medium leading-relaxed uppercase tracking-wide">
-                {settings?.siteDescription || "BAZAR THOLE IS BANGLADESH'S TRUSTED OMNI-CHANNEL E-COMMERCE HUB. WE BRING YOU PREMIUM QUALITY PRODUCTS ACROSS FASHION, ELECTRONICS, HEALTH & BEAUTY, DAILY GROCERIES, AND LIFESTYLE ESSENTIALS DIRECTLY TO YOUR DOORSTEP WITH GUARANTEED AUTHENTICITY."}
+                {settings?.siteDescription || "BAZAR DALA IS BANGLADESH'S TRUSTED OMNI-CHANNEL E-COMMERCE HUB. WE BRING YOU PREMIUM QUALITY PRODUCTS ACROSS FASHION, ELECTRONICS, HEALTH & BEAUTY, DAILY GROCERIES, AND LIFESTYLE ESSENTIALS DIRECTLY TO YOUR DOORSTEP WITH GUARANTEED AUTHENTICITY."}
               </p>
 
               <div className="space-y-4">
@@ -579,8 +579,8 @@ export const UserLayout: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-2.5 text-[11px] font-black tracking-widest text-slate-400 uppercase">
                   <Mail className="h-4 w-4 text-orange-500 shrink-0" />
-                  <a href={`mailto:${settings?.contactEmail || 'INFO@BAZARTHOLE.COM'}`} className="hover:text-orange-500 transition-colors">
-                    {settings?.contactEmail || 'INFO@BAZARTHOLE.COM'}
+                  <a href={`mailto:${settings?.contactEmail || 'INFO@BAZARDALA.COM'}`} className="hover:text-orange-500 transition-colors">
+                    {settings?.contactEmail || 'INFO@BAZARDALA.COM'}
                   </a>
                 </div>
                 <div className="flex items-center gap-2.5 text-[11px] font-black tracking-widest text-slate-400 uppercase">
@@ -779,7 +779,7 @@ export const UserLayout: React.FC = () => {
 
           <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
             <p className="text-slate-500 text-[9px] font-black uppercase tracking-[0.3em] opacity-60">
-              © 2026 {(settings?.siteName || 'BAZAR THOLE').replace(/ /g, '_').toUpperCase()} // TERMINAL_FOOTER_01
+              © 2026 {(settings?.siteName || 'BAZAR DALA').replace(/ /g, '_').toUpperCase()} // TERMINAL_FOOTER_01
             </p>
             <div className="hidden lg:flex items-center gap-4 opacity-20">
                <div className="h-[2px] w-12 bg-white" />

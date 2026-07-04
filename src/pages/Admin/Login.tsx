@@ -94,7 +94,7 @@ const AdminLogin = () => {
             <div className="absolute -top-1 -right-1 w-3 h-3 bg-white border border-brand-primary" />
             <div className="absolute -bottom-1 -left-1 w-3 h-3 bg-white border border-brand-primary" />
           </div>
-          <h1 className="text-4xl font-black text-slate-900 mb-2 uppercase tracking-tighter leading-none">BAZAR<span className="text-brand-primary"> THOLE</span> Admin</h1>
+          <h1 className="text-4xl font-black text-slate-900 mb-2 uppercase tracking-tighter leading-none">BAZAR<span className="text-brand-primary"> DALA</span> Admin</h1>
           <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] font-mono">Control_OS // Secure_Access</p>
         </div>
 
@@ -292,7 +292,7 @@ const AdminLogin = () => {
         <div className="text-center mt-10">
            <div className="inline-block px-4 py-1 border border-[#777]/30 bg-[#ead9c4]/30">
               <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
-                &copy; 2026 BAZAR THOLE // Protocol Secured
+                &copy; 2026 BAZAR DALA // Protocol Secured
               </p>
            </div>
         </div>

@@ -63,10 +63,10 @@ const AdminStaff = () => {
   );
 
   return (
-    <div className="flex flex-col min-h-screen bg-white">
-      <div className="bg-[#ead9c4] border-b border-[#777] p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+    <div className="flex flex-col min-h-screen bg-[#f4efe6]">
+      <div className="bg-[#ead9c4] border-b-2 border-slate-900 p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h1 className="text-2xl font-black text-[#9B2B2C] uppercase tracking-tight flex items-center gap-3">
+          <h1 className="text-2xl font-black text-[#8B1E1E] uppercase tracking-tight flex items-center gap-3">
             Staff <span className="text-slate-900">Control Center</span>
           </h1>
           <p className="text-slate-600 font-bold text-[10px] uppercase mt-1">
@@ -79,7 +79,7 @@ const AdminStaff = () => {
             placeholder="Query Admin ID..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 h-11 bg-slate-800 border border-slate-700 text-[11px] font-black uppercase tracking-widest text-white outline-none focus:border-brand-primary transition-all"
+            className="w-full pl-10 pr-4 h-11 bg-white border-2 border-slate-900 text-[11px] font-black uppercase tracking-widest text-slate-800 outline-none focus:border-[#8B1E1E] transition-all shadow-sm"
           />
         </div>
       </div>
@@ -87,25 +87,25 @@ const AdminStaff = () => {
       <div className="p-8 max-w-7xl mx-auto w-full">
         <div className="grid grid-cols-1 gap-4">
           {loading ? (
-             <div className="py-20 text-center font-black text-slate-300 uppercase tracking-widest animate-pulse">
+             <div className="py-20 text-center font-black text-slate-400 uppercase tracking-widest animate-pulse">
                 Scanning_Registry_Nodes...
              </div>
           ) : filteredStaff.length === 0 ? (
-             <div className="py-20 text-center font-black text-slate-300 uppercase tracking-widest border-2 border-dashed border-slate-100">
+             <div className="py-20 text-center font-black text-slate-400 uppercase tracking-widest border-2 border-dashed border-slate-900/10">
                 No_Authorized_Sub_Admins_Found
              </div>
           ) : filteredStaff.map((member) => (
-            <div key={member.uid} className={`group border transition-all ${member.status === 'suspended' ? 'bg-rose-50 border-rose-100 opacity-75' : 'bg-white border-slate-200 hover:border-brand-primary'}`}>
+            <div key={member.uid} className={`group border-2 border-slate-900 shadow-sm transition-all ${member.status === 'suspended' ? 'bg-rose-50/60 opacity-80' : 'bg-[#faf6f0] hover:border-[#8B1E1E]'}`}>
               <div className="flex flex-col md:flex-row items-center p-6 gap-6">
                 <div className="relative">
-                   <div className={`w-16 h-16 p-1 border ${member.role === 'super_admin' ? 'border-brand-primary' : 'border-slate-200'} bg-white overflow-hidden`}>
+                   <div className={`w-16 h-16 p-1 border-2 ${member.role === 'super_admin' ? 'border-[#8B1E1E]' : 'border-slate-900'} bg-white overflow-hidden`}>
                       <Avatar className="h-full w-full rounded-none">
                         <AvatarImage src={`https://api.dicebear.com/7.x/pixel-art/svg?seed=${member.email}`} />
                         <AvatarFallback className="rounded-none bg-slate-100 font-black">{(member.name || 'A')[0]}</AvatarFallback>
                       </Avatar>
                    </div>
                    {member.role === 'super_admin' && (
-                      <div className="absolute -top-2 -right-2 bg-brand-primary text-white p-1 shadow-lg">
+                      <div className="absolute -top-2 -right-2 bg-[#8B1E1E] text-white p-1 shadow-lg border-2 border-slate-900">
                          <Shield className="h-3 w-3" />
                       </div>
                    )}
@@ -114,16 +114,16 @@ const AdminStaff = () => {
                 <div className="flex-1 text-center md:text-left">
                   <div className="flex flex-wrap items-center justify-center md:justify-start gap-3 mb-1">
                     <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight">{member.name || 'Anonymous Admin'}</h3>
-                    <div className={`px-3 py-0.5 text-[8px] font-black uppercase tracking-widest border ${member.role === 'super_admin' ? 'bg-brand-primary text-white border-brand-primary' : 'bg-slate-900 text-white border-slate-900'}`}>
+                    <div className={`px-3 py-0.5 text-[8px] font-black uppercase tracking-widest border-2 ${member.role === 'super_admin' ? 'bg-[#8B1E1E] text-white border-[#8B1E1E]' : 'bg-slate-900 text-white border-slate-900'}`}>
                       {member.role}
                     </div>
                     {member.status === 'suspended' && (
-                       <div className="bg-rose-600 text-white px-3 py-0.5 text-[8px] font-black uppercase tracking-widest">
+                       <div className="bg-rose-600 text-white px-3 py-0.5 text-[8px] font-black uppercase tracking-widest border-2 border-slate-900">
                           SUSPENDED
                        </div>
                     )}
                   </div>
-                  <p className="text-[11px] font-mono text-slate-400 group-hover:text-slate-600 transition-colors uppercase tracking-tight">{member.email}</p>
+                  <p className="text-[11px] font-mono text-slate-500 group-hover:text-slate-700 transition-colors uppercase tracking-tight">{member.email}</p>
                 </div>
 
                 <div className="flex gap-2 flex-wrap justify-center">
@@ -148,10 +148,10 @@ const AdminStaff = () => {
                             }
                           }}
                           variant="outline" 
-                          className={`h-10 px-4 rounded-none font-black text-[9px] uppercase tracking-widest transition-all ${
+                          className={`h-10 px-4 rounded-none font-black text-[9px] uppercase tracking-widest transition-all border-2 border-slate-900 shadow-sm cursor-pointer ${
                             confirmingUid === member.uid && confirmType === 'suspend'
                               ? "bg-rose-600 text-white border-rose-600 px-6"
-                              : "border-rose-200 text-rose-600 hover:bg-rose-600 hover:text-white"
+                              : "bg-white text-rose-600 hover:bg-rose-600 hover:text-white"
                           }`}
                         >
                           {confirmingUid === member.uid && confirmType === 'suspend' ? "SURE? SUSPEND" : <><ShieldAlert className="h-3.5 w-3.5 mr-2" /> Suspend Access</>}
@@ -164,7 +164,7 @@ const AdminStaff = () => {
                             handleUpdateStatus(member.uid, 'active');
                           }}
                           variant="outline" 
-                          className="h-10 px-4 border-green-200 text-green-600 hover:bg-green-600 hover:text-white rounded-none font-black text-[9px] uppercase tracking-widest transition-all"
+                          className="h-10 px-4 bg-white border-2 border-slate-900 text-green-600 hover:bg-green-600 hover:text-white rounded-none font-black text-[9px] uppercase tracking-widest transition-all cursor-pointer shadow-sm"
                         >
                           <ShieldCheck className="h-3.5 w-3.5 mr-2" /> Restore Access
                         </Button>
@@ -182,23 +182,23 @@ const AdminStaff = () => {
                             setConfirmingUid(member.uid);
                             setConfirmType('remove');
                             setTimeout(() => {
-                              setConfirmingUid(null);
-                              setConfirmType(null);
-                            }, 3000);
+                                setConfirmingUid(null);
+                                setConfirmType(null);
+                              }, 3000);
                           }
                         }}
                         variant="outline" 
-                        className={`h-10 px-4 rounded-none font-black text-[9px] uppercase tracking-widest transition-all ${
+                        className={`h-10 px-4 rounded-none font-black text-[9px] uppercase tracking-widest transition-all border-2 border-slate-900 shadow-sm cursor-pointer ${
                           confirmingUid === member.uid && confirmType === 'remove'
                             ? "bg-slate-900 text-white border-slate-900 px-6"
-                            : "border-slate-200 text-slate-600 hover:bg-slate-900 hover:text-white"
+                            : "bg-white text-slate-600 hover:bg-slate-950 hover:text-white"
                         }`}
                       >
                         {confirmingUid === member.uid && confirmType === 'remove' ? "SURE? REMOVE ROLE" : <><UserMinus className="h-3.5 w-3.5 mr-2" /> Remove Admin</>}
                       </Button>
                     </>
                   ) : (
-                    <div className="bg-slate-50 border border-slate-100 px-4 py-2 text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                    <div className="bg-[#f4efe6] border-2 border-slate-900 px-4 py-2 text-[9px] font-black text-slate-500 uppercase tracking-widest shadow-sm">
                       Immutable Hierarchy Node
                     </div>
                   )}
@@ -209,9 +209,9 @@ const AdminStaff = () => {
         </div>
 
         {/* Info Card */}
-        <div className="mt-12 bg-slate-50 border border-slate-200 p-8">
+        <div className="mt-12 bg-[#ead9c4]/30 border-2 border-slate-900 p-8 shadow-sm">
            <div className="flex gap-4 items-start">
-              <Shield className="h-6 w-6 text-brand-primary shrink-0 mt-1" />
+              <Shield className="h-6 w-6 text-[#8B1E1E] shrink-0 mt-1" />
               <div>
                  <h4 className="font-black text-slate-900 uppercase text-xs mb-2">Sovereign Admin Protocols</h4>
                  <p className="text-[10px] font-bold text-slate-500 uppercase leading-relaxed max-w-3xl">

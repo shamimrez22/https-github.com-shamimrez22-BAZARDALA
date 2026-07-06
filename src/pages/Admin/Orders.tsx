@@ -380,10 +380,10 @@ const AdminOrders = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-white">
-      <div className="bg-[#ead9c4] border-b border-[#777] p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+    <div className="flex flex-col min-h-screen bg-[#f4efe6]">
+      <div className="bg-[#ead9c4] border-b-2 border-slate-900 p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h1 className="text-2xl font-black text-[#9B2B2C] uppercase tracking-tight flex items-center gap-3">
+          <h1 className="text-2xl font-black text-[#8B1E1E] uppercase tracking-tight flex items-center gap-3">
             Order <span className="text-slate-900">Management</span>
           </h1>
           <p className="text-slate-600 font-bold text-[10px] uppercase mt-1">
@@ -394,32 +394,32 @@ const AdminOrders = () => {
         <div className="flex flex-wrap items-center gap-2 overflow-x-auto pb-2 md:pb-0">
              <button 
                onClick={() => navigate('/admin/orders')}
-               className={`h-8 px-4 text-[9px] font-black uppercase transition-all tracking-widest ${
-                 !statusFilter ? 'bg-brand-primary text-white' : 'bg-white border border-slate-200 text-slate-500 hover:bg-slate-50'
+               className={`h-8 px-4 text-[9px] font-black uppercase transition-all tracking-widest border-2 border-slate-900 shadow-sm cursor-pointer ${
+                 !statusFilter ? 'bg-[#8B1E1E] text-white' : 'bg-[#faf6f0] text-slate-800 hover:bg-[#ebd9c4]/30'
                }`}
              >
                All Orders
              </button>
              <button 
                onClick={() => navigate('/admin/orders?status=pending')}
-               className={`h-8 px-4 text-[9px] font-black uppercase transition-all tracking-widest ${
-                 statusFilter === 'pending' ? 'bg-brand-primary text-white' : 'bg-white border border-slate-200 text-slate-500 hover:bg-slate-50'
+               className={`h-8 px-4 text-[9px] font-black uppercase transition-all tracking-widest border-2 border-slate-900 shadow-sm cursor-pointer ${
+                 statusFilter === 'pending' ? 'bg-[#8B1E1E] text-white' : 'bg-[#faf6f0] text-slate-800 hover:bg-[#ebd9c4]/30'
                }`}
              >
                Pending
              </button>
              <button 
                onClick={() => navigate('/admin/orders?status=confirmed')}
-               className={`h-8 px-4 text-[9px] font-black uppercase transition-all tracking-widest ${
-                 statusFilter === 'confirmed' ? 'bg-slate-800 text-white' : 'bg-white border border-slate-200 text-slate-500 hover:bg-slate-50'
+               className={`h-8 px-4 text-[9px] font-black uppercase transition-all tracking-widest border-2 border-slate-900 shadow-sm cursor-pointer ${
+                 statusFilter === 'confirmed' ? 'bg-[#8B1E1E] text-white' : 'bg-[#faf6f0] text-slate-800 hover:bg-[#ebd9c4]/30'
                }`}
              >
                Confirmed
              </button>
-             <div className="h-6 w-[1px] bg-slate-200 mx-2 hidden md:block" />
+             <div className="h-6 w-[1px] bg-slate-900/15 mx-2 hidden md:block" />
              <button 
                onClick={() => window.location.reload()}
-               className="h-8 px-3 text-[9px] font-black uppercase border border-slate-200 text-slate-400 hover:bg-slate-50"
+               className="h-8 px-3 text-[9px] font-black uppercase border-2 border-slate-900 text-slate-700 bg-[#faf6f0] hover:bg-[#ebd9c4]/30 shadow-sm cursor-pointer"
              >
                Refresh
              </button>
@@ -432,32 +432,62 @@ const AdminOrders = () => {
               placeholder="Search Order ID..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 h-10 bg-white border border-slate-200 text-[10px] font-black uppercase tracking-widest focus:border-brand-primary outline-none transition-colors"
+              className="w-full pl-10 pr-4 h-10 bg-white border-2 border-slate-900 text-[10px] font-black uppercase tracking-widest focus:border-[#8B1E1E] outline-none transition-colors shadow-sm"
             />
           </div>
         </div>
       </div>
 
       <div className="flex-1 p-8">
-        <div className="bg-white border border-slate-200 overflow-hidden min-h-[500px]">
+        <div className="bg-[#faf6f0] border-2 border-slate-900 shadow-sm overflow-hidden min-h-[500px]">
           <Table className="w-full text-left border-collapse table-fixed">
-            <TableHeader className="bg-brand-primary text-white uppercase sticky top-0 z-10 border-none">
-              <TableRow className="border-none hover:bg-brand-primary">
-                <TableHead className="w-32 px-6 py-3 text-[9px] font-black uppercase tracking-[0.2em] text-white border-r border-white/10">Order ID</TableHead>
-                <TableHead className="px-6 py-3 text-[9px] font-black uppercase tracking-[0.2em] text-white border-r border-white/10">Customer</TableHead>
-                <TableHead className="px-6 py-3 text-[9px] font-black uppercase tracking-[0.2em] text-white border-r border-white/10">Items</TableHead>
-                <TableHead className="w-40 px-6 py-3 text-[9px] font-black uppercase tracking-[0.2em] text-white border-r border-white/10">Amount</TableHead>
-                <TableHead className="w-32 px-6 py-3 text-[9px] font-black uppercase tracking-[0.2em] text-white border-r border-white/10">Status</TableHead>
-                <TableHead className="w-64 px-6 py-3 text-[9px] font-black uppercase tracking-[0.2em] text-white">Actions</TableHead>
+            <TableHeader className="bg-[#8B1E1E] text-white uppercase sticky top-0 z-10 border-none">
+              <TableRow className="border-none hover:bg-[#8B1E1E]">
+                <TableHead className="w-32 px-6 py-4 text-[9px] font-black uppercase tracking-[0.1em] text-white border-r border-white/10">
+                  <div className="flex flex-col">
+                    <span>ORDER ID</span>
+                    <span className="text-[8px] opacity-80 font-bold tracking-normal">(আইডি)</span>
+                  </div>
+                </TableHead>
+                <TableHead className="px-6 py-4 text-[9px] font-black uppercase tracking-[0.1em] text-white border-r border-white/10">
+                  <div className="flex flex-col">
+                    <span>CUSTOMER</span>
+                    <span className="text-[8px] opacity-80 font-bold tracking-normal">(গ্রাহক খতিয়ান)</span>
+                  </div>
+                </TableHead>
+                <TableHead className="px-6 py-4 text-[9px] font-black uppercase tracking-[0.1em] text-white border-r border-white/10">
+                  <div className="flex flex-col">
+                    <span>ITEMS</span>
+                    <span className="text-[8px] opacity-80 font-bold tracking-normal">(পণ্য তালিকা)</span>
+                  </div>
+                </TableHead>
+                <TableHead className="w-40 px-6 py-4 text-[9px] font-black uppercase tracking-[0.1em] text-white border-r border-white/10">
+                  <div className="flex flex-col">
+                    <span>AMOUNT</span>
+                    <span className="text-[8px] opacity-80 font-bold tracking-normal">(মোট মূল্য)</span>
+                  </div>
+                </TableHead>
+                <TableHead className="w-32 px-6 py-4 text-[9px] font-black uppercase tracking-[0.1em] text-white border-r border-white/10">
+                  <div className="flex flex-col">
+                    <span>STATUS</span>
+                    <span className="text-[8px] opacity-80 font-bold tracking-normal">(বর্তমান অবস্থা)</span>
+                  </div>
+                </TableHead>
+                <TableHead className="w-64 px-6 py-4 text-[9px] font-black uppercase tracking-[0.1em] text-white">
+                  <div className="flex flex-col">
+                    <span>ACTIONS</span>
+                    <span className="text-[8px] opacity-80 font-bold tracking-normal">(পদক্ষেপ)</span>
+                  </div>
+                </TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody className="divide-y divide-slate-100">
+            <TableBody className="divide-y divide-slate-900/10">
               {loading && (orders || []).length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center py-40">
                     <div className="flex flex-col items-center gap-3">
-                      <div className="w-8 h-8 border-2 border-slate-200 border-t-brand-primary animate-spin" />
-                      <p className="text-slate-300 font-black uppercase text-[9px] tracking-[0.2em]">Syncing_Global_Registry_Delta...</p>
+                      <div className="w-8 h-8 border-2 border-slate-300 border-t-[#8B1E1E] animate-spin" />
+                      <p className="text-slate-400 font-black uppercase text-[9px] tracking-[0.2em]">Syncing_Global_Registry_Delta...</p>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -466,37 +496,39 @@ const AdminOrders = () => {
                   {filteredOrders.map((order) => {
                     if (!order) return null;
                     return (
-                      <TableRow key={order.id || Math.random().toString()} className="hover:bg-slate-50 transition-all font-bold group">
-                        <TableCell className="px-6 py-4 text-[10px] border-r border-slate-100 whitespace-nowrap align-top">
+                      <TableRow key={order.id || Math.random().toString()} className="hover:bg-[#ebd9c4]/10 border-b border-slate-900/10 transition-all font-bold group bg-[#faf6f0]">
+                        <TableCell className="px-6 py-4 text-[10px] border-r border-slate-900/10 whitespace-nowrap align-top">
                           <span className="font-black text-slate-900 tracking-tighter">#{order?.orderId || 'NULL_ID'}</span>
                           <div className="text-[8px] text-slate-400 mt-1 uppercase font-mono tracking-tight">
                             {order?.createdAt?.toDate ? format(order.createdAt.toDate(), 'dd/MM/yy.HHmm') : 'WAIT_SYNC'}
                           </div>
                         </TableCell>
-                        <TableCell className="px-6 py-4 border-r border-slate-100 overflow-hidden align-top">
+                        <TableCell className="px-6 py-4 border-r border-slate-900/10 overflow-hidden align-top">
                           <div className="text-[11px] font-black text-slate-900 uppercase truncate leading-none">{order?.customerInfo?.name || 'GUEST'}</div>
                           <div className="text-[9px] text-slate-400 font-mono mt-1 opacity-60">{order?.customerInfo?.phone || 'NO_PHONE'}</div>
-                          <div className="text-[8px] text-slate-300 truncate mt-2 uppercase tracking-tight">
+                          <div className="text-[8px] text-slate-400 truncate mt-2 uppercase tracking-tight">
                             {order?.customerInfo?.address || 'NO_ADDRESS_NODE'}
                           </div>
                         </TableCell>
-                        <TableCell className="px-6 py-4 border-r border-slate-100 overflow-hidden align-top">
+                        <TableCell className="px-6 py-4 border-r border-slate-900/10 overflow-hidden align-top">
                           <div className="flex flex-col gap-1">
                             {order?.items?.slice(0, 2).map((item: any, i: number) => (
-                              <div key={i} className="text-[9px] text-slate-500 uppercase truncate leading-none">
+                              <div key={i} className="text-[9px] text-slate-600 uppercase truncate leading-none">
                                 <span className="text-slate-400">[{item?.quantity || 1}x]</span> {item?.name}
                               </div>
                             ))}
                             {order?.items && order.items.length > 2 && (
-                              <div className="text-[8px] text-slate-300 font-black">+{order.items.length - 2} ADDTL_ITEMS</div>
+                              <div className="text-[8px] text-slate-400 font-black">+{order.items.length - 2} ADDTL_ITEMS</div>
                             )}
                           </div>
                         </TableCell>
-                        <TableCell className="px-6 py-4 border-r border-slate-100 align-top">
+                        <TableCell className="px-6 py-4 border-r border-slate-900/10 align-top">
                           <div className="text-[13px] font-black text-slate-900 tracking-tighter">৳{(order?.total || 0).toLocaleString()}</div>
-                          <div className="text-[8px] text-slate-400 uppercase tracking-widest font-black mt-1">{order?.paymentMethod || 'COD_PROTOCOL'}</div>
+                          <div className="text-[8px] text-slate-400 uppercase tracking-widest font-black mt-1">
+                            <span className="px-1.5 py-0.5 border border-slate-900/10 bg-[#f4efe6] rounded-sm">{order?.paymentMethod || 'COD'}</span>
+                          </div>
                         </TableCell>
-                        <TableCell className="px-6 py-4 border-r border-slate-100 align-top">
+                        <TableCell className="px-6 py-4 border-r border-slate-900/10 align-top">
                           <div className="flex items-center gap-2">
                             <div className={`w-1.5 h-1.5 animate-pulse ${getOrderStatusColor(order?.status)}`} />
                             <span className="text-[9px] font-black uppercase text-slate-800 tracking-widest">{order?.status || 'Active'}</span>
@@ -508,7 +540,7 @@ const AdminOrders = () => {
                                <select 
                                  value={order.status || 'pending'}
                                  onChange={(e) => updateStatus(order.id, e.target.value)}
-                                 className="h-8 px-2 bg-slate-50 border border-slate-200 text-slate-900 text-[8px] font-black uppercase focus:outline-none transition-all flex-1"
+                                 className="h-8 px-2 bg-[#faf6f0] border-2 border-slate-900 text-slate-900 text-[8px] font-black uppercase focus:outline-none transition-all flex-1"
                                >
                                  {['pending', 'confirmed', 'processing', 'shipped', 'completed', 'cancelled'].map((status) => (
                                    <option key={status} value={status}>{status}</option>
@@ -517,7 +549,7 @@ const AdminOrders = () => {
                                
                                <button 
                                  onClick={() => generateInvoice(order)}
-                                 className="h-8 w-8 flex items-center justify-center bg-slate-50 border border-slate-200 text-slate-900 hover:bg-white transition-all flex-shrink-0"
+                                 className="h-8 w-8 flex items-center justify-center bg-[#faf6f0] border-2 border-slate-900 text-slate-900 hover:bg-[#ebd9c4]/30 transition-all flex-shrink-0 cursor-pointer"
                                  title="Invoice"
                                >
                                  <FileText className="h-3.5 w-3.5" />
@@ -535,10 +567,10 @@ const AdminOrders = () => {
                                      setTimeout(() => setDeletingId(null), 3000); // Reset after 3s
                                    }
                                  }}
-                                 className={`h-8 flex items-center justify-center border transition-all flex-shrink-0 ${
+                                 className={`h-8 flex items-center justify-center border-2 border-slate-900 transition-all flex-shrink-0 cursor-pointer ${
                                    deletingId === order.id 
                                      ? "bg-rose-600 text-white border-rose-600 px-3 min-w-[60px]" 
-                                     : "w-8 bg-rose-50 border-rose-100 text-rose-600 hover:bg-rose-100"
+                                     : "w-8 bg-rose-50 text-rose-600 hover:bg-rose-100"
                                  }`}
                                  title={deletingId === order.id ? "Confirm Delete" : "Delete"}
                                 >
@@ -557,7 +589,7 @@ const AdminOrders = () => {
                                    e.stopPropagation();
                                    updateStatus(order.id, 'confirmed');
                                  }}
-                                 className="w-full h-8 px-4 bg-brand-primary text-white text-[8px] font-black uppercase hover:bg-slate-900 transition-all active:scale-95"
+                                 className="w-full h-8 px-4 bg-[#8B1E1E] border-2 border-slate-900 shadow-sm text-white text-[8px] font-black uppercase hover:bg-slate-950 transition-all active:scale-95 cursor-pointer"
                                >
                                  CONFIRM ORDER
                                </button>
@@ -573,7 +605,7 @@ const AdminOrders = () => {
                         <button
                           onClick={() => fetchOrders(true)}
                           disabled={loadingMore}
-                          className="bg-brand-primary hover:bg-slate-900 text-white text-[10px] font-black uppercase tracking-[0.2em] px-12 py-4 active:scale-95 transition-all"
+                          className="bg-[#8B1E1E] hover:bg-slate-950 text-white text-[10px] font-black uppercase tracking-[0.2em] px-12 py-4 border-2 border-slate-900 active:scale-95 transition-all shadow-sm cursor-pointer"
                         >
                           {loadingMore ? 'Loading...' : 'Load More'}
                         </button>

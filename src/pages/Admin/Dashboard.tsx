@@ -171,12 +171,12 @@ const AdminDashboard = () => {
   ];
 
   const StatCard = ({ title, value, icon: Icon, color, description }: any) => (
-    <div className="bg-white border border-slate-200 flex flex-col group">
-      <div className="bg-slate-50 px-3 py-2 border-b border-slate-200 flex items-center justify-between">
-        <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">{title}</span>
-        <Icon className="h-3 w-3 text-brand-primary" />
+    <div className="bg-[#faf6f0] border-2 border-slate-900 shadow-sm flex flex-col group">
+      <div className="bg-[#ead9c4]/30 px-3 py-2 border-b-2 border-slate-900 flex items-center justify-between">
+        <span className="text-[9px] font-black text-slate-700 uppercase tracking-widest">{title}</span>
+        <Icon className="h-3.5 w-3.5 text-[#8B1E1E]" />
       </div>
-      <div className="p-5 flex flex-col items-center justify-center flex-1">
+      <div className="p-5 flex flex-col items-center justify-center flex-1 bg-[#faf6f0]">
         <h3 className="text-2xl font-black text-slate-900 tracking-tight">{value}</h3>
         <p className="text-[9px] font-bold text-slate-400 uppercase mt-1 tracking-tight">{description}</p>
       </div>
@@ -184,10 +184,10 @@ const AdminDashboard = () => {
   );
 
   return (
-    <div className="flex flex-col min-h-full">
-      <div className="bg-[#ead9c4] border-b border-[#777] p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+    <div className="flex flex-col min-h-screen bg-[#f4efe6]">
+      <div className="bg-[#ead9c4] border-b-2 border-slate-900 p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h1 className="text-2xl font-black text-[#9B2B2C] uppercase tracking-tight flex items-center gap-3">
+          <h1 className="text-2xl font-black text-[#8B1E1E] uppercase tracking-tight flex items-center gap-3">
             Admin <span className="text-slate-900">Dashboard</span>
           </h1>
           <p className="text-slate-600 font-bold text-[10px] uppercase mt-1">
@@ -195,11 +195,11 @@ const AdminDashboard = () => {
           </p>
         </div>
         <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 px-4 py-2 bg-white border border-[#777]/30 shadow-sm">
+            <div className="flex items-center gap-2 px-4 py-2 bg-[#faf6f0] border-2 border-slate-900 shadow-sm">
                <div className="w-2 h-2 bg-emerald-500 animate-pulse" />
                <span className="text-[10px] font-black text-slate-800 uppercase tracking-widest">System Online</span>
             </div>
-            <button className="h-10 px-6 bg-brand-primary text-white font-black uppercase text-[10px] tracking-widest hover:bg-slate-900 transition-all shadow-sm">
+            <button className="h-10 px-6 bg-[#8B1E1E] hover:bg-slate-950 text-white font-black uppercase text-[10px] tracking-widest border-2 border-slate-900 shadow-sm transition-all active:scale-95 cursor-pointer">
                Generate Report
             </button>
         </div>
@@ -238,20 +238,20 @@ const AdminDashboard = () => {
       </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 bg-white border border-slate-200 flex flex-col">
-            <div className="bg-slate-50 border-b border-slate-200 p-4 flex items-center justify-between">
+          <div className="lg:col-span-2 bg-[#faf6f0] border-2 border-slate-900 shadow-sm flex flex-col">
+            <div className="bg-[#ead9c4]/30 border-b-2 border-slate-900 p-4 flex items-center justify-between">
               <h2 className="text-[11px] font-black text-slate-900 uppercase tracking-widest flex items-center gap-3">
-                <TrendingUp className="h-4 w-4 text-brand-primary" /> Revenue Overview
+                <TrendingUp className="h-4 w-4 text-[#8B1E1E]" /> Revenue Overview
               </h2>
               <div className="flex items-center gap-2">
-                 <div className="w-2 h-2 bg-brand-primary" />
-                 <span className="text-[8px] font-bold text-slate-400 capitalize">Sales Graph</span>
+                 <div className="w-2 h-2 bg-[#8B1E1E]" />
+                 <span className="text-[8px] font-bold text-slate-500 capitalize">Sales Graph</span>
               </div>
             </div>
             <div className="h-[400px] p-8">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#ebd9c4" />
                   <XAxis 
                     dataKey="name" 
                     axisLine={false} 
@@ -264,13 +264,13 @@ const AdminDashboard = () => {
                     tick={{ fontSize: 10, fill: '#64748B', fontWeight: 700 }} 
                   />
                   <Tooltip 
-                    contentStyle={{ borderRadius: '0px', border: '1px solid #E2E8F0', boxShadow: 'none' }}
+                    contentStyle={{ borderRadius: '0px', border: '2px solid #0f172a', backgroundColor: '#faf6f0', boxShadow: 'none' }}
                   />
-                  <Area type="monotone" dataKey="sales" stroke="#00BCBC" strokeWidth={3} fill="url(#colorSales)" fillOpacity={1} />
+                  <Area type="monotone" dataKey="sales" stroke="#8B1E1E" strokeWidth={3} fill="url(#colorSales)" fillOpacity={1} />
                   <defs>
                     <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#00BCBC" stopOpacity={0.1}/>
-                      <stop offset="95%" stopColor="#00BCBC" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#8B1E1E" stopOpacity={0.15}/>
+                      <stop offset="95%" stopColor="#8B1E1E" stopOpacity={0}/>
                     </linearGradient>
                   </defs>
                 </AreaChart>
@@ -278,16 +278,16 @@ const AdminDashboard = () => {
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200 flex flex-col">
-            <div className="bg-slate-50 border-b border-slate-200 p-4">
+          <div className="bg-[#faf6f0] border-2 border-slate-900 shadow-sm flex flex-col">
+            <div className="bg-[#ead9c4]/30 border-b-2 border-slate-900 p-4">
               <h2 className="text-[11px] font-black text-slate-900 uppercase tracking-widest">Recent Orders</h2>
             </div>
-            <div className="p-0 divide-y divide-slate-100 flex-1 overflow-y-auto max-h-[400px]">
+            <div className="p-0 divide-y divide-slate-900/10 flex-1 overflow-y-auto max-h-[400px]">
               {recentOrders.map((order, i) => (
-                <div key={order?.id || i} className="p-4 hover:bg-slate-50 transition-all cursor-pointer group" onClick={() => navigate('/admin/orders')}>
+                <div key={order?.id || i} className="p-4 hover:bg-[#ebd9c4]/15 border-b border-slate-900/10 transition-all cursor-pointer group" onClick={() => navigate('/admin/orders')}>
                   <div className="flex justify-between items-start">
                     <div className="flex flex-col">
-                      <span className="text-[10px] font-black text-brand-primary tracking-tighter">
+                      <span className="text-[10px] font-black text-[#8B1E1E] tracking-tighter">
                         #{order?.orderId || 'PENDING_ID'}
                       </span>
                       <p className="text-[11px] font-bold text-slate-800 uppercase mt-1 leading-none">
@@ -297,7 +297,7 @@ const AdminDashboard = () => {
                     <div className="text-right">
                       <p className="text-[12px] font-black text-slate-900">৳{(order?.total || 0).toLocaleString()}</p>
                       <div className={`mt-1 inline-block px-2 py-0.5 text-[7px] font-black uppercase tracking-widest ${
-                        order?.status === 'delivered' ? 'bg-green-100 text-green-700' : 'bg-brand-primary/10 text-brand-primary'
+                        order?.status === 'delivered' ? 'bg-green-100 text-green-700' : 'bg-[#8B1E1E]/10 text-[#8B1E1E]'
                       }`}>
                          {order?.status || 'Active'}
                       </div>
@@ -307,15 +307,15 @@ const AdminDashboard = () => {
               ))}
               {recentOrders.length === 0 && (
                 <div className="text-center py-20">
-                  <ShoppingBag className="h-10 w-10 text-slate-100 mx-auto mb-4" />
-                  <p className="text-slate-300 font-bold uppercase tracking-widest text-[8px]">Empty_Registry</p>
+                  <ShoppingBag className="h-10 w-10 text-slate-300 mx-auto mb-4" />
+                  <p className="text-slate-400 font-bold uppercase tracking-widest text-[8px]">Empty_Registry</p>
                 </div>
               )}
             </div>
-            <div className="p-4 bg-slate-50 border-t border-slate-200">
+            <div className="p-4 bg-[#ead9c4]/10 border-t-2 border-slate-900">
               <button 
                 onClick={() => navigate('/admin/orders')} 
-                className="w-full py-3 bg-brand-primary text-white text-[10px] font-black uppercase tracking-widest hover:bg-slate-900 transition-all active:scale-95"
+                className="w-full py-3 bg-[#8B1E1E] hover:bg-slate-950 text-white text-[10px] font-black uppercase tracking-widest border-2 border-slate-900 shadow-sm transition-all active:scale-95 cursor-pointer"
               >
                 View All Orders
               </button>

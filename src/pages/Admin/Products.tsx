@@ -35,10 +35,12 @@ import { Badge } from '../../components/ui/badge';
 import { Card, CardContent } from '../../components/ui/card';
 import { GoogleGenAI } from '@google/genai';
 
+import { useLocation } from 'react-router-dom';
 import { optimizeProductImage } from '../../lib/image-utils';
 
 const AdminProducts = () => {
   const { isAdmin, loading: authLoading } = useAuth();
+  const location = useLocation();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -46,6 +48,12 @@ const AdminProducts = () => {
   const [hasMore, setHasMore] = useState(true);
   const [search, setSearch] = useState('');
   const [isAddOpen, setIsAddOpen] = useState(false);
+
+  useEffect(() => {
+    if (location.pathname === '/admin/products/add') {
+      setIsAddOpen(true);
+    }
+  }, [location.pathname]);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
@@ -258,10 +266,10 @@ const AdminProducts = () => {
   );
 
   return (
-    <div className="flex flex-col min-h-screen bg-white">
-      <div className="bg-[#ead9c4] border-b border-[#777] p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+    <div className="flex flex-col min-h-screen bg-[#f4efe6]">
+      <div className="bg-[#ead9c4] border-b-2 border-slate-900 p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h1 className="text-2xl font-black text-[#9B2B2C] uppercase tracking-tight flex items-center gap-3">
+          <h1 className="text-2xl font-black text-[#8B1E1E] uppercase tracking-tight flex items-center gap-3">
             Product <span className="text-slate-900">Inventory</span>
           </h1>
           <p className="text-slate-600 font-bold text-[10px] uppercase mt-1">
@@ -276,17 +284,17 @@ const AdminProducts = () => {
           }
         }}>
           <DialogTrigger asChild>
-            <button className="bg-brand-primary hover:bg-slate-900 text-white h-10 px-6 font-black text-[10px] uppercase tracking-widest active:scale-95 transition-all">
-              <Plus className="mr-2 h-4 w-4" /> Add Product
+            <button className="bg-[#8B1E1E] hover:bg-slate-950 text-white h-10 px-6 font-black text-[10px] uppercase tracking-widest active:scale-95 transition-all border-2 border-slate-900 shadow-sm cursor-pointer flex items-center justify-center gap-2">
+              <Plus className="h-4 w-4" /> Add Product
             </button>
           </DialogTrigger>
-          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto rounded-none p-0 border border-slate-200 shadow-2xl bg-white">
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto rounded-none p-0 border-2 border-slate-900 shadow-2xl bg-[#faf6f0]">
             <div className="p-8">
-              <DialogHeader className="mb-8 border-b border-slate-100 pb-6">
+              <DialogHeader className="mb-8 border-b-2 border-slate-900/10 pb-6">
                 <DialogTitle className="text-2xl font-black text-slate-900 uppercase tracking-tighter">
-                  {editingProduct ? 'Edit' : 'Create'} <span className="text-brand-primary">Product</span>
+                  {editingProduct ? 'Edit' : 'Create'} <span className="text-[#8B1E1E]">Product</span>
                 </DialogTitle>
-                <p className="text-slate-400 font-bold text-[10px] uppercase mt-1">Update product registry information</p>
+                <p className="text-slate-500 font-bold text-[10px] uppercase mt-1">Update product registry information</p>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -451,7 +459,7 @@ const AdminProducts = () => {
                     </div>
                   </div>
                 </div>
-                <Button type="submit" className="w-full h-12 bg-brand-primary hover:bg-slate-900 text-white rounded-none font-black text-[11px] uppercase tracking-widest shadow-xl transition-all active:scale-95">
+                <Button type="submit" className="w-full h-12 bg-[#8B1E1E] hover:bg-slate-950 text-white rounded-none font-black text-[11px] uppercase tracking-widest shadow-xl transition-all active:scale-95 border-2 border-slate-900 shadow-sm cursor-pointer">
                   {editingProduct ? 'Save Changes' : 'Create Product'}
                 </Button>
               </form>
@@ -460,20 +468,20 @@ const AdminProducts = () => {
         </Dialog>
       </div>
 
-      <div className="bg-white p-8">
-        <div className="bg-white border border-slate-200 overflow-hidden">
-          <div className="p-4 bg-slate-50 border-b border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="p-8">
+        <div className="bg-[#faf6f0] border-2 border-slate-900 shadow-sm overflow-hidden">
+          <div className="p-4 bg-[#ead9c4]/30 border-b-2 border-slate-900 flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="relative flex-1 w-full md:max-w-md">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input
                 placeholder="Search products..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="w-full pl-10 pr-4 h-10 bg-white border border-slate-200 text-[10px] font-black uppercase tracking-widest focus:border-brand-primary outline-none text-slate-900 placeholder:text-slate-300 transition-colors"
+                className="w-full pl-10 pr-4 h-10 bg-white border-2 border-slate-900 text-[10px] font-black uppercase tracking-widest focus:border-[#8B1E1E] outline-none text-slate-900 placeholder:text-slate-300 transition-colors shadow-sm"
               />
             </div>
             <div className="flex items-center gap-4">
-               <div className="px-4 py-1.5 bg-white border border-slate-200 flex flex-col items-center min-w-[120px]">
+               <div className="px-4 py-1.5 bg-[#faf6f0] border-2 border-slate-900 shadow-sm flex flex-col items-center min-w-[120px]">
                   <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Total Inventory Value</span>
                   <span className="text-xs font-black text-slate-900">৳{filteredProducts.reduce((acc, p) => acc + ((p.price || 0) * (p.stock || 0)), 0).toLocaleString()}</span>
                </div>
@@ -481,41 +489,71 @@ const AdminProducts = () => {
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
-              <thead className="bg-brand-primary text-white">
+              <thead className="bg-[#8B1E1E] text-white">
                 <tr>
-                  <th className="px-6 py-3 text-[9px] font-black uppercase tracking-[0.2em] border-r border-white/10">Image</th>
-                  <th className="px-6 py-3 text-[9px] font-black uppercase tracking-[0.2em] border-r border-white/10">Product Name</th>
-                  <th className="px-6 py-3 text-[9px] font-black uppercase tracking-[0.2em] border-r border-white/10">Category</th>
-                  <th className="px-6 py-3 text-[9px] font-black uppercase tracking-[0.2em] border-r border-white/10">Price</th>
-                  <th className="px-6 py-3 text-[9px] font-black uppercase tracking-[0.2em] border-r border-white/10">Stock</th>
-                  <th className="px-6 py-3 text-[9px] font-black uppercase tracking-[0.2em]">Actions</th>
+                  <th className="px-6 py-4 text-[9px] font-black uppercase tracking-[0.1em] border-r border-white/10">
+                    <div className="flex flex-col">
+                      <span>IMAGE</span>
+                      <span className="text-[8px] opacity-80 font-bold tracking-normal">(ছবি)</span>
+                    </div>
+                  </th>
+                  <th className="px-6 py-4 text-[9px] font-black uppercase tracking-[0.1em] border-r border-white/10">
+                    <div className="flex flex-col">
+                      <span>PRODUCT NAME</span>
+                      <span className="text-[8px] opacity-80 font-bold tracking-normal">(পণ্যের নাম)</span>
+                    </div>
+                  </th>
+                  <th className="px-6 py-4 text-[9px] font-black uppercase tracking-[0.1em] border-r border-white/10">
+                    <div className="flex flex-col">
+                      <span>CATEGORY</span>
+                      <span className="text-[8px] opacity-80 font-bold tracking-normal">(ক্যাটাগরি)</span>
+                    </div>
+                  </th>
+                  <th className="px-6 py-4 text-[9px] font-black uppercase tracking-[0.1em] border-r border-white/10">
+                    <div className="flex flex-col">
+                      <span>PRICE</span>
+                      <span className="text-[8px] opacity-80 font-bold tracking-normal">(মূল্য)</span>
+                    </div>
+                  </th>
+                  <th className="px-6 py-4 text-[9px] font-black uppercase tracking-[0.1em] border-r border-white/10">
+                    <div className="flex flex-col">
+                      <span>STOCK</span>
+                      <span className="text-[8px] opacity-80 font-bold tracking-normal">(স্টক)</span>
+                    </div>
+                  </th>
+                  <th className="px-6 py-4 text-[9px] font-black uppercase tracking-[0.1em]">
+                    <div className="flex flex-col">
+                      <span>ACTIONS</span>
+                      <span className="text-[8px] opacity-80 font-bold tracking-normal">(পদক্ষেপ)</span>
+                    </div>
+                  </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-900/10 bg-[#faf6f0]">
                 {loading ? (
                   <tr>
-                    <td colSpan={6} className="text-center py-20 font-black text-[10px] uppercase text-slate-300">Loading Catalog...</td>
+                    <td colSpan={6} className="text-center py-20 font-black text-[10px] uppercase text-slate-400">Loading Catalog...</td>
                   </tr>
                 ) : filteredProducts.map((product) => (
-                  <tr key={product.id} className="hover:bg-slate-50 transition-all font-bold group">
-                    <td className="px-6 py-4 border-r border-slate-100">
-                      <div className="w-12 h-12 border border-slate-100 bg-slate-50 overflow-hidden">
+                  <tr key={product.id} className="hover:bg-[#ebd9c4]/10 transition-all font-bold group">
+                    <td className="px-6 py-4 border-r border-slate-900/10">
+                      <div className="w-12 h-12 border-2 border-slate-900/10 bg-slate-50 overflow-hidden">
                         <img src={product.images[0]} alt="" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" referrerPolicy="no-referrer" />
                       </div>
                     </td>
-                    <td className="px-6 py-4 border-r border-slate-100">
+                    <td className="px-6 py-4 border-r border-slate-900/10">
                       <p className="font-black text-slate-900 text-[11px] uppercase tracking-tight leading-tight">{product.name || 'NULL_DATA'}</p>
                       <p className="text-[8px] text-slate-400 font-mono mt-1 opacity-60">REF_ID: {(product.id || '').slice(0, 10).toUpperCase()}</p>
                     </td>
-                    <td className="px-6 py-4 border-r border-slate-100">
-                      <span className="text-[8px] font-black uppercase py-1 px-3 bg-slate-50 text-slate-500 border border-slate-100">
+                    <td className="px-6 py-4 border-r border-slate-900/10">
+                      <span className="text-[8px] font-black uppercase py-1 px-3 bg-[#f4efe6] text-slate-500 border border-slate-900/10">
                         {product.category}
                       </span>
                     </td>
-                    <td className="px-6 py-4 border-r border-slate-100">
+                    <td className="px-6 py-4 border-r border-slate-900/10">
                       <span className="font-black text-slate-900 text-sm tracking-tighter">৳{(product.price || 0).toLocaleString()}</span>
                     </td>
-                    <td className="px-6 py-4 border-r border-slate-100">
+                    <td className="px-6 py-4 border-r border-slate-900/10">
                       <div className="flex flex-col gap-1.5">
                       <div className="flex justify-between items-center text-[8px] font-black uppercase">
                         <span className={product.stock < 10 ? 'text-rose-600' : 'text-slate-400'}>
@@ -523,9 +561,9 @@ const AdminProducts = () => {
                         </span>
                         <span className="text-slate-900">{product.stock} units</span>
                       </div>
-                        <div className="w-full h-1 bg-slate-100 overflow-hidden">
+                        <div className="w-full h-1 bg-slate-900/10 overflow-hidden">
                           <div 
-                            className={`h-full transition-all duration-700 ${product.stock < 10 ? 'bg-rose-600' : 'bg-brand-primary'}`}
+                            className={`h-full transition-all duration-700 ${product.stock < 10 ? 'bg-rose-600' : 'bg-[#8B1E1E]'}`}
                             style={{ width: `${Math.min((product.stock / 100) * 100, 100)}%` }}
                           />
                         </div>
@@ -551,7 +589,7 @@ const AdminProducts = () => {
                             });
                             setIsAddOpen(true);
                           }}
-                          className="h-8 px-4 bg-slate-50 border border-slate-200 text-slate-900 text-[8px] font-black uppercase hover:bg-white transition-all"
+                          className="h-8 px-4 bg-[#faf6f0] border-2 border-slate-900 text-slate-900 text-[8px] font-black uppercase hover:bg-[#ebd9c4]/30 transition-all cursor-pointer shadow-sm"
                         >
                           Edit
                         </button>
@@ -567,7 +605,7 @@ const AdminProducts = () => {
                               setTimeout(() => setDeletingId(null), 3000);
                             }
                           }}
-                          className={`h-8 flex items-center justify-center border transition-all ${
+                          className={`h-8 flex items-center justify-center border-2 border-slate-900 transition-all cursor-pointer shadow-sm ${
                             deletingId === product.id 
                               ? "bg-rose-600 text-white border-rose-600 px-4 min-w-[80px]" 
                               : "px-4 bg-rose-50 border-rose-100 text-rose-600 hover:bg-rose-600 hover:text-white"
@@ -583,11 +621,11 @@ const AdminProducts = () => {
             </table>
           </div>
           {hasMore && (
-            <div className="p-10 flex justify-center border-t border-slate-100">
+            <div className="p-10 flex justify-center border-t border-slate-900/10">
               <button 
                 onClick={() => fetchProducts(true)} 
                 disabled={loadingMore}
-                className="bg-brand-primary hover:bg-slate-900 text-white font-black uppercase tracking-[0.2em] px-12 py-4 text-[10px] active:scale-95 transition-all"
+                className="bg-[#8B1E1E] hover:bg-slate-950 text-white font-black uppercase tracking-[0.2em] px-12 py-4 text-[10px] active:scale-95 transition-all border-2 border-slate-900 shadow-sm cursor-pointer"
               >
                 {loadingMore ? 'Loading...' : 'Load More'}
               </button>

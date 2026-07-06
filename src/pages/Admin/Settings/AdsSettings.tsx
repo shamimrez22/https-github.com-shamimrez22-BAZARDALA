@@ -40,15 +40,15 @@ const AdsSettings = () => {
   if (loading) return <div className="p-8 text-center animate-pulse font-black uppercase text-slate-400">Syncing Ad Protocols...</div>;
 
   return (
-    <div className="space-y-6">
-      <Card className="rounded-none border-[#777] bg-white shadow-lg overflow-hidden border-t-4 border-t-brand-primary">
-        <CardHeader className="bg-brand-primary text-white py-4 flex flex-row items-center justify-between">
-          <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
-            <Megaphone className="h-4 w-4" /> Adsterra Matrix
-          </CardTitle>
+    <div className="space-y-8 pb-10">
+      <div className="bg-[#faf6f0] border-2 border-slate-900 overflow-hidden hover:border-[#8B1E1E] transition-all shadow-sm">
+        <div className="bg-[#ead9c4]/30 px-6 py-4 flex flex-row items-center justify-between border-b-2 border-slate-900">
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900 flex items-center gap-2">
+            <Megaphone className="h-4 w-4 text-[#8B1E1E]" /> Adsterra Matrix
+          </span>
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 bg-white/10 px-3 py-1 border border-white/20">
-               <span className="text-[8px] font-black uppercase">Enable Matrix</span>
+            <div className="flex items-center gap-2 bg-white px-3 py-1 border-2 border-slate-900 shadow-sm">
+               <span className="text-[8px] font-black uppercase text-slate-900">Enable Matrix</span>
                <Switch 
                  checked={settings.ads?.adsterra?.enabled || false}
                  onCheckedChange={val => {
@@ -57,15 +57,19 @@ const AdsSettings = () => {
                  }}
                />
             </div>
-            <Button onClick={handleSave} disabled={saving} size="sm" className="bg-white text-brand-primary hover:bg-slate-100 h-8 font-black uppercase text-[9px]">
-              {saving ? 'Saving...' : <><Save className="mr-2 h-3 w-3" /> Save Module</>}
-            </Button>
+            <button 
+              onClick={handleSave} 
+              disabled={saving} 
+              className="h-8 px-5 bg-[#8B1E1E] hover:bg-slate-950 text-white font-black uppercase text-[9px] tracking-widest transition-all active:scale-95 disabled:opacity-50 border-2 border-slate-900 shadow-sm cursor-pointer"
+            >
+              {saving ? 'Saving...' : 'Save Module'}
+            </button>
           </div>
-        </CardHeader>
-        <CardContent className="p-8">
+        </div>
+        <div className="p-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-             <div className="space-y-4 p-4 bg-slate-50 border border-[#777]/30">
-               <h3 className="text-[10px] font-black uppercase text-brand-primary flex items-center gap-2">
+             <div className="space-y-4 p-6 bg-white border-2 border-slate-900 shadow-sm">
+               <h3 className="text-[10px] font-black uppercase text-[#8B1E1E] flex items-center gap-2">
                  <Zap className="h-3 w-3" /> Essential Ad Slots
                </h3>
                {[
@@ -85,15 +89,15 @@ const AdsSettings = () => {
                        setSettings({...settings, ads: newAds as any});
                      }}
                      placeholder="Paste Adsterra content here..."
-                     className="w-full min-h-[60px] p-2 border border-[#777] rounded-none text-[10px] font-mono leading-tight bg-white focus:border-brand-primary outline-none"
+                     className="w-full min-h-[60px] p-2 bg-white border-2 border-slate-900 rounded-none text-[10px] font-mono leading-tight focus:border-[#8B1E1E] outline-none shadow-sm"
                    />
                  </div>
                ))}
              </div>
 
-             <div className="space-y-4 p-4 bg-slate-50 border border-[#777]/30">
-               <h3 className="text-[10px] font-black uppercase text-slate-600 flex items-center gap-2">
-                 <Megaphone className="h-3 w-3" /> Content Banners
+             <div className="space-y-4 p-6 bg-white border-2 border-slate-900 shadow-sm">
+               <h3 className="text-[10px] font-black uppercase text-slate-700 flex items-center gap-2">
+                 <Megaphone className="h-3 w-3 text-[#8B1E1E]" /> Content Banners
                </h3>
                <div className="grid grid-cols-2 gap-3">
                  {['bannerOneCode', 'bannerTwoCode', 'bannerThreeCode', 'bannerFourCode', 'bannerFiveCode', 'bannerSixCode'].map((field) => (
@@ -106,30 +110,34 @@ const AdsSettings = () => {
                          setSettings({...settings, ads: newAds as any});
                        }}
                        placeholder="Banner URL"
-                       className="h-8 border-[#777] rounded-none text-[9px]"
+                       className="h-10 bg-white border-2 border-slate-900 rounded-none text-[9px] font-black focus:border-[#8B1E1E] shadow-sm"
                      />
                    </div>
                  ))}
                </div>
              </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
-      <Card className="rounded-none border-[#777] bg-white shadow-lg">
-        <CardHeader className="bg-brand-primary text-white py-4 flex flex-row items-center justify-between">
-          <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
-            <Zap className="h-4 w-4" /> System Notices & Announcements
-          </CardTitle>
-          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-white text-brand-primary hover:bg-slate-100 h-8 font-black uppercase text-[9px]">
-            {saving ? 'Saving...' : <><Save className="mr-2 h-3 w-3" /> Save Module</>}
-          </Button>
-        </CardHeader>
-        <CardContent className="p-8 space-y-10">
+      <div className="bg-[#faf6f0] border-2 border-slate-900 overflow-hidden hover:border-[#8B1E1E] transition-all shadow-sm">
+        <div className="bg-[#ead9c4]/30 px-6 py-4 flex flex-row items-center justify-between border-b-2 border-slate-900">
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900 flex items-center gap-2">
+            <Zap className="h-4 w-4 text-[#8B1E1E]" /> System Notices & Announcements
+          </span>
+          <button 
+            onClick={handleSave} 
+            disabled={saving} 
+            className="h-8 px-5 bg-[#8B1E1E] hover:bg-slate-950 text-white font-black uppercase text-[9px] tracking-widest transition-all active:scale-95 disabled:opacity-50 border-2 border-slate-900 shadow-sm cursor-pointer"
+          >
+            {saving ? 'Saving...' : 'Save Module'}
+          </button>
+        </div>
+        <div className="p-8 space-y-8">
             {/* Top Bar Notice */}
-            <div className="p-6 bg-slate-50 border border-slate-200 space-y-6 relative overflow-hidden">
+            <div className="p-6 bg-white border-2 border-slate-900 space-y-6 relative overflow-hidden shadow-sm">
                <div className="absolute top-0 right-0 p-2 opacity-5">
-                  <Megaphone className="h-20 w-20 text-brand-primary" />
+                  <Megaphone className="h-20 w-20 text-[#8B1E1E]" />
                </div>
                <div className="flex items-center justify-between">
                  <div className="flex items-center gap-3">
@@ -156,7 +164,7 @@ const AdsSettings = () => {
                        setSettings({...settings, ads: newAds as any});
                      }}
                      placeholder="Top info bar text..."
-                     className="h-12 border-[#777] rounded-none text-[11px] uppercase font-black"
+                     className="h-12 bg-white border-2 border-slate-900 rounded-none text-[11px] uppercase font-black focus:border-[#8B1E1E] shadow-sm"
                    />
                  </div>
                  <div className="space-y-2">
@@ -168,14 +176,14 @@ const AdsSettings = () => {
                        setSettings({...settings, ads: newAds as any});
                      }}
                      placeholder="/shop or https://..."
-                     className="h-12 border-[#777] rounded-none text-[11px]"
+                     className="h-12 bg-white border-2 border-slate-900 rounded-none text-[11px] focus:border-[#8B1E1E] shadow-sm"
                    />
                  </div>
                </div>
             </div>
 
             {/* Top Header Graphic Banner */}
-            <div className="p-6 bg-slate-50 border border-slate-200 space-y-6 relative overflow-hidden">
+            <div className="p-6 bg-white border-2 border-slate-900 space-y-6 relative overflow-hidden shadow-sm">
                <div className="flex items-center justify-between">
                  <div className="flex items-center gap-3">
                    <Switch 
@@ -201,7 +209,7 @@ const AdsSettings = () => {
                        setSettings({...settings, ads: newAds as any});
                      }}
                      placeholder="https://..."
-                     className="h-12 border-[#777] rounded-none text-[11px]"
+                     className="h-12 bg-white border-2 border-slate-900 rounded-none text-[11px] focus:border-[#8B1E1E] shadow-sm"
                    />
                  </div>
                  <div className="space-y-2">
@@ -213,16 +221,16 @@ const AdsSettings = () => {
                        setSettings({...settings, ads: newAds as any});
                      }}
                      placeholder="/shop or external"
-                     className="h-12 border-[#777] rounded-none text-[11px]"
+                     className="h-12 bg-white border-2 border-slate-900 rounded-none text-[11px] focus:border-[#8B1E1E] shadow-sm"
                    />
                  </div>
                </div>
             </div>
 
             {/* Top Global Scroll */}
-            <div className="p-6 bg-slate-50 border border-slate-200 space-y-6 relative overflow-hidden">
+            <div className="p-6 bg-white border-2 border-slate-900 space-y-6 relative overflow-hidden shadow-sm">
                <div className="absolute top-0 right-0 p-2 opacity-5">
-                  <Megaphone className="h-20 w-20 text-brand-primary" />
+                  <Megaphone className="h-20 w-20 text-[#8B1E1E]" />
                </div>
                <div className="flex items-center justify-between">
                  <div className="flex items-center gap-3">
@@ -249,7 +257,7 @@ const AdsSettings = () => {
                        setSettings({...settings, ads: newAds as any});
                      }}
                      placeholder="Global important message..."
-                     className="h-12 border-[#777] rounded-none text-[11px] uppercase font-black"
+                     className="h-12 bg-white border-2 border-slate-900 rounded-none text-[11px] uppercase font-black focus:border-[#8B1E1E] shadow-sm"
                    />
                  </div>
                  <div className="space-y-2">
@@ -261,7 +269,7 @@ const AdsSettings = () => {
                        setSettings({...settings, ads: newAds as any});
                      }}
                      placeholder="/promos or external link"
-                     className="h-12 border-[#777] rounded-none text-[11px]"
+                     className="h-12 bg-white border-2 border-slate-900 rounded-none text-[11px] focus:border-[#8B1E1E] shadow-sm"
                    />
                  </div>
                </div>
@@ -277,7 +285,7 @@ const AdsSettings = () => {
                            const newAds = { ...(settings.ads || {}), topScrollingNotice: { ...(settings.ads?.topScrollingNotice || {}), textColor: e.target.value } };
                            setSettings({...settings, ads: newAds as any});
                          }}
-                         className="h-10 w-12 p-1 border-[#777] rounded-none cursor-pointer"
+                         className="h-10 w-12 p-1 bg-white border-2 border-slate-900 rounded-none cursor-pointer shadow-sm"
                        />
                        <span className="font-mono text-[9px] font-bold">{settings.ads?.topScrollingNotice?.textColor || '#fff'}</span>
                      </div>
@@ -292,7 +300,7 @@ const AdsSettings = () => {
                            const newAds = { ...(settings.ads || {}), topScrollingNotice: { ...(settings.ads?.topScrollingNotice || {}), bgColor: e.target.value } };
                            setSettings({...settings, ads: newAds as any});
                          }}
-                         className="h-10 w-12 p-1 border-[#777] rounded-none cursor-pointer"
+                         className="h-10 w-12 p-1 bg-white border-2 border-slate-900 rounded-none cursor-pointer shadow-sm"
                        />
                        <span className="font-mono text-[9px] font-bold">{settings.ads?.topScrollingNotice?.bgColor || '#9B2B2C'}</span>
                      </div>
@@ -302,9 +310,9 @@ const AdsSettings = () => {
             </div>
 
             {/* Home/Bottom Scroll */}
-            <div className="p-6 bg-slate-50 border border-slate-200 space-y-6 relative overflow-hidden">
+            <div className="p-6 bg-white border-2 border-slate-900 space-y-6 relative overflow-hidden shadow-sm">
                <div className="absolute top-0 right-0 p-2 opacity-5">
-                  <Zap className="h-20 w-20 text-brand-primary" />
+                  <Zap className="h-20 w-20 text-[#8B1E1E]" />
                </div>
                <div className="flex items-center justify-between">
                  <div className="flex items-center gap-3">
@@ -331,7 +339,7 @@ const AdsSettings = () => {
                        setSettings({...settings, ads: newAds as any});
                      }}
                      placeholder="Message for home page..."
-                     className="h-12 border-[#777] rounded-none text-[11px] uppercase font-black"
+                     className="h-12 bg-white border-2 border-slate-900 rounded-none text-[11px] uppercase font-black focus:border-[#8B1E1E] shadow-sm"
                    />
                  </div>
                  <div className="space-y-2">
@@ -343,7 +351,7 @@ const AdsSettings = () => {
                        setSettings({...settings, ads: newAds as any});
                      }}
                      placeholder="Click destination..."
-                     className="h-12 border-[#777] rounded-none text-[11px]"
+                     className="h-12 bg-white border-2 border-slate-900 rounded-none text-[11px] focus:border-[#8B1E1E] shadow-sm"
                    />
                  </div>
                </div>
@@ -359,7 +367,7 @@ const AdsSettings = () => {
                            const newAds = { ...(settings.ads || {}), floatingNotice: { ...(settings.ads?.floatingNotice || {}), textColor: e.target.value } };
                            setSettings({...settings, ads: newAds as any});
                          }}
-                         className="h-10 w-12 p-1 border-[#777] rounded-none cursor-pointer"
+                         className="h-10 w-12 p-1 bg-white border-2 border-slate-900 rounded-none cursor-pointer shadow-sm"
                        />
                        <span className="font-mono text-[9px] font-bold">{settings.ads?.floatingNotice?.textColor || '#000'}</span>
                      </div>
@@ -374,7 +382,7 @@ const AdsSettings = () => {
                            const newAds = { ...(settings.ads || {}), floatingNotice: { ...(settings.ads?.floatingNotice || {}), bgColor: e.target.value } };
                            setSettings({...settings, ads: newAds as any});
                          }}
-                         className="h-10 w-12 p-1 border-[#777] rounded-none cursor-pointer"
+                         className="h-10 w-12 p-1 bg-white border-2 border-slate-900 rounded-none cursor-pointer shadow-sm"
                        />
                        <span className="font-mono text-[9px] font-bold">{settings.ads?.floatingNotice?.bgColor || '#f4e4d4'}</span>
                      </div>
@@ -383,7 +391,7 @@ const AdsSettings = () => {
                </div>
             </div>
 
-            <div className="p-6 bg-slate-50 border border-slate-200 space-y-4">
+            <div className="p-6 bg-white border-2 border-slate-900 space-y-4 shadow-sm">
                <div className="flex items-center gap-3">
                  <Switch 
                    checked={settings.ads?.globalNotice?.active || false}
@@ -392,7 +400,7 @@ const AdsSettings = () => {
                      setSettings({...settings, ads: newAds as any});
                    }}
                  />
-                 <Label className="text-[11px] font-black uppercase">Service Status Alert</Label>
+                 <Label className="text-[11px] font-black uppercase text-slate-800">Service Status Alert</Label>
                </div>
                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <textarea 
@@ -402,10 +410,10 @@ const AdsSettings = () => {
                       setSettings({...settings, ads: newAds as any});
                     }}
                     placeholder="Central status message..."
-                    className="w-full min-h-[80px] p-4 border border-[#777] text-[11px] font-black uppercase tracking-widest bg-white"
+                    className="w-full min-h-[80px] p-4 bg-white border-2 border-slate-900 text-[11px] font-black uppercase tracking-widest focus:border-[#8B1E1E] outline-none shadow-sm"
                   />
                   <div className="space-y-4">
-                    <Label className="text-[10px] font-black uppercase tracking-widest">Alert Link</Label>
+                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-500">Alert Link</Label>
                     <Input 
                       value={settings.ads?.globalNotice?.link || ''}
                       onChange={e => {
@@ -413,14 +421,14 @@ const AdsSettings = () => {
                         setSettings({...settings, ads: newAds as any});
                       }}
                       placeholder="Info link..."
-                      className="h-12 border-[#777] rounded-none text-[11px]"
+                      className="h-12 bg-white border-2 border-slate-900 rounded-none text-[11px] focus:border-[#8B1E1E] shadow-sm"
                     />
                   </div>
                </div>
             </div>
 
             {/* Social Bar Ad */}
-            <div className="p-6 bg-slate-50 border border-slate-200 space-y-4">
+            <div className="p-6 bg-white border-2 border-slate-900 space-y-4 shadow-sm">
                <div className="flex items-center gap-3">
                  <Switch 
                    checked={settings.ads?.socialBarAd?.active || false}
@@ -439,7 +447,7 @@ const AdsSettings = () => {
                       setSettings({...settings, ads: newAds as any});
                     }}
                     placeholder="Social CTA message..."
-                    className="h-12 border-[#777] rounded-none text-[11px] font-black uppercase"
+                    className="h-12 bg-white border-2 border-slate-900 rounded-none text-[11px] font-black uppercase focus:border-[#8B1E1E] shadow-sm"
                   />
                   <Input 
                     value={settings.ads?.socialBarAd?.link || ''}
@@ -448,12 +456,12 @@ const AdsSettings = () => {
                       setSettings({...settings, ads: newAds as any});
                     }}
                     placeholder="CTA Link (External or /shop)"
-                    className="h-12 border-[#777] rounded-none text-[11px]"
+                    className="h-12 bg-white border-2 border-slate-900 rounded-none text-[11px] focus:border-[#8B1E1E] shadow-sm"
                   />
                </div>
             </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 };

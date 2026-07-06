@@ -79,10 +79,10 @@ const AdminCoupons = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-white">
-      <div className="bg-[#ead9c4] border-b border-[#777] p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+    <div className="flex flex-col min-h-screen bg-[#f4efe6]">
+      <div className="bg-[#ead9c4] border-b-2 border-slate-900 p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h1 className="text-2xl font-black text-[#9B2B2C] uppercase tracking-tight flex items-center gap-3">
+          <h1 className="text-2xl font-black text-[#8B1E1E] uppercase tracking-tight flex items-center gap-3">
             Discount <span className="text-slate-900">Coupons</span>
           </h1>
           <p className="text-slate-600 font-bold text-[10px] uppercase mt-1">
@@ -92,9 +92,9 @@ const AdminCoupons = () => {
       </div>
 
       <div className="p-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-1 bg-white border border-slate-200 p-8 hover:border-brand-primary transition-all">
-          <h2 className="text-xs font-black text-slate-900 uppercase mb-8 border-b border-slate-100 pb-4 flex items-center gap-2">
-            <Plus className="h-4 w-4 text-brand-primary" /> Create New Coupon
+        <div className="lg:col-span-1 bg-[#faf6f0] border-2 border-slate-900 shadow-sm p-8 hover:border-[#8B1E1E] transition-all">
+          <h2 className="text-xs font-black text-slate-900 uppercase mb-8 border-b-2 border-slate-900/10 pb-4 flex items-center gap-2">
+            <Plus className="h-4 w-4 text-[#8B1E1E]" /> Create New Coupon
           </h2>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
@@ -103,7 +103,7 @@ const AdminCoupons = () => {
                 value={formData.code} 
                 onChange={e => setFormData({...formData, code: e.target.value})}
                 placeholder="e.g. SAVE100"
-                className="h-10 bg-slate-50 border-slate-200 text-slate-900 rounded-none font-bold text-xs focus:border-brand-primary outline-none focus-visible:ring-0 uppercase"
+                className="h-10 bg-white border-2 border-slate-900 text-slate-900 rounded-none font-bold text-xs focus:border-[#8B1E1E] outline-none focus-visible:ring-0 uppercase shadow-sm"
                 required 
               />
             </div>
@@ -114,7 +114,7 @@ const AdminCoupons = () => {
                 value={formData.discount} 
                 onChange={e => setFormData({...formData, discount: e.target.value})}
                 placeholder="0.00"
-                className="h-10 bg-slate-50 border-slate-200 text-slate-900 rounded-none font-bold text-xs focus:border-brand-primary outline-none focus-visible:ring-0"
+                className="h-10 bg-white border-2 border-slate-900 text-slate-900 rounded-none font-bold text-xs focus:border-[#8B1E1E] outline-none focus-visible:ring-0 shadow-sm"
                 required 
               />
             </div>
@@ -124,21 +124,21 @@ const AdminCoupons = () => {
                 type="date"
                 value={formData.expiry} 
                 onChange={e => setFormData({...formData, expiry: e.target.value})}
-                className="h-10 bg-slate-50 border-slate-200 text-slate-900 rounded-none font-bold text-xs focus:border-brand-primary outline-none focus-visible:ring-0"
+                className="h-10 bg-white border-2 border-slate-900 text-slate-900 rounded-none font-bold text-xs focus:border-[#8B1E1E] outline-none focus-visible:ring-0 shadow-sm"
                 required 
               />
             </div>
-            <Button type="submit" className="w-full bg-brand-primary hover:bg-slate-900 text-white rounded-none font-black text-[10px] uppercase h-12 tracking-widest transition-all active:scale-95 shadow-xl">
-              <Plus className="mr-2 h-4 w-4" /> Save Coupon
+            <Button type="submit" className="w-full bg-[#8B1E1E] hover:bg-slate-950 text-white rounded-none font-black text-[10px] uppercase h-12 tracking-widest transition-all active:scale-95 border-2 border-slate-900 shadow-sm cursor-pointer flex items-center justify-center gap-2">
+              <Plus className="h-4 w-4" /> Save Coupon
             </Button>
           </form>
         </div>
 
         <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
           {coupons.map((coupon) => (
-            <div key={coupon.id} className="bg-white border border-slate-200 p-6 relative group hover:border-brand-primary transition-all">
+            <div key={coupon.id} className="bg-[#faf6f0] border-2 border-slate-900 shadow-sm p-6 relative group hover:border-[#8B1E1E] transition-all">
               <div className="flex justify-between items-start mb-6">
-                <div className="p-2 bg-slate-50 border border-slate-100 text-brand-primary">
+                <div className="p-2 bg-white border-2 border-slate-900 shadow-sm text-[#8B1E1E]">
                   <Ticket className="h-4 w-4" />
                 </div>
                 <button 
@@ -153,7 +153,7 @@ const AdminCoupons = () => {
                       setTimeout(() => setDeletingId(null), 3000);
                     }
                   }}
-                  className={`px-3 py-1 text-[8px] font-black uppercase tracking-widest transition-all ${
+                  className={`px-3 py-1 text-[8px] font-black uppercase tracking-widest border-2 border-slate-900 transition-all shadow-sm cursor-pointer ${
                     deletingId === coupon.id 
                       ? "bg-rose-600 text-white" 
                       : "bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white"
@@ -163,12 +163,12 @@ const AdminCoupons = () => {
                 </button>
               </div>
               <h3 className="text-2xl font-black tracking-tighter text-slate-900 mb-2 uppercase">{coupon.code}</h3>
-              <p className="text-brand-primary font-black text-sm mb-6 flex items-center gap-2">
-                <span className="w-1.5 h-4 bg-brand-primary/20" />
+              <p className="text-[#8B1E1E] font-black text-sm mb-6 flex items-center gap-2">
+                <span className="w-1.5 h-4 bg-[#8B1E1E]/20" />
                 Discount: ৳{(coupon.discount || 0).toLocaleString()}
               </p>
-              <div className="flex items-center gap-2 text-[9px] text-slate-400 font-black uppercase bg-slate-50 p-3 border border-slate-100">
-                <Calendar className="h-3 w-3 text-slate-300" />
+              <div className="flex items-center gap-2 text-[9px] text-slate-500 font-black uppercase bg-[#f4efe6] p-3 border border-slate-900/10">
+                <Calendar className="h-3 w-3 text-slate-400" />
                 Expires: {coupon.expiry && typeof coupon.expiry.toDate === 'function' 
                   ? format(coupon.expiry.toDate(), 'dd MMM yyyy') 
                   : 'Permanent'}
@@ -176,9 +176,9 @@ const AdminCoupons = () => {
             </div>
           ))}
           {coupons.length === 0 && !loading && (
-            <div className="col-span-2 py-20 text-center border-2 border-dashed border-slate-100 flex flex-col items-center justify-center">
-              <Ticket className="h-10 w-10 text-slate-100 mb-4" />
-              <p className="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em]">Zero_Tokens_Detected</p>
+            <div className="col-span-2 py-20 text-center border-2 border-dashed border-slate-900/10 flex flex-col items-center justify-center bg-[#faf6f0]">
+              <Ticket className="h-10 w-10 text-slate-300 mb-4" />
+              <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Zero_Tokens_Detected</p>
             </div>
           )}
         </div>

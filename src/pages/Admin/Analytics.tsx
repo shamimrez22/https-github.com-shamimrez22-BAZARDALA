@@ -34,13 +34,13 @@ const AdminAnalytics = () => {
     { name: 'Beauty', value: 200 },
   ];
 
-  const COLORS = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444'];
+  const COLORS = ['#8B1E1E', '#334155', '#c29b7c', '#a14242'];
 
   return (
-    <div className="flex flex-col min-h-screen bg-white">
-      <div className="bg-[#ead9c4] border-b border-[#777] p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+    <div className="flex flex-col min-h-screen bg-[#f4efe6]">
+      <div className="bg-[#ead9c4] border-b-2 border-slate-900 p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h1 className="text-2xl font-black text-[#9B2B2C] uppercase tracking-tight flex items-center gap-3">
+          <h1 className="text-2xl font-black text-[#8B1E1E] uppercase tracking-tight flex items-center gap-3">
             Sales <span className="text-slate-900">Analytics</span>
           </h1>
           <p className="text-slate-600 font-bold text-[10px] uppercase mt-1">
@@ -48,10 +48,10 @@ const AdminAnalytics = () => {
           </p>
         </div>
         <div className="flex gap-3">
-          <button className="h-10 px-6 bg-white border border-slate-200 text-slate-900 text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all active:scale-95">
+          <button className="h-10 px-6 bg-white border-2 border-slate-900 text-slate-900 text-[10px] font-black uppercase tracking-widest hover:bg-slate-50 transition-all active:scale-95 shadow-sm cursor-pointer flex items-center justify-center">
             <Filter className="mr-2 h-4 w-4" /> Date Filter
           </button>
-          <button className="h-10 px-6 bg-brand-primary text-white font-black text-[10px] uppercase tracking-widest hover:bg-slate-900 hover:shadow-xl transition-all active:scale-95">
+          <button className="h-10 px-6 bg-[#8B1E1E] text-white font-black text-[10px] uppercase tracking-widest hover:bg-slate-950 transition-all active:scale-95 border-2 border-slate-900 shadow-sm cursor-pointer flex items-center justify-center">
             <Download className="mr-2 h-4 w-4" /> Download Report
           </button>
         </div>
@@ -59,8 +59,8 @@ const AdminAnalytics = () => {
 
       <div className="p-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Revenue Trend */}
-        <div className="bg-white border border-slate-200 flex flex-col group hover:border-brand-primary transition-all">
-          <div className="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+        <div className="bg-[#faf6f0] border-2 border-slate-900 flex flex-col group hover:border-[#8B1E1E] transition-all shadow-sm">
+          <div className="p-4 bg-[#ead9c4]/30 border-b-2 border-slate-900 flex items-center justify-between">
             <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Revenue Analysis</span>
             <div className="flex items-center text-emerald-600 text-[10px] font-black tracking-widest">
               <TrendingUp className="h-3 w-3 mr-1" /> +15.2% Growth
@@ -73,19 +73,19 @@ const AdminAnalytics = () => {
                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 9, fill: '#64748b', fontWeight: '900' }} />
                 <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 9, fill: '#64748b', fontWeight: '900' }} />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: '#0f172a', border: 'none', borderRadius: '0px', padding: '12px' }}
-                  itemStyle={{ fontSize: '9px', fontWeight: '900', textTransform: 'uppercase', color: '#fff' }}
-                  labelStyle={{ fontSize: '9px', fontWeight: '900', color: '#38bdf8', marginBottom: '4px' }}
+                  contentStyle={{ backgroundColor: '#faf6f0', border: '2px solid #0f172a', borderRadius: '0px', padding: '12px', boxShadow: '2px 2px 0px rgba(0,0,0,1)' }}
+                  itemStyle={{ fontSize: '9px', fontWeight: '900', textTransform: 'uppercase', color: '#8B1E1E' }}
+                  labelStyle={{ fontSize: '9px', fontWeight: '900', color: '#0f172a', marginBottom: '4px' }}
                 />
-                <Line type="monotone" dataKey="revenue" stroke="#0ea5e9" strokeWidth={3} dot={{ r: 0 }} activeDot={{ r: 4, strokeWidth: 0, fill: '#0ea5e9' }} />
+                <Line type="monotone" dataKey="revenue" stroke="#8B1E1E" strokeWidth={3} dot={{ r: 0 }} activeDot={{ r: 4, strokeWidth: 0, fill: '#8B1E1E' }} />
               </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         {/* Category Distribution */}
-        <div className="bg-white border border-slate-200 flex flex-col group hover:border-brand-primary transition-all">
-          <div className="p-4 bg-slate-50 border-b border-slate-200">
+        <div className="bg-[#faf6f0] border-2 border-slate-900 flex flex-col group hover:border-[#8B1E1E] transition-all shadow-sm">
+          <div className="p-4 bg-[#ead9c4]/30 border-b-2 border-slate-900">
             <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Category Sales</span>
           </div>
           <div className="p-8 h-[300px] flex flex-col md:flex-row items-center gap-8">
@@ -107,18 +107,18 @@ const AdminAnalytics = () => {
                     ))}
                   </Pie>
                   <Tooltip 
-                    contentStyle={{ backgroundColor: '#0f172a', border: 'none', borderRadius: '0px', padding: '12px' }}
-                    itemStyle={{ fontSize: '9px', fontWeight: '900', textTransform: 'uppercase', color: '#fff' }}
+                    contentStyle={{ backgroundColor: '#faf6f0', border: '2px solid #0f172a', borderRadius: '0px', padding: '12px', boxShadow: '2px 2px 0px rgba(0,0,0,1)' }}
+                    itemStyle={{ fontSize: '9px', fontWeight: '900', textTransform: 'uppercase', color: '#0f172a' }}
                   />
                 </PieChart>
               </ResponsiveContainer>
             </div>
             <div className="w-full md:w-48 space-y-3">
               {categoryData.map((cat, i) => (
-                <div key={i} className="flex items-center gap-3 text-[9px] font-black uppercase tracking-widest pb-2 border-b border-slate-50">
+                <div key={i} className="flex items-center gap-3 text-[9px] font-black uppercase tracking-widest pb-2 border-b-2 border-slate-900/10">
                   <div className="w-2 h-2" style={{ backgroundColor: COLORS[i] }} />
-                  <span className="text-slate-400">{cat.name}</span>
-                  <span className="text-slate-900 ml-auto">{cat.value}_NODE</span>
+                  <span className="text-slate-500">{cat.name}</span>
+                  <span className="text-slate-900 ml-auto font-bold">{cat.value}_NODE</span>
                 </div>
               ))}
             </div>
@@ -126,8 +126,8 @@ const AdminAnalytics = () => {
         </div>
 
         {/* Order Volume */}
-        <div className="lg:col-span-2 bg-white border border-slate-200 flex flex-col group hover:border-brand-primary transition-all">
-          <div className="p-4 bg-slate-50 border-b border-slate-200">
+        <div className="lg:col-span-2 bg-[#faf6f0] border-2 border-slate-900 flex flex-col group hover:border-[#8B1E1E] transition-all shadow-sm">
+          <div className="p-4 bg-[#ead9c4]/30 border-b-2 border-slate-900">
             <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Order Volume</span>
           </div>
           <div className="p-8 h-[300px]">
@@ -137,12 +137,12 @@ const AdminAnalytics = () => {
                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 9, fill: '#64748b', fontWeight: '900' }} />
                 <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 9, fill: '#64748b', fontWeight: '900' }} />
                 <Tooltip 
-                  cursor={{ fill: '#f8fafc' }}
-                  contentStyle={{ backgroundColor: '#0f172a', border: 'none', borderRadius: '0px', padding: '12px' }}
-                  itemStyle={{ fontSize: '9px', fontWeight: '900', textTransform: 'uppercase', color: '#fff' }}
-                  labelStyle={{ fontSize: '9px', fontWeight: '900', color: '#38bdf8', marginBottom: '4px' }}
+                  cursor={{ fill: 'rgba(139, 30, 30, 0.05)' }}
+                  contentStyle={{ backgroundColor: '#faf6f0', border: '2px solid #0f172a', borderRadius: '0px', padding: '12px', boxShadow: '2px 2px 0px rgba(0,0,0,1)' }}
+                  itemStyle={{ fontSize: '9px', fontWeight: '900', textTransform: 'uppercase', color: '#8B1E1E' }}
+                  labelStyle={{ fontSize: '9px', fontWeight: '900', color: '#0f172a', marginBottom: '4px' }}
                 />
-                <Bar dataKey="orders" fill="#9B2B2C" radius={0} />
+                <Bar dataKey="orders" fill="#8B1E1E" radius={0} />
               </BarChart>
             </ResponsiveContainer>
           </div>

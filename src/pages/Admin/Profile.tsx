@@ -70,34 +70,34 @@ const AdminProfile = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-white">
-      <div className="bg-[#ead9c4] border-b border-[#777] p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+    <div className="flex flex-col min-h-screen bg-[#f4efe6]">
+      <div className="bg-[#ead9c4] border-b-2 border-slate-900 p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h1 className="text-2xl font-black text-[#9B2B2C] uppercase tracking-tight flex items-center gap-3">
+          <h1 className="text-2xl font-black text-[#8B1E1E] uppercase tracking-tight flex items-center gap-3">
             Admin <span className="text-slate-900">Account</span>
           </h1>
           <p className="text-slate-600 font-bold text-[10px] uppercase mt-1">
             Admin User // Access Level: Full Access // Operation Protocol 99
           </p>
         </div>
-        <div className="p-3 bg-brand-primary text-white font-black text-[10px] tracking-widest uppercase border border-white/10 hidden md:flex items-center gap-3">
+        <div className="p-3 bg-[#8B1E1E] text-white font-black text-[10px] tracking-widest uppercase border-2 border-slate-900 hidden md:flex items-center gap-3 shadow-sm">
           <ShieldCheck className="h-4 w-4 text-white" /> Secure Access
         </div>
       </div>
 
       <div className="p-8 max-w-4xl">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          <div className="lg:col-span-8 bg-white border border-slate-200 overflow-hidden hover:border-brand-primary transition-all">
-            <div className="p-4 bg-brand-primary text-white border-b border-white/10">
+          <div className="lg:col-span-8 bg-[#faf6f0] border-2 border-slate-900 overflow-hidden hover:border-[#8B1E1E] transition-all shadow-sm">
+            <div className="p-4 bg-[#ead9c4]/30 text-slate-900 border-b-2 border-slate-900">
               <span className="text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-2">
-                <User className="h-4 w-4 text-white" /> Profile Information
+                <User className="h-4 w-4 text-[#8B1E1E]" /> Profile Information
               </span>
             </div>
             <div className="p-8">
               <form onSubmit={handleSave} className="space-y-8">
-                <div className="flex flex-col md:flex-row items-center gap-8 border-b border-slate-50 pb-8">
+                <div className="flex flex-col md:flex-row items-center gap-8 border-b-2 border-slate-900/10 pb-8">
                   <div className="relative group">
-                    <div className="w-32 h-32 overflow-hidden border border-slate-200 bg-slate-50 flex items-center justify-center transition-all group-hover:border-brand-primary">
+                    <div className="w-32 h-32 overflow-hidden border-2 border-slate-900 bg-white flex items-center justify-center transition-all group-hover:border-[#8B1E1E] shadow-sm">
                       {formData.photoURL ? (
                         <img src={formData.photoURL} alt="Profile" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" />
                       ) : (
@@ -121,7 +121,7 @@ const AdminProfile = () => {
                     <Input 
                       value={formData.name}
                       onChange={(e) => setFormData({...formData, name: e.target.value})}
-                      className="h-10 bg-slate-50 border-slate-200 text-slate-900 rounded-none font-black text-xs focus:border-brand-primary outline-none focus-visible:ring-0 uppercase tracking-tight"
+                      className="h-10 bg-white border-2 border-slate-900 text-slate-900 rounded-none font-black text-xs focus:border-[#8B1E1E] outline-none focus-visible:ring-0 uppercase tracking-tight shadow-sm"
                       required
                     />
                   </div>
@@ -130,7 +130,7 @@ const AdminProfile = () => {
                     <Input 
                       value={user?.email || ''}
                       disabled
-                      className="h-10 bg-slate-100 border-slate-200 text-slate-400 rounded-none font-bold text-xs cursor-not-allowed"
+                      className="h-10 bg-[#f4efe6] border-2 border-slate-900/40 text-slate-400 rounded-none font-bold text-xs cursor-not-allowed shadow-inner"
                     />
                   </div>
                 </div>
@@ -138,36 +138,36 @@ const AdminProfile = () => {
                 <Button 
                   type="submit" 
                   disabled={loading}
-                  className="h-12 bg-brand-primary hover:bg-slate-900 text-white font-black uppercase tracking-widest px-8 rounded-none transition-all active:scale-95 shadow-xl"
+                  className="h-12 bg-[#8B1E1E] hover:bg-slate-950 text-white font-black uppercase tracking-widest px-8 rounded-none transition-all active:scale-95 border-2 border-slate-900 shadow-sm cursor-pointer flex items-center justify-center gap-2"
                 >
-                  <Save className="mr-3 h-4 w-4" /> {loading ? 'Saving...' : 'Update Profile'}
+                  <Save className="h-4 w-4" /> {loading ? 'Saving...' : 'Update Profile'}
                 </Button>
               </form>
             </div>
           </div>
 
           <div className="lg:col-span-4 space-y-6">
-            <div className="bg-slate-50 border border-slate-100 p-6">
+            <div className="bg-[#ead9c4]/30 border-2 border-slate-900 p-6 shadow-sm">
               <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-900 mb-4 flex items-center gap-2">
-                <Zap className="h-3 w-3 text-brand-primary" /> SECURITY_NOTICE
+                <Zap className="h-3 w-3 text-[#8B1E1E]" /> SECURITY_NOTICE
               </h3>
-              <p className="text-[9px] leading-relaxed font-bold text-slate-400 uppercase tracking-widest">
+              <p className="text-[9px] leading-relaxed font-bold text-slate-500 uppercase tracking-widest">
                 Identity changes are broadcasted system-wide. 
                 Any modification to administrative personas will be logged in the global auditing registry for verification.
               </p>
             </div>
 
-            <div className="bg-white border border-slate-200 p-6">
+            <div className="bg-[#faf6f0] border-2 border-slate-900 p-6 shadow-sm">
               <div className="flex items-center gap-4 mb-4">
-                <div className="w-1.5 h-6 bg-brand-primary" />
+                <div className="w-1.5 h-6 bg-[#8B1E1E]" />
                 <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-900">Account Status</h3>
               </div>
               <div className="space-y-3">
-                <div className="flex justify-between items-center text-[9px] font-black uppercase py-2 border-b border-slate-50">
+                <div className="flex justify-between items-center text-[9px] font-black uppercase py-2 border-b-2 border-slate-900/10">
                   <span className="text-slate-400">Connection</span>
-                  <span className="text-emerald-500">STABLE</span>
+                  <span className="text-emerald-600">STABLE</span>
                 </div>
-                <div className="flex justify-between items-center text-[9px] font-black uppercase py-2 border-b border-slate-50">
+                <div className="flex justify-between items-center text-[9px] font-black uppercase py-2 border-b-2 border-slate-900/10">
                   <span className="text-slate-400">Identity</span>
                   <span className="text-slate-900 underline">VERIFIED</span>
                 </div>

@@ -173,44 +173,50 @@ export const AdminLayout: React.FC = () => {
   };
 
   const menuItems = [
-    { label: 'Dashboard', icon: LayoutDashboard, path: '/admin' },
-    { label: 'Manage Products', icon: Package, path: '/admin/products' },
-    { label: 'Add Product', icon: PlusCircle, path: '/admin/products/add' },
-    { label: 'All Orders', icon: ShoppingCart, path: '/admin/orders' },
-    { label: 'Pending Orders', icon: Timer, path: '/admin/orders?status=pending', badge: pendingOrdersCount > 0 ? pendingOrdersCount : null },
-    { label: 'Customers', icon: Users, path: '/admin/customers' },
-    ...(isSuperAdmin ? [{ label: 'Staff Management', icon: Users, path: '/admin/staff' }] : []),
-    { label: 'Slider Banners', icon: ImageIcon, path: '/admin/slider' },
-    { label: 'Limited Offers', icon: Zap, path: '/admin/limited-offers' },
-    { label: 'Categories', icon: List, path: '/admin/categories' },
-    { label: 'Coupons', icon: Ticket, path: '/admin/coupons' },
-    { label: 'Profile Settings', icon: CircleUser, path: '/admin/profile' },
-    { label: 'Reports & Logs', icon: FileText, path: '/admin/reports' },
-    { label: 'Control Center', icon: Settings, path: '/admin/settings' },
+    { label: 'DASHBOARD', bengaliLabel: '(ড্যাশবোর্ড)', icon: LayoutDashboard, path: '/admin' },
+    { label: 'PRODUCTS', bengaliLabel: '(পণ্য তালিকা)', icon: Package, path: '/admin/products' },
+    { label: 'ADD PRODUCT', bengaliLabel: '(পণ্য যোগ করুন)', icon: PlusCircle, path: '/admin/products/add' },
+    { label: 'ALL ORDERS', bengaliLabel: '(সব অর্ডার)', icon: ShoppingCart, path: '/admin/orders' },
+    { label: 'PENDING FARES', bengaliLabel: '(পেন্ডিং ফেয়ারস)', icon: Timer, path: '/admin/orders?status=pending', badge: pendingOrdersCount > 0 ? pendingOrdersCount : null },
+    { label: 'CUSTOMERS', bengaliLabel: '(গ্রাহক তালিকা)', icon: Users, path: '/admin/customers' },
+    ...(isSuperAdmin ? [{ label: 'STAFF MANAGEMENT', bengaliLabel: '(স্টাফ ম্যানেজমেন্ট)', icon: Users, path: '/admin/staff' }] : []),
+    { label: 'SLIDER BANNERS', bengaliLabel: '(স্লাইড ব্যানার)', icon: ImageIcon, path: '/admin/slider' },
+    { label: 'LIMITED OFFERS', bengaliLabel: '(সীমিত সময়ের অফার)', icon: Zap, path: '/admin/limited-offers' },
+    { label: 'CATEGORIES', bengaliLabel: '(ক্যাটাগরি সমূহ)', icon: List, path: '/admin/categories' },
+    { label: 'COUPONS', bengaliLabel: '(কুপন সমূহ)', icon: Ticket, path: '/admin/coupons' },
+    { label: 'PROFILE', bengaliLabel: '(প্রোফাইল সেটিংস)', icon: CircleUser, path: '/admin/profile' },
+    { label: 'REPORTS', bengaliLabel: '(রিপোর্ট এবং লগ)', icon: FileText, path: '/admin/reports' },
+    { label: 'SETTINGS', bengaliLabel: '(কন্ট্রোল সেন্টার)', icon: Settings, path: '/admin/settings' },
   ];
 
   const SidebarItem = ({ item }: { item: any }) => {
-    const isActive = location.pathname === item.path;
+    const currentPath = location.pathname + location.search;
+    const isActive = currentPath === item.path;
 
     return (
-      <div className="mb-0">
+      <div className="mb-2">
         <button
           onClick={() => {
             navigate(item.path);
             if (window.innerWidth < 1024) setIsSidebarOpen(false);
           }}
-          className={`w-full flex items-center justify-between px-6 py-4 transition-all cursor-pointer border-b border-slate-100 ${
+          className={`w-full flex items-center justify-between px-4 py-2.5 transition-all cursor-pointer border-2 border-slate-900 shadow-sm ${
             isActive 
-              ? 'bg-brand-primary text-white' 
-              : 'bg-white text-slate-600 hover:bg-slate-50'
+              ? 'bg-[#8B1E1E] text-white' 
+              : 'bg-[#faf6f0] text-slate-800 hover:bg-[#ebd9c4]/30'
           }`}
         >
-          <div className="flex items-center gap-4">
-            <item.icon className={`h-4.5 w-4.5 ${isActive ? 'text-white' : 'text-brand-primary'}`} />
-            <span className="font-black text-[11px] uppercase tracking-tighter">{item.label}</span>
+          <div className="flex items-center gap-3">
+            <div className={`w-8 h-8 flex items-center justify-center border border-slate-900/10 ${isActive ? 'bg-white/10' : 'bg-slate-100'}`}>
+              <item.icon className={`h-4.5 w-4.5 ${isActive ? 'text-white' : 'text-[#8B1E1E]'}`} />
+            </div>
+            <div className="text-left leading-none flex flex-col gap-1">
+              <span className="font-black text-[10px] uppercase tracking-wider">{item.label}</span>
+              <span className={`text-[9px] font-bold ${isActive ? 'text-white/80' : 'text-slate-500'}`}>{item.bengaliLabel}</span>
+            </div>
           </div>
           {item.badge && (
-            <div className={`${isActive ? 'bg-white text-brand-primary' : 'bg-brand-primary text-white'} h-5 min-w-5 px-1.5 flex items-center justify-center text-[9px] font-black`}>
+            <div className={`${isActive ? 'bg-white text-[#8b1e1e]' : 'bg-[#8b1e1e] text-white'} h-5 min-w-5 px-1.5 flex items-center justify-center text-[9px] font-black border border-slate-900`}>
               {item.badge}
             </div>
           )}
@@ -219,8 +225,10 @@ export const AdminLayout: React.FC = () => {
     );
   };
 
+  const firstName = (profile?.name || user?.displayName || 'SHAMIM').split(' ')[0].toUpperCase();
+
   return (
-    <div className="h-[100dvh] flex bg-slate-100 text-slate-900 overflow-hidden">
+    <div className="h-[100dvh] flex bg-[#f4efe6] text-slate-900 overflow-hidden">
       {/* Sidebar Overlay for Mobile */}
       <AnimatePresence>
         {isSidebarOpen && (
@@ -236,42 +244,33 @@ export const AdminLayout: React.FC = () => {
 
       {/* Sidebar - Sheet Selector Style */}
       <aside 
-        className={`fixed inset-y-0 left-0 z-[100] w-64 bg-white border-r border-slate-200 transition-transform duration-300 lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-[100] w-64 bg-[#f4efe6] border-r-2 border-slate-900 transition-transform duration-300 lg:translate-x-0 ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } flex flex-col`}
       >
         <div className="flex flex-col h-full">
           {/* Logo / Brand Bar */}
-          <div className="h-12 bg-brand-primary flex items-center px-4 flex-shrink-0">
-            <Link to="/admin" className="flex items-center gap-3 group">
-              <div className="w-8 h-8 bg-white flex items-center justify-center text-brand-primary font-black text-sm">
-                {(settings?.siteName || 'SS').substring(0, 2).toUpperCase()}
-              </div>
-              <h1 className="text-sm font-black tracking-tighter text-white uppercase leading-none">
-                ADMIN_PANEL
+          <div className="p-4 border-b-2 border-slate-900 bg-[#f4efe6] flex items-center gap-3 flex-shrink-0">
+            <div className="w-11 h-11 bg-[#eae0d5] border-2 border-slate-900 flex items-center justify-center text-slate-800 shadow-sm">
+              <CircleUser className="h-6 w-6 text-slate-900" />
+            </div>
+            <div className="min-w-0">
+              <h1 className="text-[11px] font-black text-slate-900 uppercase tracking-wider leading-none">
+                SYSTEM ADMIN
               </h1>
-            </Link>
-            <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(false)} className="lg:hidden ml-auto text-white/70 hover:text-white">
+              <div className="flex items-center gap-1.5 mt-1.5">
+                <span className="text-[9px] text-rose-600 font-extrabold flex items-center gap-1 uppercase tracking-tight">
+                  <span className="inline-block w-2.5 h-2.5 bg-rose-600 border border-slate-900 shadow-sm animate-pulse" /> LIVE_TICKET_COCKPIT
+                </span>
+              </div>
+            </div>
+            <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(false)} className="lg:hidden ml-auto text-slate-900 hover:bg-slate-200 h-8 w-8 border border-slate-300">
               <X className="h-5 w-5" />
             </Button>
           </div>
 
-          {/* User Brief */}
-          <div className="p-4 bg-slate-50 border-b border-slate-200 flex items-center gap-3">
-             <div className="w-10 h-10 bg-slate-200 flex items-center justify-center overflow-hidden">
-                {profile?.photoURL ? <img src={profile.photoURL} className="w-full h-full object-cover" /> : <CircleUser className="h-6 w-6 text-slate-400" />}
-             </div>
-             <div className="min-w-0">
-                <p className="text-[10px] font-black text-slate-900 truncate uppercase">{profile?.name || 'ADMIN'}</p>
-                <div className="flex items-center gap-1">
-                   <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-                   <span className="text-[8px] font-bold text-slate-400 uppercase">Live_Node</span>
-                </div>
-             </div>
-          </div>
-
           {/* Navigation - Sheet Tabs Look */}
-          <nav className="flex-1 overflow-y-auto p-0 space-y-0 custom-scrollbar" data-lenis-prevent>
+          <nav className="flex-1 overflow-y-auto p-4 space-y-0 custom-scrollbar bg-[#f4efe6]" data-lenis-prevent>
               {menuItems.map(item => (
                 <div key={item.label}>
                   <SidebarItem item={item} />
@@ -280,13 +279,27 @@ export const AdminLayout: React.FC = () => {
           </nav>
 
           {/* Sidebar Footer */}
-          <div className="p-3 border-t border-slate-200 bg-white">
+          <div className="p-4 border-t-2 border-slate-900 bg-[#f4efe6] space-y-2 flex-shrink-0">
             <button 
               onClick={handleLogout}
-              className="w-full flex items-center gap-3 px-4 py-3 text-rose-700 hover:bg-rose-50 transition-colors font-black text-[10px] uppercase border border-rose-100"
+              className="w-full flex items-center gap-3 px-4 py-2.5 text-slate-500 bg-[#faf6f0] hover:bg-slate-100 transition-colors font-black text-[10px] uppercase border-2 border-slate-900 shadow-sm cursor-pointer"
             >
-              <LogOut className="h-4 w-4" />
-              <span>TERMINATE_SESSION</span>
+              <LogOut className="h-4 w-4 text-slate-600 shrink-0" />
+              <div className="text-left leading-none flex flex-col gap-1">
+                <span className="font-extrabold tracking-wider">LOGOUT {firstName}</span>
+                <span className="text-[9px] text-slate-400 font-bold">(লগ আউট)</span>
+              </div>
+            </button>
+
+            <button 
+              onClick={() => navigate('/')}
+              className="w-full flex items-center gap-3 px-4 py-2.5 text-white bg-[#8B1E1E] hover:bg-slate-950 transition-colors font-black text-[10px] uppercase border-2 border-slate-900 shadow-sm cursor-pointer animate-pulse-slow"
+            >
+              <ExternalLink className="h-4 w-4 shrink-0" />
+              <div className="text-left leading-none flex flex-col gap-1">
+                <span className="font-extrabold tracking-wider">CLOSE CONTROL</span>
+                <span className="text-[9px] text-white/80 font-bold">(বন্ধ করুন)</span>
+              </div>
             </button>
           </div>
         </div>

@@ -51,15 +51,17 @@ const AdminVerify = () => {
   }, [token, navigate]);
 
   return (
-    <div className="min-h-screen bg-[#ead9c4]/30 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-[#f4efe6] flex items-center justify-center p-6 relative overflow-hidden font-sans">
+      <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#8B1E1E 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
+      
       <motion.div 
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="max-w-md w-full bg-white border border-[#777] shadow-2xl p-10 text-center"
+        className="max-w-md w-full bg-[#faf6f0] border-2 border-slate-900 shadow-sm p-10 text-center relative"
       >
-        <div className="inline-flex items-center justify-center w-20 h-20 bg-[#ead9c4] border-2 border-brand-primary text-brand-primary mb-8">
-          {status === 'verifying' && <Loader2 className="h-10 w-10 animate-spin" />}
-          {status === 'success' && <CheckCircle className="h-10 w-10 text-green-600" />}
+        <div className="inline-flex items-center justify-center w-20 h-20 bg-[#ead9c4]/70 border-2 border-slate-900 text-slate-900 mb-8 shadow-sm">
+          {status === 'verifying' && <Loader2 className="h-10 w-10 animate-spin text-[#8B1E1E]" />}
+          {status === 'success' && <CheckCircle className="h-10 w-10 text-[#8B1E1E]" />}
           {status === 'error' && <XCircle className="h-10 w-10 text-red-600" />}
         </div>
         
@@ -67,24 +69,30 @@ const AdminVerify = () => {
           {status === 'verifying' ? 'প্রসেসিং...' : status === 'success' ? 'ভেরিফিকেশন সফল' : 'ভেরিফিকেশন ব্যর্থ'}
         </h2>
         
-        <p className="text-sm font-bold text-slate-500 uppercase leading-relaxed mb-8">
+        <p className="text-xs font-black text-slate-500 uppercase leading-relaxed mb-8">
           {message || 'দয়া করে অপেক্ষা করুন, আমরা আপনার পরিচয় যাচাই করছি।'}
         </p>
 
         {status === 'error' && (
           <button 
             onClick={() => navigate('/admin/login')}
-            className="w-full h-14 bg-brand-primary text-white font-black uppercase tracking-widest text-xs"
+            className="w-full h-14 bg-[#8B1E1E] hover:bg-slate-950 text-white font-black uppercase tracking-widest text-xs border-2 border-slate-900 cursor-pointer shadow-sm transition-all active:scale-[0.98]"
           >
             লগইন পেজে ফিরে যান
           </button>
         )}
         
-        <div className="mt-8 pt-8 border-t border-[#777]/10">
+        <div className="mt-8 pt-8 border-t-2 border-slate-900/10">
           <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">
             Secure_Verify // Bazar_Dala_OS
           </p>
         </div>
+
+        {/* Decorative Corner Tabs */}
+        <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-slate-900" />
+        <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-slate-900" />
+        <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-slate-900" />
+        <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-slate-900" />
       </motion.div>
     </div>
   );

@@ -40,64 +40,66 @@ const SecuritySettings = () => {
   if (loading) return <div className="p-8 text-center animate-pulse font-black uppercase text-slate-400">Verifying Identity Module...</div>;
 
   return (
-    <div className="space-y-6">
-      <Card className="rounded-none border-[#777] bg-white shadow-lg overflow-hidden border-t-4 border-t-[#9B2B2C]">
-        <CardHeader className="bg-brand-primary text-white py-4 flex flex-row items-center justify-between">
-          <CardTitle className="text-xs font-black uppercase tracking-widest flex items-center gap-2">
-            <Shield className="h-4 w-4" /> Admin Access Vault
-          </CardTitle>
-          <Button onClick={handleSave} disabled={saving} size="sm" className="bg-white text-brand-primary hover:bg-slate-100 h-8 font-black uppercase text-[9px]">
-            {saving ? 'Processing...' : <><Save className="mr-2 h-3 w-3" /> Secure Save</>}
-          </Button>
-        </CardHeader>
-        <CardContent className="p-8 space-y-8">
+    <div className="space-y-8 pb-10">
+      <div className="bg-[#faf6f0] border-2 border-slate-900 overflow-hidden hover:border-[#8B1E1E] transition-all shadow-sm">
+        <div className="bg-[#ead9c4]/30 px-6 py-4 flex flex-row items-center justify-between border-b-2 border-slate-900">
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900 flex items-center gap-2">
+            <Shield className="h-4 w-4 text-[#8B1E1E]" /> Admin Access Vault
+          </span>
+          <button 
+            onClick={handleSave} 
+            disabled={saving} 
+            className="h-8 px-5 bg-[#8B1E1E] hover:bg-slate-950 text-white font-black uppercase text-[9px] tracking-widest transition-all active:scale-95 disabled:opacity-50 border-2 border-slate-900 shadow-sm cursor-pointer"
+          >
+            {saving ? 'Processing...' : 'Secure Save'}
+          </button>
+        </div>
+        <div className="p-8 space-y-8">
            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
-                <Label className="text-[10px] font-black uppercase text-slate-600 flex items-center gap-2">
-                  <User className="h-3 w-3" /> System Username
+                <Label className="text-[10px] font-black uppercase text-slate-700 flex items-center gap-2">
+                  <User className="h-3 w-3 text-[#8B1E1E]" /> System Username
                 </Label>
                 <Input 
                   value={settings.adminCredentials?.username || ''} 
                   onChange={e => {
                     setSettings({...settings, adminCredentials: { ...(settings.adminCredentials || {}), username: e.target.value }});
                   }}
-                  className="h-12 border-[#777] rounded-none font-black text-sm bg-slate-50"
+                  className="h-12 bg-white border-2 border-slate-900 rounded-none font-black text-sm text-slate-900 focus:border-[#8B1E1E] outline-none shadow-sm"
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-[10px] font-black uppercase text-slate-600 flex items-center gap-2">
-                  <Lock className="h-3 w-3" /> System Password
+                <Label className="text-[10px] font-black uppercase text-slate-700 flex items-center gap-2">
+                  <Lock className="h-3 w-3 text-[#8B1E1E]" /> System Password
                 </Label>
                 <Input 
                   value={settings.adminCredentials?.pass || ''} 
                   onChange={e => {
                     setSettings({...settings, adminCredentials: { ...(settings.adminCredentials || {}), pass: e.target.value }});
                   }}
-                  className="h-12 border-[#777] rounded-none font-black text-sm bg-slate-50"
+                  className="h-12 bg-white border-2 border-slate-900 rounded-none font-black text-sm text-slate-900 focus:border-[#8B1E1E] outline-none shadow-sm"
                 />
               </div>
            </div>
 
-           <div className="pt-8 border-t border-[#777]/20">
+           <div className="pt-8 border-t-2 border-slate-900/10">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <Label className="text-[10px] font-black uppercase text-slate-600 tracking-widest flex items-center gap-2">
-                    <Mail className="h-3 w-3" /> Authorized Admin Emails
+                  <Label className="text-[10px] font-black uppercase text-slate-700 tracking-widest flex items-center gap-2">
+                    <Mail className="h-3 w-3 text-[#8B1E1E]" /> Authorized Admin Emails
                   </Label>
-                  <p className="text-[9px] font-bold text-slate-400 uppercase mt-1">Direct Google Auth Access Permission List</p>
+                  <p className="text-[9px] font-bold text-slate-500 uppercase mt-1">Direct Google Auth Access Permission List</p>
                 </div>
-                <Button 
+                <button 
                   onClick={() => {
                     const newList = [...(settings.adminEmails || [])];
                     newList.push('');
                     setSettings({...settings, adminEmails: newList});
                   }}
-                  variant="outline"
-                  size="sm"
-                  className="rounded-none border-[#777] font-black uppercase text-[9px] h-8"
+                  className="h-8 px-4 bg-[#ead9c4]/50 hover:bg-[#ead9c4] text-slate-900 font-black uppercase text-[9px] tracking-widest border-2 border-slate-900 transition-all active:scale-95 cursor-pointer shadow-sm"
                 >
-                  <Plus className="mr-2 h-3 w-3" /> Authorize New
-                </Button>
+                  Authorize New
+                </button>
               </div>
 
               <div className="space-y-3">
@@ -111,10 +113,9 @@ const SecuritySettings = () => {
                         setSettings({...settings, adminEmails: newList});
                       }}
                       placeholder="admin@gmail.com"
-                      className="h-10 border-[#777] rounded-none text-xs font-bold"
+                      className="h-10 bg-white border-2 border-slate-900 rounded-none text-xs font-black text-slate-900 focus:border-[#8B1E1E] shadow-sm"
                     />
-                    <Button 
-                      variant="ghost" 
+                    <button 
                       onClick={() => {
                          if (deletingIndex === i) {
                            const newList = (settings.adminEmails || []).filter((_, idx) => idx !== i);
@@ -125,16 +126,20 @@ const SecuritySettings = () => {
                            setTimeout(() => setDeletingIndex(null), 3000);
                          }
                       }}
-                      className={`h-10 transition-all ${deletingIndex === i ? "bg-red-600 text-white px-2 min-w-[70px]" : "w-10 text-red-500 hover:bg-red-50"}`}
+                      className={`h-10 border-2 border-slate-900 transition-all cursor-pointer flex items-center justify-center ${
+                        deletingIndex === i 
+                          ? "bg-red-600 hover:bg-red-700 text-white px-4 font-black text-[9px] uppercase tracking-widest" 
+                          : "w-10 bg-red-100 hover:bg-red-200 text-red-600 font-black"
+                      }`}
                     >
-                      {deletingIndex === i ? <span className="text-[8px] font-black uppercase">SURE?</span> : <Trash2 className="h-4 w-4" />}
-                    </Button>
+                      {deletingIndex === i ? 'SURE?' : <Trash2 className="h-4 w-4" />}
+                    </button>
                   </div>
                 ))}
               </div>
            </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 };

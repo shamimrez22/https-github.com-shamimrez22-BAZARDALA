@@ -68,20 +68,10 @@ const AdminLogin = () => {
     }
   };
 
-  const handleGoogleRecovery = async () => {
-    try {
-      await loginWithGoogle();
-      toast.success('সুপার অ্যাডমিন হিসেবে লগইন করেছেন');
-    } catch (err: any) {
-      console.error(err);
-      toast.error('রিকভারি ব্যর্থ হয়েছে: ' + (err.message || 'Unknown error'));
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-[#f4e4d4] flex items-center justify-center p-4 relative overflow-hidden font-sans">
+    <div className="min-h-screen bg-[#f4efe6] flex items-center justify-center p-4 relative overflow-hidden font-sans">
       {/* Background Decorative Elements */}
-      <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'radial-gradient(var(--primary-color) 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
+      <div className="absolute inset-0 opacity-5 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#8B1E1E 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
       
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -89,34 +79,34 @@ const AdminLogin = () => {
         className="w-full max-w-md relative z-10"
       >
         <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-[#ead9c4] border-2 border-brand-primary text-brand-primary shadow-2xl mb-6 relative">
-            <ShoppingBasket className="h-10 w-10" />
-            <div className="absolute -top-1 -right-1 w-3 h-3 bg-white border border-brand-primary" />
-            <div className="absolute -bottom-1 -left-1 w-3 h-3 bg-white border border-brand-primary" />
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-[#ead9c4]/70 border-2 border-slate-900 text-slate-900 shadow-sm mb-6 relative">
+            <ShoppingBasket className="h-10 w-10 text-[#8B1E1E]" />
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-white border border-slate-900" />
+            <div className="absolute -bottom-1 -left-1 w-3 h-3 bg-white border border-slate-900" />
           </div>
-          <h1 className="text-4xl font-black text-slate-900 mb-2 uppercase tracking-tighter leading-none">BAZAR<span className="text-brand-primary"> DALA</span> Admin</h1>
+          <h1 className="text-4xl font-black text-slate-900 mb-2 uppercase tracking-tighter leading-none">BAZAR<span className="text-[#8B1E1E]"> DALA</span> Admin</h1>
           <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] font-mono">Control_OS // Secure_Access</p>
         </div>
 
-        <div className="bg-[#ead9c4] border border-[#777] shadow-2xl relative">
-          <div className="bg-brand-primary p-4 text-white flex items-center justify-between border-b border-[#777]">
-            <h2 className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
-              <ShieldCheck className="h-4 w-4" /> অথেন্টিকেশন প্রোটোকল
+        <div className="bg-[#faf6f0] border-2 border-slate-900 shadow-sm relative">
+          <div className="bg-[#ead9c4]/50 p-4 text-slate-900 flex items-center justify-between border-b-2 border-slate-900">
+            <h2 className="text-xs font-black uppercase tracking-widest flex items-center gap-2 text-slate-900">
+              <ShieldCheck className="h-4 w-4 text-[#8B1E1E]" /> অথেন্টিকেশন প্রোটোকল
             </h2>
           </div>
 
-          <div className="p-10 bg-white/40">
+          <div className="p-10">
             {!showRecovery ? (
               <form onSubmit={handleLogin} className="space-y-6">
                 <div className="space-y-3">
                   <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-700">ইউজারনেম</Label>
                   <div className="relative">
-                    <User className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-primary" />
+                    <User className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#8B1E1E]" />
                     <Input
                       type="text"
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
-                      className="pl-12 bg-white border-[#777] text-slate-900 rounded-none h-14 font-black text-xs focus-visible:ring-0 focus-visible:border-brand-primary"
+                      className="pl-12 bg-white border-2 border-slate-900 text-slate-900 rounded-none h-14 font-black text-xs focus-visible:ring-0 focus:border-[#8B1E1E]"
                       placeholder="Enter Admin ID"
                       required
                     />
@@ -126,12 +116,12 @@ const AdminLogin = () => {
                 <div className="space-y-3">
                   <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-700">পাসওয়ার্ড</Label>
                   <div className="relative">
-                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-primary" />
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#8B1E1E]" />
                     <Input
                       type={showPassword ? "text" : "password"}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="pl-12 pr-12 bg-white border-[#777] text-slate-900 rounded-none h-14 font-black text-xs focus-visible:ring-0 focus-visible:border-brand-primary"
+                      className="pl-12 pr-12 bg-white border-2 border-slate-900 text-slate-900 rounded-none h-14 font-black text-xs focus-visible:ring-0 focus:border-[#8B1E1E]"
                       placeholder="Enter Password"
                       required
                     />
@@ -140,45 +130,45 @@ const AdminLogin = () => {
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none cursor-pointer"
                     >
-                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      {showPassword ? <EyeOff className="h-4 w-4 text-slate-500" /> : <Eye className="h-4 w-4 text-slate-500" />}
                     </button>
                   </div>
                 </div>
 
-                <Button 
+                <button 
                   type="submit" 
-                  className="w-full h-14 bg-brand-primary hover:bg-slate-900 text-white font-black rounded-none shadow-xl uppercase tracking-[0.3em] text-xs transition-all active:scale-[0.98] border border-[#777]/20"
+                  className="w-full h-14 bg-[#8B1E1E] hover:bg-slate-950 text-white font-black rounded-none shadow-sm uppercase tracking-[0.3em] text-xs transition-all active:scale-[0.98] border-2 border-slate-900 cursor-pointer"
                 >
                   লগইন করুন
-                </Button>
+                </button>
 
                 <div className="relative my-6">
                   <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-[#777]/20"></div>
+                    <div className="w-full border-t-2 border-slate-900/10"></div>
                   </div>
                   <div className="relative flex justify-center text-[10px] font-black uppercase tracking-widest">
-                    <span className="bg-white/40 px-4 text-slate-400">অথবা</span>
+                    <span className="bg-[#faf6f0] px-4 text-slate-400">অথবা</span>
                   </div>
                 </div>
 
-                <Button 
+                <button 
                   type="button" 
                   onClick={async () => {
                     try {
                       await loginWithGoogle();
                     } catch (err) {}
                   }}
-                  className="w-full h-14 bg-white hover:bg-slate-50 text-slate-900 font-black rounded-none shadow-xl uppercase tracking-[0.2em] text-[10px] transition-all active:scale-[0.98] border border-[#777]/20 flex items-center justify-center gap-3"
+                  className="w-full h-14 bg-white hover:bg-[#ead9c4]/25 text-slate-900 font-black rounded-none shadow-sm uppercase tracking-[0.2em] text-[10px] transition-all active:scale-[0.98] border-2 border-slate-900 flex items-center justify-center gap-3 cursor-pointer"
                 >
                   <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" className="w-5 h-5" alt="Google" />
                   গুগল দিয়ে প্রবেশ (সুপার অ্যাডমিন)
-                </Button>
+                </button>
 
                 <div className="pt-4 text-center">
                   <button 
                     type="button"
                     onClick={() => setShowRecovery(true)}
-                    className="text-[10px] font-black text-brand-primary uppercase tracking-widest hover:underline flex items-center justify-center gap-2 mx-auto"
+                    className="text-[10px] font-black text-[#8B1E1E] uppercase tracking-widest hover:underline flex items-center justify-center gap-2 mx-auto cursor-pointer"
                   >
                     <AlertCircle className="h-3 w-3" /> পাসওয়ার্ড ভুলে গেছেন? (রিকভারি)
                   </button>
@@ -187,7 +177,7 @@ const AdminLogin = () => {
             ) : (
               <div className="space-y-6 text-center">
                 <div className="mb-4">
-                   <div className="w-16 h-16 rounded-full bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-500 mx-auto mb-4">
+                   <div className="w-16 h-16 rounded-none bg-rose-50 border-2 border-slate-900 flex items-center justify-center text-[#8B1E1E] mx-auto mb-4 shadow-sm">
                       <ShieldCheck className="h-8 w-8" />
                    </div>
                    <h3 className="text-sm font-black uppercase tracking-tighter text-slate-900">অ্যাডমিন রিকভারি প্রোটোকল</h3>
@@ -200,12 +190,12 @@ const AdminLogin = () => {
                   <div className="space-y-2 text-left">
                     <Label className="text-[9px] font-black uppercase tracking-widest text-slate-500">Recovery Gmail</Label>
                     <div className="relative">
-                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-primary" />
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#8B1E1E]" />
                       <Input
                         type="email"
                         value={recoveryGmail}
                         onChange={(e) => setRecoveryGmail(e.target.value)}
-                        className="pl-12 bg-white border-[#777] text-slate-900 rounded-none h-12 font-black text-xs"
+                        className="pl-12 bg-white border-2 border-slate-900 text-slate-900 rounded-none h-12 font-black text-xs"
                         placeholder="আপনার সেভ করা জিমেইল"
                         required
                       />
@@ -215,12 +205,12 @@ const AdminLogin = () => {
                   <div className="space-y-2 text-left">
                     <Label className="text-[9px] font-black uppercase tracking-widest text-slate-500">Gmail App Password</Label>
                     <div className="relative">
-                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-primary" />
+                      <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#8B1E1E]" />
                       <Input
                         type={showRecoveryAppPass ? "text" : "password"}
                         value={recoveryAppPass}
                         onChange={(e) => setRecoveryAppPass(e.target.value)}
-                        className="pl-12 pr-12 bg-white border-[#777] text-slate-900 rounded-none h-12 font-black text-xs"
+                        className="pl-12 pr-12 bg-white border-2 border-slate-900 text-slate-900 rounded-none h-12 font-black text-xs"
                         placeholder="Gmail App Password"
                         required
                       />
@@ -229,7 +219,7 @@ const AdminLogin = () => {
                         onClick={() => setShowRecoveryAppPass(!showRecoveryAppPass)}
                         className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none cursor-pointer"
                       >
-                        {showRecoveryAppPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        {showRecoveryAppPass ? <EyeOff className="h-4 w-4 text-slate-500" /> : <Eye className="h-4 w-4 text-slate-500" />}
                       </button>
                     </div>
                   </div>
@@ -237,44 +227,44 @@ const AdminLogin = () => {
                   <div className="space-y-2 text-left">
                     <Label className="text-[9px] font-black uppercase tracking-widest text-slate-500">Master Security PIN</Label>
                     <div className="relative">
-                      <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-brand-primary" />
+                      <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#8B1E1E]" />
                       <Input
                         type="text"
                         maxLength={6}
                         value={masterPin}
                         onChange={(e) => setMasterPin(e.target.value)}
-                        className="pl-12 bg-white border-[#777] text-slate-900 rounded-none h-12 font-black text-xs"
+                        className="pl-12 bg-white border-2 border-slate-900 text-slate-900 rounded-none h-12 font-black text-xs"
                         placeholder="৬ ডিজিট পিন"
                         required
                       />
                     </div>
                   </div>
 
-                  <Button 
+                  <button 
                     type="submit" 
                     disabled={isRecovering}
-                    className="w-full h-14 bg-slate-900 hover:bg-brand-primary text-white font-black rounded-none uppercase tracking-[0.2em] text-xs transition-all flex items-center justify-center gap-2"
+                    className="w-full h-14 bg-slate-900 hover:bg-[#8B1E1E] text-white font-black rounded-none uppercase tracking-[0.2em] text-xs transition-all border-2 border-slate-900 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                   >
                     {isRecovering ? (
                       <>
-                        <Loader2 className="h-4 w-4 animate-spin" /> প্রসেসিং...
+                        <Loader2 className="h-4 w-4 animate-spin text-white" /> প্রসেসিং...
                       </>
                     ) : 'রিকভারি ইমেইল পাঠান'}
-                  </Button>
+                  </button>
                 </form>
 
                 <div className="relative my-6">
                   <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-[#777]/20"></div>
+                    <div className="w-full border-t-2 border-slate-900/10"></div>
                   </div>
                   <div className="relative flex justify-center text-[10px] font-black uppercase tracking-widest">
-                    <span className="bg-[#ead9c4]/40 px-4 text-slate-400">অথবা</span>
+                    <span className="bg-[#faf6f0] px-4 text-slate-400">অথবা</span>
                   </div>
                 </div>
 
                 <button 
                   onClick={() => setShowRecovery(false)}
-                  className="w-full text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-brand-primary mt-4 block"
+                  className="w-full text-[10px] font-black text-slate-500 uppercase tracking-widest hover:text-[#8B1E1E] mt-4 block cursor-pointer"
                 >
                   ব্যাক টু লগইন
                 </button>
@@ -283,15 +273,15 @@ const AdminLogin = () => {
           </div>
 
           {/* Decorative Corner Tabs */}
-          <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-brand-primary" />
-          <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-brand-primary" />
-          <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-brand-primary" />
-          <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-brand-primary" />
+          <div className="absolute top-0 left-0 w-2 h-2 border-t-2 border-l-2 border-slate-900" />
+          <div className="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-slate-900" />
+          <div className="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-slate-900" />
+          <div className="absolute bottom-0 right-0 w-2 h-2 border-b-2 border-r-2 border-slate-900" />
         </div>
         
         <div className="text-center mt-10">
-           <div className="inline-block px-4 py-1 border border-[#777]/30 bg-[#ead9c4]/30">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
+           <div className="inline-block px-4 py-1 border-2 border-slate-900 bg-[#ead9c4]/30 shadow-sm">
+              <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.2em]">
                 &copy; 2026 BAZAR DALA // Protocol Secured
               </p>
            </div>

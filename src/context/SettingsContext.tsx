@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { doc, onSnapshot, updateDoc, setDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { SiteSettings } from '../types';
 import { safeStorage } from '../lib/storage';
@@ -19,7 +19,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [loading, setLoading] = useState(!settings);
 
   useEffect(() => {
-    const unsub = onSnapshot(doc(db, 'settings', 'site'), (snapshot) => {
+    const unsub = onSnapshot(doc(db, 'settings', 'site'), async (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.data() as SiteSettings;
         
@@ -73,6 +73,50 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
         setSettings(sanitizedData as any);
         safeStorage.set('bzd_site_settings_cache', JSON.stringify(sanitizedData));
+      } else {
+        console.log('No site settings found. Initializing default site settings in Firestore...');
+        const defaultSettings = {
+          siteName: 'BAZAR DALA',
+          siteDescription: 'BAZAR DALA - Your premium destination for multi-category products and deals.',
+          siteDescriptionBangla: 'বাজার ডালা - আপনার দৈনন্দিন কেনাকাটার নির্ভরযোগ্য অনলাইন শপ।',
+          contactEmail: 'support@bazardala.com',
+          contactPhone: '01700000000',
+          whatsappNumber: '8801700000000',
+          contactAddress: 'Dhaka, Bangladesh',
+          footerSupportLinks: [
+            { label: 'Privacy Policy', url: '/info/privacy-policy' },
+            { label: 'Terms & Conditions', url: '/info/terms-and-conditions' },
+            { label: 'Refund Policy', url: '/info/refund-policy' }
+          ],
+          footerCompanyLinks: [
+            { label: 'About Us', url: '/info/about-us' },
+            { label: 'Contact Us', url: '/info/contact-us' }
+          ],
+          socialLinks: [
+            { platform: 'facebook', url: 'https://facebook.com' },
+            { platform: 'youtube', url: 'https://youtube.com' },
+            { platform: 'instagram', url: 'https://instagram.com' }
+          ],
+          ads: {
+            topScrollingNotice: {
+              active: true,
+              text: 'Welcome to BAZAR DALA! Free home delivery across Dhaka City on orders above ৳1000!',
+              textColor: '#ffffff',
+              bgColor: '#8B1E1E'
+            },
+            floatingNotice: {
+              active: false,
+              text: '',
+              textColor: '#000000',
+              bgColor: '#ffffff'
+            }
+          }
+        };
+        try {
+          await setDoc(doc(db, 'settings', 'site'), defaultSettings);
+        } catch (e) {
+          console.error('Failed to initialize default site settings:', e);
+        }
       }
       setLoading(false);
     }, (error) => {

@@ -30,11 +30,21 @@ export const ProductProvider: React.FC<{ children: React.ReactNode }> = ({ child
     // Real-time listener for ALL products
     const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'));
     
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
-      setProducts(data);
-      safeStorage.set('bzd_products_cache', JSON.stringify(data));
-      setLoading(false);
+    const unsubscribe = onSnapshot(q, async (snapshot) => {
+      if (snapshot.empty) {
+        console.log('No products found in Firestore. Seeding demo products to ensure data is present...');
+        try {
+          const { seedProducts } = await import('../seed');
+          await seedProducts();
+        } catch (e) {
+          console.error('Auto-seeding failed:', e);
+        }
+      } else {
+        const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product));
+        setProducts(data);
+        safeStorage.set('bzd_products_cache', JSON.stringify(data));
+        setLoading(false);
+      }
     }, (error) => {
       console.error("Global product fetch error:", error);
       setLoading(false);
